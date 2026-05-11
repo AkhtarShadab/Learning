@@ -1,0 +1,602 @@
+# Cloud Networking Mental Model
+
+## Core Idea: Virtual Networks Over Physical Networks
+
+In a traditional data center, networking is physical: you buy switches,
+routers, cables, and firewalls. In the cloud, networking is **virtual**:
+software defines the network topology, and it runs as an overlay on top
+of the provider's physical network.
+
+This is called **Software-Defined Networking (SDN)**, and it is what
+allows every cloud customer to have their own isolated, configurable
+network -- even though they all share the same physical infrastructure.
+
+```
+  PHYSICAL vs VIRTUAL NETWORKING
+  ===============================
+
+  Physical (Traditional Data Center):
+  +--------+     +--------+     +----------+
+  | Server |-----| Switch |-----| Firewall |-----> Internet
+  +--------+     +--------+     +----------+
+  Physical cables, physical devices, physical configuration.
+
+  Virtual (Cloud):
+  +--------+     +-----------+     +----------+
+  | EC2    |-----| Virtual   |-----| Internet |-----> Internet
+  |Instance|     | Switch    |     | Gateway  |
+  +--------+     +-----------+     +----------+
+  Software-defined. No physical cables. Configured via API.
+  Runs as an overlay on the provider's physical network fabric.
+```
+
+---
+
+## VPC: Your Virtual Data Center
+
+A **Virtual Private Cloud (VPC)** is a logically isolated section of the
+cloud provider's network that you control. Think of it as your own
+private data center inside the cloud, with your own IP address range,
+subnets, routing rules, and security policies.
+
+### Key Properties of a VPC
+
+- **Isolated:** Traffic cannot flow between VPCs unless you explicitly
+  allow it (via peering, Transit Gateway, or VPN).
+- **Configurable:** You define the IP range, subnets, route tables,
+  gateways, and security rules.
+- **Regional:** A VPC spans all Availability Zones in a single region.
+- **Free:** VPCs themselves cost nothing. You pay for resources inside
+  them (instances, NAT gateways, data transfer).
+
+```
+  VPC ARCHITECTURE (AWS Example)
+  ===============================
+
+  Region: us-east-1
+  +------------------------------------------------------+
+  | VPC: 10.0.0.0/16 (65,536 IP addresses)               |
+  |                                                        |
+  |  AZ: us-east-1a            AZ: us-east-1b             |
+  |  +-----------------------+ +-----------------------+   |
+  |  | Public Subnet         | | Public Subnet         |   |
+  |  | 10.0.1.0/24 (256 IPs) | | 10.0.2.0/24 (256 IPs)|   |
+  |  | [Web Server]          | | [Web Server]          |   |
+  |  +-----------------------+ +-----------------------+   |
+  |  +-----------------------+ +-----------------------+   |
+  |  | Private Subnet        | | Private Subnet        |   |
+  |  | 10.0.3.0/24 (256 IPs) | | 10.0.4.0/24 (256 IPs)|   |
+  |  | [App Server]          | | [App Server]          |   |
+  |  +-----------------------+ +-----------------------+   |
+  |  +-----------------------+ +-----------------------+   |
+  |  | Private Subnet        | | Private Subnet        |   |
+  |  | 10.0.5.0/24 (256 IPs) | | 10.0.6.0/24 (256 IPs)|   |
+  |  | [Database]            | | [Database Standby]    |   |
+  |  +-----------------------+ +-----------------------+   |
+  +------------------------------------------------------+
+```
+
+---
+
+## CIDR Notation and Subnet Math
+
+**CIDR (Classless Inter-Domain Routing)** notation defines IP address
+ranges. Mastering CIDR math is essential for cloud networking.
+
+### The Basics
+
+A CIDR block like `10.0.0.0/16` means:
+- The first 16 bits are the **network prefix** (fixed)
+- The remaining 16 bits are available for **host addresses**
+- Total addresses: 2^(32-16) = 2^16 = 65,536
+
+### Quick Reference Table
+
+| CIDR  | Subnet Mask     | Total IPs | Usable IPs* | Use Case              |
+|-------|-----------------|-----------|-------------|----------------------|
+| /16   | 255.255.0.0     | 65,536    | 65,531      | Large VPC             |
+| /20   | 255.255.240.0   | 4,096     | 4,091       | Medium subnet         |
+| /24   | 255.255.255.0   | 256       | 251         | Standard subnet       |
+| /26   | 255.255.255.192 | 64        | 59          | Small subnet          |
+| /28   | 255.255.255.240 | 16        | 11          | Tiny subnet           |
+
+*AWS reserves 5 IPs per subnet: network address, VPC router, DNS,
+future use, and broadcast.
+
+### Subnet Planning Example
+
+```
+  SUBNET PLANNING FOR A /16 VPC
+  ===============================
+
+  VPC: 10.0.0.0/16 (65,536 addresses)
+
+  Split into /20 subnets (4,096 addresses each):
+
+  10.0.0.0/20    = 10.0.0.0   - 10.0.15.255   (Public, AZ-a)
+  10.0.16.0/20   = 10.0.16.0  - 10.0.31.255   (Public, AZ-b)
+  10.0.32.0/20   = 10.0.32.0  - 10.0.47.255   (Public, AZ-c)
+  10.0.48.0/20   = 10.0.48.0  - 10.0.63.255   (Private, AZ-a)
+  10.0.64.0/20   = 10.0.64.0  - 10.0.79.255   (Private, AZ-b)
+  10.0.80.0/20   = 10.0.80.0  - 10.0.95.255   (Private, AZ-c)
+  10.0.96.0/20   = 10.0.96.0  - 10.0.111.255  (Data, AZ-a)
+  10.0.112.0/20  = 10.0.112.0 - 10.0.127.255  (Data, AZ-b)
+  ...
+  (Room for 16 total /20 subnets in a /16 VPC)
+
+  Rule of thumb: Always allocate more IPs than you think you need.
+  Expanding CIDR ranges later is painful.
+```
+
+---
+
+## Public vs Private Subnets
+
+The distinction between public and private subnets is one of the most
+important concepts in cloud networking.
+
+### Public Subnet
+
+- Has a route to an **Internet Gateway (IGW)**
+- Instances can have public IP addresses
+- Directly reachable from the internet (if security groups allow)
+- Used for: load balancers, bastion hosts, NAT gateways
+
+### Private Subnet
+
+- Has **no** route to an Internet Gateway
+- Instances have only private IP addresses
+- NOT directly reachable from the internet
+- Can reach the internet via a **NAT Gateway** (outbound only)
+- Used for: application servers, databases, internal services
+
+```
+  PUBLIC vs PRIVATE SUBNET TRAFFIC FLOW
+  ======================================
+
+                        Internet
+                           |
+                    +------+------+
+                    | Internet    |
+                    | Gateway     |
+                    +------+------+
+                           |
+              +------------+------------+
+              |                         |
+       +------+------+          +------+------+
+       | Public      |          | Public      |
+       | Subnet      |          | Subnet      |
+       | (Web/ALB)   |          | (NAT GW)    |
+       +------+------+          +------+------+
+              |                         |
+              +------------+------------+
+                           |
+                    +------+------+
+                    | Private     |
+                    | Subnet      |
+                    | (App/DB)    |
+                    +------+------+
+
+  Inbound: Internet -> IGW -> Public Subnet -> Private Subnet
+  Outbound: Private Subnet -> NAT GW -> IGW -> Internet
+```
+
+---
+
+## Internet Gateway vs NAT Gateway
+
+These two components are frequently confused. They serve opposite
+purposes.
+
+### Internet Gateway (IGW)
+
+- Allows **inbound and outbound** internet traffic
+- Attached to the VPC (one per VPC)
+- Instances in public subnets use it with a public IP
+- Free (no hourly charge, but data transfer costs apply)
+- Horizontally scaled, redundant, and highly available by default
+
+### NAT Gateway
+
+- Allows **outbound-only** internet traffic from private subnets
+- Instances initiate connections out; the internet cannot initiate
+  connections in
+- Deployed in a public subnet, referenced in private subnet route tables
+- Costs money (~$0.045/hour + $0.045/GB processed)
+- Use case: private instances need to download software updates,
+  call external APIs
+
+```
+  INTERNET GATEWAY vs NAT GATEWAY
+  ================================
+
+  Internet Gateway:                NAT Gateway:
+  +-----------+                    +-----------+
+  | Internet  |                    | Internet  |
+  +-----+-----+                   +-----+-----+
+        |                               |
+  +-----+-----+                   +-----+-----+
+  | IGW       |                   | NAT GW    |  (in public subnet)
+  +-----+-----+                   +-----+-----+
+        |                               |
+  +-----+-----+                   +-----+-----+
+  | Public    |                   | Private   |
+  | Subnet    |                   | Subnet    |
+  | (has      |                   | (no       |
+  |  public IP)|                  |  public IP)|
+  +-----------+                   +-----------+
+
+  IGW: Two-way door.  Anyone can walk in or out.
+  NAT: One-way mirror. You can see out, but no one can see in.
+```
+
+---
+
+## Route Tables: The GPS of Your VPC
+
+Every subnet has a **route table** that determines where network traffic
+is directed. Think of it as a set of GPS directions: "to reach this
+destination, go through this gateway."
+
+### Route Table Example
+
+```
+  PUBLIC SUBNET ROUTE TABLE
+  ==========================
+
+  Destination       Target          Notes
+  ---------------  --------------  ----------------------------
+  10.0.0.0/16      local           Traffic within VPC stays local
+  0.0.0.0/0        igw-abc123      All other traffic -> internet
+
+  PRIVATE SUBNET ROUTE TABLE
+  ===========================
+
+  Destination       Target          Notes
+  ---------------  --------------  ----------------------------
+  10.0.0.0/16      local           Traffic within VPC stays local
+  0.0.0.0/0        nat-xyz789      All other traffic -> NAT GW
+
+  The key difference: public subnets route 0.0.0.0/0 to an IGW.
+  Private subnets route 0.0.0.0/0 to a NAT Gateway (or nowhere).
+```
+
+### Route Evaluation
+
+Routes are evaluated using **longest prefix match**. More specific
+routes (longer prefix) take priority over less specific routes.
+
+```
+  LONGEST PREFIX MATCH EXAMPLE
+  =============================
+
+  Route Table:
+  10.0.0.0/16   -> local
+  10.0.5.0/24   -> peering-connection
+  0.0.0.0/0     -> igw
+
+  Packet to 10.0.5.17:
+  - Matches 10.0.0.0/16 (16-bit prefix)
+  - Matches 10.0.5.0/24 (24-bit prefix)  <-- MORE SPECIFIC, wins
+  - Matches 0.0.0.0/0 (0-bit prefix)
+  Result: Routed via peering-connection
+
+  Packet to 10.0.9.100:
+  - Matches 10.0.0.0/16 (16-bit prefix)  <-- MOST SPECIFIC
+  - Matches 0.0.0.0/0 (0-bit prefix)
+  Result: Routed locally within VPC
+```
+
+---
+
+## Security Groups vs NACLs
+
+Cloud networking provides two layers of firewalling. Understanding the
+difference is critical.
+
+### Security Groups (Stateful Firewall)
+
+- Applied at the **instance (ENI) level**
+- **Stateful:** If you allow inbound traffic, the response is
+  automatically allowed (no need for an outbound rule)
+- **Allow-only:** You can only write ALLOW rules. Everything not
+  explicitly allowed is denied.
+- **Evaluated as a group:** All rules are evaluated together; the
+  most permissive rule wins.
+- Default: all outbound allowed, all inbound denied.
+
+### NACLs (Stateless Firewall)
+
+- Applied at the **subnet level**
+- **Stateless:** You must write rules for both inbound AND outbound
+  traffic. Return traffic is not automatically allowed.
+- **Allow and Deny:** You can write both ALLOW and DENY rules.
+- **Evaluated in order:** Rules are evaluated by rule number (lowest
+  first). First match wins.
+- Default: all traffic allowed (both directions).
+
+```
+  SECURITY GROUPS vs NACLs
+  =========================
+
+                     Security Group         NACL
+                     -----------------      -----------------
+  Applied to         Instance (ENI)         Subnet
+  Statefulness       Stateful               Stateless
+  Rule types         Allow only             Allow and Deny
+  Rule evaluation    All rules, most        In order, first
+                     permissive wins        match wins
+  Default            Deny all inbound       Allow all
+  Return traffic     Automatic              Must be explicit
+  Use case           Primary firewall       Subnet-level
+                     for instances          guard rails
+
+  MENTAL MODEL:
+  - Security Groups = bouncers at the door of each room (instance)
+  - NACLs = security checkpoint at the building entrance (subnet)
+```
+
+### Example Configuration
+
+```
+  SECURITY GROUP: web-server-sg
+  =============================
+  Inbound:
+    HTTP   (TCP 80)   from 0.0.0.0/0         ALLOW
+    HTTPS  (TCP 443)  from 0.0.0.0/0         ALLOW
+    SSH    (TCP 22)   from 10.0.0.0/16       ALLOW (VPC only)
+  Outbound:
+    All traffic       to 0.0.0.0/0           ALLOW (default)
+
+  Because Security Groups are stateful:
+  - A request on port 443 is allowed in
+  - The response on the ephemeral port is AUTOMATICALLY allowed out
+  - No outbound rule needed for the response
+```
+
+---
+
+## VPC Peering vs Transit Gateway
+
+As architectures grow, you need to connect multiple VPCs. Two primary
+approaches exist.
+
+### VPC Peering
+
+Direct connection between two VPCs. Traffic stays on the provider's
+private backbone (never crosses the public internet).
+
+```
+  VPC PEERING
+  ============
+
+  VPC A (10.0.0.0/16) <----peering----> VPC B (10.1.0.0/16)
+
+  Limitations:
+  - NOT transitive: if A peers with B and B peers with C,
+    A CANNOT reach C through B.
+  - One-to-one: each pair of VPCs needs its own peering connection.
+  - With N VPCs, you need N*(N-1)/2 peering connections.
+    10 VPCs = 45 connections. 50 VPCs = 1,225 connections.
+```
+
+### Transit Gateway
+
+A centralized hub that connects multiple VPCs and on-premises networks.
+Think of it as a cloud router.
+
+```
+  TRANSIT GATEWAY
+  ================
+
+  On-Premises ----VPN/DX----+
+                             |
+  VPC A (10.0.0.0/16) ------+
+                             |
+  VPC B (10.1.0.0/16) ------+---- [Transit Gateway] ---- Hub
+                             |
+  VPC C (10.2.0.0/16) ------+
+                             |
+  VPC D (10.3.0.0/16) ------+
+
+  Benefits:
+  - Transitive routing: any VPC can reach any other VPC
+  - Centralized management: one hub instead of N^2 peerings
+  - Scales to thousands of VPCs
+  - Supports VPN and Direct Connect attachments
+
+  Cost: ~$0.05/hour + $0.02/GB processed
+```
+
+---
+
+## DNS: Route 53 and Cloud DNS
+
+DNS is the phone book of the internet. In the cloud, managed DNS
+services provide additional capabilities beyond simple name resolution.
+
+### Routing Policies
+
+| Policy          | Behavior                                    | Use Case                      |
+|-----------------|---------------------------------------------|-------------------------------|
+| Simple          | Return one record                           | Single resource               |
+| Weighted        | Distribute traffic by percentage            | A/B testing, canary deploys   |
+| Latency-based   | Route to lowest-latency region              | Global applications           |
+| Failover        | Route to primary; switch to secondary       | Disaster recovery             |
+| Geolocation     | Route based on user's location              | Content localization          |
+| Multi-value     | Return multiple IPs, health-checked         | Simple load balancing         |
+
+---
+
+## Load Balancers: L4 vs L7
+
+Load balancers distribute traffic across multiple targets. The key
+distinction is between Layer 4 and Layer 7 load balancers.
+
+### Layer 4 (Network Load Balancer - NLB)
+
+Operates at the **transport layer** (TCP/UDP). Sees source IP, destination
+IP, source port, destination port. Routes based on IP and port. Does not
+inspect the content of the request.
+
+- **Speed:** Millions of requests per second, ultra-low latency
+- **Use case:** TCP/UDP traffic, gaming, IoT, non-HTTP protocols
+- **Preserves:** Client source IP
+
+### Layer 7 (Application Load Balancer - ALB)
+
+Operates at the **application layer** (HTTP/HTTPS). Sees URLs, headers,
+cookies, query parameters. Can make routing decisions based on content.
+
+- **Speed:** Hundreds of thousands of requests per second
+- **Use case:** HTTP/HTTPS traffic, microservices, path-based routing
+- **Features:** Host-based routing, path-based routing, header inspection,
+  WebSocket support, sticky sessions
+
+```
+  L4 vs L7 LOAD BALANCER
+  ========================
+
+  L4 (NLB):
+  Client --> [NLB sees: TCP, src:1.2.3.4:54321, dst:5.6.7.8:443]
+             Routes based on IP/port only.
+             "I see a packet for port 443. Send it to target group."
+
+  L7 (ALB):
+  Client --> [ALB sees: GET /api/users HTTP/1.1, Host: myapp.com]
+             Routes based on content.
+             "I see a request for /api/users. Send it to the API service."
+             "I see a request for /static/logo.png. Send it to the CDN."
+
+  Routing rules (ALB):
+  /api/*        --> API target group (port 8080)
+  /admin/*      --> Admin target group (port 9090)
+  /static/*     --> S3 bucket (via redirect)
+  default       --> Web target group (port 80)
+```
+
+---
+
+## The Packet Journey: End to End
+
+Here is the complete journey of an HTTPS request from a user's browser
+to a database and back.
+
+```
+  THE PACKET JOURNEY
+  ===================
+
+  User's Browser (Sydney, Australia)
+       |
+       | DNS lookup: app.example.com
+       v
+  [Route 53] --> Returns CloudFront distribution CNAME
+       |
+       | HTTPS request to nearest edge location
+       v
+  [CloudFront Edge - Sydney PoP]
+       |
+       | Cache MISS (dynamic content)
+       | Forwards to origin via AWS backbone
+       v
+  [Application Load Balancer - us-east-1]
+       |
+       | TLS termination (decrypts HTTPS)
+       | Inspects HTTP headers
+       | Routes based on path: /api/users
+       v
+  [EC2 Instance - Private Subnet, us-east-1a]
+       |
+       | Security Group: allows traffic from ALB only
+       | Application processes request
+       | Needs data from database
+       v
+  [RDS Instance - Private Subnet, us-east-1a]
+       |
+       | Security Group: allows port 5432 from app subnet only
+       | Queries execute, results return
+       |
+       v  (Response travels back the same path in reverse)
+
+  Total latency: ~150-300ms (Sydney to US East and back)
+  With CloudFront caching (cache HIT): ~20-50ms (served from Sydney edge)
+```
+
+### What Security Checks Happen Along the Way
+
+```
+  SECURITY CHECK SEQUENCE
+  ========================
+
+  1. CloudFront:  WAF rules (block SQL injection, XSS, rate limiting)
+  2. ALB:         Security Group (allow HTTPS from CloudFront IPs)
+  3. EC2:         Security Group (allow HTTP from ALB only)
+                  NACL at subnet boundary (stateless check)
+  4. RDS:         Security Group (allow PostgreSQL from app subnet)
+                  NACL at data subnet boundary
+
+  Each layer adds defense in depth.
+```
+
+---
+
+## CDN Edge Locations
+
+A **Content Delivery Network (CDN)** caches content at edge locations
+close to users, reducing latency for static content (images, CSS, JS)
+and improving performance for dynamic content (via optimized backbone
+routing).
+
+```
+  CDN TOPOLOGY
+  =============
+
+  Without CDN:
+  User (Tokyo) --[public internet, 15+ hops]--> Origin (Virginia)
+  Latency: 200-400ms
+
+  With CDN:
+  User (Tokyo) --[1-2 hops]--> Edge (Tokyo) --[AWS backbone]--> Origin
+  Cache HIT:  20-50ms (served from edge, no origin contact)
+  Cache MISS: 120-200ms (fetched via optimized backbone, then cached)
+
+  AWS CloudFront: 600+ edge locations in 100+ cities
+  Azure CDN: 180+ PoPs globally
+  GCP Cloud CDN: 180+ edge locations
+```
+
+---
+
+## Key Takeaways
+
+1. **VPCs are virtual data centers.** They give you a logically isolated
+   network with your own IP space, subnets, route tables, and security
+   policies. Learn to design VPCs before deploying workloads.
+
+2. **Public vs private subnets are about routing, not magic.** A subnet
+   is "public" if its route table has a route to an Internet Gateway. A
+   subnet is "private" if it does not.
+
+3. **NAT Gateway enables outbound-only internet access.** Private
+   instances can reach the internet (for updates, API calls) without
+   being reachable from the internet.
+
+4. **Security Groups are your primary firewall.** They are stateful,
+   allow-only, and applied per instance. Start with the most restrictive
+   rules and open only what is needed.
+
+5. **CIDR math is worth learning.** Subnet planning mistakes are
+   expensive to fix later. Always allocate more IP space than you think
+   you need.
+
+6. **Transit Gateway replaces the peering mesh.** For more than 3-4
+   VPCs, Transit Gateway is simpler and more scalable than managing
+   N*(N-1)/2 peering connections.
+
+7. **Understand the packet journey.** Knowing how a request flows from
+   user to CloudFront to ALB to EC2 to RDS (and back) helps you debug
+   connectivity issues, optimize latency, and design security in depth.
+
+8. **L4 vs L7 load balancers serve different purposes.** Use NLB for raw
+   TCP/UDP performance and source IP preservation. Use ALB for
+   HTTP-aware routing, path-based rules, and WebSocket support.
