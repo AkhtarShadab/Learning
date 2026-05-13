@@ -4,44 +4,63 @@
 
 ## 1. What Is This Exactly?
 
-`.clinerules` is a plain Markdown file you place at the **root of your project repository**. Every time you start a task with Cline in that project, Cline automatically reads this file and treats its contents as standing instructions — a persistent briefing that applies to every single interaction in that project.
+`.clinerules` is Cline's persistent instruction system — a way to give Cline standing context that applies automatically to every task in your project or globally across all projects. Every time you start a task with Cline, it reads your rules and treats them as a permanent briefing, prepended to every interaction.
 
-### File location and format
+### Primary format: the `.clinerules/` folder
+
+The preferred format as of current Cline versions is a **folder** at the project root, not a single file. Each rule lives in its own Markdown file inside the folder:
 
 ```
 your-project/
-├── .clinerules          ← lives here, at the root
+├── .clinerules/               ← folder (primary format)
+│   ├── coding-standards.md
+│   ├── architecture.md
+│   ├── testing.md
+│   └── component-rules.md     ← can be path-conditional (see below)
 ├── src/
 ├── package.json
 └── README.md
 ```
 
-- **Format:** Plain Markdown (`.md` content under a `.clinerules` filename — no extension). Cline reads it as text, so headers, bullet lists, and code blocks all work and improve readability.
-- **Encoding:** UTF-8, no BOM.
-- **Size:** No hard limit, but you should aim to keep it under ~2000 tokens (roughly 1500 words) so it fits cleanly in every context window without crowding out your actual task.
+You can still use a single `.clinerules` file (no folder, no extension) — this is the legacy format and continues to work. The folder format is preferred because it lets you organize rules by concern and apply them conditionally per file path.
 
-### How Cline reads it
+### Global rules
 
-When you open a project folder in VS Code with Cline installed and start a new task, Cline:
+Rules that apply across all your projects live at:
 
-1. Scans the project root for `.clinerules`.
-2. Prepends the file's contents to the system context for that task — before your first message.
-3. Applies those instructions for the entire duration of the task, every task, automatically.
+- **macOS / Linux / WSL:** `~/Documents/Cline/Rules/`
+- **Windows:** `Documents\Cline\Rules\`
 
-You never have to reference it manually. It just works.
+Global rules are loaded alongside workspace rules. When the same rule exists in both places, **workspace rules take precedence** on conflicts. Think of global rules as your personal preferences ("I prefer concise answers", "always use ES modules") and workspace rules as the project's own rulebook that travels with the code.
 
-### Global Custom Instructions vs. `.clinerules`
+### Other rule formats Cline auto-detects
 
-Cline has two layers of instructions:
+Cline recognizes rules from several formats automatically — you don't need to convert them:
+
+- `.cursorrules`
+- `.windsurfrules`
+- `AGENTS.md`
+
+### Managing rules from the Cline panel
+
+Access your rules through the **scale icon** in the Cline panel. From there you can:
+
+- Create new rule files
+- Edit existing rules
+- **Toggle rules on/off individually** — useful for temporarily disabling a rule without deleting it
+
+### Creating rules via slash command
+
+Type `/newrule` in the Cline chat to create a new rule from a prompt. Your preferences from this command are saved automatically to `.clinerules`.
+
+### Layer summary
 
 | Layer | Location | Scope | Who sets it |
 |---|---|---|---|
-| **Global Custom Instructions** | Cline settings panel (VS Code) | Every project on your machine | You, personally |
-| **`.clinerules`** | Project root | Only this project | You, or your team (checked into git) |
+| **Global Rules** | `~/Documents/Cline/Rules/` | Every project on your machine | You, personally |
+| **Workspace Rules** | `.clinerules/` or `.clinerules` at project root | Only this project | You, or your team (checked into git) |
 
-Think of global instructions as your personal preferences that follow you everywhere ("I prefer concise answers", "always use ES modules"). `.clinerules` is the project's own rulebook — it travels with the code, not with the developer. When another team member clones the repo, they get the same rules automatically. When you switch to a different project, those rules don't bleed over.
-
-**Precedence:** `.clinerules` is additive on top of global instructions. Neither overrides the other; both apply simultaneously.
+Both layers apply simultaneously. Workspace rules win on conflicts.
 
 ---
 
@@ -57,7 +76,7 @@ A constitution is the supreme law of a country. Individual laws come and go, pre
 
 ```
                     ┌─────────────────────────────┐
-                    │       .clinerules            │
+                    │       .clinerules/           │
                     │   (always in force)          │
                     └────────────┬────────────────┘
                                  │ underlies
@@ -86,26 +105,104 @@ Imagine you have a brilliant new developer joining your team. You could:
 
 ---
 
-## 3. How to Integrate It in Your Projects
+## 3. Conditional Rules (Path-Scoped Rules)
 
-### Step 1: Create the file
+One of the most powerful features of the folder format is **conditional rules** — rules that only activate when Cline is working on specific file paths. You define which paths trigger a rule using YAML frontmatter at the top of the rule file.
+
+```yaml
+---
+paths:
+  - "src/components/**"
+  - "*.test.ts"
+---
+
+# Component and Test Rules
+
+- Always use named exports for components
+- Co-locate tests next to source files
+- Use React Testing Library, not Enzyme
+- Every component must have a `data-testid` attribute for e2e tests
+```
+
+When Cline works on a file that matches one of the glob patterns, this rule loads. When it's working on files outside those paths, the rule is skipped entirely.
+
+**Why this matters:** Context window space is finite. A rule about React component conventions is irrelevant when Cline is editing a database migration. Conditional rules prevent context bloat — irrelevant rules don't consume tokens.
+
+### Common path-scoping patterns
+
+```yaml
+---
+paths:
+  - "src/components/**"       # All component files
+---
+# UI component rules...
+```
+
+```yaml
+---
+paths:
+  - "*.test.ts"
+  - "*.spec.ts"
+  - "__tests__/**"
+---
+# Testing rules...
+```
+
+```yaml
+---
+paths:
+  - "src/api/**"
+  - "src/routes/**"
+---
+# API endpoint rules...
+```
+
+```yaml
+---
+paths:
+  - "prisma/**"
+  - "src/lib/db/**"
+---
+# Database rules...
+```
+
+Rules without a `paths` frontmatter load unconditionally for every task — use these for project-wide standards that always apply.
+
+---
+
+## 4. How to Integrate It in Your Projects
+
+### Step 1: Create the folder
 
 ```bash
-touch .clinerules
+mkdir .clinerules
 ```
 
 Add it to version control so every developer gets the same Cline behavior:
 
 ```bash
-git add .clinerules
+git add .clinerules/
 git commit -m "chore: add .clinerules for Cline project context"
 ```
 
-Do NOT add it to `.gitignore` unless you have personal overrides you want to keep private (in which case, keep a team version named differently and document the convention).
+Do NOT add it to `.gitignore` unless you have personal overrides you want to keep private.
 
-### Step 2: Sections to include
+### Step 2: Organize rules by concern
 
-A well-structured `.clinerules` covers these areas:
+Rather than one large file, split rules into focused files — each covering a single concern:
+
+```
+.clinerules/
+├── stack.md             ← tech stack snapshot (always loaded)
+├── code-style.md        ← formatting, naming, imports (always loaded)
+├── architecture.md      ← layering rules, boundaries (always loaded)
+├── components.md        ← UI rules (paths: src/components/**)
+├── testing.md           ← test rules (paths: *.test.ts, *.spec.ts)
+├── database.md          ← DB/migration rules (paths: prisma/**)
+└── lessons-learned.md   ← encoded bug history (always loaded)
+```
+
+### Step 3: Sections to include (in always-loaded rules)
 
 | Section | Purpose |
 |---|---|
@@ -118,75 +215,115 @@ A well-structured `.clinerules` covers these areas:
 | **Architecture boundaries** | Which layers may call which |
 | **References to other docs** | "Read X before changing Y" |
 
-### Step 3: Real-world examples
+### Step 4: Real-world examples
 
 ---
 
 #### Example 1: Next.js + Prisma + TypeScript project
 
-```markdown
-# Project Rules — AcmeSaaS
+`.clinerules/stack.md` (always loaded):
 
-## Stack
+```markdown
+# Stack
+
 - Next.js 14 (App Router, not Pages Router)
 - TypeScript 5.x — strict mode is ON
 - Prisma 5 + PostgreSQL 15
 - Tailwind CSS + shadcn/ui
 - Vitest for unit tests, Playwright for e2e
+```
 
-## Code Style
+`.clinerules/code-style.md` (always loaded):
+
+```markdown
+# Code Style
+
 - Use named exports everywhere — no default exports except for Next.js page files
 - Path aliases: use `@/` for src root, never use relative `../../../` paths
 - All async server components must use `async/await` — no `.then()` chains
 - Tailwind: use the `cn()` utility (from `@/lib/utils`) for conditional classes, never string interpolation
+- `any` is banned. If you genuinely need it: `// eslint-disable-next-line @typescript-eslint/no-explicit-any — reason`
+- All Prisma query results must go through a Zod schema before returning from a Server Action or API route
+- Prefer `type` over `interface` for data shapes; use `interface` only for extension/augmentation
+```
 
-## TypeScript Rules
-- `any` is banned. If you genuinely need it, add a comment explaining why: `// eslint-disable-next-line @typescript-eslint/no-explicit-any — reason`
-- All Prisma query results must go through a Zod schema before being returned from a Server Action or API route
-- Prefer `type` over `interface` for data shapes; use `interface` only when you need extension/augmentation
+`.clinerules/architecture.md` (always loaded):
 
-## Architecture Boundaries
+```markdown
+# Architecture Boundaries
+
 - Server Actions live in `src/actions/` — one file per domain (e.g. `users.ts`, `billing.ts`)
-- Never call Prisma directly from a React component (client or server) — all DB access goes through `src/lib/db/` query functions
+- Never call Prisma directly from a React component — all DB access through `src/lib/db/` query functions
 - `src/lib/` is for pure logic — no Next.js-specific imports (no `next/headers`, no `next/navigation`)
 - Email sending lives exclusively in `src/lib/email/` — nowhere else
 
 ## Forbidden Patterns
+
 - Do NOT use `useEffect` to fetch data — use React Server Components or SWR/React Query
 - Do NOT write raw SQL strings — use Prisma query builder only
-- Do NOT store secrets in `src/` — they go in `.env.local` and are accessed via `src/lib/env.ts` (our validated env module)
+- Do NOT store secrets in `src/` — use `.env.local`, accessed via `src/lib/env.ts`
 - Do NOT use `console.log` in production code — use the logger at `src/lib/logger.ts`
+```
 
-## Database / Prisma
+`.clinerules/components.md` (path-conditional):
+
+```yaml
+---
+paths:
+  - "src/components/**"
+---
+
+# Component Rules
+
+- Every component file exports exactly one component (named export, matches filename)
+- Always add a `data-testid` attribute for testability
+- Use shadcn/ui components from `src/components/ui/` — do NOT edit them manually
+- Use the `cn()` utility for conditional class merging, never string interpolation
+- Client components must have `'use client'` as the first line
+```
+
+`.clinerules/testing.md` (path-conditional):
+
+```yaml
+---
+paths:
+  - "*.test.ts"
+  - "*.spec.ts"
+  - "*.test.tsx"
+  - "*.spec.tsx"
+  - "e2e/**"
+---
+
+# Testing Rules
+
+- Run unit tests: `pnpm test`
+- Run e2e tests: `pnpm test:e2e` (requires local dev server on port 3000)
+- Coverage threshold: 80% on `src/lib/` — CI fails below this
+- Test files live next to source files: `foo.ts` → `foo.test.ts`
+- Do NOT rely on test order — each test must set up its own data
+```
+
+`.clinerules/database.md` (path-conditional):
+
+```yaml
+---
+paths:
+  - "prisma/**"
+  - "src/lib/db/**"
+---
+
+# Database Rules
+
 - All schema changes need a migration: `npx prisma migrate dev --name <descriptive-name>`
 - Migrations must be backwards compatible (no dropping columns without a multi-step process)
 - After any schema change, regenerate the client: `npx prisma generate`
 - Seed file is at `prisma/seed.ts` — run with `npx prisma db seed`
-
-## Testing
-- Run unit tests: `pnpm test`
-- Run e2e tests: `pnpm test:e2e` (requires local dev server running on port 3000)
-- Coverage threshold: 80% on `src/lib/` — CI will fail below this
-- Test files live next to source files: `foo.ts` → `foo.test.ts`
-
-## Common Gotchas
-- shadcn/ui components live in `src/components/ui/` — do NOT edit them manually; use `npx shadcn-ui add` to update
-- The Prisma client is a singleton — import from `src/lib/prisma.ts`, never instantiate a new `PrismaClient()` directly
-- Next.js 14 caches fetch aggressively — add `{ cache: 'no-store' }` or `revalidate` tags explicitly when data must be fresh
-- `useRouter` is from `next/navigation` in App Router (not `next/router`)
-
-## Before Changing Routes
-Read `docs/API_SPEC.md` first. All public API routes must be documented there before code is written.
-
-## PR Conventions
-- One logical change per PR
-- PR title format: `type(scope): description` (e.g. `feat(billing): add Stripe webhook handler`)
-- Always include a test for new features
+- The Prisma client is a singleton — import from `src/lib/prisma.ts`, never `new PrismaClient()`
 ```
 
 ---
 
-#### Example 2: Python ML project
+#### Example 2: Python ML project (single-file format)
 
 ```markdown
 # Project Rules — ChurnPredictor
@@ -200,8 +337,8 @@ Read `docs/API_SPEC.md` first. All public API routes must be documented there be
 
 ## Code Style
 - Follow PEP 8 strictly — use `ruff` for linting (`poetry run ruff check .`)
-- Type hints are required on all function signatures — use `from __future__ import annotations` at the top of every module
-- Docstrings: Google style. Every public function needs a docstring with Args and Returns sections.
+- Type hints are required on all function signatures — use `from __future__ import annotations`
+- Docstrings: Google style. Every public function needs Args and Returns sections.
 - Max line length: 100 characters (configured in `pyproject.toml`)
 
 ## Project Structure
@@ -210,52 +347,41 @@ Read `docs/API_SPEC.md` first. All public API routes must be documented there be
 - `src/churn/models/`   — model training, evaluation, serialization
 - `src/churn/api/`      — FastAPI routes and Pydantic schemas
 - `notebooks/`          — exploration only, never imported by src/
-- `tests/`              — mirrors src/ structure
-
-## Architecture Boundaries
-- `notebooks/` code is exploratory ONLY — never import from `src/` in notebooks (copy what you need)
-- Model artifacts are serialized to `models/` directory with joblib — never pickle raw objects
-- Feature engineering pipelines must be scikit-learn compatible (implement `fit`/`transform`) so they can be included in a Pipeline
 
 ## Forbidden Patterns
 - Never hardcode file paths — use `pathlib.Path` and constants from `src/churn/config.py`
 - Never fit a transformer on the test set — always fit on train, transform on both
-- Do not commit model artifacts (`*.joblib`) to git — they go in the `models/` directory which is in `.gitignore`; document the training command instead
 - No bare `except:` clauses — always specify the exception type
-
-## Data Rules
-- Raw data lives in `data/raw/` — never modify it
-- Processed data goes in `data/processed/` — document the processing steps in `data/README.md`
-- If you add a new data source, update `docs/DATA_SOURCES.md`
 
 ## Testing
 - Run: `poetry run pytest`
 - All feature transformers must have a unit test that checks output shape and dtype
 - Model tests use a small synthetic dataset (< 100 rows) — do not commit large test datasets
-
-## Common Gotchas
-- The training pipeline assumes feature columns are sorted alphabetically — do not change column order without updating `src/churn/config.py`
-- FastAPI route response models must be Pydantic v2 models (we migrated from v1 in March 2024)
-- `pandas` FutureWarnings about `.fillna` chaining are real — always assign explicitly
 ```
 
 ---
 
-### Tips for writing effective `.clinerules`
+### Tips for writing effective rules
 
 1. **Be specific, not generic.** "Write clean code" is useless. "Do not call `db.query()` outside of `src/lib/db/` modules" is actionable.
 
-2. **Keep it under 2000 tokens.** A 5000-token `.clinerules` eats into every context window. If your rules are that long, split them into referenced docs and link from `.clinerules`.
+2. **Include reasoning.** Rules with "why" are better than rules without. Cline can make better judgment calls near a boundary when it understands intent. "No `useEffect` for data fetching — use RSC instead (reason: Next.js caches RSC responses automatically)" is more useful than just "No `useEffect` for data fetching."
 
-3. **Update it when you discover a new gotcha.** Just had a nasty bug because someone imported Prisma directly in a component? Add it to the Forbidden Patterns section that day — encode the lesson while the pain is fresh.
+3. **Reference code examples within rules.** Show the bad pattern and the good pattern side-by-side. Cline reads literally — concrete examples eliminate ambiguity.
 
-4. **Review it quarterly.** Remove rules that no longer apply (e.g., if you migrated from Pages Router to App Router, old Pages-specific rules become noise).
+4. **Keep each file focused on a single concern.** A rule file about testing should not also contain deployment instructions. One concern per file makes toggling and conditional loading work cleanly.
 
-5. **Write for the AI, not for a human reader.** Humans skim and infer. Cline reads literally. Be explicit. "Use the `cn()` utility" is better than "follow our class merging conventions."
+5. **Keep files concise — under 5K tokens per file.** A massive rules file eats into every context window. If rules for a domain are extensive, split them and use path-conditioning so only relevant ones load.
+
+6. **Maintain current information — stale rules mislead the model.** Migrated from Pages Router to App Router? Remove old Pages-specific rules. Stale rules are worse than no rules — they actively mislead Cline.
+
+7. **Update when you discover a new gotcha.** Just had a nasty bug? Add it to the lessons-learned file that day. Encode the lesson while the pain is fresh.
+
+8. **Write for the AI, not for a human reader.** Humans skim and infer. Cline reads literally. Be explicit: "Use the `cn()` utility for class merging" is better than "follow our class merging conventions."
 
 ---
 
-## 4. Advanced Use Cases
+## 5. Advanced Use Cases
 
 ### Enforcing architectural boundaries
 
@@ -319,7 +445,7 @@ Reason: Silent failures that surface as weird UI states.
 ### Production
 - Never log PII in production — the logger strips it in dev, but be explicit
 - Rate limits are enforced at the infrastructure level — do not add app-level rate limiting that conflicts
-- The production DB runs on read replicas for SELECT — write queries must go through the primary connection string
+- The production DB runs on read replicas for SELECT — write queries must go through the primary
 
 ### CI
 - Tests run against a fresh Postgres instance seeded from `prisma/seed.ts`
@@ -342,7 +468,7 @@ Reason: Silent failures that surface as weird UI states.
 
 ### Team conventions for multi-developer projects
 
-`.clinerules` becomes the single source of truth for what every developer (and every Cline session) should know about your team's conventions. Crucially, it eliminates the "which way do we do this?" conversation when someone new joins:
+`.clinerules` becomes the single source of truth for what every developer (and every Cline session) should know about your team's conventions:
 
 ```markdown
 ## Team Conventions
@@ -390,7 +516,7 @@ RULE: Import Prisma ONLY from `src/lib/prisma.ts` — never `new PrismaClient()`
 ### 2024-07-19: Next.js build failure on case-sensitive file systems
 SYMPTOM: Works on Mac (case-insensitive FS), fails in CI (Linux).
 ROOT CAUSE: Import was `import Foo from './foo'` but file was named `Foo.tsx`.
-RULE: Import paths must exactly match the file's casing. Use your editor's "autocomplete import" — never type paths by hand.
+RULE: Import paths must exactly match the file's casing. Use editor autocomplete — never type paths by hand.
 ```
 
 ---
@@ -398,18 +524,18 @@ RULE: Import paths must exactly match the file's casing. Use your editor's "auto
 ### Quick reference: `.clinerules` anatomy
 
 ```
-.clinerules
+.clinerules/
 │
-├── ## Stack                    ← what's in the project
-├── ## Code Style               ← formatter, naming, import rules
-├── ## Architecture Boundaries  ← what can call what
-├── ## Forbidden Patterns       ← explicitly banned with reasons
-├── ## Testing                  ← how to run tests, thresholds
-├── ## File Structure           ← where things live
-├── ## Environment Notes        ← dev / prod / CI differences
-├── ## Before You Change X      ← links to required reading
-├── ## Team Conventions         ← branching, PR, ownership
-└── ## Lessons Learned          ← encoded bug history
+├── stack.md               ← what's in the project (always loaded)
+├── code-style.md          ← formatter, naming, import rules (always loaded)
+├── architecture.md        ← what can call what (always loaded)
+├── components.md          ← UI rules (paths: src/components/**)
+├── testing.md             ← test rules (paths: *.test.ts, *.spec.ts)
+├── database.md            ← DB rules (paths: prisma/**)
+├── environments.md        ← dev / prod / CI differences (always loaded)
+├── required-reading.md    ← links to docs before touching key areas (always loaded)
+├── team-conventions.md    ← branching, PR, ownership (always loaded)
+└── lessons-learned.md     ← encoded bug history (always loaded)
 ```
 
-The investment is low — an hour to write, minutes to maintain — and the payoff is compounding: every Cline session in your project starts with full context, every time, for every developer, forever.
+The investment is low — an hour to write, minutes to maintain — and the payoff is compounding: every Cline session in your project starts with full context, every time, for every developer, forever. Conditional rules mean even large rule sets don't bloat your context — only what's relevant to the current files loads.

@@ -4,55 +4,56 @@
 
 ## 1. What Is This Exactly?
 
-A **skill** is a folder of shell scripts that exposes a set of domain-specific commands to an AI agent. Instead of describing how to do something in natural language every time, you package the capability once as executable scripts — and the agent can invoke them directly, reliably, and repeatedly.
+A **skill** is a modular instruction set that extends Cline's capabilities for a specific domain. Skills package reusable knowledge — instructions, reference docs, templates, and executable scripts — into a structured folder that Cline can discover and load on demand.
+
+When Cline determines a skill is relevant to a task, it invokes the `use_skill` tool internally, which loads the skill's instructions into context. You can also activate skills manually by typing `/` in chat and selecting from the skill list.
+
+### The key insight: progressive loading
+
+Unlike `.clinerules` rules (which load fully when active), skills use **three-level progressive loading** to manage context cost:
+
+| Level | Content | Size | When loaded |
+|---|---|---|---|
+| **1 — Metadata** | Name + description | ~100 tokens | Always — even for inactive skills |
+| **2 — Instructions** | Full `SKILL.md` | < 5K tokens | When skill is triggered |
+| **3 — Resources** | Docs, scripts, templates | Unlimited | On-demand, when Cline needs them |
+
+This means inactive skills cost only ~100 tokens (the metadata description). You can have many skills installed without bloating context — only triggered skills pay the full cost. This is the key difference from rules, which always load fully when active.
 
 ### The concrete structure
 
 ```
-skills/
-└── my-skill/
-    ├── SKILL.md          ← documentation the agent reads to understand the skill
-    ├── command-one       ← executable script (bash, python, node, etc.)
-    ├── command-two
-    └── command-three
+skill-name/
+├── SKILL.md       (required — YAML frontmatter + instructions)
+├── docs/          (optional — deep reference, troubleshooting guides)
+├── templates/     (optional — boilerplate code, config files)
+└── scripts/       (optional — validation, processing, API calls)
 ```
 
-Each script is one thing the agent can do. `SKILL.md` is the manifest that explains what those things are.
+`SKILL.md` is the contract: it tells Cline what the skill can do, when to use it, and how to use it. The supporting folders provide depth that only loads when needed.
 
-### The role of SKILL.md
+### Skills vs. built-in Cline tools
 
-SKILL.md is the contract between the skill author and the agent. The agent reads it to answer:
-- "What can I do with this skill?"
-- "What are the exact command names?"
-- "What arguments does each command take?"
-- "What does the output look like?"
+| Built-in Cline tools | Skills |
+|---|---|
+| `read_file`, `write_to_file` | `deploy-staging`, `db-migrate`, `git-commit` |
+| `execute_command` | `check-logs`, `get-metrics`, `ad-tasks` |
+| `list_files`, `search_files` | `api-create-user`, `send-notification` |
+| Always present, universal | You add them, project- or user-specific |
+| General-purpose primitives | Domain-specific abstractions |
+| Cline knows them without docs | Cline learns them from `SKILL.md` |
 
-Without `SKILL.md`, the agent has to guess. With it, the agent has a spec.
-
-### Built-in Cline tools vs. Skills
-
-This distinction is important to internalize:
-
-| Built-in Cline tools           | Skills                                      |
-|--------------------------------|---------------------------------------------|
-| `read_file`, `write_to_file`   | `git-commit`, `deploy-staging`, `db-migrate`|
-| `execute_command`              | `check-logs`, `get-metrics`, `ad-tasks`     |
-| `list_files`, `search_files`   | `api-create-user`, `send-notification`      |
-| Always present, universal      | Project-specific, you add them              |
-| General-purpose                | Domain-specific, high-level abstractions    |
-| Cline knows them without docs  | Cline learns them from SKILL.md             |
-
-Built-in tools are the foundation. Skills are domain vocabulary built on top of that foundation. When you give Cline a `deploy-staging` skill, it no longer needs to reason about SSH connections, environment variables, health checks, and rollback logic from scratch — that complexity is encapsulated in the script.
+Built-in tools are the foundation. Skills are domain vocabulary built on top of that foundation. A `deploy-staging` skill means Cline no longer reasons about SSH, environment variables, health checks, and rollback from scratch on every deploy task — that complexity is encapsulated once, reused always.
 
 ---
 
-## 2. Mental Model
+## 2. Mental Models
 
 ### Mental Model 1: A Toolbox
 
 A standard toolbox ships with hammer, screwdriver, pliers, wrench — tools that work for almost any job. That's Cline's built-in toolkit.
 
-But a mechanic's bay also has a torque wrench, an oscilloscope, a coolant flush machine, a timing light. Those are specialist tools you add when you need them. They are not part of the base box — you acquire them for specific jobs.
+But a mechanic's bay also has a torque wrench, an oscilloscope, a coolant flush machine, a timing light. Those are specialist tools you add when you need them for specific jobs.
 
 ```
 Base Cline toolkit (always present):     Specialist skills (you add):
@@ -80,115 +81,289 @@ Without a skill:
   how to rollback if it fails, where to log results...
 
 With a deploy skill:
-  Agent runs: ./deploy-staging --version 1.4.2
+  Agent runs the deploy command.
   Script handles all the above internally.
 ```
 
-You install a skill once. The agent uses it in every task where it's relevant.
+You install a skill once. The agent uses it in every task where it's relevant — with zero re-explanation.
 
-### Mental Model 3: A Plugin System
+### Mental Model 3: A Plugin System with Lazy Loading
 
 Think of Cline as a base application — capable, but generic. Skills are plugins. You install a plugin, and the application gains new capabilities specific to your domain.
 
+The critical difference from a naive plugin system: skills are **lazy-loaded**. A plugin you installed but aren't using costs nothing (just its 100-token metadata description). Only when you actually invoke a skill does it pay the full cost of loading its instructions.
+
 ```
-┌─────────────────────────────────────────────┐
-│                  Cline Agent                │
-│                                             │
-│  ┌─────────────┐    ┌──────────────────┐   │
-│  │  Core Tools │    │  Loaded Skills   │   │
-│  │  (built-in) │    │  (your plugins)  │   │
-│  └─────────────┘    └──────────────────┘   │
-│                            ▲               │
-│                            │               │
-│                     skills/ folder          │
-│                     in your project         │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│                  Cline Agent                    │
+│                                                 │
+│  ┌─────────────┐    ┌──────────────────────┐   │
+│  │  Core Tools │    │  Active Skills       │   │
+│  │  (built-in) │    │  (loaded on trigger) │   │
+│  └─────────────┘    └──────────────────────┘   │
+│                             ▲                  │
+│                      ~100 tokens each          │
+│                      (inactive skills)         │
+│                      .cline/skills/            │
+└─────────────────────────────────────────────────┘
 ```
 
-SKILL.md is the plugin's README. Just as a VS Code extension has a `package.json` manifest and a `README.md`, a skill has a `SKILL.md`. The agent reads the README to know what the plugin can do.
+`SKILL.md` is the plugin's manifest. Just as a VS Code extension has a `package.json` declaring what it does, a skill's YAML frontmatter declares when Cline should activate it. The agent reads the description, matches it against the task at hand, and decides whether to load the full skill.
 
 ---
 
-## 3. How to Integrate It in Your Projects
+## 3. Storage Locations
 
-### Step 1: Create the skills/ folder
+Skills can live at project level (version-controlled, shared with your team) or at the global user level (available across all projects).
+
+### Project-level skills
 
 ```
 your-project/
-├── src/
-├── tests/
-├── .clinerules           ← you'll reference skills here
-└── skills/               ← create this
-    └── .gitkeep
+├── .cline/
+│   └── skills/          ← Primary project skill location
+│       └── deploy/
+│           ├── SKILL.md
+│           └── scripts/
+│               └── deploy-staging.sh
+├── .clinerules/
+│   └── skills/          ← Alternative project skill location
+└── src/
 ```
 
-Keep `skills/` in version control. The scripts are part of your project infrastructure, same as Makefiles or CI configs.
+Both `.cline/skills/` and `.clinerules/skills/` work for project-level skills. `.cline/skills/` is the primary recommended path.
 
-### Step 2: Create a skill folder
+### Global user-level skills
 
 ```
-skills/
+~/.cline/skills/               (macOS / Linux / WSL)
+C:\Users\USERNAME\.cline\skills\  (Windows)
+```
+
+Global skills are available in every project on your machine. When a naming conflict occurs between a global skill and a project skill, **global skills take precedence**.
+
+Use global skills for capabilities that span projects — your personal git workflow, your preferred deploy patterns, organization-wide API wrappers. Use project skills for things that are specific to one codebase.
+
+---
+
+## 4. The SKILL.md File
+
+`SKILL.md` is the core of every skill. It has two parts: a YAML frontmatter block that controls discovery and activation, and a Markdown body with full instructions.
+
+### YAML frontmatter
+
+```yaml
+---
+name: skill-name        # must match the directory name exactly (kebab-case)
+description: |          # max 1024 chars — this is what Cline reads to decide when to activate
+  Deploy applications to AWS using CDK. Use when deploying, updating
+  infrastructure, or managing AWS resources. Handles staging and production
+  deployments, stack diffs, and rollbacks.
+---
+```
+
+The `name` must exactly match the folder name. The `description` is the Level 1 metadata — the ~100 tokens that are always loaded. It determines when Cline activates the skill automatically.
+
+**Description best practices:**
+
+- Start with an **action verb**: "Deploy...", "Generate...", "Validate...", "Query..."
+- Include **specific trigger phrases** that match how users ask for the task
+- Mention **relevant file types or domains** so Cline knows what context activates it
+- Be **concrete and specific**, not vague: "Deploy to AWS using CDK" not "helps with AWS stuff"
+- Keep it under 1024 characters — this is a hard limit
+
+```yaml
+# Good description
+description: |
+  Generate TypeScript types from OpenAPI specs. Use when creating API client types,
+  updating type definitions from an API schema, or working with .openapi.yaml or
+  swagger.json files. Outputs ready-to-use TypeScript interfaces.
+
+# Weak description (too vague)
+description: |
+  Helps with API stuff and types.
+```
+
+### SKILL.md body
+
+After the frontmatter, write your instructions in Markdown. This is the Level 2 content — loaded when the skill activates. Keep it under 5K tokens.
+
+A solid `SKILL.md` answers:
+- What can I do with this skill?
+- When should I use each capability?
+- What are the exact commands or steps?
+- What does output look like?
+- What supporting files exist in `docs/`, `templates/`, `scripts/`?
+
+```markdown
+---
+name: aws-deploy
+description: |
+  Deploy applications to AWS using CDK. Use when deploying, updating
+  infrastructure, or managing AWS resources. Handles staging and production
+  deployments, stack diffs, and rollbacks.
+---
+
+# AWS Deploy Skill
+
+Manages deployments to AWS via CDK. All deploy operations run through
+scripts in `scripts/` — do not construct raw AWS CLI commands.
+
+## Capabilities
+
+| Action | How |
+|---|---|
+| Deploy to staging | Run `scripts/deploy.sh staging` |
+| Deploy to production | Run `scripts/deploy.sh production` (requires confirmation) |
+| Preview changes (diff) | Run `scripts/diff.sh [environment]` |
+| Rollback | Run `scripts/rollback.sh [environment] [version]` |
+
+## Required Environment Variables
+
+- `AWS_PROFILE` — AWS credentials profile
+- `CDK_DEFAULT_ACCOUNT` — target AWS account ID
+- `CDK_DEFAULT_REGION` — target region (e.g. us-east-1)
+
+## Workflow
+
+1. Always run `scripts/diff.sh` first to preview what will change
+2. Review the diff output before proceeding
+3. For staging: `scripts/deploy.sh staging`
+4. For production: get explicit user confirmation, then `scripts/deploy.sh production`
+5. Monitor deployment output — the script polls CloudFormation events
+
+## Advanced Reference
+
+For CDK stack structure, troubleshooting common errors, and cross-account
+deployment patterns, see `docs/advanced.md`.
+```
+
+---
+
+## 5. Supporting Files
+
+### `docs/` — Deep reference (Level 3, on-demand)
+
+The `docs/` folder holds advanced guides, troubleshooting references, and detailed API documentation. Cline loads these **only when it needs them** — they don't bloat context by default.
+
+```
+aws-deploy/
+└── docs/
+    ├── advanced.md          ← CDK patterns, cross-account setup
+    ├── troubleshooting.md   ← common errors and fixes
+    └── architecture.md      ← how the stacks are organized
+```
+
+Put content here that is too detailed for the main `SKILL.md` but that Cline might need for edge cases or deep dives. The main instructions in `SKILL.md` should reference these files by name so Cline knows they exist.
+
+### `scripts/` — Executables (output-only cost)
+
+Scripts in `scripts/` are **executed but not loaded into context**. The script's source code never consumes tokens — only its output does. This makes scripts the right place for complex logic, credential handling, and anything that would be verbose as inline instructions.
+
+```
+aws-deploy/
+└── scripts/
+    ├── deploy.sh            ← deploy to an environment
+    ├── diff.sh              ← preview CDK changes
+    └── rollback.sh          ← revert to a previous version
+```
+
+Write scripts defensively: validate inputs, fail fast with clear error messages to stderr, exit non-zero on failure. The agent reads exit codes and stdout, so keep output parseable.
+
+### `templates/` — Boilerplate (on-demand)
+
+Templates are config files, scaffolding code, or common patterns that Cline can copy or adapt for the task. Like `docs/`, they load on-demand, not upfront.
+
+```
+aws-deploy/
+└── templates/
+    ├── stack-template.ts    ← CDK stack boilerplate
+    └── pipeline-config.yml  ← CI/CD pipeline template
+```
+
+---
+
+## 6. Activation
+
+### Automatic activation
+
+Cline reads the `description` frontmatter of every installed skill (the ~100-token metadata). When you start a task, it matches your request against all descriptions and automatically loads the most relevant skill via the `use_skill` tool.
+
+A well-written description makes automatic activation reliable. A vague description means Cline might not activate the skill when it should — or activate it when it shouldn't.
+
+### Manual activation
+
+Type `/` in the Cline chat input to see a list of all available skills. Select one to activate it explicitly. Manual activation is useful when:
+
+- The task description doesn't obviously match the skill's description
+- You want to force a specific skill rather than let Cline choose
+- You're testing a skill you just created
+
+---
+
+## 7. How to Integrate It in Your Projects
+
+### Step 1: Create the skills folder
+
+```bash
+mkdir -p .cline/skills
+```
+
+Keep skills in version control — they're infrastructure, same as Makefiles or CI configs:
+
+```bash
+git add .cline/skills/
+git commit -m "chore: add cline skills"
+```
+
+### Step 2: Create a skill folder with SKILL.md
+
+```
+.cline/skills/
 └── git-helper/
     ├── SKILL.md
-    ├── git-status
-    ├── git-commit
-    └── git-pr
+    └── scripts/
+        ├── git-status.sh
+        ├── git-commit.sh
+        └── git-pr.sh
 ```
 
 ### Step 3: Write SKILL.md
 
-SKILL.md has a specific job: give the agent exactly what it needs to use the skill correctly. No more, no less.
-
-**What to include:**
-
 ```markdown
+---
+name: git-helper
+description: |
+  Perform git operations following this project's conventions. Use when
+  committing changes, checking status, creating branches, or opening pull
+  requests. Enforces Conventional Commits format and project branch naming.
+---
+
 # git-helper
 
-Provides high-level git operations for this project.
-Wraps raw git commands with project-specific conventions
-(branch naming, commit message format, PR template).
+High-level git operations for this project. Wraps raw git with project
+conventions (branch naming, commit message format, PR template).
 
-## Available Commands
+## Available Scripts
 
-| Command      | Description                              | Usage                              |
-|--------------|------------------------------------------|------------------------------------|
-| git-status   | Show working tree status and summary     | ./git-status                       |
-| git-commit   | Stage all changes and commit             | ./git-commit "your message"        |
-| git-pr       | Create a pull request via gh CLI         | ./git-pr "PR title" "description"  |
-
-## Output Format
-
-All commands output to stdout. Exit code 0 = success, non-zero = failure.
-Errors are printed to stderr.
-
-## Examples
-
-Check what's changed:
-  ./git-status
-
-Commit current work:
-  ./git-commit "feat: add user authentication"
-
-Open a PR:
-  ./git-pr "Add user auth" "Implements login, logout, and session management"
+| Script | Description | Usage |
+|---|---|---|
+| `scripts/git-status.sh` | Show working tree status and recent commits | `bash scripts/git-status.sh` |
+| `scripts/git-commit.sh` | Stage all and commit with conventional format | `bash scripts/git-commit.sh "feat: message"` |
+| `scripts/git-pr.sh` | Create a pull request via gh CLI | `bash scripts/git-pr.sh "title" "body"` |
 
 ## Notes
 
-- git-commit follows Conventional Commits format (feat:, fix:, chore:, etc.)
-- git-pr requires the gh CLI to be installed and authenticated
-- Always run git-status before git-commit to review what will be staged
+- `git-commit.sh` enforces Conventional Commits: feat, fix, chore, docs, refactor, test, perf
+- `git-pr.sh` requires the `gh` CLI authenticated
+- Always run `git-status.sh` before committing to review what will be staged
 ```
 
-**What NOT to include:** implementation details (how the scripts work internally), installation instructions for the agent, or anything the agent doesn't need to use the commands.
-
-### Step 4: Write individual command scripts
-
-Each script is a standalone executable. Write it so a human could also run it from the terminal.
+### Step 4: Write scripts
 
 ```bash
 #!/bin/bash
-# skills/git-helper/git-status
-
+# .cline/skills/git-helper/scripts/git-status.sh
 set -e
 
 echo "=== Working Tree Status ==="
@@ -205,15 +380,14 @@ git diff --name-only
 
 ```bash
 #!/bin/bash
-# skills/git-helper/git-commit
-
+# .cline/skills/git-helper/scripts/git-commit.sh
 set -e
 
 MESSAGE="$1"
 
 if [ -z "$MESSAGE" ]; then
   echo "ERROR: commit message is required" >&2
-  echo "Usage: ./git-commit \"your message\"" >&2
+  echo "Usage: bash git-commit.sh \"type(scope): description\"" >&2
   exit 1
 fi
 
@@ -223,108 +397,73 @@ git add -A
 echo "Committing: $MESSAGE"
 git commit -m "$MESSAGE"
 
-echo "Done. Commit hash: $(git rev-parse --short HEAD)"
+echo "Done. Commit: $(git rev-parse --short HEAD)"
 ```
 
 ```bash
 #!/bin/bash
-# skills/git-helper/git-pr
-
+# .cline/skills/git-helper/scripts/git-pr.sh
 set -e
 
 TITLE="$1"
-BODY="$2"
+BODY="${2:-No description provided}"
 
 if [ -z "$TITLE" ]; then
   echo "ERROR: PR title is required" >&2
-  echo "Usage: ./git-pr \"title\" \"description\"" >&2
+  echo "Usage: bash git-pr.sh \"title\" [\"body\"]" >&2
   exit 1
 fi
 
 BRANCH=$(git branch --show-current)
 echo "Creating PR from branch: $BRANCH"
 
-gh pr create \
-  --title "$TITLE" \
-  --body "${BODY:-No description provided}" \
-  --draft
+gh pr create --title "$TITLE" --body "$BODY" --draft
 
 echo "PR created."
-gh pr view --web
 ```
 
-Make all scripts executable:
-
-```bash
-chmod +x skills/git-helper/git-status
-chmod +x skills/git-helper/git-commit
-chmod +x skills/git-helper/git-pr
-```
-
-### Step 5: Tell Cline about your skill in .clinerules
-
-```markdown
-# .clinerules
-
-## Available Skills
-
-You have access to the following skills in the `skills/` directory.
-Read each skill's SKILL.md before using any of its commands.
-
-### git-helper
-Path: ./skills/git-helper/SKILL.md
-Use for: all git operations — checking status, committing, creating PRs.
-Do NOT use raw git commands for these tasks; use the skill instead.
-
-### db-tools
-Path: ./skills/db-tools/SKILL.md
-Use for: database operations — queries, migrations, seeding.
-```
-
-### Full example: db-tools skill
+### Step 5: Full example — db-tools skill
 
 ```
-skills/
+.cline/skills/
 └── db-tools/
     ├── SKILL.md
-    ├── db-query
-    ├── db-migrate
-    └── db-seed
+    └── scripts/
+        ├── db-query.sh
+        ├── db-migrate.sh
+        └── db-seed.sh
 ```
 
 **SKILL.md:**
 
 ```markdown
+---
+name: db-tools
+description: |
+  Run database operations: queries, migrations, and seeding. Use when
+  querying the database, applying Prisma migrations, or seeding test data.
+  Requires DATABASE_URL in .env.
+---
+
 # db-tools
 
-Database operations for this project (PostgreSQL via psql).
-Connection config is read from DATABASE_URL environment variable.
+Database operations for this project (PostgreSQL via Prisma).
+Connection config is read from DATABASE_URL in `.env`.
 
-## Available Commands
+## Available Scripts
 
-| Command     | Description                          | Usage                                    |
-|-------------|--------------------------------------|------------------------------------------|
-| db-query    | Run a SQL query and print results    | ./db-query "SELECT * FROM users LIMIT 5" |
-| db-migrate  | Run pending Prisma migrations        | ./db-migrate                             |
-| db-seed     | Seed the database with test data     | ./db-seed [--reset]                      |
+| Script | Description | Usage |
+|---|---|---|
+| `scripts/db-query.sh` | Run a SQL query and print results | `bash scripts/db-query.sh "SELECT ..."` |
+| `scripts/db-migrate.sh` | Run pending Prisma migrations | `bash scripts/db-migrate.sh` |
+| `scripts/db-seed.sh` | Seed with test data | `bash scripts/db-seed.sh [--reset]` |
 
 ## Environment Variables Required
 
-- DATABASE_URL — PostgreSQL connection string (set in .env)
-
-## Examples
-
-Check current users:
-  ./db-query "SELECT id, email, created_at FROM users ORDER BY created_at DESC LIMIT 10"
-
-Apply pending migrations:
-  ./db-migrate
-
-Seed fresh data (resets existing data):
-  ./db-seed --reset
+- `DATABASE_URL` — PostgreSQL connection string (set in .env)
 ```
 
-**db-query:**
+**scripts/db-query.sh:**
 
 ```bash
 #!/bin/bash
@@ -334,11 +473,10 @@ SQL="$1"
 
 if [ -z "$SQL" ]; then
   echo "ERROR: SQL query required" >&2
-  echo "Usage: ./db-query \"SELECT ...\"" >&2
+  echo "Usage: bash db-query.sh \"SELECT ...\"" >&2
   exit 1
 fi
 
-# Load .env if present
 [ -f .env ] && export $(grep -v '^#' .env | xargs)
 
 if [ -z "$DATABASE_URL" ]; then
@@ -349,7 +487,7 @@ fi
 psql "$DATABASE_URL" -c "$SQL"
 ```
 
-**db-migrate:**
+**scripts/db-migrate.sh:**
 
 ```bash
 #!/bin/bash
@@ -364,7 +502,7 @@ echo "Current migration status:"
 npx prisma migrate status
 ```
 
-**db-seed:**
+**scripts/db-seed.sh:**
 
 ```bash
 #!/bin/bash
@@ -372,12 +510,7 @@ set -e
 
 [ -f .env ] && export $(grep -v '^#' .env | xargs)
 
-RESET=false
 if [ "$1" = "--reset" ]; then
-  RESET=true
-fi
-
-if [ "$RESET" = true ]; then
   echo "Resetting database..."
   npx prisma migrate reset --force
 fi
@@ -390,26 +523,26 @@ echo "Seed complete."
 
 ---
 
-## 4. Advanced Use Cases
+## 8. Advanced Use Cases
 
 ### Building an API-wrapper skill
 
 You have a backend API. Instead of letting Cline construct curl commands from scratch (and get auth headers wrong), you wrap it:
 
 ```
-skills/
+.cline/skills/
 └── api/
     ├── SKILL.md
-    ├── api-get-user
-    ├── api-create-user
-    ├── api-list-orders
-    └── api-update-order
+    └── scripts/
+        ├── api-get-user.sh
+        ├── api-create-user.sh
+        ├── api-list-orders.sh
+        └── api-update-order.sh
 ```
 
 ```bash
 #!/bin/bash
-# skills/api/api-create-user
-
+# .cline/skills/api/scripts/api-create-user.sh
 set -e
 [ -f .env ] && export $(grep -v '^#' .env | xargs)
 
@@ -418,7 +551,7 @@ ROLE="${2:-user}"
 
 if [ -z "$EMAIL" ]; then
   echo "ERROR: email required" >&2
-  echo "Usage: ./api-create-user email@example.com [role]" >&2
+  echo "Usage: bash api-create-user.sh email@example.com [role]" >&2
   exit 1
 fi
 
@@ -429,72 +562,67 @@ curl -s -X POST "$API_BASE_URL/users" \
   | jq .
 ```
 
-Now Cline calls `./api-create-user test@example.com admin` instead of constructing the curl command. Cline cannot leak the API token in its output, cannot get the auth header format wrong, and cannot call the wrong endpoint.
+Now Cline calls the script instead of constructing curl commands. The API token is never in context, the auth header format is always correct, and the endpoint is always right.
 
 ### Building a deployment skill
 
 ```
-skills/
+.cline/skills/
 └── deploy/
     ├── SKILL.md
-    ├── deploy-staging
-    ├── deploy-prod
-    └── rollback
+    ├── docs/
+    │   └── rollback-procedures.md
+    └── scripts/
+        ├── deploy-staging.sh
+        ├── deploy-prod.sh
+        └── rollback.sh
 ```
 
 ```bash
 #!/bin/bash
-# skills/deploy/deploy-staging
-
+# .cline/skills/deploy/scripts/deploy-staging.sh
 set -euo pipefail
 [ -f .env ] && export $(grep -v '^#' .env | xargs)
 
 VERSION="${1:-$(git rev-parse --short HEAD)}"
 echo "Deploying version $VERSION to staging..."
 
-# Build
 docker build -t "myapp:$VERSION" .
-
-# Push
 docker push "$REGISTRY/myapp:$VERSION"
 
-# Deploy via kubectl or your platform
 kubectl set image deployment/myapp-staging \
   myapp="$REGISTRY/myapp:$VERSION" \
   --record
 
-# Wait for rollout
 kubectl rollout status deployment/myapp-staging --timeout=120s
 
-# Health check
-sleep 5
 HEALTH=$(curl -sf "$STAGING_URL/health" | jq -r '.status')
 if [ "$HEALTH" != "ok" ]; then
   echo "Health check failed: $HEALTH" >&2
-  echo "Run ./rollback staging to revert." >&2
+  echo "Run rollback.sh staging to revert." >&2
   exit 1
 fi
 
 echo "Staging deploy complete. URL: $STAGING_URL"
 ```
 
-This script encapsulates: build, push, deploy, wait, health-check. Cline issues one command. All the failure handling and platform specifics are invisible to the agent.
+This script encapsulates: build, push, deploy, wait, health-check. Cline issues one command. All failure handling and platform specifics are invisible to the agent.
 
 ### Building a monitoring skill
 
 ```
-skills/
+.cline/skills/
 └── monitoring/
     ├── SKILL.md
-    ├── check-logs
-    ├── get-errors
-    └── get-metrics
+    └── scripts/
+        ├── check-logs.sh
+        ├── get-errors.sh
+        └── get-metrics.sh
 ```
 
 ```bash
 #!/bin/bash
-# skills/monitoring/get-errors
-
+# .cline/skills/monitoring/scripts/get-errors.sh
 set -e
 [ -f .env ] && export $(grep -v '^#' .env | xargs)
 
@@ -503,7 +631,6 @@ LIMIT="${2:-20}"
 
 echo "=== Errors in last ${MINUTES} minutes (limit: $LIMIT) ==="
 
-# Query your log aggregation system (Loki, CloudWatch, Datadog, etc.)
 curl -s "$LOKI_URL/loki/api/v1/query_range" \
   --data-urlencode "query={app=\"myapp\"} |= \"ERROR\"" \
   --data-urlencode "start=$(date -d "-${MINUTES} minutes" +%s)000000000" \
@@ -514,88 +641,86 @@ curl -s "$LOKI_URL/loki/api/v1/query_range" \
   | tail -"$LIMIT"
 ```
 
-Cline can now investigate production errors during a debugging task: `./get-errors 30 50`. No credentials in context, no curl flag guessing, clean output.
+Cline can investigate production errors during a debugging task with a single script call. No credentials in context, clean output.
 
 ### Composing skills (one skill's output feeds another)
 
 ```bash
 #!/bin/bash
-# skills/debug/investigate-errors
+# .cline/skills/debug/scripts/investigate-errors.sh
 # Composes monitoring + db-tools skills
 
 set -e
+SKILL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 echo "=== Fetching recent errors ==="
-ERROR_OUTPUT=$(./skills/monitoring/get-errors 30 10)
+ERROR_OUTPUT=$(bash "$SKILL_ROOT/monitoring/scripts/get-errors.sh" 30 10)
 echo "$ERROR_OUTPUT"
 
-# Extract failing user IDs from error logs
 USER_IDS=$(echo "$ERROR_OUTPUT" | grep -oP 'user_id=\K[0-9]+' | sort -u | head -5)
 
 if [ -n "$USER_IDS" ]; then
   echo ""
   echo "=== Looking up affected users ==="
   for UID in $USER_IDS; do
-    ./skills/db-tools/db-query "SELECT id, email, created_at FROM users WHERE id = $UID"
+    bash "$SKILL_ROOT/db-tools/scripts/db-query.sh" \
+      "SELECT id, email, created_at FROM users WHERE id = $UID"
   done
 fi
 ```
 
 You've composed two skills into a higher-level diagnostic command. Cline runs one script and gets both the error context and the affected user data.
 
-### Skills with authentication (storing tokens securely)
+### Handling credentials securely in scripts
 
 Never hardcode credentials in skill scripts. Use environment variables loaded from `.env`:
 
 ```bash
 #!/bin/bash
-# Pattern used in all skill scripts
+# Pattern used in all skill scripts that need credentials
 
-# Load .env from project root (never commit .env to git)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 [ -f "$PROJECT_ROOT/.env" ] && export $(grep -v '^#' "$PROJECT_ROOT/.env" | xargs)
 
-# Validate required vars
+# Validate required vars are present
 : "${API_TOKEN:?ERROR: API_TOKEN not set in .env}"
 : "${DATABASE_URL:?ERROR: DATABASE_URL not set in .env}"
 ```
 
-For more sensitive credentials (production secrets), use a secrets manager and fetch at runtime:
+For production secrets, fetch from a secrets manager at runtime:
 
 ```bash
-# Fetch from AWS Secrets Manager at runtime
 PROD_DB_URL=$(aws secretsmanager get-secret-value \
   --secret-id "myapp/prod/database-url" \
   --query SecretString \
   --output text)
 ```
 
-This way the credential is never written to disk or printed to stdout.
+The credential is never written to disk or printed to stdout.
 
-### Skills the agent uses autonomously during heartbeat
+### Skills designed for autonomous heartbeat use
 
-When an AI agent runs on a heartbeat (scheduled cron), it needs skills that are:
+When Cline runs on a heartbeat (scheduled cron), skills need to be:
 
 1. **Idempotent** — safe to run multiple times with the same result
 2. **Non-interactive** — no prompts, no y/n confirmations
 3. **Self-contained** — all context comes from arguments or environment
 4. **Informative** — clear output the agent can parse and act on
+5. **Exit-code-aware** — use distinct exit codes to signal different outcomes
 
 ```bash
 #!/bin/bash
-# skills/maintenance/check-stale-tasks
+# .cline/skills/maintenance/scripts/check-stale-tasks.sh
 # Designed for autonomous heartbeat use
 
 set -e
-
 THRESHOLD_DAYS="${1:-7}"
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 echo "[$TIMESTAMP] Checking for tasks stale > ${THRESHOLD_DAYS} days..."
 
-# Query AgentDesk (or your task system)
-STALE=$(./skills/agent-desk/ad-tasks \
+STALE=$(ad-tasks \
   --filter "status=in-progress" \
   --filter "updated_before=$(date -d "-${THRESHOLD_DAYS} days" +%Y-%m-%d)" \
   --format json)
@@ -605,40 +730,34 @@ echo "Found $COUNT stale task(s)."
 
 if [ "$COUNT" -gt 0 ]; then
   echo "$STALE" | jq -r '.[] | "STALE: \(.id) — \(.title) (last updated: \(.updated_at))"'
-  exit 2   # non-zero so calling agent knows action is needed
+  exit 2   # non-zero so the calling agent knows action is needed
 fi
 
 echo "No stale tasks found."
 exit 0
 ```
 
-The agent checks the exit code: 0 = nothing to do, 2 = stale tasks found. Clean, parseable, autonomous-friendly.
+The agent checks exit code: 0 = nothing to do, 2 = stale tasks found. Clean, parseable, autonomous-friendly.
 
-### The AgentDesk skill as a reference implementation
+### Using `docs/` for advanced reference without upfront cost
 
-AgentDesk ships with its own skill as the canonical example of how to build one. Study it:
+When a skill has complex domain knowledge — troubleshooting guides, architectural references, edge-case handling — put it in `docs/` and reference it from `SKILL.md`:
 
+```markdown
+# SKILL.md body (excerpt)
+
+## Advanced Reference
+
+For complex scenarios, consult the supporting docs:
+- `docs/troubleshooting.md` — common errors and fixes
+- `docs/cross-account.md` — deploying across AWS accounts
+- `docs/rollback-procedures.md` — step-by-step rollback for each failure mode
+
+These load on-demand. If you encounter an error not covered above,
+check `docs/troubleshooting.md` first.
 ```
-skills/agent-desk/
-├── SKILL.md           ← explains all commands, output formats, error codes
-├── ad-tasks           ← list tasks for a project
-├── ad-task            ← get details of a single task
-├── ad-comment         ← post a comment on a task
-├── ad-create-task     ← create a new task
-├── ad-update-task     ← update task status/assignee
-├── ad-projects        ← list all projects
-├── ad-mentions        ← get tasks where an agent is mentioned
-└── ad-cron-create     ← schedule a recurring job
-```
 
-What makes it a good reference:
-
-1. **SKILL.md is the source of truth** — the agent reads SKILL.md, not the scripts
-2. **Each command does one thing** — `ad-comment` comments, `ad-tasks` lists, they don't overlap
-3. **Consistent output format** — all commands use the same JSON/text conventions
-4. **Error handling is explicit** — non-zero exit codes, error messages to stderr
-5. **Auth is invisible to the agent** — API tokens are handled inside the scripts, not passed as arguments
-6. **Commands are composable** — the agent chains `ad-tasks | ad-task | ad-comment` to do complex operations
+The docs are there when Cline needs them. They never load upfront and never cost tokens when they're not relevant.
 
 ---
 
@@ -647,44 +766,59 @@ What makes it a good reference:
 ### Skill folder structure
 
 ```
-skills/
+.cline/skills/
 └── your-skill/
-    ├── SKILL.md           ← REQUIRED: agent reads this
-    ├── command-one        ← executable script, no extension
-    ├── command-two
-    └── command-three
+    ├── SKILL.md           ← REQUIRED: frontmatter + instructions
+    ├── docs/              ← optional: loaded on-demand, deep reference
+    │   └── advanced.md
+    ├── templates/         ← optional: loaded on-demand, boilerplate
+    │   └── config-template.yml
+    └── scripts/           ← optional: executed, never loaded into context
+        ├── command-one.sh
+        └── command-two.sh
 ```
 
 ### SKILL.md template
 
 ```markdown
+---
+name: skill-name          # must match directory name (kebab-case)
+description: |            # max 1024 chars — determines when Cline activates this skill
+  ACTION_VERB what this skill does. Use when USER_TRIGGER_PHRASES.
+  Works with RELEVANT_FILES or DOMAIN_AREA.
+---
+
 # skill-name
 
 One sentence: what does this skill do and for what system?
 
-## Available Commands
+## Capabilities
 
-| Command        | Description                  | Usage                          |
-|----------------|------------------------------|--------------------------------|
-| command-one    | What it does                 | ./command-one arg1 [arg2]      |
-| command-two    | What it does                 | ./command-two --flag value     |
+| Action | How | Notes |
+|---|---|---|
+| Do thing A | `bash scripts/command-one.sh arg` | When to use |
+| Do thing B | `bash scripts/command-two.sh --flag` | When to use |
 
 ## Environment Variables Required
 
-- VAR_NAME — description of what this is
+- `VAR_NAME` — description of what this is
 
 ## Examples
 
 Typical use case A:
-  ./command-one argument
+  bash scripts/command-one.sh argument
 
 Typical use case B:
-  ./command-two --flag value
+  bash scripts/command-two.sh --flag value
 
 ## Output
 
 Describe what the output looks like so the agent knows how to parse it.
 Exit code 0 = success. Non-zero = error (message on stderr).
+
+## Advanced Reference
+
+See `docs/advanced.md` for edge cases and troubleshooting.
 ```
 
 ### Script template
@@ -693,19 +827,19 @@ Exit code 0 = success. Non-zero = error (message on stderr).
 #!/bin/bash
 set -euo pipefail
 
-# Load environment
+# Load environment from project root .env
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 [ -f "$PROJECT_ROOT/.env" ] && export $(grep -v '^#' "$PROJECT_ROOT/.env" | xargs)
 
 # Parse arguments
 ARG_ONE="$1"
 ARG_TWO="${2:-default_value}"
 
-# Validate
+# Validate required inputs
 if [ -z "$ARG_ONE" ]; then
   echo "ERROR: arg-one is required" >&2
-  echo "Usage: ./command-one <arg-one> [arg-two]" >&2
+  echo "Usage: bash command-one.sh <arg-one> [arg-two]" >&2
   exit 1
 fi
 
@@ -717,38 +851,34 @@ echo "Done."
 exit 0
 ```
 
-### .clinerules snippet to register skills
-
-```markdown
-## Skills
-
-The following skills are available. Read each SKILL.md before using.
-
-| Skill         | Path                          | Use for                        |
-|---------------|-------------------------------|--------------------------------|
-| git-helper    | ./skills/git-helper/SKILL.md  | All git operations             |
-| db-tools      | ./skills/db-tools/SKILL.md    | Database queries and migrations|
-| deploy        | ./skills/deploy/SKILL.md      | Staging and production deploys |
-| monitoring    | ./skills/monitoring/SKILL.md  | Logs, errors, metrics          |
-
-Prefer skill commands over raw shell commands for these domains.
-Always read SKILL.md before first use in a session.
-```
-
-### Decision guide: built-in tool vs. skill
+### Decision guide: skill activation
 
 ```
-Do you need to...
-  ├── Read or write a file?           → use read_file / write_to_file (built-in)
-  ├── Run a general shell command?    → use execute_command (built-in)
-  ├── List or search files?           → use list_files / search_files (built-in)
+Task comes in...
+  ├── Matches a skill description?
+  │     ├── Yes → Cline activates automatically via use_skill
+  │     └── No / uncertain → type / in chat and select manually
   │
-  └── Do something domain-specific?
-        ├── Git operations?           → use git-helper skill
-        ├── Database operations?      → use db-tools skill
-        ├── Deploy something?         → use deploy skill
-        ├── Check production health?  → use monitoring skill
-        └── Manage AgentDesk tasks?   → use agent-desk skill
+  ├── Need deep reference?
+  │     → Cline loads docs/ on-demand (Level 3)
+  │
+  └── Need to run something?
+        → Cline executes scripts/ (output-only cost)
 ```
 
-If you find yourself writing the same `execute_command` invocation more than twice, it belongs in a skill.
+### Storage location decision guide
+
+```
+Who needs this skill?
+  ├── Just this project / team
+  │     → .cline/skills/skill-name/       (version-controlled)
+  │     → .clinerules/skills/skill-name/  (alternative)
+  │
+  └── All my projects (personal workflow)
+        → ~/.cline/skills/skill-name/     (global, macOS/Linux)
+        → C:\Users\NAME\.cline\skills\    (Windows)
+
+Note: global skills take precedence over project skills on name conflicts.
+```
+
+If you find yourself repeating the same domain-specific instructions across multiple tasks, that's a skill waiting to be written. Package it once, and Cline carries that capability forward into every relevant task — automatically.

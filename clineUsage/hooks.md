@@ -4,11 +4,22 @@
 
 ## 1. What Is This Exactly?
 
-Hooks are commands or scripts that Cline fires **automatically** at specific lifecycle events — without you asking, without a prompt, without relying on Cline remembering to do it.
+Hooks are lifecycle event handlers that Cline fires **automatically** at specific points in its execution pipeline — without you asking, without a prompt, without relying on Cline remembering to do it.
 
-You configure them once in your VS Code `settings.json` under the `cline.hooks` key. After that, they run on every matching event, every time, forever — until you remove them.
+There are **two distinct hook systems** depending on which surface of Cline you are using:
 
-### The four hook points
+1. **Plugin Hooks** — for the SDK, CLI, and Kanban. Defined in an `AgentPlugin` and fire at agent lifecycle events.
+2. **VS Code Settings Hooks** — for the VS Code extension only. Configured in `settings.json` under the `cline.hooks` key and run shell commands.
+
+You configure them once. After that, they run on every matching event, every time, forever — until you remove them.
+
+---
+
+### Hook System 1: VS Code Settings Hooks (Extension)
+
+These are the hooks most users encounter first. Configured in your VS Code `settings.json` under `cline.hooks`, they run shell commands at tool-use boundaries.
+
+#### The four VS Code hook events
 
 | Hook event    | When it fires                                              |
 |---------------|------------------------------------------------------------|
@@ -17,15 +28,52 @@ You configure them once in your VS Code `settings.json` under the `cline.hooks` 
 | `OnError`     | When Cline encounters an error during a task               |
 | `Stop`        | After the entire task ends (Cline has finished)            |
 
-### What context each hook receives
+#### What context each hook receives
 
-When a hook fires, Cline passes structured context to your script as environment variables or stdin JSON (depending on how you configure it). The context typically includes:
+When a hook fires, Cline passes structured context to your script as shell variable substitutions in the command string:
 
-- `CLINE_TOOL` — the name of the tool that fired (e.g. `write_to_file`, `execute_command`)
-- `CLINE_PATH` — the file path involved (for file operations)
-- `CLINE_OUTPUT` — the output/result of the tool call
-- `CLINE_ERROR` — the error message (for `OnError` hooks)
-- `CLINE_TASK_ID` — identifier of the current task
+- `${path}` — absolute path of the file involved
+- `${tool}` — name of the tool that fired (e.g. `write_to_file`, `execute_command`)
+- `${output}` — the tool's output/result
+- `${workspaceFolder}` — absolute path to the VS Code workspace root
+- `${command}` — the shell command (for `execute_command` hooks)
+
+---
+
+### Hook System 2: Plugin Hooks (SDK/CLI/Kanban)
+
+When you build with the Cline SDK or run the CLI, you define an `AgentPlugin` with a `hooks` object. These fire at agent lifecycle events — not tool-use events.
+
+#### Official Plugin Hook Types
+
+```typescript
+hooks: {
+  beforeRun()    // fires at execution start — setup, logging
+  afterRun()     // fires after completion — metrics, cleanup
+  beforeModel()  // fires before each LLM call — prompt inspection
+  afterModel()   // fires after each LLM response — response inspection
+  beforeTool()   // fires before tool execution — policy checks, logging
+  afterTool()    // fires after tool execution — result inspection
+  onEvent()      // fires on external events
+}
+```
+
+#### Hook Policies — controlling execution behaviour
+
+Each plugin hook can be configured with a policy object:
+
+```typescript
+{
+  mode: "blocking" | "async",   // blocking waits for the hook to finish; async fires and forgets
+  timeoutMs: 5000,               // how long to wait before timing out
+  retries: 2,                    // retry count on failure
+  failureMode: "fail_open" | "fail_closed"  // fail_open = continue on hook error; fail_closed = abort
+}
+```
+
+Use `fail_open` for logging and observability hooks (a logging failure should not crash the agent). Use `fail_closed` for policy and security hooks (a policy check failure should abort execution).
+
+---
 
 ### Hooks vs. asking Cline to run a command
 
@@ -99,11 +147,15 @@ Hooks = motion detection (fires unconditionally when the event occurs)
 
 **The key insight:** Hooks let you enforce rules that cannot be forgotten or bypassed. If Cline is modifying 40 files in a refactor, every single write will trigger your lint hook — even if Cline "forgot" to mention it would lint, even if the task prompt never mentioned linting.
 
+**Key design principle:** Use hooks for **OBSERVING** (logging, metrics, auditing). Modify agent behaviour via system prompts instead — hooks should not change agent decisions.
+
 ---
 
 ## 3. How to Integrate It in Your Projects
 
-### Where to configure hooks
+### VS Code Settings Hooks
+
+#### Where to configure hooks
 
 **Option A: User-level settings** (applies to all your projects)
 
@@ -115,25 +167,18 @@ File: `<project-root>/.vscode/settings.json`
 
 Workspace settings override user settings, so you can have global defaults and per-project overrides.
 
-### Hook configuration format
+#### Hook configuration format
 
 ```json
 {
   "cline.hooks": {
-    "PostToolUse": [
-      {
-        "matcher": {
-          "tool": "write_to_file",
-          "path": "**/*.ts"
-        },
-        "command": "npm run lint -- --fix ${path}"
-      }
-    ],
-    "Stop": [
-      {
-        "command": "notify-send 'Cline' 'Task completed'"
-      }
-    ]
+    "PostToolUse": [{
+      "matcher": { "tool": "editor", "path": "src/**/*.ts" },
+      "command": "npx tsc --noEmit"
+    }],
+    "Stop": [{
+      "command": "osascript -e 'display notification \"Done\" with title \"Cline\"'"
+    }]
   }
 }
 ```
@@ -150,9 +195,9 @@ cline.hooks
               └── command  (shell command to run; ${path}, ${tool}, ${output} available)
 ```
 
-### Example hooks
+#### Example hooks
 
-#### Auto-run tests after TypeScript writes
+##### Auto-run tests after TypeScript writes
 
 ```json
 {
@@ -172,7 +217,7 @@ cline.hooks
 
 This runs Jest (or your test runner) scoped to the file Cline just edited. Fast, targeted, automatic.
 
-#### Auto-fix ESLint issues after writes to src/
+##### Auto-fix ESLint issues after writes to src/
 
 ```json
 {
@@ -190,7 +235,7 @@ This runs Jest (or your test runner) scoped to the file Cline just edited. Fast,
 }
 ```
 
-#### Auto-format with Prettier after any file edit
+##### Auto-format with Prettier after any file edit
 
 ```json
 {
@@ -209,7 +254,7 @@ This runs Jest (or your test runner) scoped to the file Cline just edited. Fast,
 
 No `path` matcher here — matches all file writes.
 
-#### Show git diff after every tool use (great for debugging/auditing)
+##### Show git diff after every tool use (great for debugging/auditing)
 
 ```json
 {
@@ -225,7 +270,7 @@ No `path` matcher here — matches all file writes.
 
 Output appears in Cline's tool result feed, so you can watch the diff accumulate as Cline works.
 
-#### Desktop notification when task completes
+##### Desktop notification when task completes
 
 ```json
 {
@@ -241,7 +286,7 @@ Output appears in Cline's tool result feed, so you can watch the diff accumulate
 
 On macOS replace `notify-send` with `osascript -e 'display notification "Task completed" with title "Cline"'`.
 
-#### Auto type-check after TypeScript writes
+##### Auto type-check after TypeScript writes
 
 ```json
 {
@@ -261,16 +306,7 @@ On macOS replace `notify-send` with `osascript -e 'display notification "Task co
 
 The `head -50` prevents flooding Cline's context with hundreds of type errors at once.
 
-### Passing hook context to your scripts
-
-When Cline fires a hook, it exposes context as shell variable substitutions in the command string:
-
-```
-${path}            — absolute path of the file involved
-${tool}            — name of the tool that fired (write_to_file, execute_command, etc.)
-${output}          — the tool's output/result
-${workspaceFolder} — absolute path to the VS Code workspace root
-```
+#### Passing hook context to your scripts
 
 For more complex scripts, write a standalone bash script and call it:
 
@@ -304,7 +340,7 @@ npx tsc --noEmit 2>&1 | head -30
 echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) WRITE $FILE_PATH" >> .cline-audit.log
 ```
 
-### Enabling vs. disabling hooks per workspace
+#### Enabling vs. disabling hooks per workspace
 
 To disable hooks for a workspace without deleting the config, add:
 
@@ -314,7 +350,80 @@ To disable hooks for a workspace without deleting the config, add:
 }
 ```
 
-To disable a single hook temporarily, comment it out or add an `"enabled": false` field if Cline supports it, or simply move it to a `_disabled_hooks` key (which Cline ignores).
+To disable a single hook temporarily, comment it out or move it to a `_disabled_hooks` key (which Cline ignores).
+
+---
+
+### Plugin Hooks (SDK/CLI/Kanban)
+
+#### Writing a Plugin with Hooks
+
+```typescript
+import { AgentPlugin } from "@cline/sdk";
+
+const myPlugin: AgentPlugin = {
+  name: "audit-logger",
+  manifest: { capabilities: ["hooks"] },
+  setup() {},  // keep fast and synchronous — runs before first LLM call
+  hooks: {
+    beforeTool({ tool, input }) {
+      console.log(`[audit] Tool: ${tool.name}`, input);
+    },
+    afterRun({ usage }) {
+      console.log(`[metrics] Tokens: ${usage.totalTokens}`);
+    }
+  }
+};
+```
+
+#### Best practices for Plugin Hooks
+
+- Keep `setup()` synchronous and fast — it runs before the first LLM call
+- Register tools only in `setup()`, not inside hook handlers
+- Handle errors in hooks to prevent observation code from crashing the agent
+- Use `fail_open` for logging hooks (don't abort if logging fails)
+- Use `fail_closed` for policy/security hooks (abort if the policy check fails)
+- Use `mode: "async"` for fire-and-forget side effects (metrics, analytics)
+- Use `mode: "blocking"` when the hook result must complete before execution continues
+
+#### Full Plugin example with policies
+
+```typescript
+import { AgentPlugin } from "@cline/sdk";
+
+const securityPlugin: AgentPlugin = {
+  name: "security-policy",
+  manifest: { capabilities: ["hooks"] },
+  setup() {},
+  hooks: {
+    beforeTool: {
+      handler({ tool, input }) {
+        // Block writes to protected paths
+        if (tool.name === "write_to_file" && input.path?.includes("/etc/")) {
+          throw new Error(`[security] Write to ${input.path} is not permitted.`);
+        }
+      },
+      policy: {
+        mode: "blocking",
+        timeoutMs: 2000,
+        failureMode: "fail_closed"   // abort if this hook errors
+      }
+    },
+    afterRun: {
+      handler({ usage }) {
+        fetch("https://metrics.internal/cline", {
+          method: "POST",
+          body: JSON.stringify({ tokens: usage.totalTokens, ts: Date.now() })
+        }).catch(() => {});          // swallow errors — metrics are optional
+      },
+      policy: {
+        mode: "async",               // don't wait for this
+        failureMode: "fail_open"     // continue even if metrics call fails
+      }
+    }
+  }
+};
+```
 
 ---
 
@@ -593,7 +702,7 @@ Because this is a `PreToolUse` hook, it runs before the write completes — Clin
 ## Quick Reference
 
 ```
-Hook timing:
+Hook timing (VS Code extension):
 
   Cline decides to call a tool
           │
@@ -614,9 +723,24 @@ Hook timing:
           │
           ▼  (when entire task done)
   [Stop hook]             ← cleanup, notify, commit, report
+
+
+Plugin hook order (SDK/CLI):
+
+  Agent starts
+      └─► beforeRun()
+              └─► [loop: for each LLM call]
+                      └─► beforeModel()
+                              └─► LLM called
+                                      └─► afterModel()
+                                              └─► [if tool call]
+                                                      ├─► beforeTool()
+                                                      │       └─► tool executes
+                                                      └─► afterTool()
+      └─► afterRun()
 ```
 
-### Hook configuration cheat sheet
+### Hook configuration cheat sheet (VS Code)
 
 ```json
 {
@@ -630,14 +754,25 @@ Hook timing:
         "command": "your-command ${path}"
       }
     ],
-    "PreToolUse": [ ... ],
-    "OnError":    [ ... ],
-    "Stop":       [ ... ]
+    "PreToolUse": [],
+    "OnError":    [],
+    "Stop":       []
   }
 }
 ```
 
-### Available substitutions in command strings
+### Plugin Hook policy cheat sheet
+
+```typescript
+{
+  mode: "blocking",          // "blocking" | "async"
+  timeoutMs: 5000,
+  retries: 2,
+  failureMode: "fail_open"   // "fail_open" | "fail_closed"
+}
+```
+
+### Available substitutions in VS Code hook command strings
 
 | Variable             | Value                                       |
 |----------------------|---------------------------------------------|

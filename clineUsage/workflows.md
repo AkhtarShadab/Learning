@@ -8,6 +8,11 @@ Workflows are not a built-in Cline feature with a special file format or magic f
 
 A **workflow** is a documented, repeatable sequence of prompts, context-setting instructions, and expected outputs that you use every time you perform a specific type of task with Cline.
 
+> **Key design principle from the official docs:**
+> "Cline works best when it has the right context, not just more context."
+>
+> This principle applies directly to workflows: they exist to give Cline precisely the context it needs for a given task type — no more, no less. A good workflow template is a distillation of "what does Cline need to know to do this well?"
+
 ### The problem workflows solve
 
 Ad-hoc prompting — typing whatever feels right each time — produces ad-hoc results. You might write a perfect prompt for "add a new API route" on Tuesday, get great output, and then write a completely different (worse) prompt for the same task on Thursday, miss a step, and introduce a bug. The knowledge of "how to prompt this well" lives only in your head, in that one conversation that will scroll off and be forgotten.
@@ -65,7 +70,68 @@ You paste this into the Cline chat, fill in the blanks, and the rest of the work
 
 ---
 
-## 2. Mental Models
+## 2. Official Built-in Slash Commands
+
+Cline ships with a set of built-in slash commands. These are first-class, official workflow primitives — not conventions you invent, but features Cline provides out of the box. Think of them as the "stdlib" of Cline workflows; your custom workflow templates build on top of them.
+
+Type `/` in the Cline chat input to see and invoke any of these commands.
+
+### The full built-in command set
+
+| Command | What it does |
+|---|---|
+| `/newtask` | Packages essential context and decisions from the current conversation into a fresh task, for when the context window is nearly full |
+| `/smol` | Condenses conversation history while maintaining key insights — cheaper than `/newtask`, good for mid-task context trimming |
+| `/deep-planning` | Transforms Cline into a detailed architect: investigates the codebase, asks clarifying questions, generates a plan, creates tasks |
+| `/newrule` | Establishes a preference or convention and saves it to `.clinerules` for all future sessions |
+| `/explain-changes` | (VS Code only) AI explanation of git diffs — great for understanding what a PR or commit actually did |
+| `/reportbug` | Gathers diagnostics and formats them for filing an issue against Cline |
+
+### When to use each
+
+**`/newtask` — use when context is nearly full**
+
+The context window has a limit. When you're deep in a long session and Cline starts losing track of earlier decisions, `/newtask` is the right move. It doesn't just start a blank chat — it packages the essential information (decisions made, files changed, next steps) so the new task can continue without re-explaining everything.
+
+```
+You: /newtask
+Cline: [summarizes what's been accomplished, open decisions, recommended next steps]
+      [creates a new task with that summary as its starting context]
+```
+
+**`/smol` — use for mid-task context trimming**
+
+Lighter than `/newtask`. If the conversation is getting long but you're not done with the current task, `/smol` compresses the history into a tighter summary without ending the session. Use it when you're in the middle of a workflow and want to reclaim context budget without losing your place.
+
+**`/deep-planning` — use before complex multi-file work**
+
+This is the most powerful command for structured development. When you have a non-trivial task (a new feature that touches multiple files, a refactor with architectural implications), `/deep-planning` causes Cline to:
+
+1. Investigate the relevant parts of the codebase
+2. Ask clarifying questions before assuming
+3. Generate a detailed plan
+4. Create tasks for each piece of the plan
+
+This is the official equivalent of the "Plan mode → Act mode" workflow pattern (covered in section 3). Use `/deep-planning` before writing any code on complex tasks.
+
+**`/newrule` — use when you discover a convention**
+
+When you find yourself repeating the same instruction to Cline across sessions, that's a signal: this should be a rule, not a prompt. Use `/newrule` and Cline will capture the preference into `.clinerules` so it applies automatically going forward.
+
+```
+You: /newrule — always use `const` over `let` unless reassignment is necessary
+Cline: [saves this to .clinerules]
+```
+
+This is how your `.clinerules` file gets smarter over time — not through manual editing alone, but through accumulated `/newrule` invocations as you work.
+
+**`/explain-changes` — use for code review and understanding**
+
+In VS Code, after a git diff, `/explain-changes` gives you a plain-language explanation of what changed and why. Useful for understanding a PR you're reviewing, or for writing a clear commit message for changes you made with Cline's help.
+
+---
+
+## 3. Mental Models
 
 ### Mental Model 1: Standard Operating Procedures (SOPs)
 
@@ -118,9 +184,94 @@ Cline workflow:
 
 The value is the same: predictable process, reviewable steps, improvable over time, shared across the team.
 
+### Mental Model 4: Plan & Act
+
+Cline operates in two distinct modes, and treating them as a deliberate workflow pattern — not just a UI toggle — changes how you work:
+
+- **Plan mode:** Cline explores, reads files, asks questions, and generates a plan. It does NOT modify files. Use this to think through a task before committing to an implementation.
+- **Act mode:** Cline implements. It writes code, runs commands, modifies files.
+
+The recommended workflow pattern is:
+
+```
+Plan mode                    Act mode
+─────────────────────────    ─────────────────────────
+Cline reads codebase         Cline writes code
+Cline asks questions         Cline runs commands
+You review the plan          You review diffs
+You say "go ahead"      →    Cline implements
+```
+
+For complex multi-file tasks, always start in Plan mode (or use `/deep-planning`). Let Cline understand the landscape before touching anything. This prevents the most common Cline mistake: confidently implementing the wrong thing because it didn't read enough first.
+
 ---
 
-## 3. How to Integrate Workflows in Your Projects
+## 4. Giving Cline the Right Context
+
+### Working with Files: The @ Syntax
+
+The official way to point Cline to specific files or directories is the `@` syntax. This is more precise than saying "look at the auth module" — it tells Cline exactly what to read.
+
+**Reference a specific file:**
+```
+@/src/routes/users.ts
+```
+
+**Reference an entire directory (note the trailing slash):**
+```
+@/src/components/
+```
+
+**In practice — a well-formed workflow invocation with @ references:**
+```
+Following docs/workflows/new-api-route.md
+
+Context:
+- Read the existing routes: @/src/routes/
+- Read the API spec: @/docs/API_SPEC.md
+- Read the Zod schemas: @/src/schemas/
+
+Task:
+  Method: POST
+  Path: /api/v1/users/:userId/promote
+  Auth: admin-only
+  Body: { role: "admin" | "moderator" }
+```
+
+### Three ways to add files to a Cline session
+
+1. **`@` in the chat input** — type `@` followed by the path directly in your message
+2. **The `+` button** — browse and select files from the file picker in the Cline UI
+3. **Drag and drop** — drag files directly into the chat panel (hold Shift in VS Code to add without immediately sending)
+
+### What file types Cline can work with
+
+- Text files of any kind (source code, configs, Markdown, etc.)
+- Images (for visual context — UI screenshots, diagrams)
+- PDFs
+- CSVs
+- Excel files
+
+### VS Code Context Menu Integration
+
+In VS Code, right-clicking on any code selection or file opens Cline-specific options:
+
+| Menu item | When to use it |
+|---|---|
+| **Add to Cline** | Start or continue a conversation with the selected code as context |
+| **Fix with Cline** | Address a specific error — Cline sees the error and the code together |
+| **Explain with Cline** | Understand complex or unfamiliar logic |
+| **Improve with Cline** | Get refactoring suggestions for the selected code |
+
+Terminal output and source control diffs also have right-click shortcuts. This means you can:
+- Right-click a failing test's output in the terminal → "Fix with Cline"
+- Right-click a diff in the Source Control panel → "/explain-changes"
+
+These are the official "quick entry points" into Cline from within your editor, rather than switching to the Cline panel and typing from scratch.
+
+---
+
+## 5. How to Integrate Workflows in Your Projects
 
 ### Step 1: Create the workflows folder
 
@@ -185,6 +336,11 @@ Before starting, provide:
 - Request body/params shape: [describe or paste schema]
 - Response shape: [describe what success looks like]
 - Side effects: [DB writes, emails sent, events emitted, etc.]
+
+Reference files for Cline:
+- @/src/routes/          (existing route patterns)
+- @/src/schemas/         (existing Zod schemas)
+- @/docs/API_SPEC.md     (API spec to update)
 
 ## Steps
 
@@ -476,10 +632,15 @@ Context:
 - Response: { success: true, user: { id, email, role } }
 - Side effects: update user.role in DB, send "role changed" email to the promoted user
 
+Reference files:
+- @/src/routes/users.ts
+- @/src/schemas/user.ts
+- @/docs/API_SPEC.md
+
 Please follow all steps in the workflow exactly.
 ```
 
-That's the entire prompt. The workflow template provides all the structure; you provide only the task-specific details.
+That's the entire prompt. The workflow template provides all the structure; you provide only the task-specific details. The `@` references ensure Cline reads the right files before writing anything.
 
 ### Step 5: Reference workflows from `.clinerules`
 
@@ -500,11 +661,12 @@ For standard tasks, always use the workflow template in `docs/workflows/`:
 | Add a new feature end-to-end | `docs/workflows/new-feature.md` |
 
 Before starting any of these task types, read the relevant workflow first.
+Use /deep-planning for any task that touches more than 3 files.
 ```
 
 ---
 
-## 4. Advanced Use Cases
+## 6. Advanced Use Cases
 
 ### Chained workflows
 
@@ -535,6 +697,8 @@ Stage 6 → run: docs/workflows/deploy-checklist.md
 ```
 
 You can run these as separate Cline sessions, or as a single session where you invoke each stage in sequence. The key is that each stage has a defined "done" state (its Output) before the next stage starts.
+
+For complex chains like this, start with `/deep-planning` to let Cline map out which stages apply and in what order, before committing to any implementation.
 
 ### Conditional workflows
 
@@ -585,6 +749,35 @@ Changed from 2.1: Added auth failure test case to Step 4 — found via audit
 ```
 
 This makes it easy to see what changed and why, and it gives you a history of your team's accumulated learning about how to do this task well.
+
+### Agent Teams (CLI/SDK feature)
+
+For large, parallelizable tasks, Cline supports agent teams: a coordinator agent that manages specialist agents working in parallel. This is an advanced workflow pattern for complex projects.
+
+```bash
+cline --team-name auth-sprint "Plan and implement user auth with tests"
+```
+
+What this does:
+- Spins up one **coordinator agent** that owns the plan and task board
+- Spawns **specialist agents** for scoped subtasks (e.g. "implement password hashing", "write auth middleware", "write integration tests")
+- Maintains **persistent state** at `~/.cline/data/teams/[team-name]/` — the team can be resumed across sessions
+- Provides a **task board** with current tasks and status for each agent
+
+**When agent teams make sense:**
+- The feature requires multiple independent pieces that can be worked in parallel
+- The work would fill a single context window many times over
+- You want to see progress on a task board, not just in a linear conversation
+
+**Current availability:** Agent teams work via the Cline SDK and CLI. They are not yet available in the VS Code extension.
+
+**Resuming a team across sessions:**
+```bash
+# Pick up where you left off
+cline --team-name auth-sprint --resume
+```
+
+Contrast this with `/newtask` and `/smol`, which are single-agent context management tools. Agent teams are for true parallelism, not just context trimming.
 
 ### Team-shared workflow libraries in git
 
@@ -693,7 +886,7 @@ Running `make new-route` opens the workflow and reminds you what context to gath
 
 ---
 
-### Full picture: how `.clinerules` and workflows work together
+### Full picture: how `.clinerules`, slash commands, and workflows work together
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -701,8 +894,20 @@ Running `make new-route` opens the workflow and reminds you what context to gath
 │  (always loaded — project rules, architecture, conventions)     │
 │                                                                 │
 │  "For standard tasks, use the workflow in docs/workflows/"      │
+│  "Use /deep-planning for tasks touching >3 files"              │
 └───────────────────────────────┬─────────────────────────────────┘
                                 │ references
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│               Built-in Slash Commands                           │
+│                                                                 │
+│  /deep-planning  ← architect mode, generates plan + tasks      │
+│  /newrule        ← capture a convention into .clinerules       │
+│  /newtask        ← continue across context boundaries          │
+│  /smol           ← compress history mid-task                   │
+│  /explain-changes← understand a diff                           │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │ used within
                                 ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                   docs/workflows/                               │
@@ -719,6 +924,7 @@ Running `make new-route` opens the workflow and reminds you what context to gath
 │                    Cline task session                           │
 │                                                                 │
 │  Developer: "Following new-api-route.md workflow.              │
+│              @/src/routes/users.ts @/docs/API_SPEC.md          │
 │              Context: POST /api/v1/users/:id/promote, ..."     │
 │                                                                 │
 │  Cline: [executes each step in sequence]                       │
@@ -727,13 +933,14 @@ Running `make new-route` opens the workflow and reminds you what context to gath
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-The two tools are complementary and additive:
+The three layers are complementary and additive:
 
-| Tool | Scope | When it applies |
+| Layer | Scope | When it applies |
 |---|---|---|
 | `.clinerules` | Always, automatically | Every Cline session in the project |
-| Workflows | On-demand, per task type | When you invoke a specific workflow |
+| Built-in slash commands | On-demand, ad-hoc | When a specific capability is needed mid-session |
+| Custom workflows | On-demand, per task type | When you invoke a specific workflow template |
 
-`.clinerules` is the constitution. Workflows are the legislation — specific procedures for specific situations, grounded in the same constitutional rules.
+`.clinerules` is the constitution. Slash commands are the standard library. Workflows are the legislation — specific procedures for specific situations, grounded in the same constitutional rules.
 
 Together, they give you AI-assisted development that is consistent, auditable, improvable over time, and transferable across your entire team.

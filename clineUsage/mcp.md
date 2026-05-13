@@ -131,32 +131,39 @@ Example: A `code-review` prompt template that, when invoked, expands into a deta
 
 ### Configuration: Where MCP Lives in Cline
 
-MCP server configuration lives in Cline's settings. In VS Code, this is in the Cline extension settings under "MCP Servers". Internally it is stored in a JSON config that Cline reads on startup and whenever you edit settings.
+MCP server configuration location depends on which Cline surface you are using:
 
-The configuration format:
+- **VS Code extension:** Cline Settings panel → MCP Servers → JSON editor
+- **CLI:** `~/.cline/mcp.json`
+
+The config format uses **direct server objects** — the top-level keys are server names with no wrapper key:
+
 ```json
 {
-  "mcpServers": {
-    "server-name": {
-      "command": "node",
-      "args": ["/path/to/server/build/index.js"],
-      "env": {
-        "API_KEY": "your-secret-key"
-      }
-    }
+  "github": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-github"],
+    "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "your-token" }
+  },
+  "remote-server": {
+    "url": "https://my-server.com/mcp",
+    "headers": { "Authorization": "Bearer token" }
   }
 }
 ```
 
-Each key in `mcpServers` is a logical name for the server. The value tells Cline how to start (for stdio) or connect to (for SSE) that server.
-
-### Transport Types: stdio vs SSE
+### Transport Types: STDIO vs Remote HTTP/SSE
 
 MCP supports two transport mechanisms:
 
-#### stdio (Standard Input/Output) — Local Processes
+#### STDIO (Standard Input/Output) — Local Processes
 
 The default transport for local MCP servers. Cline launches the server as a **child process** and communicates with it over standard input and standard output. JSON-RPC messages are written to the process's stdin and read from its stdout.
+
+- Lower latency
+- Simpler setup
+- Best for servers you install via npm or build locally
+- Best for servers that need local file system or local network access
 
 ```
 Cline Process
@@ -166,51 +173,52 @@ Cline Process
     └── stdout ◄──reads──  MCP Server Process
 ```
 
-Configuration for stdio:
+Configuration for STDIO:
 ```json
 {
-  "mcpServers": {
-    "my-local-server": {
-      "command": "node",
-      "args": ["./build/index.js"],
-      "env": { "DATABASE_URL": "postgres://localhost:5432/mydb" }
-    }
+  "my-local-server": {
+    "command": "node",
+    "args": ["./build/index.js"],
+    "env": { "DATABASE_URL": "postgres://localhost:5432/mydb" }
   }
 }
 ```
 
-This is the approach for:
-- MCP servers you install via npm
-- Custom servers you build and run locally
-- Servers that need access to local file system or local resources
+#### Remote HTTP/SSE — Hosted Endpoints
 
-#### SSE (Server-Sent Events) — Remote Servers over HTTP
+For MCP servers running on a remote host (or as a persistent local service). Cline connects to an HTTP endpoint and communicates over Server-Sent Events.
 
-For MCP servers running on a remote host (or as a persistent local service), you use SSE transport. Cline connects to an HTTP endpoint and receives a stream of events.
+- Supports multiple clients connecting to the same server
+- Centralised auth — team members don't need individual API keys
+- Can access internal network resources from a server with VPN access
+- Best for shared team tool servers
 
 ```
 Cline ──── HTTP POST (requests) ────► Remote MCP Server
 Cline ◄─── HTTP SSE  (responses) ─── Remote MCP Server
 ```
 
-Configuration for SSE:
+Configuration for remote HTTP/SSE — use `url` and optional `headers`:
 ```json
 {
-  "mcpServers": {
-    "remote-analytics-server": {
-      "url": "https://mcp.mycompany.com/analytics",
-      "headers": {
-        "Authorization": "Bearer your-token"
-      }
+  "remote-analytics-server": {
+    "url": "https://mcp.mycompany.com/analytics",
+    "headers": {
+      "Authorization": "Bearer your-token"
     }
   }
 }
 ```
 
-This is the approach for:
-- Shared team tool servers (one deployment, every dev connects)
-- Servers that need persistent state or heavy resources
-- Integrations with cloud services that cannot run locally
+### CLI Management (official commands)
+
+The Cline CLI provides commands for managing MCP configuration without editing JSON by hand:
+
+```bash
+cline mcp                        # Interactive wizard: list, add, edit, enable/disable, delete
+cline config mcp                 # Show current MCP config
+cline config mcp --json          # JSON output for scripting
+```
 
 ### MCP vs. Just Running a Terminal Command
 
@@ -359,35 +367,35 @@ The leverage is compounding. The more MCP servers exist (and there are already h
 
 MCP servers are configured in Cline's settings. Open the Cline extension, click the settings icon (top right of the Cline panel), then navigate to "MCP Servers". You will see a JSON editor.
 
-The full config structure:
+The VS Code extension also has an **MCP Marketplace** accessible from the MCP Servers panel — it allows one-click installation of popular pre-built servers without writing any JSON manually.
+
+The full config structure uses direct server objects (no wrapper key):
 
 ```json
 {
-  "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_your_token_here"
-      }
-    },
-    "postgres": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "postgresql://username:password@localhost:5432/mydb"
-      ]
-    },
-    "brave-search": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
-      "env": {
-        "BRAVE_API_KEY": "your_brave_api_key"
-      }
+  "github": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-github"
+    ],
+    "env": {
+      "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_your_token_here"
+    }
+  },
+  "postgres": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-postgres",
+      "postgresql://username:password@localhost:5432/mydb"
+    ]
+  },
+  "brave-search": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+    "env": {
+      "BRAVE_API_KEY": "your_brave_api_key"
     }
   }
 }
@@ -397,8 +405,19 @@ The full config structure:
 - `command` — the executable to run (e.g., `node`, `npx`, `python`)
 - `args` — command-line arguments passed to the executable
 - `env` — environment variables injected into the server process (use this for API keys, connection strings — never hardcode them in args if they're sensitive)
+- `url` — for remote HTTP/SSE servers, replaces `command`/`args`
+- `headers` — for remote HTTP/SSE servers, HTTP headers sent with every request (use for auth tokens)
 
 After saving, Cline restarts the MCP connections and discovers the new server's tools automatically.
+
+### Security (from official docs)
+
+Before installing any MCP server:
+
+- **Install only trusted, verified servers.** Community servers are not vetted by Anthropic — review their source code or choose well-known packages.
+- **Store secrets in environment variables, never hardcode them** in `args` or the config file. Secrets in `args` appear in process listings.
+- **Limit `autoApprove` to safe, read-only tools only.** Any tool with write, delete, or network side effects should require manual approval.
+- **Review all tool calls before approving** in sensitive contexts (production databases, systems with billing implications, etc.).
 
 ### Popular Pre-Built MCP Servers
 
@@ -409,13 +428,11 @@ After saving, Cline restarts the MCP connections and discovers the new server's 
 **Install and configure:**
 ```json
 {
-  "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_xxxxxxxxxxxxxxxxxxxx"
-      }
+  "github": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-github"],
+    "env": {
+      "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_xxxxxxxxxxxxxxxxxxxx"
     }
   }
 }
@@ -443,15 +460,13 @@ After saving, Cline restarts the MCP connections and discovers the new server's 
 **Install and configure:**
 ```json
 {
-  "mcpServers": {
-    "postgres": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "postgresql://readonly_user:password@localhost:5432/production_db"
-      ]
-    }
+  "postgres": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-postgres",
+      "postgresql://readonly_user:password@localhost:5432/production_db"
+    ]
   }
 }
 ```
@@ -485,13 +500,11 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO mcp_reader;
 **Install and configure:**
 ```json
 {
-  "mcpServers": {
-    "brave-search": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
-      "env": {
-        "BRAVE_API_KEY": "BSA_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-      }
+  "brave-search": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+    "env": {
+      "BRAVE_API_KEY": "BSA_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     }
   }
 }
@@ -514,15 +527,13 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO mcp_reader;
 **Install and configure:**
 ```json
 {
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/path/to/allowed/directory"
-      ]
-    }
+  "filesystem": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-filesystem",
+      "/path/to/allowed/directory"
+    ]
   }
 }
 ```
@@ -557,14 +568,12 @@ You can pass multiple directories:
 **Install and configure:**
 ```json
 {
-  "mcpServers": {
-    "slack": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-slack"],
-      "env": {
-        "SLACK_BOT_TOKEN": "xoxb-your-bot-token",
-        "SLACK_TEAM_ID": "T1234567890"
-      }
+  "slack": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-slack"],
+    "env": {
+      "SLACK_BOT_TOKEN": "xoxb-your-bot-token",
+      "SLACK_TEAM_ID": "T1234567890"
     }
   }
 }
@@ -591,11 +600,9 @@ You can pass multiple directories:
 **Install and configure:**
 ```json
 {
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["-y", "@playwright/mcp"]
-    }
+  "playwright": {
+    "command": "npx",
+    "args": ["-y", "@playwright/mcp"]
   }
 }
 ```
@@ -885,11 +892,9 @@ node build/index.js
 **Add to Cline:**
 ```json
 {
-  "mcpServers": {
-    "project-stats": {
-      "command": "node",
-      "args": ["/absolute/path/to/my-mcp-server/build/index.js"]
-    }
+  "project-stats": {
+    "command": "node",
+    "args": ["/absolute/path/to/my-mcp-server/build/index.js"]
   }
 }
 ```
@@ -1021,13 +1026,11 @@ await server.connect(transport);
 **Config:**
 ```json
 {
-  "mcpServers": {
-    "weather": {
-      "command": "node",
-      "args": ["/path/to/weather-server/build/index.ts"],
-      "env": {
-        "OPENWEATHER_API_KEY": "your_api_key_here"
-      }
+  "weather": {
+    "command": "node",
+    "args": ["/path/to/weather-server/build/index.ts"],
+    "env": {
+      "OPENWEATHER_API_KEY": "your_api_key_here"
     }
   }
 }
@@ -1299,14 +1302,12 @@ await server.connect(transport);
 **Config:**
 ```json
 {
-  "mcpServers": {
-    "project-api": {
-      "command": "node",
-      "args": ["/path/to/project-api-server/build/index.js"],
-      "env": {
-        "API_BASE_URL": "https://api.myapp.com",
-        "API_TOKEN": "your-service-account-token"
-      }
+  "project-api": {
+    "command": "node",
+    "args": ["/path/to/project-api-server/build/index.js"],
+    "env": {
+      "API_BASE_URL": "https://api.myapp.com",
+      "API_TOKEN": "your-service-account-token"
     }
   }
 }
@@ -1324,14 +1325,12 @@ Never put secrets in `args` — they appear in process listings. Always use `env
 
 ```json
 {
-  "mcpServers": {
-    "my-api": {
-      "command": "node",
-      "args": ["/path/to/server/build/index.js"],
-      "env": {
-        "API_KEY": "sk-...",
-        "API_SECRET": "your-secret"
-      }
+  "my-api": {
+    "command": "node",
+    "args": ["/path/to/server/build/index.js"],
+    "env": {
+      "API_KEY": "sk-...",
+      "API_SECRET": "your-secret"
     }
   }
 }
@@ -1502,15 +1501,13 @@ ENV PORT=3100
 CMD ["node", "build/server.js"]
 ```
 
-**Team members connect via SSE config:**
+**Team members connect via remote config:**
 ```json
 {
-  "mcpServers": {
-    "team-tools": {
-      "url": "https://mcp.internal.mycompany.com/mcp",
-      "headers": {
-        "Authorization": "Bearer team-shared-secret"
-      }
+  "team-tools": {
+    "url": "https://mcp.internal.mycompany.com/mcp",
+    "headers": {
+      "Authorization": "Bearer team-shared-secret"
     }
   }
 }
@@ -1913,15 +1910,22 @@ This way, when you have both a `postgres` MCP server and the ability to run `psq
 │                    MCP Quick Reference                           │
 ├─────────────────────────────────────────────────────────────────┤
 │  CONFIG LOCATION                                                 │
-│  Cline → Settings → MCP Servers (JSON editor)                   │
+│  VS Code: Cline Settings → MCP Servers (JSON editor)            │
+│  CLI: ~/.cline/mcp.json                                          │
 │                                                                  │
-│  STDIO SERVER CONFIG                                             │
-│  { "command": "node", "args": ["./build/index.js"],             │
-│    "env": { "API_KEY": "..." } }                                 │
+│  CLI MANAGEMENT                                                  │
+│  cline mcp                   # interactive wizard                │
+│  cline config mcp            # show current config               │
+│  cline config mcp --json     # JSON output for scripting         │
 │                                                                  │
-│  SSE SERVER CONFIG                                               │
-│  { "url": "https://host/mcp",                                   │
-│    "headers": { "Authorization": "Bearer ..." } }               │
+│  STDIO SERVER CONFIG (no wrapper key)                            │
+│  { "my-server": { "command": "node",                            │
+│      "args": ["./build/index.js"],                               │
+│      "env": { "API_KEY": "..." } } }                             │
+│                                                                  │
+│  REMOTE HTTP/SSE SERVER CONFIG                                   │
+│  { "remote": { "url": "https://host/mcp",                       │
+│      "headers": { "Authorization": "Bearer ..." } } }           │
 │                                                                  │
 │  BUILD YOUR SERVER                                               │
 │  npm install @modelcontextprotocol/sdk zod                       │
@@ -1940,5 +1944,11 @@ This way, when you have both a `postgres` MCP server and the ability to run `psq
 │  @modelcontextprotocol/server-filesystem                         │
 │  @modelcontextprotocol/server-slack                              │
 │  @playwright/mcp                                                 │
+│                                                                  │
+│  SECURITY CHECKLIST                                              │
+│  - Install only trusted, verified servers                        │
+│  - Secrets in env vars, never in args                            │
+│  - Limit autoApprove to safe read-only tools                     │
+│  - Review tool calls in sensitive contexts                       │
 └─────────────────────────────────────────────────────────────────┘
 ```
