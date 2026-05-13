@@ -1,32 +1,41 @@
 # Cline Knowledge Base
-> A comprehensive reference guide for using Cline effectively as an AI coding assistant inside VS Code.
+> Comprehensive reference guide based on official Cline documentation (docs.cline.bot).
+> Covers the full platform — SDK, CLI, VS Code extension, Kanban, and all integrations.
 
 ---
 
 ## Table of Contents
 
 1. [What is Cline?](#1-what-is-cline)
-2. [Installation & Setup](#2-installation--setup)
-3. [Core Concepts](#3-core-concepts)
-4. [How Cline Works — Under the Hood](#4-how-cline-works--under-the-hood)
-5. [Cline's Tool Arsenal](#5-clines-tool-arsenal)
-6. [Writing Effective Prompts](#6-writing-effective-prompts)
-7. [Context Management](#7-context-management)
-8. [Custom Instructions & .clinerules](#8-custom-instructions--clinerules)
-9. [MCP — Model Context Protocol](#9-mcp--model-context-protocol)
-10. [Modes: Auto-Approve vs Manual](#10-modes-auto-approve-vs-manual)
-11. [Memory Bank Pattern](#11-memory-bank-pattern)
-12. [Workflows & Best Practices](#12-workflows--best-practices)
-13. [Token Usage & Cost Control](#13-token-usage--cost-control)
-14. [Supported Models & Providers](#14-supported-models--providers)
-15. [Common Pitfalls & Fixes](#15-common-pitfalls--fixes)
-16. [Quick Reference Cheatsheet](#16-quick-reference-cheatsheet)
+2. [Platform Architecture](#2-platform-architecture)
+3. [Installation & Setup](#3-installation--setup)
+4. [Core Concepts](#4-core-concepts)
+5. [Built-in Tools](#5-built-in-tools)
+6. [Plan & Act Mode](#6-plan--act-mode)
+7. [Checkpoints](#7-checkpoints)
+8. [Subagents](#8-subagents)
+9. [Cline Rules (.clinerules)](#9-cline-rules-clinerules)
+10. [Skills](#10-skills)
+11. [Hooks](#11-hooks)
+12. [Plugins](#12-plugins)
+13. [MCP — Model Context Protocol](#13-mcp--model-context-protocol)
+14. [Auto-Approve & YOLO Mode](#14-auto-approve--yolo-mode)
+15. [Kanban Board](#15-kanban-board)
+16. [CLI Usage](#16-cli-usage)
+17. [Supported Models & Providers](#17-supported-models--providers)
+18. [Writing Effective Prompts](#18-writing-effective-prompts)
+19. [Memory Bank Pattern](#19-memory-bank-pattern)
+20. [Token Usage & Cost Control](#20-token-usage--cost-control)
+21. [Common Pitfalls & Fixes](#21-common-pitfalls--fixes)
+22. [Quick Reference Cheatsheet](#22-quick-reference-cheatsheet)
 
 ---
 
 ## 1. What is Cline?
 
-**Cline** (formerly Claude Dev) is an open-source AI coding assistant that lives inside VS Code as an extension. Unlike GitHub Copilot (which autocompletes inline), Cline operates as an **autonomous agent** — it can read files, write code, run terminal commands, search the web, and interact with your entire codebase in a goal-directed way.
+**Cline** is an open-source AI coding agent that integrates with your editor and terminal. It can **read and write files, run terminal commands, use a browser, and help you build features through natural conversation** — with user approval required for all actions by default.
+
+> *"Every action requires your explicit approval. You're always in control."* — Cline docs
 
 ### Key Differentiators
 
@@ -38,68 +47,110 @@
 | Open source | ✅ Yes | ❌ No | ❌ No |
 | MCP tool support | ✅ Yes | ❌ No | ❌ No |
 | Works with any LLM | ✅ Yes | ❌ No | ✅ Partial |
-| Context window control | ✅ Full | ❌ Managed | ✅ Partial |
+| SDK for custom agents | ✅ Yes | ❌ No | ❌ No |
+| Kanban multi-agent board | ✅ Yes | ❌ No | ❌ No |
+| Subagents (parallel research) | ✅ Yes | ❌ No | ❌ No |
+| Checkpoints / undo | ✅ Yes | ❌ No | ✅ Partial |
 
-### Core Philosophy
-Cline follows a **human-in-the-loop** approach — it proposes actions (file writes, terminal commands) and asks for approval before executing, keeping you in control at every step (unless you enable auto-approve).
-
----
-
-## 2. Installation & Setup
-
-### Step 1: Install the Extension
-1. Open VS Code
-2. Go to Extensions (`Ctrl+Shift+X`)
-3. Search for **"Cline"**
-4. Install by **saoudrizwan**
-
-### Step 2: Configure Your API Provider
-Open the Cline panel (left sidebar robot icon) → click the **settings gear** → choose your provider:
-
-```
-Supported Providers:
-- Anthropic (Claude models)         ← Most popular
-- OpenAI (GPT-4o, o1, o3)
-- Google Gemini
-- AWS Bedrock
-- Azure OpenAI
-- Ollama (local models)
-- OpenRouter (aggregator)
-- LM Studio (local)
-- Vertex AI
-```
-
-### Step 3: Set API Key
-- For Anthropic: get key at [console.anthropic.com](https://console.anthropic.com)
-- Paste into Cline settings → API Key field
-- Select model (recommended: `claude-sonnet-4-5` for balance of power/cost)
-
-### Step 4: Verify Setup
-Open Cline panel → type a simple task like:
-```
-List all files in the current directory
-```
-If Cline responds and proposes a tool call → you're good to go.
+### Supported Editors
+VS Code, Cursor, Windsurf, JetBrains (IntelliJ, PyCharm, WebStorm, GoLand), Antigravity, Zed, Neovim (via ACP mode).
 
 ---
 
-## 3. Core Concepts
+## 2. Platform Architecture
 
-### 3.1 Tasks
-A **task** is a single conversation thread with Cline. Each task has:
-- A starting prompt (your instruction)
-- A sequence of tool calls and responses
-- A token counter (tracks cost)
-- Full history saved to disk
+Cline is structured in two layers:
 
-### 3.2 The Agentic Loop
-Cline operates in a loop:
+```
+┌────────────────────────────────────────────────────────────┐
+│                  AGENT CORE (SDK)                          │
+│         @cline/sdk — npm install @cline/sdk                │
+│   The same engine behind ALL Cline applications            │
+│   Node.js 22+ required                                     │
+│                                                            │
+│  Packages:                                                 │
+│  @cline/sdk      → public surface (re-exports all)         │
+│  @cline/core     → Node.js runtime                         │
+│  @cline/agents   → browser-compatible execution            │
+│  @cline/llms     → provider gateway                        │
+│  @cline/shared   → utilities and types                     │
+└──────────────────────────┬─────────────────────────────────┘
+                           │ Powers
+          ┌────────────────┼────────────────┐
+          ▼                ▼                ▼                ▼
+   VS Code/JetBrains     CLI          Kanban Board     Your Custom App
+     Extension        npm i -g cline  npx kanban      (via SDK)
+   IDE integration    Terminal chat   Multi-agent     Build anything
+   File/command       Headless CI     task board      on the same core
+```
+
+### SDK Quick Start
+```typescript
+import { ClineCore } from "@cline/sdk";
+
+const agent = new ClineCore({
+  provider: { type: "anthropic", apiKey: process.env.ANTHROPIC_API_KEY },
+  model: "claude-sonnet-4-6"
+});
+
+agent.on("message", (msg) => console.log(msg));
+await agent.run("Fix the auth bug in middleware.ts");
+```
+
+---
+
+## 3. Installation & Setup
+
+### VS Code / JetBrains Extension
+1. Open VS Code → Extensions (`Ctrl+Shift+X`)
+2. Search **"Cline"** → Install
+3. Open Cline panel → Settings gear → Choose provider → Enter API key
+
+### CLI (Terminal / Headless)
+```bash
+npm i -g cline        # Install globally
+cline                 # Start interactive chat
+cline "fix the bug"   # Headless one-shot
+```
+
+### Kanban (Multi-agent board)
+```bash
+npx kanban            # Launch the web-based task board
+```
+
+### SDK (Custom apps)
+```bash
+npm install @cline/sdk
+```
+
+### Supported Providers
+```
+Anthropic (Claude)    ← Recommended
+OpenAI (GPT-4o, o1)
+Google Gemini
+AWS Bedrock
+Azure OpenAI
+Google Vertex AI
+DeepSeek
+MiniMax
+Qwen
+OpenRouter (aggregator — access 100+ models)
+Ollama (local)
+LM Studio (local)
+30+ other compatible providers
+```
+
+---
+
+## 4. Core Concepts
+
+### 4.1 The Agentic Loop
 ```
 You give instruction
         ↓
 Cline thinks (LLM call)
         ↓
-Cline proposes a tool (read file / write file / run command)
+Cline proposes a tool (read file / run command / search)
         ↓
 You approve (or auto-approve fires)
         ↓
@@ -107,504 +158,745 @@ Tool executes → result returned to Cline
         ↓
 Cline thinks again → proposes next action
         ↓
-... repeat until task is complete ...
+... repeat (can be 10–20 tool calls per prompt) ...
         ↓
-Cline responds with final summary
+Cline responds with final summary (attempt_completion)
 ```
 
-### 3.3 Context Window
-The context window is the LLM's "working memory". Everything — your prompt, file contents, tool results, conversation history — must fit inside it. For Claude Sonnet: **200K tokens**.
+### 4.2 Context Window
+Everything — prompt, file contents, tool results, conversation history — must fit in the LLM's context window. For Claude Sonnet: **200K tokens**.
 
-When the window fills up, Cline compacts old messages to preserve the most recent context. Understanding this is key to avoiding lost context.
+Cline compacts old messages when nearing the limit. Skills use progressive loading (metadata → instructions → resources) to avoid wasting context on inactive capabilities.
 
-### 3.4 System Prompt
-Cline prepends a large system prompt to every task that tells the LLM:
-- What tools are available and how to use them
-- Your OS and shell
-- The current working directory
-- Any custom instructions or `.clinerules` content
+### 4.3 System Prompt
+Cline prepends a system prompt to every task containing:
+- Available tools and their parameters
+- Your OS, shell, working directory
+- Content from `.clinerules` files
+- Any global custom instructions
 
 ---
 
-## 4. How Cline Works — Under the Hood
+## 5. Built-in Tools
 
-```
-┌─────────────────────────────────────────────────┐
-│                    VS Code                       │
-│  ┌──────────┐    ┌─────────────────────────┐   │
-│  │  Cline   │    │    Extension Backend     │   │
-│  │   Chat   │◄──►│  - Tool execution        │   │
-│  │   Panel  │    │  - File R/W              │   │
-│  └──────────┘    │  - Terminal commands     │   │
-│                  │  - Browser (via MCP)     │   │
-│                  └────────────┬────────────┘   │
-└───────────────────────────────┼─────────────────┘
-                                │ API calls
-                    ┌───────────▼────────────┐
-                    │     LLM Provider        │
-                    │  (Anthropic / OpenAI    │
-                    │   / Bedrock / Ollama)   │
-                    └─────────────────────────┘
-```
+Cline ships with **7 core tools** via ClineCore:
 
-### Message Flow
-1. User types prompt in Cline panel
-2. Cline builds a messages array: `[system prompt, user msg, ...history]`
-3. Sends to LLM API
-4. LLM responds with either:
-   - A **tool call** (XML tags like `<read_file>`, `<write_to_file>`)
-   - A **text response** (task complete)
-5. Cline parses the tool call, executes it, appends result to messages
-6. Sends updated messages back to LLM
-7. Repeat until LLM gives a text-only response
-
----
-
-## 5. Cline's Tool Arsenal
-
-Cline has a set of built-in tools the LLM can invoke:
-
-### File Tools
 | Tool | What It Does |
 |---|---|
-| `read_file` | Read full contents of a file |
-| `write_to_file` | Create or overwrite a file completely |
-| `replace_in_file` | Make targeted edits using search/replace blocks |
-| `list_files` | List directory contents (recursive option) |
-| `search_files` | Grep-like search across codebase (regex) |
-| `list_code_definition_names` | List functions/classes in a file |
+| `bash` | Execute shell commands in the terminal |
+| `editor` | View and edit files (targeted or full rewrites) |
+| `read_files` | Batch read multiple files at once |
+| `apply_patch` | Apply unified diffs to files |
+| `search` | Ripgrep-powered codebase search (regex) |
+| `fetch_web` | HTTP requests with HTML-to-markdown conversion |
+| `ask_question` | Ask the user for clarifying input mid-task |
 
-### Terminal Tools
-| Tool | What It Does |
-|---|---|
-| `execute_command` | Run shell command (npm install, git, etc.) |
+> **Note:** Older docs reference XML-style names (`read_file`, `write_to_file`, `execute_command`). The current runtime tools use the names above.
 
-### Browser Tools (requires MCP or built-in)
-| Tool | What It Does |
-|---|---|
-| `browser_action` | Launch browser, click, type, screenshot |
-
-### MCP Tools
-Any tools registered via Model Context Protocol (custom or third-party).
-
-### Communication Tools
-| Tool | What It Does |
-|---|---|
-| `ask_followup_question` | Ask you a clarifying question mid-task |
-| `attempt_completion` | Signal the task is done with a summary |
+### Additional Tool Sources
+- **MCP servers** — tools from any configured MCP server appear alongside built-ins
+- **Plugins** — custom tools added via the plugin system (SDK/CLI/Kanban only)
 
 ### Best Tool Usage Patterns
 ```
-Reading a file before editing:
-  read_file → understand contents → replace_in_file (targeted edit)
-  NOT: write_to_file (full overwrite — loses context)
+Exploring an unfamiliar codebase:
+  search (find key patterns) → read_files (batch read relevant files)
+  NOT: read each file one by one
 
-Exploring a new codebase:
-  list_files (recursive) → read_file (key files) → search_files (find patterns)
+Making a targeted edit:
+  read_files → understand → editor (apply_patch for minimal diff)
+  NOT: full file rewrite if only changing 3 lines
 
 Running tests:
-  execute_command("npm test") → read output → fix errors → re-run
+  bash("npm test") → read output → editor (fix) → bash again
 ```
 
 ---
 
-## 6. Writing Effective Prompts
+## 6. Plan & Act Mode
 
-### The Golden Rule
-**Be specific about what you want, not how to do it.** Cline figures out the how.
+Cline has a **dual-mode system** for structured development:
 
-### Bad vs Good Prompts
+### Plan Mode
+- Explore and strategize **without modifying files**
+- Read codebases, run searches, discuss approaches
+- Context stays focused on understanding, not implementation
 
+### Act Mode
+- File modifications and command execution enabled
+- Conversation history from Plan mode is preserved when switching
+- Implement what was planned
+
+### When to Use Each
+
+| Situation | Mode |
+|---|---|
+| Unfamiliar codebase | Plan first |
+| Architectural decisions | Plan first |
+| Edge case identification | Plan first |
+| Code review | Plan first |
+| Implementing a known solution | Act directly |
+| Routine/small changes | Act directly |
+| Quick bug fix | Act directly |
+
+### Recommended Workflow
 ```
-❌ Bad: "Fix the bug"
-✅ Good: "The login form throws a 401 when the email has uppercase letters.
-          Fix it so authentication is case-insensitive."
-
-❌ Bad: "Make it better"
-✅ Good: "Refactor the fetchUserData() function in src/api/users.ts to use
-          async/await instead of .then() chains, and add error handling."
-
-❌ Bad: "Add tests"
-✅ Good: "Add Vitest unit tests for the calculateScore() function in
-          lib/scoring.ts. Cover edge cases: empty input, all trumps, and
-          a passed-out hand."
-```
-
-### Prompt Structure Template
-```
-[Context] — what part of the codebase / what situation
-[Problem] — what's wrong or what's needed
-[Constraint] — any rules to follow (don't change the API, keep TypeScript strict)
-[Expected outcome] — what done looks like
-```
-
-**Example:**
-```
-Context: The BridgeOnline project uses Socket.io for real-time game state.
-Problem: When a player disconnects and reconnects, they lose their hand.
-Constraint: Don't change the socket event names — clients depend on them.
-Expected outcome: Player reconnects and receives their current hand within 2 seconds.
+1. Start in Plan mode
+2. "Explore the auth module and explain how it works"
+3. "What's the best approach to add OAuth support?"
+4. Switch to Act mode
+5. "Implement the OAuth flow we discussed"
 ```
 
-### Prompts for Common Tasks
+### Deep Planning
+Use `/deep-planning` slash command for complex tasks — triggers extended analysis and creates a comprehensive implementation plan across multiple files before any code is written.
 
-**Explain code:**
-```
-Explain what the handleBid() function in lib/game/bidding.ts does,
-focusing on how it validates bids and updates game state.
-```
-
-**Add a feature:**
-```
-Add a "spectator mode" to the game room. Spectators can join via a URL
-param ?spectate=true, see all cards (but can't play), and receive
-all game state updates via the existing socket events.
-```
-
-**Debug:**
-```
-The test in __tests__/scoring.test.ts line 42 is failing with:
-"Expected 3, received 0". The test checks rubber bonus calculation.
-Find and fix the bug.
-```
-
-**Refactor:**
-```
-The GameRoom component (app/room/[id]/page.tsx) is 800 lines. Extract
-the bidding UI into a separate BiddingPanel component in components/game/.
-Keep all existing props and socket handlers intact.
-```
+### Dual-Model Setup
+Configure different models per mode:
+- **Plan mode** → stronger reasoning model (Claude Opus) for architecture
+- **Act mode** → faster model (Claude Sonnet) for implementation
 
 ---
 
-## 7. Context Management
+## 7. Checkpoints
 
-### What Eats Your Context Window
+Checkpoints let you **undo file changes while keeping conversation history**.
 
-| Source | Size | Notes |
+### How It Works
+- Cline maintains a **shadow Git repository** completely separate from your project's git
+- A checkpoint is created **after every file edit or command execution**
+- Your real git history stays clean and unaffected
+- Checkpoints capture **all files**, including those not tracked by git
+
+```
+Your Project Git:    A ──── B ──── C          (your commits, untouched)
+Cline Shadow Git:    ●──●──●──●──●──●──●      (checkpoint after every action)
+                     ↑                  ↑
+                  task start         rollback here
+```
+
+### Restoration Options
+
+| Action | What It Does |
+|---|---|
+| **Restore Files** | Revert code changes, keep conversation history |
+| **Restore Task Only** | Remove subsequent messages, keep file changes |
+| **Restore Files & Task** | Reset both files and conversation simultaneously |
+
+### Practical Use
+- Makes **auto-approve safer** — failed experiments can be rolled back instantly
+- Compare diffs before deciding to keep or revert changes
+- Persists across multiple editor sessions
+
+> **Performance note:** Large repositories may see slowdowns. Disable in Settings → Feature Settings if needed.
+
+---
+
+## 8. Subagents
+
+Subagents let Cline **spawn parallel research agents** to explore your codebase without consuming your main context window.
+
+### What Subagents Can Do
+- ✅ Read files
+- ✅ Search code (ripgrep)
+- ✅ List directories
+- ✅ Execute read-only commands
+- ✅ Use Skills
+
+### What Subagents Cannot Do
+- ❌ Edit files
+- ❌ Use browser
+- ❌ Access MCP servers
+- ❌ Create nested subagents
+
+### When to Use
+```
+✅ Onboarding an unfamiliar project (explore in parallel)
+✅ Investigating cross-cutting concerns simultaneously
+✅ Pre-edit research across many related files
+✅ Large codebase exploration without sequential context fill
+
+❌ Small focused tasks (target files already known)
+❌ Anything requiring file edits
+```
+
+### Triggering Subagents
+Cline decides autonomously when parallel research helps. You can also request explicitly:
+```
+"Use subagents to explore how authentication works and where
+the database models are defined."
+```
+
+### Permissions
+Subagent launches follow your **"Read project files"** auto-approve setting — if enabled, they launch without prompting.
+
+---
+
+## 9. Cline Rules (.clinerules)
+
+Cline Rules are markdown files that define **persistent instructions** loaded at the start of every task — without you having to repeat them.
+
+### Storage Locations
+
+| Type | Location | Scope |
 |---|---|---|
-| System prompt | ~8-12K tokens | Fixed, always present |
-| `.clinerules` | Varies | Your custom instructions |
-| File contents | Varies | Biggest variable |
-| Tool results | Varies | Terminal output, search results |
-| Conversation history | Grows | Compacted when near limit |
+| **Workspace rules** | `.clinerules/` folder at project root | Team / project |
+| **Global rules** | `~/Documents/Cline/Rules/` (macOS/Linux) | All projects |
+| **Single file** | `.clinerules` at project root | Legacy format |
 
-### Strategies to Preserve Context
+> Workspace rules override global rules when conflicts occur.
 
-**1. Be specific about files**
-```
-❌ "Look at the codebase and fix the auth bug"
-✅ "Look at middleware.ts and app/api/auth/route.ts and fix the auth bug"
-```
-This prevents Cline from reading dozens of irrelevant files.
+### Supported Rule Formats (Auto-detected)
 
-**2. Start new tasks for new problems**
-Each task gets a fresh context. Don't try to fix 10 unrelated bugs in one task — split them up.
+| Format | File/Folder | Purpose |
+|---|---|---|
+| Cline Rules | `.clinerules/` | Primary format |
+| Cursor Rules | `.cursorrules` | Auto-detected |
+| Windsurf Rules | `.windsurfrules` | Auto-detected |
+| OpenAI Agents | `AGENTS.md` | Cross-tool compatibility |
 
-**3. Summarize before long operations**
-Before Cline dives into a big refactor, ask it to:
-```
-First, summarize your plan in bullet points before making any changes.
-```
-This forces structured thinking and is cheaper than trial-and-error.
+### Creating Rules
+Access via the **scale icon** in the Cline panel → create new rule files → write markdown → toggle rules on/off individually.
 
-**4. Use `.clinerules` for persistent context**
-Project-level rules that always load — saves re-explaining every task (see section 8).
+### Conditional Rules (Advanced)
+Rules that activate **only for specific file paths** using YAML frontmatter:
 
-### Context Window Indicator
-Cline shows a token counter in the task header. Watch it — when it approaches the model's limit, consider:
-- Starting a new task with a focused scope
-- Asking Cline to summarize progress and continue fresh
-
+```yaml
+---
+paths:
+  - "src/components/**"
+  - "*.test.ts"
 ---
 
-## 8. Custom Instructions & .clinerules
-
-### Global Custom Instructions
-In Cline Settings → **Custom Instructions** — applies to ALL tasks:
-```
-- Always use TypeScript strict mode
-- Prefer functional components over class components
-- Write tests for any new functions you create
-- Never use `any` type without a comment explaining why
-- Follow the existing code style — check nearby files first
+# Component Rules
+- Always use functional components
+- Export component as default
+- Co-locate tests with components
 ```
 
-### .clinerules (Project-level)
-Create a `.clinerules` file in your project root. Cline loads it automatically at the start of every task in that project.
+This prevents context bloat — irrelevant rules don't load unless you're working on matching files.
 
-**Example `.clinerules` for BridgeOnlineNEXTJS:**
+### Example .clinerules for BridgeOnline
 ```markdown
 # BridgeOnline — Cline Rules
 
 ## Stack
 - Next.js 15 (App Router), React 19, TypeScript strict
-- PostgreSQL via Prisma ORM
-- Socket.io for real-time
-- NextAuth.js v5 for auth
-- Tailwind CSS + shadcn/ui
+- PostgreSQL via Prisma ORM — import client from lib/prisma.ts ONLY
+- Socket.io for real-time — events defined in types/socket.ts
+- NextAuth.js v5 — userId lives at session.user.id
 
-## Code Style
-- Use async/await, never .then() chains
-- All API routes return { data, error } shape
-- Socket events are defined in types/socket.ts — don't add new ones without updating types
-- Game logic lives in lib/game/ — keep it pure (no DB calls, no socket emits)
+## Architecture Boundaries
+- lib/game/ → pure functions ONLY (no DB calls, no socket emits)
+- API routes → return { data, error } shape always
+- Server socket → in server/index.js, NOT in Next.js API routes
+
+## Forbidden Patterns
+- Never: new PrismaClient() — use the singleton
+- Never: .then() chains — use async/await
+- Never: `any` type without explaining why in a comment
 
 ## Testing
+- Run `npm test` before marking any task done
 - Unit tests: Vitest in __tests__/
-- E2E tests: Playwright in __tests__/e2e/
-- Always run `npm test` before saying a task is done
-
-## Common Gotchas
-- Prisma client is a singleton — import from lib/prisma.ts, never new PrismaClient()
-- Socket server is in server/index.js — Next.js API routes can't emit socket events directly
-- Auth session uses JWT strategy — userId is in session.user.id
+- E2E: Playwright in __tests__/e2e/
 ```
 
-### .clinerules Best Practices
-- Keep it under 2000 tokens (it loads on every task)
-- Focus on project-specific facts Cline couldn't guess
-- Update it when you discover new gotchas
-- Include the tech stack, naming conventions, and forbidden patterns
+### Writing Effective Rules
+- ✅ Be specific, not generic ("use async/await, never .then()" not "write clean code")
+- ✅ Include the *why* alongside the *what*
+- ✅ Keep under **5K tokens** per file — skills handle larger docs better
+- ✅ Focus each file on a single concern
+- ✅ Update when you discover new gotchas
+- ❌ Don't put things in rules that Cline could infer from reading the code
 
 ---
 
-## 9. MCP — Model Context Protocol
+## 10. Skills
 
-**MCP** is an open standard that lets Cline connect to external tools and data sources beyond its built-in toolkit.
+Skills are **modular instruction sets** that extend Cline's capabilities for specific tasks. Unlike rules (always loaded), skills use **progressive loading** — only the metadata is always active; full instructions load on-demand.
 
-### What MCP Enables
+### Loading Levels
+
+| Level | Size | When Loaded |
+|---|---|---|
+| Metadata | ~100 tokens | Always (skill name + description) |
+| Instructions | < 5K tokens | When skill is triggered |
+| Resources | Varies | As needed during execution |
+
+### Directory Structure
 ```
-Cline + MCP Servers
-├── Browser automation (Puppeteer, Playwright)
-├── Database queries (PostgreSQL, SQLite)
-├── File systems (remote / cloud)
-├── APIs (GitHub, Slack, Linear, Notion)
-├── Web search (Brave, Perplexity)
-└── Custom tools (anything you build)
+.cline/skills/              ← Project-scoped (team-shared via git)
+  my-skill/
+    SKILL.md                ← Required: manifest + instructions
+    docs/                   ← Optional: extended documentation
+    templates/              ← Optional: reusable templates
+    scripts/                ← Optional: helper scripts
+
+~/.cline/skills/            ← Global (available in all projects)
 ```
 
-### Setting Up MCP
-1. Open Cline Settings → **MCP Servers**
-2. Click **Add Server**
-3. Enter the server config (JSON):
+### SKILL.md Format
+```yaml
+---
+name: git-helper            # Must match directory name (kebab-case)
+description: |              # Max 1024 characters — this is what Cline reads
+  Helps with git operations: creating branches, writing commit messages,
+  reviewing diffs, and creating PRs. Trigger phrases: "commit this",
+  "create a PR", "what changed", "git workflow".
+---
 
+# Git Helper
+
+## Commands
+- `git-status` — show working tree status with summary
+- `git-commit` — stage and commit with generated message
+- `git-pr` — create a pull request with auto-generated description
+
+## Usage
+Run any command via bash. Always check exit codes.
+```
+
+### Activating Skills
+1. **Automatic** — Cline detects when your request matches the skill description
+2. **Manual** — type `/` in chat to see available skills and invoke by slash command
+
+### Creating a Simple Skill
+```
+.cline/skills/db-tools/
+├── SKILL.md
+└── scripts/
+    ├── db-query.sh
+    └── db-migrate.sh
+```
+
+`SKILL.md`:
+```yaml
+---
+name: db-tools
+description: |
+  Database utilities for PostgreSQL. Trigger for: "run a query",
+  "check the database", "migrate", "seed data". Works with psql and Prisma.
+---
+
+## db-query
+Run: `bash scripts/db-query.sh "SELECT * FROM users LIMIT 10"`
+
+## db-migrate
+Run: `bash scripts/db-migrate.sh` — runs pending Prisma migrations
+```
+
+---
+
+## 11. Hooks
+
+Hooks are commands that **fire automatically at Cline lifecycle events** — configured in VS Code settings, not in `.clinerules`.
+
+> **Key difference from rules:** Rules tell Cline what to do (LLM follows them). Hooks are infrastructure — they execute automatically regardless of what the LLM decides.
+
+### Hook Points
+| Event | When It Fires |
+|---|---|
+| `PreToolUse` | Before Cline executes any tool |
+| `PostToolUse` | After a tool finishes executing |
+| `OnError` | When a tool or LLM call fails |
+| `Stop` | When a task completes |
+
+### Configuration (VS Code settings.json)
 ```json
 {
-  "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-token-here"
+  "cline.hooks": {
+    "PostToolUse": [
+      {
+        "matcher": { "tool": "editor", "path": "src/**/*.ts" },
+        "command": "npx tsc --noEmit"
+      },
+      {
+        "matcher": { "tool": "editor" },
+        "command": "npx eslint --fix ${file}"
       }
-    },
-    "postgres": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres"],
-      "env": {
-        "POSTGRES_URL": "postgresql://localhost/mydb"
+    ],
+    "Stop": [
+      {
+        "command": "osascript -e 'display notification \"Cline task done\" with title \"Cline\"'"
       }
-    }
+    ]
   }
 }
 ```
 
+### Practical Hook Examples
+```
+After writing a TypeScript file → run tsc type check
+After any file edit           → run eslint --fix
+After any file edit           → run prettier --write
+When task stops               → desktop notification
+After writing test files      → run npm test automatically
+```
+
+### Advanced: Audit Hook
+Log every file Cline touches:
+```json
+{
+  "PostToolUse": [{
+    "matcher": { "tool": "editor" },
+    "command": "echo \"$(date): edited ${file}\" >> ~/.cline-audit.log"
+  }]
+}
+```
+
+---
+
+## 12. Plugins
+
+Plugins extend Cline with **custom tools, lifecycle hooks, slash commands**, and more.
+
+> ⚠️ **Availability:** Plugins only work in **Cline SDK, CLI, and Kanban**. Not available in VS Code/JetBrains extensions currently.
+
+### Installing Plugins
+```bash
+# From git repo
+cline plugin install https://github.com/owner/repo.git
+cline plugin install https://github.com/owner/repo.git@v1.2.0  # specific version
+
+# From npm
+cline plugin install npm:@scope/my-plugin
+
+# From local path
+cline plugin install ./my-plugin
+cline plugin install /absolute/path/to/plugin.ts
+```
+
+### Plugin Directory Structure
+```
+~/.cline/plugins/           ← Global plugins (all sessions)
+  _installed/
+    npm/                    ← npm-sourced
+    git/                    ← git-sourced
+    local/                  ← local-sourced
+
+.cline/plugins/             ← Project-scoped plugins
+```
+
+### Plugin Manifest (package.json)
+```json
+{
+  "name": "my-cline-plugin",
+  "version": "1.0.0",
+  "cline": {
+    "plugins": [
+      {
+        "paths": ["./index.ts"],
+        "capabilities": ["tools", "hooks"]
+      }
+    ]
+  },
+  "peerDependencies": {
+    "@cline/core": "*"
+  }
+}
+```
+
+### Reference Plugin
+The **typescript-lsp-plugin** is a good reference implementation — adds a `goto_definition` tool using the TypeScript Language Service to resolve symbols through imports and re-exports (much more precise than text search):
+```bash
+cline plugin install https://github.com/cline/typescript-lsp-plugin.git
+```
+
+---
+
+## 13. MCP — Model Context Protocol
+
+**MCP** is an open standard by Anthropic that defines how AI models communicate with external tools and data sources — the **USB standard for AI tools**.
+
+### Architecture
+```
+┌─────────────────┐     MCP Protocol      ┌──────────────────┐
+│   Cline         │ ◄──────────────────► │  MCP Server      │
+│  (MCP Client)   │   Tools/Resources/    │  (GitHub, DB,    │
+│                 │   Prompts             │   Browser, etc.) │
+└─────────────────┘                       └──────────────────┘
+```
+
+### Transport Types
+| Type | Config Key | Best For |
+|---|---|---|
+| **STDIO** (local process) | `command` + `args` | Low latency, local tools |
+| **Remote HTTP/SSE** | `url` + `headers` | Hosted servers, multi-client |
+
+### Configuration (~/.cline/mcp.json or IDE settings)
+```json
+{
+  "github": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-github"],
+    "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "your-token" }
+  },
+  "postgres": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-postgres"],
+    "env": { "POSTGRES_URL": "postgresql://localhost/mydb" }
+  },
+  "remote-tool": {
+    "url": "https://my-mcp-server.com/mcp",
+    "headers": { "Authorization": "Bearer token" }
+  }
+}
+```
+
+### CLI Management
+```bash
+cline mcp            # List, add, edit, enable/disable, delete servers
+cline config mcp     # Show current MCP config
+cline config mcp --json  # JSON output for scripting
+```
+
 ### Popular MCP Servers
-| Server | Use Case |
+| Server | Capability |
 |---|---|
-| `@modelcontextprotocol/server-github` | Read/write GitHub issues, PRs, code |
-| `@modelcontextprotocol/server-postgres` | Query PostgreSQL directly |
+| `@modelcontextprotocol/server-github` | Issues, PRs, repos, code |
+| `@modelcontextprotocol/server-postgres` | Direct DB queries |
 | `@modelcontextprotocol/server-brave-search` | Web search |
-| `@modelcontextprotocol/server-filesystem` | Access remote file systems |
-| `@modelcontextprotocol/server-slack` | Send/read Slack messages |
+| `@modelcontextprotocol/server-filesystem` | Remote file systems |
+| `@modelcontextprotocol/server-slack` | Send/read messages |
 | `mcp-server-playwright` | Browser automation |
 
-### Building a Custom MCP Server
-```typescript
-// Simple MCP server in TypeScript
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+### MCP Primitives
+- **Tools** — callable functions (like `get_issue`, `run_query`)
+- **Resources** — readable data exposed as context (DB schemas, API specs, docs)
+- **Prompts** — reusable prompt templates the AI can invoke
 
-const server = new Server({ name: "my-tool", version: "1.0.0" });
-
-server.setRequestHandler("tools/list", async () => ({
-  tools: [{
-    name: "get_weather",
-    description: "Get current weather for a city",
-    inputSchema: {
-      type: "object",
-      properties: { city: { type: "string" } },
-      required: ["city"]
-    }
-  }]
-}));
-
-server.setRequestHandler("tools/call", async (request) => {
-  if (request.params.name === "get_weather") {
-    const city = request.params.arguments.city;
-    // fetch weather API...
-    return { content: [{ type: "text", text: `Weather in ${city}: 72°F, sunny` }] };
-  }
-});
-
-const transport = new StdioServerTransport();
-await server.connect(transport);
-```
+### Security Guidelines
+- Install only trusted, verified servers
+- Store secrets in environment variables (never hardcode)
+- Limit `autoApprove` to genuinely safe operations
+- Review tool calls before approving in sensitive contexts
 
 ---
 
-## 10. Modes: Auto-Approve vs Manual
+## 14. Auto-Approve & YOLO Mode
 
-### Manual Mode (Default — Recommended for beginners)
-Cline proposes every action, you click **Approve** or **Reject** before it executes.
-
-```
-Cline: "I'll write the following to src/auth.ts: ..."
-You: [Approve] → file is written
-     [Reject]  → Cline tries a different approach
-```
-
-**Best for:** Learning, sensitive codebases, production files, any destructive operation.
-
-### Auto-Approve Settings
-In Cline settings you can enable auto-approval for specific action types:
-
-| Setting | What Gets Auto-Approved |
+### Permission Categories (8 types)
+| Permission | What It Controls |
 |---|---|
-| Read files | All `read_file` calls |
-| Write files | All `write_to_file` / `replace_in_file` |
-| Execute commands | All `execute_command` calls ⚠️ Dangerous |
-| Browser actions | All browser interactions |
-| MCP tools | All MCP tool calls |
+| Read project files | Files inside your workspace |
+| Read outside workspace | Files anywhere on the system |
+| Edit project files | Writes inside your workspace |
+| Edit outside workspace | Writes anywhere on system |
+| Terminal — safe commands | Build, test, read-only commands |
+| Terminal — all commands | Any command including destructive ones |
+| Browser access | All browser tool actions |
+| MCP server access | All MCP tool calls |
 
-**Recommended auto-approve config:**
+> **Hierarchical:** Broader permissions (e.g. "Read all files") only work if their base toggle is enabled.
+
+### Command Classification
+Cline dynamically assigns a `requires_approval` flag per command — not a fixed list:
+- **Auto-safe:** build commands, read-only queries, package installs
+- **Requires approval:** deletions, in-place modifications, network requests, config changes
+
+### Recommended Setup for Development
 ```
-✅ Auto-approve: read files (safe, just reading)
-⚠️  Manual: write files (review before changes land)
-❌ Never auto-approve: execute commands in production
+✅ Auto-approve: Read project files (safe — just reading)
+⚠️  Manual:      Edit project files (review before landing)
+⚠️  Manual:      Terminal commands (until you know what's running)
+❌  Disabled:    Edit outside workspace (dangerous)
+❌  Disabled:    Terminal — all commands (use with Checkpoints only)
 ```
 
-### The `--dangerously-skip-permissions` Flag
-Running Cline in headless/CLI mode for CI pipelines:
+### YOLO Mode
+Auto-approves **all** actions with zero prompts — including destructive terminal commands, files anywhere on the system, and all MCP tools.
+
+**Risks:** unintended deletion, system config changes, unauthorized network requests, git history modification.
+
+**Safe YOLO usage:**
+- Isolated/throwaway environments only
+- Give very specific instructions (not vague ones)
+- Monitor output actively
+- Always have version control as a recovery mechanism
+- Use Checkpoints before enabling
+
+---
+
+## 15. Kanban Board
+
+The Cline Kanban is a **web-based task board for parallel multi-agent execution**.
+
 ```bash
-# Use only in sandboxed environments
-cline --dangerously-skip-permissions "run all tests and fix failures"
+npx kanban    # Launch the board
+```
+
+### Key Features
+- **Per-card worktrees** — each task runs in an isolated git worktree
+- **Auto-commit** — changes are committed automatically as agents work
+- **Dependency chains** — define task order with dependencies
+- **Parallel execution** — multiple agents work simultaneously on different cards
+- **Remote access** — access the board from anywhere
+
+### Workflow
+```
+Create cards (tasks) on the board
+        ↓
+Agents pick up cards (via dispatcher)
+        ↓
+Each agent works in its own git worktree
+        ↓
+Changes auto-committed as agent progresses
+        ↓
+Human reviews and merges when done
 ```
 
 ---
 
-## 11. Memory Bank Pattern
+## 16. CLI Usage
 
-Because Cline starts fresh each task, a **Memory Bank** is a folder of markdown files that gives Cline persistent project knowledge.
-
-### Standard Memory Bank Structure
-```
-.cline/memory-bank/
-├── projectbrief.md       — What the project is, goals, non-goals
-├── productContext.md     — Why it exists, user problems it solves
-├── systemPatterns.md     — Architecture decisions, design patterns used
-├── techContext.md        — Tech stack, setup, environment quirks
-├── activeContext.md      — Current work in progress (updated each session)
-└── progress.md           — What's done, what's next, known issues
+### Interactive Mode
+```bash
+cline                           # Start conversational session
+cline --model claude-sonnet-4-6 # Specify model
+cline --cwd /path/to/project    # Set working directory
 ```
 
-### How to Use It
-**Start every task with:**
-```
-Read all files in .cline/memory-bank/ to understand the project context,
-then [actual task here].
-```
-
-**End every significant task with:**
-```
-Update .cline/memory-bank/activeContext.md and progress.md with what
-was completed in this session and what's next.
+### Headless / Scripting Mode
+```bash
+cline "fix the failing tests"                    # One-shot task
+cline "migrate the database" --yes               # Auto-approve all
+cline "generate docs" --output-format json       # JSON output
 ```
 
-### Example `activeContext.md`
-```markdown
-# Active Context — Last Updated: 2026-05-11
+### Agent Teams (CLI)
+```bash
+# Run multiple agents on different tasks in parallel
+cline agent-teams --config teams.json
+```
 
-## Current Focus
-Implementing spectator mode (GitHub issue #42)
+### Scheduling
+```bash
+# Schedule recurring tasks
+cline schedule --cron "0 9 * * *" "run daily test suite and report failures"
+```
 
-## What Was Done Last Session
-- Added `?spectate=true` URL param handling in middleware.ts
-- Created SpectatorContext in app/room/[id]/layout.tsx
-- Spectators now receive game-state socket events
-
-## What's Next
-- Hide the bidding controls for spectators
-- Add spectator count display in the room header
-- Test with Playwright (spectator joining mid-game)
-
-## Known Issues
-- Spectators briefly see their "hand" before the spectator guard fires — fix in next session
+### MCP Management
+```bash
+cline mcp                        # Interactive MCP management wizard
+cline mcp add github             # Add from marketplace
+cline mcp list                   # Show all configured servers
 ```
 
 ---
 
-## 12. Workflows & Best Practices
+## 17. Supported Models & Providers
 
-### Workflow 1: Starting a New Feature
-```
-1. "Read .cline/memory-bank/ for context."
-2. "Explain your implementation plan for [feature] before writing any code."
-3. Review the plan → request changes if needed
-4. "Implement the plan step by step."
-5. "Run the tests and fix any failures."
-6. "Update the memory bank with what was done."
-```
+### Recommended Models
 
-### Workflow 2: Debugging a Bug
-```
-1. Share the exact error message + stack trace in your prompt
-2. "Find the root cause in the codebase — don't fix yet, just diagnose."
-3. Review diagnosis → confirm it's correct
-4. "Now fix it with the minimal change needed."
-5. "Write a regression test to cover this bug."
-```
+| Model | Best For | Context |
+|---|---|---|
+| `claude-sonnet-4-6` | General development, Act mode | 200K |
+| `claude-opus-4` | Complex architecture, Plan mode | 200K |
+| `claude-haiku-3-5` | Simple edits, fast iteration | 200K |
+| `gpt-4o` | General use, web tasks | 128K |
+| `gemini-2.0-flash` | Speed + cost balance | 1M |
+| `deepseek-coder` | Code-focused, cost-efficient | 64K |
+| Local (Ollama) | Privacy, offline, zero cost | Varies |
 
-### Workflow 3: Code Review
+### Dual-Model Configuration (Plan & Act)
 ```
-"Review the changes in the following files for:
- - Logic errors
- - Missing error handling
- - Security issues (SQL injection, XSS, etc.)
- - TypeScript type safety
- - Test coverage gaps
-Files: [list them]"
+Plan mode  → claude-opus-4        (stronger reasoning for architecture)
+Act mode   → claude-sonnet-4-6    (faster for implementation)
 ```
 
-### Workflow 4: Learning a New Codebase
-```
-"List all files in the project recursively.
-Then read the package.json, README, and main entry point.
-Give me a 10-bullet summary of how this codebase is structured
-and what it does."
-```
+### Provider Setup
+```bash
+# Anthropic
+API Key: console.anthropic.com → API Keys
 
-### General Best Practices
-- ✅ **One task per conversation** — scope tightly, start new tasks often
-- ✅ **Approve file reads freely** — it's just reading
-- ✅ **Review file writes carefully** — especially in shared/production files
-- ✅ **Keep `.clinerules` updated** — it's your project's constitution
-- ✅ **Use the Memory Bank** for any project longer than 1 session
-- ✅ **Ask for a plan first** on large tasks
-- ❌ **Don't give huge vague tasks** — "rewrite the whole app" never works well
-- ❌ **Don't let context fill up** — split big tasks into smaller ones
-- ❌ **Don't auto-approve terminal commands** unless you know what's running
+# OpenRouter (access 100+ models with one key, with fallback routing)
+API Key: openrouter.ai → Keys
+
+# Ollama (local, free, private)
+ollama pull llama3.2
+ollama pull codellama
+# Cline provider: "Ollama", URL: http://localhost:11434
+
+# AWS Bedrock (three auth methods)
+# 1. API key  2. CLI profile  3. IAM credentials
+```
 
 ---
 
-## 13. Token Usage & Cost Control
+## 18. Writing Effective Prompts
 
-### How Tokens Are Counted
-Every API call sends the **entire conversation** — system prompt + all messages + tool results. Costs grow as a task gets longer.
+### The Golden Rule
+**Be specific about the outcome, not the method.** Cline decides how — you decide what.
 
-### Cost Estimates (Claude Sonnet 3.5)
-| Task Type | Typical Tokens | Approx Cost |
+### Prompt Structure
+```
+[Context]  — which file / feature / system
+[Problem]  — what's wrong or what's needed
+[Constraint] — rules to follow, what NOT to change
+[Done looks like] — how you'll know it's complete
+```
+
+### Bad vs Good
+
+| Bad | Good |
+|---|---|
+| "Fix the bug" | "Login throws 401 when email has uppercase — make auth case-insensitive" |
+| "Make it better" | "Refactor fetchUserData() in src/api/users.ts to use async/await, add try/catch" |
+| "Add tests" | "Add Vitest tests for calculateScore() in lib/scoring.ts — cover empty input, all trumps, passed-out hand" |
+
+### Plan First for Complex Tasks
+```
+"Before writing any code, outline your implementation plan for [feature].
+List the files you'll touch and the changes to each."
+```
+Review the plan → confirm → then let Cline implement.
+
+### Use /deep-planning for Large Tasks
+```
+/deep-planning Implement OAuth2 login with Google and GitHub, including
+session management, DB schema changes, and UI updates across the app.
+```
+
+---
+
+## 19. Memory Bank Pattern
+
+Because Cline starts fresh each task, a **Memory Bank** is a `.cline/` folder of markdown files that provides persistent project knowledge.
+
+### Structure
+```
+.cline/
+  memory-bank/
+    projectbrief.md     — What the project is, goals, non-goals
+    productContext.md   — Why it exists, user problems solved
+    systemPatterns.md   — Architecture decisions, design patterns
+    techContext.md      — Tech stack, setup, environment quirks
+    activeContext.md    — Current WIP (updated each session)
+    progress.md         — What's done, what's next, known issues
+```
+
+### Usage Pattern
+**Start every task:**
+```
+Read all files in .cline/memory-bank/ for context, then [task].
+```
+
+**End every significant task:**
+```
+Update .cline/memory-bank/activeContext.md and progress.md
+with what was completed and what's next.
+```
+
+---
+
+## 20. Token Usage & Cost Control
+
+### How Costs Grow
+Every API call sends the **full conversation** — system prompt + all messages + tool results. A long task costs exponentially more than multiple short tasks.
+
+### Cost Estimates
+| Task | Typical Tokens | ~Cost (Sonnet) |
 |---|---|---|
 | Simple edit (1 file) | 5K–15K | $0.01–$0.05 |
 | Feature implementation | 30K–80K | $0.10–$0.30 |
@@ -612,76 +904,33 @@ Every API call sends the **entire conversation** — system prompt + all message
 | Full codebase exploration | 100K–300K | $0.40–$1.20 |
 
 ### Cost Reduction Tips
-1. **Use targeted prompts** — reference specific files instead of letting Cline explore
-2. **Pick the right model** — use `claude-haiku` for simple tasks, `sonnet` for complex ones
-3. **Start fresh tasks** — don't let one task balloon with unrelated work
-4. **Use `replace_in_file`** — cheaper than `write_to_file` for small changes (less content in the response)
-5. **Avoid redundant reads** — once a file is in context, Cline remembers it for the task
-
-### Token Counter
-Cline shows total tokens used per task in the task header. Track it to build intuition for what different tasks cost.
+1. **Reference specific files** — don't let Cline explore blindly
+2. **Use Plan mode first** — cheaper to plan than to undo
+3. **Start fresh tasks** — don't balloon one task with unrelated work
+4. **Right model for the job** — Haiku for simple, Sonnet for complex, Opus for architecture
+5. **Use Skills** — inactive skills cost ~100 tokens vs always-loaded rules
+6. **Subagents for research** — offload exploration to parallel subagents without burning main context
 
 ---
 
-## 14. Supported Models & Providers
+## 21. Common Pitfalls & Fixes
 
-### Recommended Models
-
-| Model | Best For | Context | Speed |
-|---|---|---|---|
-| `claude-sonnet-4-5` | General development, complex reasoning | 200K | Fast |
-| `claude-opus-4` | Very complex architecture, analysis | 200K | Slower |
-| `claude-haiku-3-5` | Simple edits, quick questions | 200K | Fastest |
-| `gpt-4o` | General use, good for web tasks | 128K | Fast |
-| `gemini-2.0-flash` | Speed + cost | 1M | Very fast |
-| Local (Ollama) | Privacy, no cost, offline | Varies | Depends on GPU |
-
-### Provider Setup Quick Reference
-```bash
-# Anthropic — best overall for coding
-API Key: console.anthropic.com → API Keys
-
-# OpenRouter — access many models with one key
-API Key: openrouter.ai → Keys
-Benefit: fallback routing, cheaper access to some models
-
-# Ollama — local, free, private
-ollama pull llama3.2
-ollama pull codellama
-# Then set Cline provider to "Ollama", URL: http://localhost:11434
-```
+| Problem | Fix |
+|---|---|
+| Cline reads wrong files | Be explicit: "Only look at `src/api/users.ts`" |
+| Context fills up mid-task | Start a new task; summarize progress as the first message |
+| Cline loops / can't finish | Stop it; ask "What's blocking you in one sentence?" |
+| File write loses important code | Use Checkpoints; always start with clean git tree |
+| .clinerules ignored | Confirm file is in workspace root; check if rules are toggled on |
+| Terminal command fails silently | Ask Cline to "check exit codes and confirm success before proceeding" |
+| Code doesn't match project style | Add concrete examples to .clinerules — not just rules, show patterns |
+| API rate limits | Switch model or use OpenRouter with fallback routing |
+| Cold start / slow first response | Provisioned concurrency (for Anthropic API) or use a faster model |
+| Subagent not triggering | Request explicitly: "Use subagents to explore X and Y in parallel" |
 
 ---
 
-## 15. Common Pitfalls & Fixes
-
-### Cline keeps reading wrong files
-**Fix:** Be explicit: *"Only look at src/api/users.ts — don't read other files"*
-
-### Context fills up mid-task
-**Fix:** Start a new task. Open the completed task → click "..." → "Copy as Markdown" → start new task with a summary.
-
-### Cline loops and can't finish
-**Fix:** Stop the task, ask: *"What's blocking you? Give me a one-line diagnosis."* Then address the specific blocker.
-
-### File write overwrites something important
-**Fix:** Use git. Always have a clean working tree before big Cline sessions. `git stash` or commit first.
-
-### Cline ignores `.clinerules`
-**Fix:** Check the file is in the **workspace root** (not a subfolder). Also check Cline settings that custom instructions loading is enabled.
-
-### Terminal command fails silently
-**Fix:** Ask Cline to always check exit codes: *"After running each command, confirm it succeeded before proceeding."*
-
-### Cline generates code that doesn't match the project style
-**Fix:** Update `.clinerules` with the specific style conventions and examples. The more concrete, the better.
-
-### API errors / rate limits
-**Fix:** Switch to a different model temporarily, or use OpenRouter with fallback routing enabled.
-
----
-
-## 16. Quick Reference Cheatsheet
+## 22. Quick Reference Cheatsheet
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -690,32 +939,33 @@ ollama pull codellama
 │ START A TASK                                                     │
 │   "Read .clinerules and .cline/memory-bank/, then [task]"       │
 │                                                                  │
-│ GET A PLAN FIRST                                                 │
-│   "Outline your approach before writing any code."              │
+│ PLAN BEFORE ACTING                                               │
+│   "Outline your plan before writing any code."                  │
+│   /deep-planning [complex multi-file task]                       │
 │                                                                  │
 │ DEBUG                                                            │
-│   "Here's the error: [paste]. Find the root cause first."       │
+│   "Here's the error: [paste]. Find root cause first."           │
 │                                                                  │
-│ REFACTOR SAFELY                                                  │
-│   "Make only the minimal change needed. Explain each edit."     │
+│ PARALLEL EXPLORATION                                             │
+│   "Use subagents to explore [area A] and [area B] in parallel." │
 │                                                                  │
-│ ADD TESTS                                                        │
-│   "Write tests for [function] covering: [edge cases]."          │
-│                                                                  │
-│ REVIEW CODE                                                      │
-│   "Review [file] for bugs, type safety, and security."          │
+│ UNDO A MISTAKE                                                   │
+│   Checkpoints → Restore Files                                   │
 │                                                                  │
 │ FINISH CLEANLY                                                   │
-│   "Run the tests. If they pass, update the memory bank."        │
+│   "Run tests. If passing, update .cline/memory-bank/."          │
 │                                                                  │
 ├─────────────────────────────────────────────────────────────────┤
-│ AUTO-APPROVE: reads=✅  writes=⚠️  commands=❌(careful)         │
-│ CONTEXT TIP: new task per problem, reference specific files      │
-│ COST TIP:    haiku for simple, sonnet for complex                │
-│ KEY FILES:   .clinerules (root), .cline/memory-bank/*.md        │
+│ MODES:  Plan (explore) → Act (implement) → /deep-planning       │
+│ RULES:  .clinerules/ folder (conditional with YAML frontmatter) │
+│ SKILLS: .cline/skills/ — progressive loading, slash commands    │
+│ HOOKS:  VS Code settings.json — fires automatically             │
+│ MCP:    ~/.cline/mcp.json — external tools via protocol         │
+│ UNDO:   Checkpoints — shadow git repo, revert anytime           │
+│ MULTI:  Kanban board — parallel agents, per-card worktrees      │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-*Last updated: 2026-05-11 | Cline version reference: v3.x*
+*Last updated: 2026-05-13 | Based on official docs: docs.cline.bot*
