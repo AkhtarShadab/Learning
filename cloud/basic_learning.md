@@ -369,6 +369,29 @@ peering across N regions uses minimum spanning trees (Kruskal/Prim) to
 minimize connections. Capacity planning uses max-flow/min-cut (Ford-Fulkerson)
 to find bottlenecks.
 
+### Distributed Consensus and Raft
+Distributed systems need to agree on a single value (who is leader, what
+the next log entry is) even when nodes fail. This is the **consensus problem**.
+Raft (2014, Ongaro & Ousterhout) solves it with three mechanisms:
+
+1. **Leader election** — randomized timeouts + majority vote ensure exactly
+   one leader per term. Two leaders cannot coexist because two majorities
+   must overlap on at least one node (quorum intersection).
+2. **Log replication** — leader appends, broadcasts, commits once a majority
+   ACK. Followers apply committed entries to their state machines in order.
+3. **Safety** — only a candidate with the most up-to-date log can win an
+   election, so committed entries are never overwritten.
+
+The quorum math: an n-node cluster tolerates `⌊(n-1)/2⌋` failures.
+n=3 tolerates 1; n=5 tolerates 2. Odd sizes are standard — n=4 still only
+tolerates 1 failure (needs 3 ACKs) but has higher write latency than n=3.
+
+Real-world usage: etcd (Kubernetes config), CockroachDB (per-range Raft
+groups), TiKV, Consul. Without consensus, redundant nodes produce
+split-brain — two nodes accepting conflicting writes simultaneously.
+See `MentalModels/04_fault_tolerance.md` for the full mental model with
+diagrams and quorum tables.
+
 ### Permutations and Consistent Hashing
 Distributed caches map servers and keys onto a circular hash ring. When a
 server is added/removed, only `K/n` keys remap (not all K). With virtual

@@ -593,6 +593,219 @@ Gmail, and Google Search.
 
 ---
 
+## Raft: Consensus as the Foundation of Fault Tolerance
+
+Redundancy keeps hardware alive. **Consensus** keeps a cluster of nodes
+agreeing on a single truth despite failures. Without consensus, three nodes
+might each believe they are the leader and accept conflicting writes —
+a split-brain scenario that corrupts data even with zero hardware failures.
+
+Raft is the consensus algorithm that powers etcd (Kubernetes), CockroachDB,
+TiKV (TiDB), Consul, and many distributed databases. Understanding Raft tells
+you exactly *why* a 3-node cluster tolerates 1 failure, but a 4-node cluster
+still only tolerates 1.
+
+---
+
+### Mental Model 1: The Parliamentary Vote
+
+A parliament can only pass a bill if a **majority** of members vote yes.
+No two competing groups can both get a majority at the same time — by
+definition, two majorities would overlap on at least one member, and that
+member cannot vote for both sides simultaneously.
+
+```
+5-member parliament: majority = 3
+
+  Group A (3 votes) ── passes ✓
+  Group B (3 votes) ── passes ✓   ← impossible: A∩B ≥ 1 member
+
+In a 5-node Raft cluster (majority = 3):
+  Two candidates cannot both win an election simultaneously.
+  The overlap node will only vote for one.
+```
+
+This is why Raft is safe: **quorum intersection** guarantees that no two
+leaders can be elected in the same term.
+
+---
+
+### Mental Model 2: The Ship with One Captain
+
+At any moment, Raft ensures **exactly one leader**. The leader is the only
+node that accepts writes. It decides the order of operations and replicates
+decisions to all followers.
+
+```
+          ┌────────────┐
+          │   LEADER   │  ← accepts all writes
+          │   (Node 1) │  ← sends heartbeats every 150ms
+          └─────┬──────┘
+         ┌──────┴──────┐
+    ┌────┴───┐     ┌───┴────┐
+    │Follower│     │Follower│  ← replicate log entries from leader
+    │(Node 2)│     │(Node 3)│  ← respond to reads (or redirect to leader)
+    └────────┘     └────────┘
+```
+
+If the captain (leader) goes overboard (crashes or becomes unreachable),
+followers notice the absence of heartbeats, start an election, and elect
+a new captain — all automatically, typically within 150–300ms.
+
+There is **never a moment** where two nodes legitimately act as leader in
+the same term. If an old leader recovers after isolation, it finds a higher
+term number and steps down immediately.
+
+---
+
+### Mental Model 3: The Append-Only Logbook
+
+Every write is an entry in a **distributed log**. The leader appends the
+entry first, then tells followers to append the same entry. Once a majority
+have confirmed the append, the entry is **committed** — permanently part of
+the log, applied to the state machine.
+
+```
+Leader log:     [1: set x=1] [2: set y=2] [3: set x=5]  ← committed
+Follower 2 log: [1: set x=1] [2: set y=2] [3: set x=5]  ← in sync
+Follower 3 log: [1: set x=1] [2: set y=2]               ← lagging
+
+Leader gets new write: set z=9
+  → appends [4: set z=9] locally
+  → sends AppendEntries RPC to followers
+  → waits for majority ACK (at least 1 follower)
+  → commits entry 4
+  → applies to state machine
+  → responds to client: success
+```
+
+Entries are **never deleted or reordered** once committed. The log grows
+monotonically. If a follower crashes and restarts, it replays the log from
+the last snapshot and catches up.
+
+---
+
+### The Three Sub-Problems Raft Solves
+
+#### 1. Leader Election
+
+When a follower stops receiving heartbeats, it starts an election:
+
+```
+Election timeout fires (randomized: 150–300ms)
+  │
+  ├─ Follower becomes Candidate
+  ├─ Increments its term number  (e.g., term 3 → term 4)
+  ├─ Votes for itself
+  ├─ Sends RequestVote RPC to all other nodes
+  │
+  └─ Each node votes YES if:
+       (a) It hasn't voted in this term yet
+       (b) Candidate's log is at least as up-to-date as its own
+       
+  Candidate wins if it gets votes from a majority (⌊n/2⌋ + 1)
+```
+
+**Randomized timeouts** prevent perpetual split votes. If two candidates
+start simultaneously, one almost always fires its next election timeout first
+and wins before the other can split the vote again.
+
+#### 2. Log Replication
+
+```
+Client write → Leader
+  │
+  ├─ Leader appends entry to its log (uncommitted)
+  ├─ Sends AppendEntries RPCs to all followers (in parallel)
+  ├─ Waits for majority ACK
+  ├─ Marks entry as committed, applies to state machine
+  └─ Returns success to client
+
+  On next heartbeat → notifies followers entry is committed
+  Followers apply committed entries to their state machines
+```
+
+Followers that are slow or partitioned will catch up when reconnected.
+The leader tracks a `nextIndex` per follower and retries indefinitely.
+
+#### 3. Safety Guarantee
+
+Only a candidate whose log is **at least as up-to-date** as a majority of
+nodes can win an election. This prevents a stale node (that missed recent
+commits) from becoming leader and overwriting committed data.
+
+```
+"Up-to-date" comparison:
+  1. Higher last log term wins.
+  2. If same last log term, longer log wins.
+```
+
+This means: every committed entry will be present on the next leader's log,
+by construction.
+
+---
+
+### The Quorum Math
+
+```
+Cluster size (n)  │  Majority needed  │  Failures tolerated
+──────────────────┼───────────────────┼────────────────────
+        1         │        1          │         0
+        2         │        2          │         0  ← no benefit
+        3         │        2          │         1
+        4         │        3          │         1  ← same as n=3, write is slower
+        5         │        3          │         2
+        7         │        4          │         3
+
+Formula: tolerates ⌊(n-1)/2⌋ failures
+```
+
+This is why **odd cluster sizes** are the standard: adding an even node
+gives no additional failure tolerance (n=4 still tolerates 1 failure like
+n=3), but increases write latency (must wait for 3 ACKs instead of 2).
+
+```
+Write latency in Raft:
+  Leader must wait for ⌊n/2⌋ follower ACKs before committing.
+
+  n=3: wait for 1 follower  → fast
+  n=5: wait for 2 followers → latency = max(slowest 2 of 4 followers)
+  n=7: wait for 3 followers → higher tail latency
+```
+
+The sweet spot for most systems is **n=3** (tolerates 1 failure, low write
+latency) or **n=5** (tolerates 2 failures, moderate latency).
+
+---
+
+### Where Raft Runs in the Cloud
+
+| System | How Raft is used |
+|---|---|
+| **etcd** | Single Raft group for all key-value data; backbone of every Kubernetes cluster |
+| **CockroachDB** | One Raft group per range (64 MB partition); thousands of groups per cluster |
+| **TiKV** (TiDB) | One Raft group per region; Multi-Raft for parallelism |
+| **Consul** | Single Raft group for service registry and config |
+| **AWS Aurora** | Quorum-based storage (similar principle; 6 copies, 4/6 for write quorum) |
+
+---
+
+### Raft vs. Active-Passive Failover
+
+The redundancy patterns covered earlier (Active-Active, Active-Passive) are
+**manual or externally-orchestrated** failover. Raft is **self-orchestrating**:
+
+| Dimension | Active-Passive with External Failover | Raft Consensus |
+|---|---|---|
+| Who detects leader failure? | External health check / load balancer | Raft followers (heartbeat timeout) |
+| Who elects new leader? | DBA / ops / Route53 health routing | Raft election protocol |
+| Time to failover | 30–120 seconds (RDS Multi-AZ) | 150–500ms |
+| Risk of split-brain | Yes (if health check is wrong) | No (quorum prevents it) |
+| Write consistency | Possible gap at failover | Guaranteed — committed entries are never lost |
+| Use case | Stateful services, managed databases | Distributed databases, config stores, coordination |
+
+---
+
 ## Key Takeaways
 
 1. **Failure is a constant, not an event.** At scale, something is
@@ -617,6 +830,12 @@ Gmail, and Google Search.
 6. **Chaos engineering proves your design.** Testing in production,
    under controlled conditions, is the only way to know that your fault
    tolerance actually works.
+
+7. **Consensus is the bedrock of distributed fault tolerance.** Hardware
+   redundancy keeps nodes alive; Raft keeps them agreeing. Without
+   consensus, redundancy produces split-brain. Use odd cluster sizes
+   (3 or 5), understand the quorum math, and know which cloud services
+   use Raft under the hood.
 
 7. **Circuit breakers and backoff prevent cascading failures.** Without
    them, one failing service can bring down the entire system through
