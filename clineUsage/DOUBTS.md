@@ -143,3 +143,152 @@ Want to call a built-in slash command from a bash script?
       not the shell layer. Use Method 1 (SKILL.md instructions) instead.
 ```
 
+---
+
+## Q: I created workspace skills but the `/` command can't find them — why?
+
+This is almost always a **wrong folder path** issue. Both Cline and Claude Code require skills to be in a very specific hidden directory. A plain `skills/` folder at your project root is invisible to the `/` command.
+
+---
+
+### The exact path each tool requires
+
+| Tool | Workspace (project-level) skills | Global (all projects) skills |
+|---|---|---|
+| **Cline** (VS Code extension) | `.cline/skills/<name>/SKILL.md` | `~/.cline/skills/<name>/SKILL.md` |
+| **Claude Code** | `.claude/skills/<name>/SKILL.md` | `~/.claude/skills/<name>/SKILL.md` |
+
+Note the **dot prefix** on both `.cline/` and `.claude/`. A folder named `skills/` (no dot) at your project root is completely ignored by both tools.
+
+---
+
+### Common wrong locations people use
+
+```
+❌  skills/my-skill/SKILL.md              ← plain folder, not hidden
+❌  .skills/my-skill/SKILL.md             ← wrong prefix
+❌  .cline/my-skill/SKILL.md              ← missing the "skills" subfolder
+❌  src/skills/my-skill/SKILL.md          ← nested in src, not root-level
+❌  my-skill/SKILL.md                     ← no parent skills folder at all
+```
+
+```
+✅  .cline/skills/my-skill/SKILL.md       ← correct for Cline
+✅  .claude/skills/my-skill/SKILL.md      ← correct for Claude Code
+```
+
+---
+
+### The 5 reasons skills don't show up in `/` even with the right path
+
+**1. The `.cline/skills/` (or `.claude/skills/`) directory was created after the session started**
+
+Both tools set up a file watcher for the skills directory **at session startup**. If the directory didn't exist when the session began, the watcher is never attached — so new files in it are invisible until you restart.
+
+```
+Fix: Restart Cline / reload the VS Code window / restart your Claude Code session.
+```
+
+**2. The `name` field in SKILL.md frontmatter doesn't match the folder name**
+
+The skill directory name and the `name` in the YAML frontmatter must be **identical**.
+
+```
+❌  Folder: .cline/skills/my-tool/
+    Frontmatter: name: mytool        ← mismatch — tool vs my-tool
+
+✅  Folder: .cline/skills/my-tool/
+    Frontmatter: name: my-tool       ← exact match
+```
+
+**3. Skill name violates naming rules**
+
+Skill names must be:
+- All **lowercase**
+- Only **letters, numbers, and hyphens** (`-`)
+- **Max 64 characters**
+
+```
+❌  MyTool       ← uppercase
+❌  my tool      ← space
+❌  my_tool      ← underscore
+✅  my-tool      ← correct
+```
+
+**4. The SKILL.md frontmatter is missing or malformed**
+
+The file must start with a valid YAML frontmatter block — three dashes, `name:`, `description:`, three dashes. If the frontmatter is missing or the YAML is invalid, the skill is silently skipped.
+
+```yaml
+---
+name: my-tool        ← must match folder name exactly
+description: |
+  What this skill does. Use when...   ← keep under 1024 chars
+---
+
+# Rest of SKILL.md...
+```
+
+**5. Skill conflicts with a global skill of the same name**
+
+Global skills (`~/.cline/skills/` or `~/.claude/skills/`) take precedence over workspace skills on name conflicts. If you have a global `deploy` skill AND a workspace `deploy` skill, the global one wins and the workspace one is silently shadowed.
+
+```
+Fix: Rename the workspace skill to something unique,
+     or remove the global one if the workspace version replaces it.
+```
+
+---
+
+### Step-by-step fix checklist
+
+```
+1. Is the folder path correct?
+   → Cline:       .cline/skills/<name>/SKILL.md
+   → Claude Code: .claude/skills/<name>/SKILL.md
+   (dot prefix, "skills" subfolder, skill folder, SKILL.md file)
+
+2. Does the folder name match the `name:` in frontmatter exactly?
+   → Both must be lowercase-hyphenated and identical
+
+3. Did the .cline/skills/ directory exist before you started the session?
+   → If you just created it: restart Cline / reload VS Code window
+
+4. Is the frontmatter valid YAML?
+   → Must start with --- and end with --- before the body
+
+5. Is there a global skill with the same name shadowing this one?
+   → Check ~/.cline/skills/ (Cline) or ~/.claude/skills/ (Claude Code)
+```
+
+---
+
+### Verifying discovery worked
+
+After fixing the path and restarting, type `/` in the chat input. Your skill should appear in the list with its description. If it still doesn't appear, check the tool's output/logs for "skill load error" messages — a malformed frontmatter will produce a silent skip, but some versions log a warning.
+
+For Claude Code specifically, you can also ask directly: "What skills are available?" and it will list all discovered skills with their descriptions.
+
+---
+
+### Quick structure reference
+
+```
+your-project/
+├── .cline/                      ← Cline workspace config
+│   └── skills/
+│       └── my-tool/             ← folder name = skill name
+│           ├── SKILL.md         ← required, frontmatter name: my-tool
+│           ├── scripts/
+│           │   └── run.sh
+│           └── docs/
+│               └── reference.md
+├── .claude/                     ← Claude Code workspace config
+│   └── skills/
+│       └── my-tool/
+│           └── SKILL.md
+└── src/
+```
+
+Both `.cline/skills/` and `.claude/skills/` can coexist in the same project — one for Cline, one for Claude Code.
+
