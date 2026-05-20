@@ -616,6 +616,26 @@ debugging and performance optimization in the cloud.
 
 ---
 
+## DSA Connections
+
+### Hash Maps (Page Tables) -- Virtual Memory Translation
+
+A page table is fundamentally a hash map: it maps virtual page numbers (keys) to physical frame numbers (values) in O(1) average time via hardware-assisted lookup. The document's discussion of shadow page tables and Extended Page Tables (EPT) describes a two-level hash map -- the guest OS maintains one map (guest virtual to guest physical), and the hypervisor maintains a second map (guest physical to host physical). Without EPT, every guest page table update triggers a trap to the hypervisor, which must synchronize the shadow map -- analogous to maintaining two hash maps where every insert into map A requires a corresponding insert into map B. EPT moves this double-translation into hardware, effectively making the CPU perform a nested hash lookup in a single operation, reducing overhead from ~30% to ~5%.
+
+### Indirection (Pointer/Reference Abstraction) -- Decoupling Logical from Physical
+
+The fundamental computer science principle "any problem can be solved by adding a layer of indirection" is the organizing idea of the entire abstraction tower described in this document. A pointer decouples a variable name from its memory address; a virtual machine decouples a workload from its physical server; a container decouples an application from its host OS. Each virtualization technique the document covers -- hypervisors, namespaces, cgroups, overlay filesystems -- is an indirection layer that maps a logical resource identifier to a physical resource, allowing the mapping to change without the consumer's knowledge. SR-IOV's Virtual Functions are hardware-level indirection: the NIC presents multiple logical interfaces (VFs) that each VM treats as a dedicated device, while a single Physical Function manages the actual hardware.
+
+### Tree Data Structures -- Union/Overlay Filesystems
+
+The overlay filesystem described in the document -- where a container's view of `/` is composed from stacked read-only image layers plus a writable top layer -- is a tree merge operation. Each layer is a filesystem tree (directories as internal nodes, files as leaves), and the overlay driver performs a real-time union of these trees: for any path, it walks down each layer from top to bottom and returns the first match. This is structurally similar to a persistent (copy-on-write) data structure where writes create new nodes in the top layer without modifying shared lower layers. The efficiency gain is the same as in persistent data structures: multiple containers sharing the same base image share the identical read-only subtrees, and only their individual writes diverge.
+
+### Trap-and-Emulate (Interrupt Handling / Exception Tables) -- CPU Virtualization
+
+The trap-and-emulate mechanism at the heart of hardware-assisted virtualization (VT-x/AMD-V) is a direct application of the CPU's exception/interrupt dispatch table -- a jump table indexed by exception type that vectors control flow to the appropriate handler in O(1) time. When a guest OS in VMX non-root mode executes a privileged instruction, the CPU consults its VM-exit reason table and transfers control to the hypervisor's handler for that specific exit reason. This is the same dispatch pattern used by operating system interrupt descriptor tables (IDTs), but at a deeper privilege level. The randomized-constant-time dispatch ensures that virtualization overhead per trapped instruction is bounded, which is why hardware-assisted virtualization achieves only 2-5% overhead compared to the 20-40% of binary translation's instruction-scanning approach.
+
+---
+
 ## Key Takeaways
 
 1. **Virtualization is abstraction applied to hardware.** It decouples

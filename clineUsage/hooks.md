@@ -699,6 +699,26 @@ Because this is a `PreToolUse` hook, it runs before the write completes — Clin
 
 ---
 
+## DSA Connections
+
+### Observer Pattern (Event Emitter) — Hook Registration and Dispatch
+
+The observer pattern maintains a list of subscribers for each event type; when an event fires, the emitter iterates the subscriber list and invokes each callback. Cline's hook system is a direct implementation: `PostToolUse`, `PreToolUse`, `OnError`, and `Stop` are named event channels, and each hook object you register in `cline.hooks` is a subscriber with an optional matcher predicate that further filters which events it responds to. When Cline calls `write_to_file`, the internal emitter publishes a `PostToolUse` event, iterates all registered hooks, evaluates each matcher against the tool name and file path, and invokes the matching commands. This is why hooks "fire 100% of the time" — the emitter is infrastructure, not an LLM decision — and why adding a new hook requires zero changes to the core pipeline, just appending to the subscriber list.
+
+### Linked List — Hook Chain Execution Order
+
+A linked list is a sequence of nodes where each node points to the next, enabling O(1) insertion at either end and guaranteed traversal in insertion order. The array of hook objects under each event key (`PostToolUse: [{...}, {...}, {...}]`) forms a logical linked list: Cline traverses it head to tail, executing each hook in the order it was registered. The chaining pipeline described in the document — `write → eslint --fix → tsc --noEmit → npm test → git commit` — is a singly linked list of processing stages where each node's successful completion triggers traversal to the next. If any node fails (returns non-zero), traversal halts, mirroring how a linked-list search terminates when it finds its target. The Plugin hook's `failureMode: "fail_closed"` is the "halt on match" semantic; `fail_open` is "skip this node, continue traversal."
+
+### Interceptor Stack (Decorator/Chain of Responsibility) — PreToolUse Gating
+
+The chain of responsibility pattern passes a request through a sequence of handlers, each of which can process, modify, or reject the request before forwarding it to the next handler. `PreToolUse` hooks implement exactly this: before a tool executes, the request passes through every registered `PreToolUse` hook in order. The secret-scanning hook in the document is a handler that inspects the file content for credential patterns and either allows the write to proceed (passes to next handler) or exits with code 1 (rejects the request). In data-structure terms, this is a stack of interceptors — each `PreToolUse` entry is pushed onto the stack at configuration time, and at runtime the stack is unwound top-to-bottom. The Plugin hook's `mode: "blocking"` ensures the interceptor completes before the request proceeds, which is critical for security gates where asynchronous execution would defeat the purpose.
+
+### Pub-Sub with Topic Filtering — Matcher-Based Event Routing
+
+A publish-subscribe system with topic filtering allows subscribers to receive only messages matching a declared pattern, avoiding the overhead of processing irrelevant events. The `matcher` object in VS Code hooks (`{ "tool": "write_to_file", "path": "src/**/*.ts" }`) is a topic filter: the publisher (Cline's tool-use pipeline) emits all events, and the subscriber (your hook command) only receives events whose tool name and file path glob match the declared filter. This is more efficient than registering a catch-all hook and filtering inside your script, just as topic-filtered pub-sub avoids delivering messages to uninterested subscribers. The document's example of scoping a TypeScript type-check hook to `**/*.ts` rather than all files demonstrates the performance benefit — the hook command never runs for `.css` or `.json` writes, reducing unnecessary subprocess spawns.
+
+---
+
 ## Quick Reference
 
 ```

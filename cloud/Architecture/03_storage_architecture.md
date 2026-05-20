@@ -549,3 +549,23 @@ aws s3control put-public-access-block \
   --public-access-block-configuration \
     "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
 ```
+
+---
+
+## DSA Connections
+
+### Hash Maps — S3 Object Storage and Key-Value Lookups
+
+A hash map is a data structure that maps keys to values using a hash function, providing average-case O(1) lookups, inserts, and deletes. S3 is, at its core, a massively distributed hash map: each object is stored under a key (like `images/profile/user123.jpg`), and the storage layer hashes this key to determine which partition and which set of storage nodes hold the data. When you call `GetObject`, S3 does not traverse a directory tree -- it hashes the key, locates the partition, and retrieves the object directly. This is why S3 has no concept of directories (the "folders" in the console are a UI trick based on the `/` delimiter) and why S3 can achieve 5,500 GET requests per second per prefix -- the hash-based distribution ensures that keys with different prefixes land on different partitions, enabling parallelism. The recommendation to distribute keys across prefixes for high-throughput workloads is essentially the same advice as choosing a good hash function to avoid bucket collisions.
+
+### LRU Cache (Doubly-Linked List + Hash Map) — EFS Lifecycle and S3 Intelligent-Tiering
+
+An LRU (Least Recently Used) cache combines a doubly-linked list with a hash map to evict the least-recently-accessed item in O(1) time: the hash map provides fast lookups, and the linked list maintains access order. S3 Intelligent-Tiering and EFS lifecycle policies implement an LRU-like eviction strategy at storage scale. When S3 Intelligent-Tiering monitors object access patterns, it maintains metadata tracking the last access timestamp for each object. Objects not accessed for 30 days are moved to Infrequent Access, then to Archive Access after 90 days -- mirroring how an LRU cache evicts cold entries to make room for hot ones. Similarly, EFS lifecycle management moves files untouched for 30+ days to Infrequent Access storage at 92% lower cost. The key insight is that these tiered storage systems are applying the same temporal locality principle that makes LRU caches effective: recently accessed data is likely to be accessed again, so it stays in the fast (expensive) tier.
+
+### B-Trees — EBS Volume Indexing and Filesystem Metadata
+
+A B-tree is a self-balancing tree data structure that maintains sorted data and allows searches, insertions, and deletions in O(log n) time, with high fanout to minimize disk reads. When you format an EBS volume with ext4 or XFS and mount it to an EC2 instance, the filesystem uses B-tree variants to organize block metadata. XFS in particular uses B+ trees for its inode allocation, directory entries, and extent maps -- this is why XFS is the recommended filesystem for high-IOPS workloads on io2 Block Express volumes. Each directory lookup traverses a B+ tree where each node is sized to fit a single disk block (typically 4 KB), maximizing the data retrieved per I/O operation. For a volume with millions of files, the B-tree structure ensures that locating any file requires only 3-4 disk reads regardless of directory size, which is critical when your io2 Block Express volume is handling 256,000 IOPS -- every wasted I/O operation matters at that scale.
+
+### Incremental Snapshots as Merkle-Like Structures — EBS Snapshot Efficiency
+
+A Merkle tree is a hash tree where every leaf node contains a hash of a data block and every non-leaf node contains a hash of its children, enabling efficient verification and diffing of large datasets. EBS snapshots use a conceptually similar approach to achieve incremental backups: the storage layer maintains a block-level mapping that tracks which blocks have changed since the last snapshot. When you create a new snapshot, EBS compares block hashes between the current volume state and the previous snapshot, and only copies the changed blocks to S3. This is why each snapshot is independently restorable even though it only stores the delta -- AWS manages the chain of block references internally, similar to how a Merkle tree can prove the integrity of any leaf by walking the hash chain to the root. The practical benefit is dramatic: a 1 TB volume with 10 GB of changes produces a snapshot that stores only 10 GB of new data, while still being fully restorable as a complete 1 TB volume.

@@ -644,6 +644,26 @@ application generated 500 GB/day of CloudWatch Logs.
 
 ---
 
+## DSA Connections
+
+### Dynamic Programming (Knapsack Problem) -- Reserved Instance Purchasing
+
+Selecting the optimal combination of Reserved Instances and Savings Plans is a variant of the 0/1 knapsack problem: each commitment option has a "weight" (upfront cost and lock-in period) and a "value" (projected savings over the term), and the budget is the knapsack capacity. The goal is to maximize total savings without exceeding the capital budget constraint. The pricing pyramid in this document -- 50-70% reserved, 10-30% on-demand, 10-20% spot -- is the empirically-derived solution to this knapsack. AWS Cost Explorer's RI recommendations solve this DP internally: for each instance family and term length, the algorithm computes the break-even utilization and selects the combination that maximizes net savings, subject to the constraint that reserved capacity should not exceed steady-state demand. The overlapping subproblem structure (covering week 1's demand informs covering week 2's) makes DP the natural algorithmic framework.
+
+### Greedy Algorithms -- Right-Sizing and Quick-Win Optimization
+
+The cost optimization checklist's "quick wins" section is a greedy strategy: sort optimization opportunities by savings-to-effort ratio and execute them in descending order. Right-sizing an m5.4xlarge down to m5.xlarge (75% savings, minimal effort) is selected before architectural changes (moderate savings, high effort) because the greedy criterion -- maximum immediate savings per unit of work -- favors it. This mirrors the greedy algorithm for fractional knapsack, where items are sorted by value-per-weight and added in that order. The FinOps lifecycle's Crawl/Walk/Run maturity model is itself a greedy progression: at each stage, the organization picks the highest-impact optimization it can currently execute, exactly as a greedy algorithm selects the locally optimal choice at each step.
+
+### Trie / Prefix Trees -- Cost Allocation Tag Hierarchies
+
+Cost allocation tags form a hierarchical namespace that can be represented as a trie: the root branches by `Environment` (production, staging, dev), each environment branches by `Team`, each team by `Project`, and so on. Querying "what does Team Platform-Engineering spend in Production?" is a trie prefix lookup -- traverse the path `production -> platform-engineering -> *` and sum all leaf costs. AWS Cost Explorer's filtering and grouping operations perform exactly this trie traversal when generating cost breakdowns. The document's tagging strategy (Environment, Team, Project, CostCenter, Owner) defines a 5-level trie whose depth determines the granularity of cost attribution. Untagged resources are orphan nodes outside the trie -- invisible to cost reporting, which is why the document insists tags are non-negotiable.
+
+### Anomaly Detection as Online Algorithms -- Cost Spike Identification
+
+The Cost Anomaly Detection system described in this document is an online algorithm: it processes a stream of daily cost data points and must decide, at each new observation, whether that point is anomalous -- without the luxury of seeing the full dataset. Internally, AWS uses a sliding-window approach combined with statistical thresholds (similar to exponentially-weighted moving averages or CUSUM detectors). The algorithmic challenge is the same as maintaining a running median or a streaming percentile: the system must update its model in O(1) or O(log n) time per data point while accurately distinguishing true anomalies ($4,200 on a normally-$1,600 day) from natural variance. The 50 forgotten GPU instances scenario in this document would be flagged because the cost observation falls outside the confidence interval maintained by the online algorithm -- a classic application of streaming statistics.
+
+---
+
 ## Key Takeaways
 
 1. **Cloud costs are an iceberg.** Compute is visible, but data transfer,

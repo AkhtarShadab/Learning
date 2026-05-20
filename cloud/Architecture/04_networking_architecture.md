@@ -547,3 +547,23 @@ aws ec2 create-flow-logs \
    and allow referencing other security groups (e.g., "allow traffic from the ALB
    security group"). NACLs are stateless and harder to manage; use them only for
    broad deny rules.
+
+---
+
+## DSA Connections
+
+### Graph Traversal (Dijkstra's Algorithm) — Route Table Evaluation and Network Path Selection
+
+Dijkstra's algorithm finds the shortest path between nodes in a weighted graph in O((V + E) log V) time using a priority queue. VPC route tables implement a simplified form of graph-based routing: when a packet leaves an instance, the route table is consulted to determine the next hop. The "most specific route wins" rule (longest prefix match) is the routing equivalent of choosing the shortest weighted path -- a packet destined for `10.100.5.10` matches `10.100.0.0/16` (Transit Gateway) over `0.0.0.0/0` (NAT Gateway) because the more specific prefix represents a more direct path. At the AWS backbone level, the Global Accelerator and Direct Connect services use actual shortest-path algorithms to route traffic across the physical network. When a packet traverses from a private subnet through a NAT Gateway to the internet, or across a Transit Gateway to another VPC, each hop is a node in the network graph, and the route table chain from source to destination is effectively the shortest-path result precomputed and cached as static routes.
+
+### Spanning Trees — Transit Gateway Hub-and-Spoke Topology
+
+A spanning tree is a subgraph of a connected graph that includes all vertices with the minimum number of edges and no cycles. The Transit Gateway hub-and-spoke architecture directly solves the problem that VPC Peering's full mesh creates: with N VPCs, peering requires O(N^2) connections (N*(N-1)/2 edges), while Transit Gateway reduces this to O(N) connections (one attachment per VPC). This mirrors the transformation from a complete graph to a star-topology spanning tree where the Transit Gateway is the root node. In physical networking, the Spanning Tree Protocol (STP) prevents broadcast loops by pruning a network graph into a tree; Transit Gateway achieves the analogous result in the virtual networking layer by centralizing routing decisions at a single hub. Each new VPC requires only one attachment to the Transit Gateway rather than N-1 peering connections, exactly as adding a node to a spanning tree requires only one edge to connect it to the existing tree.
+
+### Trie (Prefix Tree) — CIDR Matching and Longest Prefix Match Routing
+
+A trie is a tree data structure where each node represents a character (or bit) of a key, enabling O(k) lookup where k is the key length. IP routing fundamentally relies on a binary trie (also called a radix tree or Patricia trie) for longest prefix match: each bit of a destination IP address is a branch in the trie, and the deepest matching node determines the route. When a VPC route table contains entries like `10.0.0.0/16 -> local`, `10.100.0.0/16 -> tgw`, and `0.0.0.0/0 -> nat-gw`, the routing engine builds a binary trie of these prefixes. A packet to `10.0.12.5` traverses the trie bit by bit, matching `10.0.0.0/16` (the local route) at depth 16. A packet to `8.8.8.8` falls through to `0.0.0.0/0` (the default route) because no more specific prefix matches. This trie-based approach is how routers achieve wire-speed forwarding even with large routing tables -- the lookup is bounded by the address length (32 bits for IPv4), not by the number of routes.
+
+### Hash Tables — VPC Mapping Service for Virtual-to-Physical Address Resolution
+
+A hash table provides O(1) average-case lookups by computing a hash of the key to index into an array of buckets. The AWS VPC Mapping Service, which resolves virtual private IP addresses to physical host addresses, operates as a massive distributed hash table. When instance A sends a packet to instance B's private IP (say `10.0.11.47`), the Mapping Service hashes this virtual IP to locate the physical host and encapsulation metadata for B. This lookup must complete in microseconds for every packet, making a hash-table-based design essential. The system must also handle dynamic updates (instances launching, stopping, migrating) without disrupting in-flight lookups, which is why it uses consistent hashing with replication across multiple mapping nodes rather than a single central table -- similar to how distributed key-value stores like DynamoDB distribute their partition maps.

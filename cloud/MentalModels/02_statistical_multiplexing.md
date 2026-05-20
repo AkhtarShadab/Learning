@@ -517,6 +517,26 @@ call centers answer faster per agent than small ones.
 
 ---
 
+## DSA Connections
+
+### Priority Queues -- Quality-of-Service Scheduling
+
+A priority queue dequeues the highest-priority element in O(log n) time, enabling efficient scheduling when not all requests are equal. Cloud hypervisors use priority-queue-based schedulers to implement Quality of Service: latency-sensitive VM workloads receive higher scheduling priority than background batch jobs, so when the aggregate demand curve is smooth but individual requests compete for the same physical core, the scheduler ensures premium tenants are served first. AWS's Nitro scheduler and Google's Borg both maintain per-host priority queues where the "priority" is derived from instance type, placement constraints, and SLA tier -- allowing the provider to overcommit CPU safely while guaranteeing that high-priority VMs never starve.
+
+### Bin Packing (First-Fit Decreasing) -- Server Consolidation
+
+Bin packing is a classic NP-hard optimization problem: fit items of varying sizes into the fewest fixed-capacity bins. The document's server consolidation challenge -- fitting VMs with multi-dimensional resource profiles (CPU, RAM, disk, network) onto physical servers -- is a multi-dimensional bin packing instance. Cloud schedulers use heuristics like First-Fit Decreasing, where VMs are sorted by their largest resource dimension and placed onto the first server with sufficient remaining capacity across all dimensions. The "stranded resources" problem described in the document is exactly the bin-packing residual: when RAM fills first, leftover CPU and disk capacity cannot be utilized. Instance family diversity is the provider's strategy to reduce this residual by offering items (VM shapes) that better tessellate against server capacities.
+
+### Scheduling Algorithms (Weighted Fair Queuing) -- CPU Overcommit
+
+Weighted Fair Queuing assigns each flow a share of bandwidth proportional to its weight, ensuring no flow is starved while maximizing utilization. The CPU overcommit ratios discussed in this document -- 2:1, 4:1, 8:1 -- work because the hypervisor's scheduler implements WFQ-style time-slicing: each vCPU gets a guaranteed minimum share of physical core time, but idle shares are redistributed to active vCPUs in proportion to their weights. This is the mechanism that allows 400 vCPUs to map onto 200 physical cores with acceptable performance. When all vCPUs are active simultaneously (the correlated-demand scenario the document warns about), WFQ degrades gracefully to each vCPU receiving exactly its guaranteed share rather than causing a crash.
+
+### Queuing Theory (M/M/c Model) -- Pool Sizing
+
+The M/M/c queue models a system with Poisson arrivals, exponential service times, and c parallel servers, and it directly underpins the document's discussion of why larger pools sustain higher utilization at the same latency target. The key result is that average waiting time drops super-linearly as c grows while holding utilization constant: a pool of 100 servers at 90% utilization has lower average wait than a pool of 10 servers at 90% utilization. This is the mathematical justification for hyperscaler consolidation -- the same reason a 200-agent call center answers faster per agent than ten 20-agent centers. Cloud capacity planning tools use M/M/c formulas to determine how many instances an Auto Scaling Group needs to maintain p99 latency targets under projected arrival rates.
+
+---
+
 ## Key Takeaways
 
 1. **Cloud works because of statistics, not just technology.** The CLT

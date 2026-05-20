@@ -640,3 +640,23 @@ aws elbv2 modify-load-balancer-attributes \
 
 8. **Use weighted target groups** for safe deployments. Canary with 5-10% traffic
    before full rollout.
+
+---
+
+## DSA Connections
+
+### Priority Queues (Min-Heaps) — Least Outstanding Requests Algorithm
+
+A priority queue backed by a binary min-heap always surfaces the element with the smallest key in O(log n) time for both extraction and insertion. The ALB's "Least Outstanding Requests" routing algorithm is a direct application of this data structure: the load balancer maintains a min-heap of backend targets keyed by their current count of in-flight requests. When a new request arrives, the ALB extracts the target with the fewest outstanding requests in O(log n), forwards the request, and re-inserts the target with an incremented count. When a response returns, the target's count is decremented and the heap is rebalanced. This is significantly more efficient than scanning all targets linearly (O(n) per request) and is why ALB can handle thousands of targets without routing latency degradation. Real-world load balancers like HAProxy and Envoy use this same heap-based approach for their least-connections algorithms.
+
+### Consistent Hashing — Flow Hash and Session Affinity
+
+Consistent hashing maps both servers and requests onto a virtual ring using a hash function, so that adding or removing a server only redistributes a minimal fraction of keys. The NLB's flow hash algorithm is a form of consistent hashing: it hashes a tuple of (source IP, source port, destination IP, destination port, protocol) to determine which target receives the flow. All packets within a TCP connection hash to the same point on the ring and thus reach the same target, providing natural session affinity without cookies. When a target is removed (health check failure or deregistration), only the flows that hashed to that target's segment of the ring are redistributed to adjacent targets -- existing connections to healthy targets are undisturbed. ALB sticky sessions using the `AWSALB` cookie also apply a hash-based mapping from cookie value to target, though at Layer 7 rather than Layer 4.
+
+### Round-Robin Scheduling — Default ALB Distribution Algorithm
+
+Round-robin is a scheduling algorithm that assigns resources to consumers in a fixed circular order, ensuring each consumer gets an equal share. The ALB's default routing algorithm cycles through healthy targets sequentially: Request 1 goes to Server A, Request 2 to Server B, Request 3 to Server C, then back to A. This provides perfect fairness when all targets are identical in capacity and all requests take equal time to process. However, round-robin has a well-known weakness in systems with variable request durations: if one request takes 5 seconds while others take 10 milliseconds, the assigned server accumulates a backlog while others sit idle. This is exactly why the ALB offers the Least Outstanding Requests algorithm as an alternative -- it adapts to heterogeneous request costs, whereas round-robin assumes uniform cost. The same trade-off appears in CPU scheduling: simple round-robin works for equal time-slice processes, but shortest-job-first or priority scheduling is needed when task durations vary.
+
+### Weighted Random Sampling — Canary Deployments with Weighted Target Groups
+
+Weighted random sampling selects elements from a collection where each element has a weight that determines its probability of being chosen. ALB's weighted target group routing for canary deployments implements exactly this: when configured with Blue=90% and Green=10%, each incoming request is routed to the Blue target group with probability 0.9 and to the Green target group with probability 0.1, using a weighted random selection. The underlying implementation generates a random number and compares it against the cumulative weight distribution -- a technique known as the alias method or roulette-wheel selection in algorithm literature. This is the same algorithm used in A/B testing frameworks, genetic algorithm selection operators, and reservoir sampling. The gradual shift from 90/10 to 50/50 to 0/100 during a deployment is simply adjusting the weight vector over time, providing a statistically controlled traffic migration.

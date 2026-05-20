@@ -806,6 +806,26 @@ The redundancy patterns covered earlier (Active-Active, Active-Passive) are
 
 ---
 
+## DSA Connections
+
+### Exponential Backoff as a Recurrence Relation -- Retry Timing
+
+The exponential backoff formula `delay = base * 2^attempt` is a recurrence relation: `T(n) = 2 * T(n-1)` with `T(0) = base`. This is the same geometric progression that governs binary search's halving of the search space, but in reverse -- each retry doubles the wait. The added jitter (`random(0, base)`) transforms the deterministic recurrence into a randomized algorithm, converting a synchronized thundering herd (where all clients retry at identical times) into a uniformly distributed load across the time interval. The AWS SDK's default backoff (base=100ms, max=20s, max_retries=3) produces the sequence 100ms, 200ms, 400ms -- capped at 20s -- which is O(2^n) growth bounded by a constant, the same asymptotic pattern as doubling-strategy dynamic array resizing.
+
+### Quorum Systems and Majority Voting -- Raft Consensus
+
+Raft's core safety property -- that no two leaders can coexist in the same term -- relies on the pigeonhole principle applied to sets: if two groups each contain a strict majority of n nodes, their intersection is non-empty (at least one node belongs to both groups). This is the same combinatorial argument underlying quorum-based read/write protocols in distributed databases. The quorum math `f = floor((n-1)/2)` directly parallels the analysis of fault-tolerant voting circuits in hardware design. The document's observation that odd cluster sizes are optimal (n=4 tolerates the same failures as n=3 but with higher write latency) is an instance of the general principle that adding a node to an even-sized quorum system increases the majority threshold without improving fault tolerance -- a pure pigeonhole consequence.
+
+### Merkle Trees -- Data Integrity Verification
+
+A Merkle tree hashes data blocks at the leaves and recursively hashes pairs of child hashes up to a single root, enabling O(log n) verification that any single block is uncorrupted. In the context of cloud fault tolerance, Merkle trees are used by systems like Amazon's DynamoDB (based on Dynamo's anti-entropy protocol) and CockroachDB to detect and repair data divergence between replicas after a failure. When a node recovers from a crash, it exchanges Merkle tree roots with peers; if roots differ, the nodes walk down the tree to identify exactly which data ranges diverged, transferring only the O(log n) hashes and the changed blocks rather than the entire dataset. This makes post-failure repair efficient enough that Raft followers can catch up quickly, keeping the cluster's MTTR low.
+
+### State Machine Replication -- Deterministic Finite Automata
+
+Raft's replicated log is an implementation of the state machine replication paradigm: every node maintains an identical deterministic finite automaton (DFA), and applying the same sequence of inputs (log entries) in the same order guarantees identical states across all replicas. This is the distributed systems analog of running the same DFA on the same input string and getting the same accept/reject result. The append-only, monotonically-indexed log ensures that the transition function is applied in a total order, which is why Raft guarantees that committed entries are never lost -- any new leader's log is a prefix-or-equal of every committed sequence, preserving the DFA's state invariant.
+
+---
+
 ## Key Takeaways
 
 1. **Failure is a constant, not an event.** At scale, something is

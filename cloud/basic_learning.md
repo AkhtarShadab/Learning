@@ -411,6 +411,26 @@ SHA-256 -- a property rooted in number-theoretic hardness assumptions.
 
 ---
 
+## DSA Connections
+
+### Consistent Hashing -- Distributed Cache Scaling
+
+Consistent hashing arranges both servers and keys on a virtual ring, so adding or removing a node only redistributes keys from its immediate neighbors -- O(K/n) keys move instead of O(K). The document's discussion of auto-scaling and stateless horizontal scaling directly depends on this: when an ElastiCache Memcached cluster scales out, consistent hashing ensures that only the keys between the new node and its ring predecessor need to migrate. Without it, adding a cache node would invalidate the entire cache (a full rehash), causing a thundering herd to the database. The "permutations and consistent hashing" section in this document notes that virtual nodes reduce deviation to O(log n), which is what makes elastic scaling of caches practical at the 100,000+ key scale that production systems require.
+
+### Dynamic Programming -- Optimal Reserved/Spot/On-Demand Mix
+
+The document's cost math section frames the pricing mix as a linear optimization problem: minimize `C = sum(c_i * x_i)` subject to demand and budget constraints. This is solvable as a linear program, but the more general version -- choosing commitment durations (1-year vs 3-year), payment options (no upfront vs all upfront), and instance families across multiple workloads with varying demand profiles -- has overlapping subproblems that make it a dynamic programming problem. The "optimized 100-instance mix" example (60 reserved + 28 spot + 12 on-demand = 58% savings) is the output of such an optimization. Each subproblem asks: "given this workload's demand distribution, what is the cheapest coverage strategy for the next month, given commitments already made?" The optimal solution at month 12 depends on choices at months 1-11 -- classic DP structure.
+
+### Graph Theory (Shortest Path, Spanning Trees) -- Network Architecture
+
+The VPC/AZ/subnet layout in this document is a graph: regions are disconnected components, AZs are vertices within a region, and subnets are sub-vertices connected by route table edges. CDN routing from a Tokyo user to a Virginia origin traverses the shortest-latency path across AWS's backbone graph -- a Dijkstra problem where edge weights are propagation delays. The document notes that VPC peering across N regions uses minimum spanning trees (Kruskal/Prim) to minimize connections, and that capacity planning uses max-flow/min-cut (Ford-Fulkerson) to identify bottlenecks. The ALB's path-based routing (/api/* to one target, /static/* to another) is a trie-based dispatch at the application layer, mapping URL prefixes to backend target groups in O(prefix length) time.
+
+### Poisson Processes and Queuing Theory -- Availability and Scaling Thresholds
+
+The document models server failure as a Poisson process with rate lambda=0.001/hr, yielding P(survival over 24h) = e^(-0.024) = 97.6%. This is the same exponential distribution that underlies M/M/1 and M/M/c queuing models used for capacity planning. The auto-scaling formula `desired = ceil(current_capacity * current_metric / target)` is a deterministic approximation of the queue-theoretic result that for an M/M/c queue, utilization must stay below a threshold to maintain bounded waiting times. The document's step-scaling policy (add 3 instances at CPU > 80%, add 1 at CPU > 60%) is a piecewise-linear approximation of the nonlinear relationship between utilization and response time in queuing theory -- response time grows as 1/(1-rho), so the system must scale more aggressively as utilization approaches 1.0.
+
+---
+
 ## 8. Key Takeaways
 
 1. **Cloud is utility computing, not magic.** Pooling, virtualization, and

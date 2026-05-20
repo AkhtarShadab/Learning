@@ -571,3 +571,23 @@ START: What are your data access patterns?
 
 8. **Automate backups and test restores.** Automated backups are worthless if you have
    never verified that a restore actually works. Schedule quarterly restore drills.
+
+---
+
+## DSA Connections
+
+### B+ Trees — RDS and Aurora Indexing
+
+A B+ tree is a self-balancing tree where all values are stored in leaf nodes linked together, with internal nodes containing only keys for navigation. B+ trees provide O(log n) lookups and support efficient range scans by walking the linked leaf chain. Every relational database engine available in RDS (MySQL, PostgreSQL, Oracle, SQL Server) uses B+ trees as the default index structure. When you create an index on a column like `order_date`, the database builds a B+ tree where internal nodes guide searches and leaf nodes contain the indexed values plus pointers to the actual table rows. A query like `SELECT * FROM orders WHERE order_date BETWEEN '2024-01-01' AND '2024-03-31'` traverses the tree to the first matching leaf in O(log n), then walks the linked leaf list to collect all results sequentially. Aurora's shared storage layer replicates these B+ tree structures across 6 copies in 3 AZs, ensuring that the index data survives even a full AZ failure without needing to rebuild the tree.
+
+### LSM Trees — DynamoDB Write-Optimized Storage
+
+A Log-Structured Merge-tree (LSM tree) is a data structure that buffers writes in an in-memory sorted structure (memtable), then periodically flushes them to sorted, immutable files on disk (SSTables), and merges these files in the background. LSM trees provide O(1) amortized write performance at the cost of slightly slower reads, which must check multiple levels. DynamoDB uses an LSM-tree-based storage engine internally, which is why it achieves consistent single-digit-millisecond write latency regardless of table size. When you perform a `PutItem`, the write goes to an in-memory buffer first (fast), is acknowledged after replication to multiple storage nodes, and is later compacted into sorted runs on disk. This architecture explains DynamoDB's capacity model: WCUs map to the rate at which the memtable can absorb writes and the compaction process can keep up. The trade-off is that reads may need to check both the memtable and multiple on-disk levels, which is why DAX (the in-memory cache) provides such a dramatic speedup for read-heavy workloads -- it bypasses the LSM tree's multi-level read path entirely.
+
+### Hash Indexes — DynamoDB Partition Key Lookups via Consistent Hashing
+
+A hash index maps keys to storage locations using a hash function, providing O(1) average-case lookups for exact-match queries but no support for range scans on the hashed key. DynamoDB's partition key is a hash index: when you query `PK = 'USER#alice'`, DynamoDB hashes this value to determine which partition stores the item, then retrieves it in constant time. This is why partition key queries are so fast and why you cannot perform range queries on the partition key itself -- hash functions destroy ordering. The sort key, by contrast, is stored in sorted order within each partition (using a B-tree-like structure), which is why `SK begins_with 'ORDER#'` works as a range scan. Single-table design in DynamoDB is essentially the art of designing composite hash keys (`PK = 'USER#alice'`, `SK = 'ORDER#2024-01-15'`) that align with your access patterns, so that each query maps to a single hash lookup followed by an efficient range scan within that partition.
+
+### Doubly-Linked Lists + Hash Maps — ElastiCache Redis LRU Eviction
+
+Redis implements its LRU eviction policy using an approximated LRU algorithm that samples a configurable number of keys and evicts the least recently used among the sample. Under the hood, each Redis key-value entry maintains an LRU clock field (recording the last access time), and the key space is organized as a hash table for O(1) lookups. When Redis reaches its `maxmemory` limit and the eviction policy is `allkeys-lru`, it samples N random keys (default 5), checks their LRU clock values, and evicts the oldest. A classic textbook LRU cache uses a doubly-linked list (for O(1) move-to-front on access) combined with a hash map (for O(1) key lookup), achieving exact LRU in O(1) per operation. Redis trades exact LRU for approximate LRU to avoid the memory overhead of maintaining a full linked list across millions of keys -- a pragmatic engineering decision that the document's caching strategy section implicitly relies on when recommending Redis for session stores and read caches.

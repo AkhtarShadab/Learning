@@ -318,6 +318,22 @@ ad-cron-create \
 
 ---
 
+## DSA Connections
+
+### Min-Heap — Timer Queue for Scheduled Jobs
+
+A min-heap is a complete binary tree where every parent node is smaller than or equal to its children, giving O(1) access to the minimum element and O(log n) insertion and extraction. Production schedulers — including the one that underpins AgentDesk's cron system — typically store pending jobs in a min-heap keyed by their next-fire timestamp. When the scheduler's tick loop runs, it peeks at the root: if the root's timestamp is in the past, it extracts the job in O(log n), fires the agent session, computes the next occurrence, and re-inserts. This is exactly how the heartbeat pattern works — a `30m` interval heartbeat is a heap entry whose key advances by 1800 seconds after each extraction, and staggering multiple agent heartbeats with `ad-stagger` is the act of choosing initial keys that spread evenly across the heap.
+
+### Circular Buffer — Interval Drift and Sliding Windows
+
+A circular buffer (ring buffer) is a fixed-size array that wraps around, overwriting the oldest entry when full, providing O(1) enqueue and dequeue without memory allocation. In the context of AgentDesk's interval schedules, the run history for a cron job (`ad-cron-runs`) behaves like a circular buffer of recent executions — the system retains a bounded window of past runs for auditability while discarding older entries. The document's warning about session overlap (heartbeat interval shorter than session runtime) is a classic ring-buffer overflow scenario: new entries arrive before old ones are consumed, causing the buffer to wrap and producing duplicate, interleaved work. Keeping the interval strictly greater than the session budget is the scheduling equivalent of sizing your ring buffer larger than your burst rate.
+
+### Hash Map with Chaining — Cron Expression Dispatch
+
+A hash map with chaining stores key-value pairs in an array of buckets, resolving collisions by linking entries in the same bucket into a list, providing average O(1) lookup. AgentDesk's scheduler must efficiently dispatch the right jobs at each clock tick, which maps naturally to hashing the current `(minute, hour, day, month, weekday)` tuple against registered cron expressions. Each "bucket" corresponds to a time slot, and multiple jobs sharing the same schedule (e.g., two agents both on `0 9 * * MON`) chain together and all fire. The document's pattern of a "Daily Standup" and "Stale Task Sweep" both running Monday mornings illustrates two entries hashing to the same bucket — the scheduler iterates the chain and fires both.
+
+---
+
 ## Critical Rule: Always Use AgentDesk Scheduling
 
 **Never use Claude Code's built-in `ScheduleWakeup` tool or the `schedule` skill for AgentDesk jobs.**

@@ -579,6 +579,26 @@ early; refactor when you hit real scaling limits.
 
 ---
 
+## DSA Connections
+
+### Dynamic Arrays (Amortized Resizing) -- Auto Scaling Group Mechanics
+
+A dynamic array (like Python's `list` or Java's `ArrayList`) doubles its backing storage when full, achieving O(1) amortized insertion despite occasional O(n) copy operations. Auto Scaling Groups follow the same pattern: capacity jumps in discrete increments (adding instances), and the system tolerates brief periods of over-provisioning after a scale-out event because the amortized cost of that extra capacity is low relative to the alternative of dropping requests. The document's cooldown period is the scaling analog of the dynamic array's "don't resize again until the new capacity is actually needed" heuristic. Scale-out-fast/scale-in-slow mirrors the asymmetry in dynamic arrays, where shrinking is typically deferred until utilization falls below 25% (not 50%) to avoid thrashing -- the exact same oscillation problem the cooldown mechanism prevents.
+
+### Consistent Hashing -- Database Sharding and Cache Rebalancing
+
+Consistent hashing arranges both servers and keys on a virtual ring, so adding or removing a node only redistributes keys from its immediate neighbors -- O(K/n) keys move instead of O(K). In the context of the document's database sharding section, this is exactly how distributed caches (e.g., Memcached rings) and storage systems like DynamoDB rebalance data when nodes scale in or out. When an auto-scaler adds a new cache node, only the keys that fall between the new node and its predecessor on the ring need to migrate, keeping rebalancing overhead minimal even under rapid scaling events. Without consistent hashing, adding a shard to the document's user_id-based partitioning scheme would require rehashing all keys -- an O(K) operation that defeats the purpose of elastic scaling.
+
+### Control Theory (PID Controllers) -- Target Tracking Scaling Policy
+
+Target tracking auto scaling is a discrete-time proportional-integral (PI) controller: the "error signal" is the difference between the current metric (e.g., CPU at 78%) and the target (50%), and the controller output is the number of instances to add or remove. The formula `desired = ceil(current_capacity * current_metric / target)` is a proportional controller (P-term), and the cooldown period acts as a low-pass filter to prevent derivative oscillation. Step scaling adds a nonlinear gain schedule (higher error = more aggressive response), which is equivalent to gain scheduling in control theory. Predictive scaling adds a feedforward term based on historical patterns, analogous to a model-predictive controller that anticipates disturbances before they arrive.
+
+### Load Balancing as Scheduling -- Weighted Round-Robin and Least Connections
+
+The document's load balancer distributing requests across horizontally-scaled instances is a classic scheduling problem. Round-robin is the scheduling equivalent of FIFO with time-slicing: each server gets requests in cyclic order, O(1) per dispatch, no state required. Least-connections is a priority-queue-based scheduler: the load balancer maintains a min-heap of servers keyed by active connection count, dispatching to the minimum in O(log n) time. Weighted round-robin assigns capacity-proportional shares, equivalent to the Weighted Fair Queuing algorithm used in network packet scheduling. The choice between these algorithms mirrors the classic scheduling trade-off: simpler algorithms (round-robin) have lower dispatch overhead but worse load distribution, while stateful algorithms (least-connections) achieve better balance at the cost of maintaining per-server state.
+
+---
+
 ## Key Takeaways
 
 1. **Horizontal scaling beats vertical scaling.** Vertical has a ceiling

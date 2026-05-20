@@ -543,6 +543,20 @@ WAF (global)          SQS / SNS             RDS Instance*
 
 ---
 
+## DSA Connections
+
+### Consistent Hashing — Partition-to-AZ Data Distribution
+
+Consistent hashing is a technique that maps data to nodes on a virtual ring, so that adding or removing a node only redistributes a small fraction of keys rather than reshuffling everything. Cloud providers use consistent hashing internally to distribute objects across Availability Zones and storage nodes within a region. When S3 stores an object across a minimum of three AZs, the storage layer uses a hash of the object key to determine which set of physical storage nodes will hold replicas, ensuring even distribution without a central lookup table. If an AZ goes offline, only the portion of the ring assigned to that AZ's nodes needs re-replication, rather than a full data reshuffle -- this is why S3 achieves 11 nines of durability while remaining resilient to AZ-level failures.
+
+### Quadtrees — Geospatial Indexing for Region and Edge Location Selection
+
+A quadtree is a tree data structure where each internal node has exactly four children, recursively subdividing a two-dimensional space into quadrants. Cloud providers and DNS services like Route 53 use geospatial indexing structures similar to quadtrees to determine which edge location or region is closest to a requesting user. When a user in Tokyo makes a DNS query, the resolution system must rapidly find the nearest edge location among 400+ candidates worldwide. A quadtree-like spatial index partitions the globe into progressively smaller regions, enabling O(log n) lookup of the nearest PoP instead of computing distances to every edge location. This is the mechanism behind latency-based routing and GeoDNS, which direct users to the closest CloudFront edge or regional endpoint.
+
+### Graph Traversal (Dijkstra's Algorithm) — CDN Routing and Multi-Region Traffic Paths
+
+Dijkstra's algorithm finds the shortest path between nodes in a weighted graph, where edge weights represent costs such as latency or hop count. The AWS global backbone network that connects regions, edge locations, and Regional Edge Caches is fundamentally a weighted graph, where nodes are PoPs and edges are fiber links with latency as their weight. When CloudFront routes a cache miss from a Tokyo edge location through a Regional Edge Cache to an origin in us-east-1, the network layer runs shortest-path calculations to determine the optimal fiber route across the Pacific. This is also how Global Accelerator selects the best path through the AWS backbone -- it continuously evaluates network conditions and applies shortest-path routing to steer traffic away from congested or degraded links, achieving lower and more consistent latency than the public internet's default BGP routing.
+
 ## Summary
 
 Cloud global infrastructure is a hierarchy of abstractions over physical data centers.

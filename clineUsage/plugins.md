@@ -260,3 +260,19 @@ agdesk_curl "$AGDESK_BASE/tasks/..."
 | Massive SKILL.md files | Bloats agent context on every load | Keep SKILL.md concise; link to separate docs for details |
 | Skills with no SKILL.md | Agent can't discover the capability | Always include a SKILL.md manifest |
 | MCP tools for simple HTTP calls | Overkill, harder to debug | Use `Bash` + `curl` or `ad-*` scripts for simple API calls |
+
+---
+
+## DSA Connections
+
+### Strategy Pattern — Plugin Dispatch and Interchangeable Capability Extensions
+
+The **strategy pattern** defines a family of interchangeable algorithms behind a common interface, allowing the client to select and swap strategies at runtime without modifying the calling code. AgentDesk's plugin system implements this precisely: skill plugins (`agent-desk`, `db-tools`, `git-helper`) and MCP plugins (`chrome-devtools`, custom MCPs) are all concrete strategies conforming to the same structural interface — a manifest describing capabilities, an invocation mechanism, and structured output the agent can parse. When Claude Code executes `Skill({ skill: "agent-desk" })`, it is selecting a strategy at runtime from the skill registry; the core agent loop does not change regardless of which plugin is invoked. Adding a new plugin is adding a new strategy: create a directory with a SKILL.md manifest and executable scripts, and it drops into the registry without modifying the agent's orchestration code. This open-closed design is why the document shows skills, MCP servers, and integration plugins coexisting seamlessly — they are all strategies behind the same dispatch interface.
+
+### Hash Map — Config Resolution and Plugin Registry Lookup
+
+A **hash map** provides O(1) average-time key-value lookup by hashing a key to an array index, making it the canonical structure for registries and configuration stores. The plugin system uses hash maps at multiple levels: the MCP server configuration in `settings.json` maps server names (`"chrome-devtools"`) to their connection details (command, args, env) as a JSON object — a literal hash map that the runtime reads to initialize plugin connections. The skill directory (`~/.claude/skills/`) is a filesystem-backed hash map where each subdirectory name is a key and its contents (SKILL.md, scripts, config files) are the value. The config resolution hierarchy — environment variable, then skill-dir file, then fallback — is a chain of hash map lookups: first check the env hash map (`process.env`), then the file-based map (`.url`, `.token`), then the hardcoded default. This layered lookup enables the "Config Override for Multiple Environments" pattern where `AGDESK_URL=http://prod-server:3838` overrides the `.url` file without editing it, exactly as a hash map's `get` method checks successive backing stores.
+
+### Trie — Skill Name Discovery and Command Prefix Matching
+
+A **trie** (prefix tree) is a tree data structure where each node represents a character, enabling O(k) prefix-based search where k is the query length. When Claude Code encounters a task and evaluates which skill to activate, it matches the task description against all installed skill names and descriptions. The skill invocation mechanism — `Skill({ skill: "agent-desk" })` — requires exact name matching, but the discovery phase where the agent browses available skills (especially via the `/` slash-command menu) benefits from prefix matching: typing `/ag` in the chat narrows candidates to skills whose names start with those characters. The `ad-*` command namespace within the agent-desk skill is itself a prefix-partitioned command set: `ad-tasks`, `ad-task`, `ad-comment`, `ad-status`, `ad-plan` all share the `ad-` prefix, making tab-completion and command discovery an O(k) trie walk rather than a linear scan of all available commands. Real-world CLI autocompletion systems (bash completion, zsh completion) use trie variants internally for exactly this pattern of prefix-based command resolution.

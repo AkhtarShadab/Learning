@@ -968,4 +968,24 @@ Every API call sends the **full conversation** — system prompt + all messages 
 
 ---
 
+## DSA Connections
+
+### DAG (Directed Acyclic Graph) — Platform Architecture and Feature Dependency Layers
+
+A **directed acyclic graph** (DAG) is a graph with directed edges and no cycles, enabling topological sorting to determine a valid processing order. Cline's two-layer platform architecture — the Agent Core SDK at the bottom powering VS Code, CLI, Kanban, and custom apps at the top — forms a DAG of dependency relationships: the SDK depends on `@cline/core`, `@cline/agents`, `@cline/llms`, and `@cline/shared`, and each surface application depends on the SDK. Features cascade through this DAG: the agentic loop (Section 4.1) lives in the core and is inherited by all surfaces, while Kanban-specific features (per-card worktrees, auto-commit) are leaf nodes that depend on the core but add no upstream dependencies. The "Supported Editors" list (VS Code, Cursor, Windsurf, JetBrains, etc.) are sibling leaves in this DAG — independent of each other, each depending on the same SDK parent. A topological sort of this architecture DAG yields the build order: shared utilities first, then core, then agents and LLM gateway, then the SDK package, then each surface application — exactly the order `npm` must resolve and build the monorepo.
+
+### Hash Map — System Prompt Assembly and Feature Registry
+
+A **hash map** stores key-value pairs with O(1) average-time lookup, making it the canonical structure for registries, configuration stores, and indexed collections. Cline assembles its system prompt (Section 4.3) by performing multiple hash map lookups: available tools are indexed by name in a tool registry, `.clinerules` files are indexed by filename in the rules registry, custom instructions are indexed by scope (global vs. workspace), and OS/shell metadata is indexed by key. The 8 permission categories (Section 14) form a hash map from permission name to policy value (`"read_project_files" → "auto-approve"`, `"terminal_all_commands" → "manual"`), checked in O(1) on every tool invocation. The MCP configuration (Section 13) is a JSON hash map from server name to connection details. The cost estimates table (Section 20) is conceptually a hash map from task type to token range. Throughout the platform, hash maps provide the constant-time lookups that keep the tight LLM-tool-approval cycle responsive across its 10-20 iterations per task.
+
+### State Machine — Modal Operation and Task Lifecycle
+
+A **finite state machine** (FSM) models a system as a set of discrete states with explicit transitions triggered by events. The Plan/Act dual-mode system (Section 6) is a two-state FSM: the agent is always in exactly one of `{PLAN, ACT}`, with the user's toggle or `/deep-planning` command triggering transitions. In PLAN state, file-modification tools are structurally disabled — not just discouraged, but unavailable — making illegal transitions impossible by construction. The Checkpoint restoration system (Section 7) extends this to a branching FSM: from any checkpoint state, three transitions are available (Restore Files, Restore Task, Restore Both), each producing a different system state. The Kanban workflow (Section 15) adds a multi-state task FSM: `Created → Picked Up → In Progress → Auto-Committed → Reviewed → Merged`. Each of these FSMs composes cleanly because they operate on orthogonal state dimensions — the Plan/Act mode FSM is independent of the Checkpoint FSM, which is independent of the Kanban task FSM — allowing the full system state to be represented as the Cartesian product of all three without exponential blowup.
+
+### Strategy Pattern — Model Selection and Provider Gateway
+
+The **strategy pattern** defines a family of interchangeable algorithms behind a common interface, allowing the client to select among them at runtime. Cline's provider gateway (`@cline/llms`) implements this precisely: Anthropic, OpenAI, Google Gemini, AWS Bedrock, DeepSeek, Ollama, and 30+ other providers are concrete strategies that all conform to the same interface — accept a prompt, return a completion with tool calls. The dual-model configuration (Section 17) is runtime strategy selection: Plan mode selects the `claude-opus-4` strategy for stronger reasoning, Act mode selects `claude-sonnet-4-6` for faster implementation, and the surrounding orchestration code does not change. OpenRouter takes this one level deeper as a meta-strategy: it is itself a strategy that internally delegates to 100+ sub-strategies with fallback routing. The 7 built-in tools (Section 5) are also strategies behind a common tool interface, and the tool selection decision tree in the tools document is a decision procedure for choosing which strategy to dispatch to at each step of the agentic loop.
+
+---
+
 *Last updated: 2026-05-13 | Based on official docs: docs.cline.bot*

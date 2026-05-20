@@ -583,3 +583,19 @@ aws autoscaling create-auto-scaling-group \
 7. **Treat instances as cattle, not pets.** Use Auto Scaling Groups, launch templates,
    and immutable deployments. If an instance has problems, replace it; do not SSH in
    and fix it.
+
+---
+
+## DSA Connections
+
+### Priority Queues (Binary Heaps) — Auto Scaling Group Instance Selection
+
+A priority queue is a data structure that always surfaces the highest-priority element in O(log n) time, typically implemented as a binary heap. When an Auto Scaling Group needs to terminate instances during a scale-in event, it must select which instances to remove based on a policy (e.g., oldest launch configuration, closest to the next billing hour, or the AZ with the most instances). Internally, the ASG scheduler maintains a priority-ordered structure of instances keyed by the termination policy criteria. When scale-in is triggered, the scheduler extracts the highest-priority candidate in O(log n) time rather than scanning all instances linearly. This same pattern applies to Spot Fleet allocation, where the fleet manager must continuously select instance types and AZs that offer the lowest interruption probability and best price, maintaining a priority queue of capacity pools ranked by the `capacity-optimized` or `lowest-price` strategy.
+
+### Bin Packing — EC2 Placement and Instance Scheduling
+
+Bin packing is an NP-hard optimization problem where items of varying sizes must be packed into a finite number of bins with fixed capacity, minimizing wasted space. The AWS hypervisor layer solves a variant of bin packing when placing EC2 instances onto physical hosts. Each Nitro-based physical server has a fixed amount of CPU, memory, and network bandwidth, and incoming instance requests (the "items") must be packed onto hosts (the "bins") to maximize utilization while respecting isolation guarantees. The scheduler uses heuristics like first-fit-decreasing (sort instances by resource demand, then place each on the first host with sufficient capacity) to achieve near-optimal packing. This is why launching a very large instance type (like `p5.48xlarge`) may occasionally fail with an `InsufficientInstanceCapacity` error -- the bin packing solver cannot find a host with enough contiguous resources, even though aggregate capacity exists across fragmented hosts.
+
+### Round-Robin Scheduling — CPU Credit Model for Burstable Instances
+
+Round-robin is a scheduling algorithm that assigns equal time slices to each process in a circular queue, ensuring fair CPU sharing. The T-family burstable instance credit model is a direct application of CPU scheduling theory: each vCPU earns credits at a fixed rate (analogous to a token bucket), and the instance is allowed to burst above its baseline only while tokens remain. Under the hood, the Nitro hypervisor implements a variant of weighted fair queuing where burstable instances receive a guaranteed baseline share (e.g., 20% for t3.medium) and can borrow additional cycles up to their credit balance. When credits are exhausted in `standard` mode, the scheduler enforces the baseline by throttling the instance back to its guaranteed time slice -- exactly like a round-robin scheduler with a strict quantum. Understanding this as a scheduling problem explains why sustained workloads above baseline are better served by M/C families: they receive a full, unthrottled time quantum without the credit overhead.

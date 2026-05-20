@@ -411,6 +411,22 @@ The utility model is not universally superior. Be aware of its limits:
 
 ---
 
+## DSA Connections
+
+### Amortized Analysis -- Pay-Per-Use Metering
+
+Amortized analysis assigns an average cost to each operation in a sequence, even when individual operations vary wildly in expense -- exactly how cloud billing works. A single API call might trigger a burst of compute, but the metered cost per vCPU-second smooths that spike into a predictable per-unit charge, just as inserting into a dynamic array is O(1) amortized despite occasional O(n) resizing. When a hyperscaler prices an on-demand instance at $0.0116/hr, that flat rate amortizes the provider's capital expenditure, cooling, staffing, and over-provisioning buffer across millions of metered hours. The customer experiences a constant per-unit price; the provider absorbs the variance -- the same mental shift that amortized analysis demands when reasoning about worst-case vs. average-case costs.
+
+### Token Bucket Algorithm -- Demand Shaping and Burst Capacity
+
+The token bucket algorithm adds tokens at a fixed rate and lets a consumer spend accumulated tokens in bursts, enforcing a long-run average rate while permitting short spikes. AWS burstable T-series instances implement exactly this pattern: CPU credits accrue at a steady rate while the instance is idle, and the instance spends those credits to burst above its baseline during demand peaks. S3 request rate limits, API Gateway throttling, and DynamoDB provisioned capacity all use token-bucket-style rate limiting. The algorithm elegantly mirrors the utility model's promise of "pay for what you use, burst when you need to" by bounding the average consumption while allowing instantaneous elasticity.
+
+### Dynamic Programming -- Optimal Pricing Strategy Selection
+
+Dynamic programming solves optimization problems by breaking them into overlapping subproblems and caching intermediate results. Choosing the cost-optimal mix of Reserved Instances, Savings Plans, On-Demand, and Spot across dozens of instance types, regions, and commitment lengths is a multi-dimensional optimization problem with exactly this structure: the optimal coverage for month 12 depends on commitments made in months 1 through 11, and the subproblems (covering each workload segment) overlap heavily. AWS Cost Explorer's RI purchase recommendations effectively solve a DP-style knapsack variant, selecting which commitment combinations minimize total cost subject to budget and coverage constraints.
+
+---
+
 ## Mental Model Summary
 
 When you think about cloud computing, think about the electric grid:

@@ -635,6 +635,26 @@ Most teams should target Level 3-4. Level 5 requires dedicated platform/SRE team
 
 ---
 
+---
+
+## DSA Connections
+
+### Sliding Window — CloudWatch Metric Periods and Alarm Evaluation
+
+A sliding window is a technique that maintains a fixed-size window over a data stream, updating aggregate statistics in O(1) as new elements enter and old elements exit. CloudWatch alarms evaluate metrics using a sliding window: when you configure an alarm with `period: 300` (5 minutes) and `evaluation-periods: 3`, CloudWatch maintains a sliding window of three 5-minute data points and evaluates the threshold condition against each window position. The M-of-N datapoints-to-alarm feature (e.g., "3 of 5 periods must breach") is a generalization where the window has N slots and at least M must satisfy the condition. This is the same algorithm used in network congestion detection (sliding window over packet loss rates) and rate limiting (sliding window log or counter). Anomaly detection extends this by building an ML model over a much larger window (2+ weeks of historical data) and comparing the current window against the predicted band, effectively implementing a two-level sliding window: a short window for the current value and a long window for the expected baseline.
+
+### Reservoir Sampling — X-Ray Trace Sampling Rules
+
+Reservoir sampling is an algorithm that selects k items uniformly at random from a stream of unknown length n, using O(k) memory. When X-Ray samples traces at a 5% rate from normal API traffic, it implements a variant of reservoir sampling: for each incoming request, a random number is generated and compared against the sampling rate threshold (0.05), and only matching requests are fully traced. The fixed-rate sampling in the document's sampling rules table (0% for health checks, 5% for normal API, 100% for errors) is a stratified sampling scheme where different traffic types have different reservoir sizes. This ensures that the trace storage budget (the "reservoir") is allocated to the most valuable traces rather than being overwhelmed by high-volume, low-value traffic like health checks. The practical benefit is that you can analyze latency distributions and error patterns from the sampled traces with statistical confidence, without paying to trace every single request -- exactly as reservoir sampling provides a representative sample without storing the entire stream.
+
+### Bloom Filters — CloudWatch Logs Metric Filters and Pattern Matching
+
+A Bloom filter is a probabilistic data structure that uses multiple hash functions to test set membership in O(k) time with no false negatives. CloudWatch Metric Filters process log streams at high throughput by applying pattern matching to every log event -- when you define a filter pattern like `{ $.level = "ERROR" }`, the filter engine must evaluate this condition against millions of log events per second. Internally, the filter engine uses indexed data structures similar to Bloom filters to quickly eliminate non-matching events: the structured JSON fields are hashed and tested against a compact representation of the filter pattern before performing full pattern evaluation. This two-phase approach (fast probabilistic check, then exact verification) enables CloudWatch to support subscription filters and metric filters on high-throughput log groups (like those from a fleet of Lambda functions) without introducing backpressure on the log ingestion pipeline. The same principle applies to EventBridge content-based filtering, which must evaluate complex event patterns against high-volume event streams in real time.
+
+### Time-Series Compression (Delta-of-Delta Encoding) — CloudWatch Metrics Storage
+
+Time-series databases use delta-of-delta encoding to compress metric data: instead of storing absolute timestamps and values, they store the difference between consecutive differences, exploiting the fact that metrics are typically sampled at regular intervals with gradually changing values. CloudWatch Metrics stores billions of data points across millions of metric streams, and achieving this scale requires aggressive compression. When you publish a metric at 60-second intervals, the timestamps increment by a constant 60, so the delta is 60 and the delta-of-delta is 0 -- compressible to nearly zero bits. Similarly, a CPU utilization metric hovering around 45% produces small deltas that compress efficiently. This is the same encoding used by Gorilla (Facebook's in-memory time-series database) and Prometheus's TSDB. Understanding this compression explains CloudWatch's pricing model: high-resolution metrics (1-second periods) cost more not just because of increased volume, but because shorter intervals produce less predictable deltas, reducing compression ratios and consuming more storage per data point.
+
 *The patterns here -- structured logging, correlation IDs, SLOs, error budgets, OTEL
 instrumentation -- are transferable to any cloud provider. Master the concepts and the
 specific service names become interchangeable.*

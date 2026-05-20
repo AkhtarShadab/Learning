@@ -567,6 +567,26 @@ routing).
 
 ---
 
+## DSA Connections
+
+### Graph Traversal (Dijkstra's Algorithm) -- Route Table Evaluation and CDN Routing
+
+A cloud network is a weighted directed graph: nodes are VPCs, subnets, gateways, and edge locations; edges are routes with associated latency or cost weights. When Route 53 uses latency-based routing to direct a user in Tokyo to the nearest CloudFront edge, it is solving a single-source shortest-path problem -- the same problem Dijkstra's algorithm addresses in O((V + E) log V) time with a min-heap. The document's packet journey from Sydney through CloudFront to us-east-1 traverses the shortest-latency path across AWS's backbone graph. Similarly, BGP (Border Gateway Protocol), which underlies all internet routing including VPC-to-internet paths, uses a distance-vector algorithm that is a distributed variant of Bellman-Ford -- trading Dijkstra's centralized optimality for decentralized convergence across autonomous systems.
+
+### Trie (Prefix Tree) -- Longest Prefix Match in Route Tables
+
+The longest prefix match algorithm described in the route table section -- where a packet to 10.0.5.17 matches /24 over /16 over /0 -- is implemented using a binary trie (also called a radix tree or Patricia trie). Each bit of the destination IP address determines a left or right branch in the trie, and the deepest matching node is the selected route. Hardware routers implement this in TCAMs (ternary content-addressable memory) for O(1) lookups, but the logical structure is a trie with up to 32 levels for IPv4. CIDR notation directly encodes the trie depth: /16 means "match the first 16 bits," which corresponds to traversing the trie to depth 16. This is why more specific routes (longer prefixes, deeper trie nodes) always win -- they represent a more precise match in the trie, just as a longer key match in a trie is always more specific than a shorter one.
+
+### Spanning Trees -- VPC Peering vs Transit Gateway Topology
+
+The document's comparison of VPC peering (requiring N*(N-1)/2 connections for N VPCs) versus Transit Gateway (a centralized hub) directly mirrors the graph theory distinction between a complete graph and a star topology. VPC peering creates a complete graph K_n with O(n^2) edges, which is expensive to manage and non-transitive. Transit Gateway creates a star graph with O(n) edges and transitive routing -- topologically equivalent to a spanning tree of the complete graph. This is the same optimization that the Spanning Tree Protocol (STP) performs in physical Ethernet networks: it finds a loop-free subgraph (tree) that connects all nodes with minimum edges. The Transit Gateway is, in effect, the cloud-level spanning tree that replaces an unmanageable full mesh with a minimal connected topology.
+
+### Adjacency Lists -- Security Group Rule Evaluation
+
+Security groups and NACLs are evaluated as rule sets that can be modeled as adjacency lists in a directed graph where nodes are (source, destination) pairs and edges represent allowed traffic flows. A security group with rules allowing HTTP from 0.0.0.0/0 and SSH from 10.0.0.0/16 defines two edges in this access graph. The stateful property of security groups means that for every edge (A -> B) in the inbound adjacency list, the reverse edge (B -> A) is implicitly added to the outbound list -- automatic bidirectional edge insertion. NACLs, being stateless, require explicit edges in both directions. Evaluating whether a packet is allowed is a graph reachability query: "does a path exist from source to destination through the allowed-traffic graph?" Network segmentation via VPCs, subnets, and security groups is the practice of partitioning this graph into disconnected components to minimize blast radius.
+
+---
+
 ## Key Takeaways
 
 1. **VPCs are virtual data centers.** They give you a logically isolated
