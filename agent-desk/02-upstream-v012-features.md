@@ -288,19 +288,3 @@ When a singleton needs to be shared between `tsx` (server.ts) and webpack (Next.
 `@/` path aliases work in static imports (resolved at startup by `tsconfig-paths/register`) but break in dynamic `await import()` under Node's native ESM resolver. Either hoist to static imports or switch to relative paths for dynamic imports.
 
 ---
-
-## DSA Connections
-
-### Tree Traversal (DFS) — Filesystem Walk for Module Resolution
-
-A **depth-first search (DFS)** traverses a tree or graph by exploring as far as possible along each branch before backtracking. The Notion MCP fix (Section 5) and the `jq` fallback fix (Section 1) both use a DFS up the filesystem directory tree: starting from the current working directory, the algorithm walks parent-by-parent (`path.dirname(dir)`) checking for `node_modules/@notionhq/notion-mcp-server/bin/cli.mjs` at each level until it either finds the file or reaches the filesystem root. This is a classic DFS on a singly-linked list (each directory has exactly one parent), terminating when `parent === dir` — the root sentinel. The fix was necessary because webpack's static `require.resolve()` performs this same walk at build time and bakes the result into a numeric module ID, which breaks at runtime when the actual filesystem path is needed.
-
-### Singleton Cache with Invalidation — globalThis Deduplication Pattern
-
-A **cache** stores computed results for reuse, and **cache invalidation** is the process of evicting stale entries. The dual-instance bugs fixed in Sections 2 and 4 (Scheduler and ChatBridge) are fundamentally cache coherence problems: `tsx` and webpack each maintained their own cached singleton instance (module-level `let _instance`), creating two independent caches for what should be shared state. The `globalThis` fix establishes a single authoritative cache entry. The `resetSessionForKey()` bug in the ChatBridge was specifically a cache invalidation failure — clearing one cache (`_bridge` in the webpack evaluator) left the other (`_bridge` in the tsx evaluator) serving stale history from its `hydratedKeys` map. This mirrors the "write-invalidate" protocol in CPU caches, where a write to one cache must invalidate all other copies to prevent stale reads.
-
-### Exponential Backoff — Dispatcher Error Escalation
-
-**Exponential backoff** is an algorithm where retry delays increase geometrically after each failure, preventing a failing component from consuming unbounded resources. The dispatcher's error handling (referenced in Section 2's scheduler fixes) implements a stepped variant: Level 0 allows 3 errors before stalling for 2 minutes, Level 1 stalls for 10 minutes after one more error, and Level 2 auto-pauses the agent entirely. The stall durations (0 → 2 min → 10 min → permanent pause) grow super-linearly, which is more aggressive than standard 2^n backoff but appropriate for an autonomous agent system where repeated failures likely indicate a systemic problem (wrong API key, broken system prompt) rather than a transient network blip. The belt-and-suspenders `enabled === 1` check added to `fireJob()` in this release acts as a circuit breaker — a complementary pattern that cuts off execution entirely when the system is in a known-bad state.
-
-*Document created: 2026-05-03 | Based on upstream commits `6739c30`→`4b78d30`*

@@ -435,23 +435,3 @@ All real-time events flow through a central broadcast hub. Clients subscribe to 
 | **Adaptive dispatcher tick rate** | Saves compute when idle; fast response when agents are actively working |
 
 ---
-
-## DSA Connections
-
-### Directed Acyclic Graph (DAG) — Agent-Task Dependency Flow
-
-A **directed acyclic graph (DAG)** is a graph with directed edges and no cycles, commonly used to model dependency relationships where work must flow in one direction. AgentDesk's end-to-end request flow (Section "How a Full Request Flows") forms a DAG: a user message enters the ChatBridge, which depends on the SessionPool, which depends on the per-agent lock, which spawns an SDK subprocess, which may route through the proxy, which depends on the provider credentials store. No component in this chain can trigger a callback to an earlier stage, making the flow acyclic. Understanding this as a DAG clarifies why any single component failure (e.g., proxy down) cleanly propagates an error back up the chain without risking circular retries or deadlocks — the same property that makes DAG-based build systems like Make and Bazel reliable.
-
-### Adaptive Timer Wheel — Dispatcher Tick Rate
-
-A **timer wheel** (or hierarchical timing wheel) is a data structure that efficiently manages a large number of timers by bucketing them into slots on a rotating wheel, achieving O(1) timer insertion and expiration. AgentDesk's dispatcher implements a simplified variant with three fixed buckets — Active (15s), Cooling (45s), and Idle (90s) — rather than a full wheel. The dispatcher transitions between buckets based on recent activity: the last-activity timestamp acts as the wheel's cursor, and each tick evaluates which bucket the system falls into. A full timer wheel implementation would allow per-agent adaptive rates (e.g., a busy agent at 15s while idle agents sit at 90s), reducing unnecessary DB queries. The current three-tier approach is effectively a degenerate timer wheel with three slots and a global cursor.
-
-### Publish-Subscribe Queue — WebSocket Event Hub
-
-A **publish-subscribe (pub/sub) system** decouples event producers from consumers by routing messages through named channels (topics). The WebSocket hub (`ws/hub.ts`) implements pub/sub with three channel types: `global`, `agent:<id>`, and `task:<id>`. Producers (dispatcher, ChatBridge, file watcher, scheduler) emit events without knowing which browser clients are listening. Subscribers register interest in specific channels, and the hub broadcasts only matching events to each connected client. This is the same pattern used by Redis Pub/Sub and Apache Kafka — it allows AgentDesk to scale the number of dashboard viewers without adding load to the core subsystems, since event fan-out is handled entirely by the hub's subscriber map (a `Map<clientId, Set<channel>>`).
-
-### Singleton Pattern via Global Symbol Table — Cross-Module Shared State
-
-A **symbol table** is a data structure (typically a hash map) that maps identifiers to their associated data, used by compilers and runtimes to resolve variable names. The `globalThis` singleton pattern used for ChatBridge and Scheduler (documented in the Design Decisions section) exploits Node.js's global symbol table to ensure exactly one instance exists across module evaluation boundaries. When `tsx` and webpack each evaluate `chat-bridge.ts`, they create separate module-scope variables — effectively two entries in two separate symbol tables. By keying on `globalThis.__agdeskChatBridge`, both evaluators read and write the same entry in the process-level symbol table, which is shared across all module systems. This is analogous to how databases use a global lock manager with a single hash table of lock entries — multiple query executors must all consult the same table to avoid conflicting operations.
-
-*Last updated: 2026-04-30 | Covers AgentDesk v0.1.x*

@@ -584,19 +584,3 @@ curl http://localhost:9377/health
 ```
 
 ---
-
-## DSA Connections
-
-### State Machine — Test Coverage as State-Transition Coverage
-
-A **state machine** defines a system's valid states and the transitions between them, and thorough testing requires exercising every transition, not just every state. The task lifecycle tested via `curl` commands in Section 7 (`todo → assigned → planning → in-progress → review → done/rejected`) is a state machine with 7 states and ~10 valid transitions. The testing guide implicitly covers the "happy path" transitions (create → update status → complete) but a rigorous test plan would enumerate all valid transitions *and* verify that invalid ones (e.g., `todo` directly to `done`) return errors. This is the basis of **model-based testing** — generating test cases from a formal state machine model. Each `curl -X PATCH` command in the guide is exercising one edge in the state transition graph; full coverage means hitting every edge at least once.
-
-### Sliding Window — Dispatcher Tick Rate Tuning
-
-A **sliding window** algorithm maintains a fixed-size window over a data stream, computing aggregates (sum, max, count) as the window advances. The dispatcher tuning section (Section 10) configures `tickActiveMs`, `tickCoolingMs`, and `tickIdleMs` — these control a sliding window over recent agent activity. The dispatcher tracks "last activity timestamp" and classifies the current moment into one of three zones based on how far that timestamp has slid into the past (0-2 min = active, 2-5 min = cooling, 5+ min = idle). When testing with shortened intervals (5s / 10s / 15s), you are shrinking the sliding window to make the dispatcher more responsive during development. The risk is that an excessively small window causes **thrashing** — rapidly oscillating between active and idle states — which is why the guide warns to restore defaults for production.
-
-### Hash Table with Chaining — Test Discovery and Module Resolution
-
-A **hash table with chaining** resolves collisions by storing multiple entries per bucket in a linked list. Vitest's test discovery system (Section 11) uses a similar approach: test files are discovered by globbing (`**/*.test.ts`), then grouped (hashed) by directory path into test suites. When you run `npx vitest run src/lib/claudecode/threshold-utils.test.ts`, Vitest hashes the file path to locate its suite, then chains through all `describe`/`it` blocks within that file. The co-located test convention (`your-module.test.ts` alongside `your-module.ts`) ensures that the hash function (directory path) naturally groups related tests together, making O(1) suite lookup possible. This is why Vitest can run a single file in isolation without scanning the entire test tree — it directly indexes into the right bucket.
-
-*Last updated: 2026-04-26*
