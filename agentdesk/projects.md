@@ -148,4 +148,19 @@ A team wants to create a dedicated project for all their internal documentation.
 # Via the REST API
 curl -X POST http://localhost:3737/api/v1/projects \
   -H "Content-Type: application/json" \
-  -d '{"name": "Internal Docs", "description": "Company-wide documentation and knowledge base"}
+  -d '{"name": "Internal Docs", "description": "Company-wide documentation and knowledge base"}'
+```
+
+## DSA Connections
+
+### N-ary Tree — Project-Task-Subtask Hierarchy
+An N-ary tree is a rooted tree where each node can have an arbitrary number of children, as opposed to a binary tree's two-child limit. AgentDesk's organizational model forms a natural N-ary tree: the root is the system itself, its children are projects, each project's children are its tasks, and each task's children are its subtasks. When the dispatcher iterates all active work it performs a depth-first traversal of this tree — enumerate projects, then for each project enumerate tasks, then for each task check subtasks. This hierarchical structure is what makes the "pause boundary" semantics work cleanly: pausing a project node effectively prunes the entire subtree beneath it, skipping all descendant tasks and subtasks in a single operation without touching each one individually. The N-ary tree model also explains why deleting a project (`DELETE /api/v1/projects/:id`) cascades to all its tasks, files, and crons — removing a parent node removes the entire subtree.
+
+### Hash Map — O(1) Project Lookup by ID and Slug
+A hash map stores key-value pairs and provides expected O(1) lookup, insert, and delete by hashing the key to an array index. AgentDesk maintains two logical hash maps for projects: one keyed by `id` (the MongoDB ObjectId used in API calls like `GET /api/v1/projects/:id`) and one keyed by `slug` (the URL-safe lowercase string used in file operations like `ad-files learning`). This dual-index design means that whether an agent calls `ad-tasks <projectId>` during its heartbeat loop or `ad-file-read <slug> README.md` during document work, the system resolves the target project in constant time regardless of how many projects exist. Without hash-map indexing, every project lookup would require a linear scan of all projects, which would degrade the heartbeat loop's performance as the number of projects grows.
+
+### Finite State Machine — Project Lifecycle
+A finite state machine (FSM) is a model of computation with a fixed set of states, a start state, and a set of transitions triggered by inputs. Each project in AgentDesk operates as a simple two-state FSM with states `active` and `paused`, and transitions triggered by `ad-pause project` and `ad-resume project`. Despite its simplicity, this FSM has cascading effects: the transition from `active` to `paused` causes the dispatcher to skip every task in the project, suspend all cron jobs, and stop sending heartbeats — a single state flip propagates through the entire system. This is a textbook example of how an FSM at a high level in a hierarchy can gate the behavior of many downstream components, the same pattern used in circuit breakers in distributed systems where a single "open" state stops all requests from flowing through.
+
+### Namespace / Trie — Slug-Based File Isolation
+A trie (prefix tree) is a tree structure where each node represents a character or segment of a key, enabling efficient prefix-based lookups and natural namespace isolation. AgentDesk's file store uses the project slug as a namespace prefix — `ad-files learning` and `ad-files agentdesk` access completely separate file trees, and both can contain a file named `README.md` without conflict. This is conceptually identical to how a trie partitions keys by prefix: all files under `learning/` share one subtree, all files under `agentdesk/` share another, and the slug acts as the first-level branch that routes to the correct partition. This namespace isolation is what allows the filing cabinet mental model to work — each drawer (project slug) is an independent partition, and inserting or deleting files in one drawer never affects another.
