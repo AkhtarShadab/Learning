@@ -435,3 +435,27 @@ All real-time events flow through a central broadcast hub. Clients subscribe to 
 | **Adaptive dispatcher tick rate** | Saves compute when idle; fast response when agents are actively working |
 
 ---
+
+## DSA Connections
+
+### Priority Queue (Min-Heap) — Dispatcher Work Selection
+
+A **priority queue** (typically backed by a binary min-heap) always surfaces the highest-priority element in O(log n) time. The dispatcher's core job each tick is to determine, for each eligible agent, which task to work on next. Tasks carry a `priority` field (0 = critical through 3 = low), and the agent always picks the lowest number first — this is a min-heap `extractMin()`. The priority rules add secondary sort keys (rejected > resumed > highest priority > oldest creation date), forming a composite comparator. Without heap-ordered selection, the dispatcher would need to linearly scan every task assigned to every agent on every tick — O(agents × tasks). With priority-queue semantics, each agent's next-work decision is O(log t) where t is that agent's task count, making the system scale cleanly as the board grows.
+
+### Finite State Machine — Task Lifecycle
+
+A **finite state machine** (FSM) has a fixed set of states and deterministic transitions between them. The task lifecycle (`todo → assigned → planning → in-progress → review → done | rejected`) is a canonical FSM: each state has a defined set of valid outgoing transitions, and the API layer enforces them — you cannot jump from `assigned` to `review`, and only a human actor can trigger `done`. The `paused` flag acts as a state overlay (any state can be paused/unpaused without changing the underlying status). This FSM governs the entire orchestration: the dispatcher queries "which tasks are in an actionable state for this agent?" and the Kanban UI renders columns directly from FSM states. Modeling this explicitly as a state machine prevents invalid transitions and makes the system's behavior predictable and auditable.
+
+### Pub/Sub (Observer Pattern) — WebSocket Event Hub
+
+The **publish-subscribe pattern** decouples event producers from consumers: producers broadcast to named channels, and any number of subscribers receive matching events without the producer knowing who's listening. The WebSocket hub (`ws/hub.ts`) is a textbook pub/sub broker — clients subscribe to channels (`global`, `agent:<id>`, `task:<id>`), and subsystems publish events (chat deltas, cron completions, file changes, dispatcher state) to those channels. The hub maintains a `Map<clientId, { send, subscribed }>` for O(1) client lookup and O(s) broadcast where s is the number of subscribers on a channel. This decoupling is critical: the SessionPool doesn't need to know whether zero or five browser tabs are watching an agent's chat stream — it publishes the delta, and the hub fans it out. The file watcher (chokidar) publishes `file:created/updated/deleted` without knowing whether the file explorer is open, enabling live UI updates without polling.
+
+### Producer-Consumer Queue — Dispatcher ↔ SessionPool
+
+The **producer-consumer pattern** separates the entity that generates work from the entity that executes it, connected by a shared queue. The dispatcher is the producer: on each tick it scans eligible agents, identifies pending work, and builds heartbeat prompts. The SessionPool is the consumer: it receives these prompts and executes them as Claude Code SDK turns. The per-agent promise chain in `SessionPool.inFlightByAgent` is the bounded queue — it serializes turns for the same agent (consumer processes one item at a time) while allowing different agents' turns to run concurrently (multiple independent consumer lanes). This separation of concerns means the dispatcher can be tuned independently (tick rate, backoff, stall thresholds) without affecting session management, and the SessionPool can evolve its locking strategy without changing dispatch logic.
+
+### Exponential Backoff — Error Escalation & Adaptive Tick Rate
+
+**Exponential backoff** is a strategy where retry intervals grow geometrically after failures, reducing load on a struggling system while still allowing recovery. The dispatcher uses a three-level escalating backoff: Level 0 (no errors) → 3 consecutive errors → Level 1 (stall 2 min) → 1 more error → Level 2 (stall 10 min) → 1 more error → auto-pause (human intervention required). Any success resets to Level 0 — this is the "full jitter" variant where recovery is immediate. The adaptive tick rate is a related mechanism: Active (15s) → Cooling (45s, after 2 min idle) → Idle (90s, after 5 min idle) — the system reduces its own polling frequency when there's no work, which is functionally an exponential backoff on the monitoring loop itself. Together, these prevent the "thundering herd" problem (all agents polling aggressively when the system is under stress) and the "wasted compute" problem (fast polling when nothing is happening).
+
+---

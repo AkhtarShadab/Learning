@@ -584,3 +584,23 @@ curl http://localhost:9377/health
 ```
 
 ---
+
+## DSA Connections
+
+### Directed Graph — Test Dependency Order & Setup Flow
+
+A **directed graph** models relationships where order matters: node A must complete before node B can begin. The dev testing workflow forms a dependency graph: `npm install` → `db:generate` → `db:migrate` → `npm run build` → `server start` → API endpoint tests. Each step depends on the output of the previous one — you cannot test API endpoints without a running server, and you cannot start the server without a built app and migrated database. This is a **topological sort** problem: the correct setup order is the topological ordering of the dependency DAG. When debugging a test failure, you walk the graph backward — if `GET /api/v1/projects` returns 500, check if the DB migration ran; if the migration fails, check if `npm install` completed. The Quick Verification Checklist (Section 15) is effectively a linearized topological ordering of this dependency graph, checking each layer before proceeding to the next.
+
+### State Machine — Server Build Modes & Dispatcher States
+
+A **state machine** defines discrete modes of operation with explicit transitions between them. The dev server has three mutually exclusive modes: HMR Dev (Option A), Production-like (Option B), and Custom Port (Option C). Each mode has different behavior — dev mode enables hot reload but introduces auto-refresh noise; production mode requires a build step but provides accurate testing. The dispatcher also operates as a three-state machine: Active (15s tick) → Cooling (45s, after 2 min idle) → Idle (90s, after 5 min idle), with Section 10 showing how to override these values for faster iteration during development. Understanding both state machines is essential for testing: running integration tests against a dev-mode server gives different results than production (e.g., the dual-singleton bugs documented in v0.1.2 only manifest in production builds where webpack evaluates modules separately from tsx).
+
+### Sliding Window Counter — Rate-Limit Testing
+
+A **sliding window counter** tracks the number of events within a moving time window, rejecting events that exceed a threshold. AgentDesk's login endpoint uses a sliding window rate limiter: 5 attempts per 15-minute window per IP address, implemented as an in-memory map. When testing auth flows (Section 7), developers must account for this — rapidly firing login requests in a test loop will trigger the rate limit after the 5th attempt, returning 429 instead of the expected 200 or 401. This is the same algorithm used in API rate limiters, DDoS protection, and network congestion control. For dev testing, the practical implication is: either space login tests across windows, reset the in-memory rate-limit map between test runs (via server restart), or configure a higher threshold in test mode. The Telegram integration also uses per-chat rate limiting and message buffering — testing voice notes (Section 12b) can hit these limits if messages are sent in rapid succession.
+
+### Lookup Table (Hash Map) — Debugging Diagnostics Matrix
+
+A **lookup table** maps a known input (symptom) to a precomputed output (solution), providing O(1) diagnostic resolution. The Debugging Tips table (Section 14) is a literal lookup table: key = error symptom ("Could not find a production build", "Dashboard auto-refreshes constantly", "Agent not picking up tasks"), value = resolution action ("Run `npm run build`", "Set `NODE_ENV=production`", "Check dispatcher-paused config"). This pattern appears throughout software engineering as diagnostic decision trees, but the flat table format is more efficient when symptoms are independent and non-overlapping — each symptom maps to exactly one resolution path, with no need for branching logic. The Quick Verification Checklist extends this into an ordered probe sequence — a sorted lookup where you check the most fundamental dependency first (server is up) and work upward, short-circuiting at the first failure.
+
+---

@@ -1228,3 +1228,27 @@ The Claude Code SDK is hard-coded to call the Anthropic API. To support other pr
 If cron jobs ran in the agent's main session, their tool calls and outputs would appear in the chat history seen by the user. `sendIsolatedTurnAndCollect()` creates a fresh ephemeral session with no persistence, keeping the main chat history clean while still executing agent work.
 
 ---
+
+## DSA Connections
+
+### Finite State Machine — Task Status Lifecycle
+
+A **finite state machine** (FSM) is a computational model with a finite set of states, a set of transitions between those states, and rules governing which transitions are valid from each state. AgentDesk's task lifecycle is a textbook FSM: the states are `todo → assigned → planning → in-progress → review → done/rejected`, with `paused` as an overlay flag on any state. Each transition is triggered by a specific operation — `ad-status` for forward moves, `ad-submit` for the review transition, and human `approve`/`reject` for the terminal fork. The system enforces valid transitions at the API layer: you cannot jump from `assigned` directly to `review`, and only humans can trigger `done`. This FSM is the backbone of the entire orchestration model — without it, there would be no way to know whether an agent should be working on a task, waiting for feedback, or idle. The dispatcher's `hasWork()` check is essentially asking "which tasks are in a state that requires agent action?" — a query against FSM state.
+
+### Priority Queue (Min-Heap) — Dispatcher Task Selection
+
+A **priority queue** is an abstract data type where each element has a priority, and the element with the highest priority (lowest numeric value in a min-heap) is always extracted first. AgentDesk tasks have a `priority` field (0 = critical, 1 = high, 2 = medium, 3 = low), and the dispatcher always selects the lowest-priority-number task for an agent to work on. This is a textbook min-heap extraction: each dispatch tick is conceptually an `extractMin()` over the agent's eligible task set. The agent's own rules reinforce this — rejected tasks (which already have context loaded) take precedence, then recently resumed tasks, then the highest-priority assigned task, with creation timestamp as a tiebreaker. Without priority-queue semantics, the dispatcher would need an O(n) scan of all tasks every tick; with a heap-ordered structure, the next task is always at the root.
+
+### N-ary Tree — Project → Task → Subtask Hierarchy
+
+An **N-ary tree** is a rooted tree where each node can have an arbitrary number of children. AgentDesk's data model forms a three-level N-ary tree: `Project` (root) → `Task` (children) → `Subtask` (leaves). A project contains many tasks (each with its own status, assignee, and priority), and each task can contain many subtasks (lightweight checklist items). This tree structure is reflected directly in the database schema — `tasks.projectId` is the parent pointer from task to project, and `subtasks.taskId` is the parent pointer from subtask to task. Tree traversal matters operationally: when a project is paused, the system must propagate that pause downward to all tasks (a pre-order traversal). When checking if a task is "complete," the system checks all leaf subtasks (a post-order check — all children must be `done` before the parent can move to `review`).
+
+### Hash Map — Mention Routing & Session Key Resolution
+
+A **hash map** provides O(1) average-case lookup by key, making it the go-to structure for any "find X by identifier" operation. AgentDesk uses hash maps in at least three critical paths: (1) The `mentions` table is an indexed lookup from `mentionedId` to the set of tasks where that agent is mentioned — the dispatcher's `hasWork()` check does an O(1) lookup per agent to find pending mentions. (2) The SessionPool's `inFlightByAgent` is a `Map<string, Promise>` — keyed by agent ID — enabling O(1) lookup of the current promise chain for any agent's turn serialization. (3) ChatBridge's `hydratedKeys` set and `history` map cache parsed JSONL conversation histories keyed by session key, avoiding repeated O(n) disk reads on every `chat.history` request. In each case, the alternative — linear scanning — would be prohibitively slow at scale.
+
+### FIFO Queue (Promise Chain) — Per-Agent Turn Serialization
+
+A **FIFO queue** processes elements in first-in-first-out order, ensuring sequential execution of items that arrive concurrently. The SessionPool implements per-agent FIFO queuing using a promise chain: each new turn awaits the previous turn's promise before executing, then resolves its own promise to unblock the next waiter. This is functionally a lock-free FIFO queue built from JavaScript's event loop — `inFlightByAgent.get(agentId)` retrieves the tail of the queue, and the new turn appends itself as the next link. The critical insight is that this queue is per-agent (same agent → serialized, different agents → parallel), which maps directly to the concurrency constraint: Claude Code SDK JSONL sessions are append-only files, so concurrent writes to the same session would corrupt the conversation. The queue guarantees that each agent's turns execute in arrival order without blocking other agents' turns — optimal throughput under the safety constraint.
+
+---
