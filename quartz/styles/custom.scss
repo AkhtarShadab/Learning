@@ -1,15 +1,19 @@
 @use "./base.scss";
 
-// Make the left sidebar's file Explorer scroll within the viewport
-// instead of overflowing off-screen when there are many notes.
+// Left sidebar: when its contents (Explorer file tree + Graph) exceed the
+// viewport height, let the whole sidebar scroll instead of clipping off-screen.
 @media all and (min-width: 801px) {
   .sidebar.left {
-    & .explorer {
-      flex: 1 1 auto;
-      min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    // thin, unobtrusive scrollbar
+    scrollbar-width: thin;
+    &::-webkit-scrollbar {
+      width: 6px;
     }
-    & .explorer-content {
-      max-height: 100%;
+    &::-webkit-scrollbar-thumb {
+      background: var(--lightgray);
+      border-radius: 3px;
     }
   }
 }
