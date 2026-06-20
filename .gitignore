@@ -1,0 +1,12 @@
+# Quartz / Node
+node_modules/
+.quartz-cache/
+# Quartz build output (its contents are mirrored to the repo root by scripts/publish.mjs)
+public/
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.vscode/
+.idea/
