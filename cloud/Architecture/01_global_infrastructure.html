@@ -129,33 +129,7 @@ locations) cascade into every other architectural choice: networking topology, d
 replication strategy, disaster recovery posture, and monthly spend.</p>
 <hr/>
 <h2 id="the-infrastructure-hierarchy">The Infrastructure Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-infrastructure-hierarchy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<pre><code>+------------------------------------------------------------------+
-|                        GLOBAL CLOUD                              |
-|                                                                  |
-|  +------------------+  +------------------+  +--------------+    |
-|  |   REGION (e.g.   |  |   REGION (e.g.   |  |  REGION ...  |    |
-|  |   us-east-1)     |  |   eu-west-1)     |  |              |    |
-|  |                  |  |                  |  |              |    |
-|  | +----+ +----+    |  | +----+ +----+    |  |              |    |
-|  | | AZ | | AZ |    |  | | AZ | | AZ |    |  |              |    |
-|  | | 1a | | 1b |    |  | | 1a | | 1b |    |  |              |    |
-|  | +----+ +----+    |  | +----+ +----+    |  |              |    |
-|  |   +----+         |  |   +----+ +----+  |  |              |    |
-|  |   | AZ |         |  |   | AZ | | AZ |  |  |              |    |
-|  |   | 1c |         |  |   | 1c | | 1d |  |  |              |    |
-|  |   +----+         |  |   +----+ +----+  |  |              |    |
-|  +------------------+  +------------------+  +--------------+    |
-|                                                                  |
-|  +-------+  +-------+  +-------+  +-------+  +-------+          |
-|  | Edge  |  | Edge  |  | Edge  |  | Edge  |  | Edge  |  ...     |
-|  | Loc.  |  | Loc.  |  | Loc.  |  | Loc.  |  | Loc.  |          |
-|  +-------+  +-------+  +-------+  +-------+  +-------+          |
-|                                                                  |
-|  +-------------+  +-------------+                                |
-|  | Local Zone  |  | Wavelength  |  (extensions of parent region) |
-|  +-------------+  +-------------+                                |
-+------------------------------------------------------------------+
-</code></pre>
+<img src="./assets/01_global_infrastructure-global-cloud.svg" alt="Global cloud infrastructure: regions, AZs, edge locations" style="max-width:100%;height:auto"/>
 <hr/>
 <h2 id="regions">Regions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#regions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <h3 id="what-is-a-region">What Is a Region?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-a-region" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>

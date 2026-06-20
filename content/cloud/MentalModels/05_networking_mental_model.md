@@ -49,32 +49,7 @@ subnets, routing rules, and security policies.
 - **Free:** VPCs themselves cost nothing. You pay for resources inside
   them (instances, NAT gateways, data transfer).
 
-```
-  VPC ARCHITECTURE (AWS Example)
-  ===============================
-
-  Region: us-east-1
-  +------------------------------------------------------+
-  | VPC: 10.0.0.0/16 (65,536 IP addresses)               |
-  |                                                        |
-  |  AZ: us-east-1a            AZ: us-east-1b             |
-  |  +-----------------------+ +-----------------------+   |
-  |  | Public Subnet         | | Public Subnet         |   |
-  |  | 10.0.1.0/24 (256 IPs) | | 10.0.2.0/24 (256 IPs)|   |
-  |  | [Web Server]          | | [Web Server]          |   |
-  |  +-----------------------+ +-----------------------+   |
-  |  +-----------------------+ +-----------------------+   |
-  |  | Private Subnet        | | Private Subnet        |   |
-  |  | 10.0.3.0/24 (256 IPs) | | 10.0.4.0/24 (256 IPs)|   |
-  |  | [App Server]          | | [App Server]          |   |
-  |  +-----------------------+ +-----------------------+   |
-  |  +-----------------------+ +-----------------------+   |
-  |  | Private Subnet        | | Private Subnet        |   |
-  |  | 10.0.5.0/24 (256 IPs) | | 10.0.6.0/24 (256 IPs)|   |
-  |  | [Database]            | | [Database Standby]    |   |
-  |  +-----------------------+ +-----------------------+   |
-  +------------------------------------------------------+
-```
+![VPC networking: public/private/DB subnets across AZs](assets/05_networking_mental_model-vpc.svg)
 
 ---
 

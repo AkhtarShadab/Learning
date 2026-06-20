@@ -11,37 +11,7 @@ Understanding the full abstraction tower -- from transistors to cloud
 services -- is the key to understanding virtualization, containers, and
 why cloud infrastructure works the way it does.
 
-```
-  THE ABSTRACTION TOWER
-  =====================
-
-  +-------------------------------------------+
-  |  SaaS Application (Gmail, Salesforce)      |  <-- User sees this
-  +-------------------------------------------+
-  |  PaaS Runtime (Heroku, App Engine)         |
-  +-------------------------------------------+
-  |  Container Orchestration (Kubernetes)       |
-  +-------------------------------------------+
-  |  Container Runtime (Docker, containerd)     |
-  +-------------------------------------------+
-  |  Operating System (Linux kernel)            |
-  +-------------------------------------------+
-  |  Hypervisor (KVM, Xen, Hyper-V)            |
-  +-------------------------------------------+
-  |  Hardware Abstraction (BIOS/UEFI, drivers)  |
-  +-------------------------------------------+
-  |  CPU Architecture (x86-64, ARM)             |
-  +-------------------------------------------+
-  |  Microarchitecture (pipeline, cache)        |
-  +-------------------------------------------+
-  |  Logic Gates (AND, OR, NOT, NAND)           |
-  +-------------------------------------------+
-  |  Transistors (MOSFET)                       |  <-- Physics here
-  +-------------------------------------------+
-
-  Each layer knows only the interface of the layer below.
-  Each layer provides a simpler interface to the layer above.
-```
+![Cloud abstraction layers: transistors up to SaaS](assets/03_virtualization_abstraction-stack.svg)
 
 ---
 
@@ -82,26 +52,7 @@ Run directly on the hardware, with no host operating system underneath.
 They are the most common type in cloud data centers because they offer
 the best performance and security.
 
-```
-  TYPE-1 HYPERVISOR ARCHITECTURE
-  ===============================
-
-  +--------+  +--------+  +--------+
-  | VM 1   |  | VM 2   |  | VM 3   |  <-- Guest VMs
-  | (Linux)|  | (Win)  |  | (Linux)|
-  +--------+  +--------+  +--------+
-  |         HYPERVISOR              |  <-- Bare-metal hypervisor
-  |  (KVM / Xen / ESXi / Hyper-V)  |
-  +---------------------------------+
-  |      PHYSICAL HARDWARE          |  <-- CPU, RAM, NIC, Disk
-  +---------------------------------+
-
-  Examples:
-  - KVM (Kernel-based Virtual Machine) -- used by AWS (Nitro), GCP
-  - Xen -- original AWS hypervisor (pre-2018)
-  - VMware ESXi -- dominant in enterprise on-premises
-  - Microsoft Hyper-V -- used by Azure
-```
+![Type-1 bare-metal hypervisor with guest VMs](assets/03_virtualization_abstraction-hypervisor.svg)
 
 ### Type-2 Hypervisors (Hosted)
 
