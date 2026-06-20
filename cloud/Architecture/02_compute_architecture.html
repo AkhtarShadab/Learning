@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>02_compute_architecture</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="02_compute_architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="02_compute_architecture"/><meta name="twitter:description" content="Cloud Compute Architecture Introduction Compute is the heartbeat of the cloud."/><meta property="og:description" content="Cloud Compute Architecture Introduction Compute is the heartbeat of the cloud."/><meta property="og:image:alt" content="Cloud Compute Architecture Introduction Compute is the heartbeat of the cloud."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/Architecture/02_compute_architecture"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/Architecture/02_compute_architecture"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Cloud Compute Architecture Introduction Compute is the heartbeat of the cloud."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/Architecture/02_compute_architecture"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-29"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-29" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/Architecture/">Architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>02_compute_architecture</a></div></nav><h1 class="article-title">02_compute_architecture</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.351Z">Jun 20, 2026</time><span>15 min read</span></p></div></div><article class="popover-hint"><h1 id="cloud-compute-architecture">Cloud Compute Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-compute-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="introduction">Introduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#introduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Compute is the heartbeat of the cloud. Every workload — a web server responding to
+requests, a machine learning model training on terabytes of data, a batch job
+crunching financial reports — ultimately executes on a processor somewhere. Cloud
+compute abstracts the physical server into a programmable, elastic resource that
+you provision in seconds and release when done.</p>
+<p>This document dives deep into cloud compute architecture, primarily through the lens
+of AWS EC2, but the concepts (instance families, placement, lifecycle, hardware
+acceleration) apply across providers. By the end, you will understand not just
+<em>what</em> instance types exist, but <em>why</em> they exist and <em>how</em> to choose between them.</p>
+<hr/>
+<h2 id="the-nitro-system-foundation-of-modern-ec2">The Nitro System: Foundation of Modern EC2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-nitro-system-foundation-of-modern-ec2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before discussing instance types, it is essential to understand what runs them.
+AWS’s Nitro System is a collection of purpose-built hardware and software components
+that offload virtualization functions from the host CPU to dedicated hardware.</p>
+<h3 id="nitro-components">Nitro Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nitro-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│              EC2 Instance (Guest)            │
+│  ┌────────────────────────────────────────┐  │
+│  │           Customer Workload            │  │
+│  │       (all vCPUs dedicated to you)     │  │
+│  └────────────────────────────────────────┘  │
+├─────────────────────────────────────────────┤
+│              Nitro Hypervisor               │
+│  (Lightweight KVM-based, minimal overhead)  │
+├─────────────────────────────────────────────┤
+│  Nitro Cards (dedicated hardware)           │
+│  ┌──────────┐ ┌──────────┐ ┌────────────┐  │
+│  │ Nitro    │ │ Nitro    │ │ Nitro      │  │
+│  │ Card for │ │ Card for │ │ Security   │  │
+│  │ VPC/EBS  │ │ Storage  │ │ Chip       │  │
+│  │ Network  │ │ (NVMe)   │ │            │  │
+│  └──────────┘ └──────────┘ └────────────┘  │
+└─────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Nitro Cards</strong>: Handle VPC networking, EBS I/O, and instance storage as dedicated
+hardware, freeing all host CPU cores for customer workloads.</p>
+<p><strong>Nitro Security Chip</strong>: Provides hardware root of trust. The host OS cannot access
+instance memory or storage. Even AWS operators cannot access your running instance.</p>
+<p><strong>Nitro Hypervisor</strong>: A lightweight, KVM-based hypervisor that provides CPU and
+memory isolation. On bare metal instances, the hypervisor is absent entirely.</p>
+<p>Pre-Nitro instances (C4, M4, etc.) used Xen hypervisor and software-based
+networking, consuming significant host CPU. Nitro instances deliver near-bare-metal
+performance.</p>
+<hr/>
+<h2 id="instance-families-and-types">Instance Families and Types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#instance-families-and-types" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-naming-convention">The Naming Convention<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-naming-convention" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  m  5  a  d  .  2xlarge
+  │  │  │  │     │
+  │  │  │  │     └── Size (vCPUs, memory)
+  │  │  │  └──────── Additional capability: d = NVMe instance store
+  │  │  └─────────── Processor: a = AMD, g = Graviton, i = Intel
+  │  └────────────── Generation number
+  └───────────────── Family (purpose)
+</code></pre>
+<h3 id="instance-family-reference">Instance Family Reference<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#instance-family-reference" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Family</th><th>Purpose</th><th>Key Characteristic</th><th>Example Use Case</th></tr></thead><tbody><tr><td><strong>T</strong></td><td>Burstable</td><td>CPU credits, baseline + burst</td><td>Dev/test, small web apps</td></tr><tr><td><strong>M</strong></td><td>General purpose</td><td>Balanced CPU:memory (1:4)</td><td>App servers, mid-size databases</td></tr><tr><td><strong>C</strong></td><td>Compute optimized</td><td>High CPU:memory ratio (1:2)</td><td>Batch processing, encoding</td></tr><tr><td><strong>R</strong></td><td>Memory optimized</td><td>Low CPU:memory ratio (1:8)</td><td>In-memory databases, caches</td></tr><tr><td><strong>X</strong></td><td>Memory intensive</td><td>Very high memory (up to 4 TB)</td><td>SAP HANA, large in-memory DBs</td></tr><tr><td><strong>I</strong></td><td>Storage optimized</td><td>High IOPS NVMe instance store</td><td>NoSQL databases, data warehouses</td></tr><tr><td><strong>D</strong></td><td>Dense storage</td><td>HDD-based, high sequential I/O</td><td>HDFS, distributed file systems</td></tr><tr><td><strong>P</strong></td><td>GPU (training)</td><td>NVIDIA A100/H100 GPUs</td><td>ML training, HPC</td></tr><tr><td><strong>G</strong></td><td>GPU (graphics)</td><td>NVIDIA T4/L4 GPUs</td><td>Graphics rendering, inference</td></tr><tr><td><strong>Inf</strong></td><td>Inferentia</td><td>AWS Inferentia chips</td><td>ML inference at scale</td></tr><tr><td><strong>Trn</strong></td><td>Trainium</td><td>AWS Trainium chips</td><td>ML training (cost-optimized)</td></tr><tr><td><strong>HPC</strong></td><td>High Performance</td><td>EFA networking, high bandwidth</td><td>Tightly-coupled HPC</td></tr></tbody></table></div>
+<h3 id="graviton-processors">Graviton Processors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#graviton-processors" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AWS Graviton processors are ARM-based, custom-designed by AWS. They offer up to 40%
+better price-performance than comparable x86 instances. Graviton 4 (available in M8g,
+C8g, R8g families) delivers further improvements.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Launch a Graviton instance (note the 'g' suffix)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run-instances</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --instance-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> m7g.xlarge</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --image-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ami-0abcdef1234567890</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \ </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"> # Must be ARM64 AMI</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  --count</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span></span></code></pre></figure>
+<p>When to use Graviton:</p>
+<ul>
+<li>Any workload that runs on Linux (most do)</li>
+<li>Applications built in interpreted languages (Python, Node.js, Java) often
+work without recompilation</li>
+<li>Containerized workloads (just rebuild the image for ARM64)</li>
+<li>Not suitable when your software has x86 binary dependencies with no ARM port</li>
+</ul>
+<hr/>
+<h2 id="burstable-instances-t-family-deep-dive">Burstable Instances (T Family) Deep Dive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#burstable-instances-t-family-deep-dive" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-cpu-credit-model">The CPU Credit Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-cpu-credit-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>T instances (T3, T3a, T4g) have a baseline CPU performance level and earn CPU
+credits when idle. Credits are spent when the instance bursts above baseline.</p>
+<pre><code>CPU Utilization
+100% ─────────────────────── Burst ceiling
+      │       ╱╲
+      │      ╱  ╲     Spending credits
+      │     ╱    ╲
+ 20% ─│────╱──────╲──────── Baseline (e.g., t3.medium = 20%)
+      │   ╱        ╲
+      │  ╱          ╲  Earning credits
+      │ ╱            ╲
+  0% ─└──────────────────── Time
+</code></pre>
+<p><strong>Key mechanics:</strong></p>
+<ul>
+<li>Each vCPU earns credits at a rate determined by the instance size</li>
+<li>A <code>t3.medium</code> (2 vCPUs) earns 24 credits/hour and has a 20% baseline</li>
+<li>One credit = one vCPU running at 100% for one minute</li>
+<li>Credits accumulate up to a maximum balance (e.g., 576 for t3.medium)</li>
+<li>New instances start with a launch credit balance for initial boot/setup</li>
+</ul>
+<h3 id="unlimited-mode">Unlimited Mode<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unlimited-mode" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>By default, T3/T4g instances run in <code>unlimited</code> mode. When credits are exhausted,
+the instance continues to burst but you pay a per-vCPU-hour surcharge. This prevents
+the performance cliff of <code>standard</code> mode (where the instance is throttled to
+baseline when credits run out).</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Launch with standard credit mode (no overage charges, but throttling possible)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run-instances</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --instance-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> t3.medium</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --credit-specification</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> CpuCredits=standard</span></span></code></pre></figure>
+<h3 id="when-not-to-use-t-instances">When NOT to Use T Instances<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-not-to-use-t-instances" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>If your workload consistently uses > 20-30% CPU, a T instance in unlimited mode
+will cost more than a comparably-sized M instance. T instances are for workloads
+with spiky, unpredictable CPU patterns — not sustained compute.</p>
+<hr/>
+<h2 id="instance-lifecycle">Instance Lifecycle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#instance-lifecycle" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>       ┌──────────────────────────────────────────────┐
+       │                                              │
+       ▼                                              │
+  ┌─────────┐    ┌─────────┐    ┌──────────┐    ┌────┴────┐
+  │ Pending │───►│ Running │───►│ Stopping │───►│ Stopped │
+  └─────────┘    └────┬────┘    └──────────┘    └─────────┘
+                      │                               │
+                      │         ┌──────────────┐      │
+                      └────────►│ Shutting-down │      │
+                                └──────┬───────┘      │
+                                       │              │
+                                       ▼              │
+                                ┌──────────────┐      │
+                                │  Terminated  │◄─────┘
+                                └──────────────┘
+                                (cannot restart)
+</code></pre>
+<p><strong>Important distinctions:</strong></p>
+<ul>
+<li><strong>Stopped</strong>: Instance is not running; you are not charged for compute (only EBS
+storage). You can change the instance type while stopped, then restart.</li>
+<li><strong>Terminated</strong>: Instance is permanently deleted. EBS root volumes are deleted by
+default (configurable with <code>DeleteOnTermination=false</code>).</li>
+<li><strong>Hibernate</strong>: Instance memory (RAM) is saved to the root EBS volume. On restart,
+the instance resumes from where it left off — no boot sequence, no application
+cold start. Useful for long-initialization applications.</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Stop an instance (preserves EBS, releases host)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> stop-instances</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --instance-ids</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> i-1234567890abcdef0</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Change instance type while stopped</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> modify-instance-attribute</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --instance-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> i-1234567890abcdef0</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --instance-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> m6i.2xlarge</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Restart with new type</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> start-instances</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --instance-ids</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> i-1234567890abcdef0</span></span></code></pre></figure>
+<hr/>
+<h2 id="amazon-machine-images-amis">Amazon Machine Images (AMIs)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-machine-images-amis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>An AMI is a template containing the OS, application software, and configuration
+needed to launch an instance. AMIs include:</p>
+<ul>
+<li>One or more EBS snapshots (or instance-store-backed: S3 bundle)</li>
+<li>Launch permissions (who can use the AMI)</li>
+<li>Block device mapping (which volumes to attach)</li>
+</ul>
+<h3 id="ami-lifecycle">AMI Lifecycle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ami-lifecycle" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Base AMI (Amazon Linux, Ubuntu, etc.)
+    │
+    ▼
+Launch instance from base AMI
+    │
+    ▼
+Install software, configure, harden
+    │
+    ▼
+Create custom AMI (snapshot taken automatically)
+    │
+    ▼
+Use custom AMI in Launch Templates / ASGs
+    │
+    ▼
+Copy AMI to other regions (for multi-region deployment)
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create an AMI from a running instance</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-image</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --instance-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> i-1234567890abcdef0</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;myapp-v2.3.1-$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> +%Y%m%d)&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --no-reboot</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Avoids downtime; filesystem may be inconsistent</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Copy AMI to another region</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> copy-image</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --source-region</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> us-east-1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --source-image-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ami-0abcdef1234567890</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --region</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> eu-west-1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;myapp-v2.3.1-eu&quot;</span></span></code></pre></figure>
+<h3 id="golden-ami-pipeline">Golden AMI Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#golden-ami-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Production environments typically use a “Golden AMI” pipeline that builds hardened,
+patched AMIs automatically using tools like EC2 Image Builder or HashiCorp Packer.</p>
+<hr/>
+<h2 id="placement-groups">Placement Groups<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#placement-groups" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Placement groups control how instances are physically positioned on underlying hardware.</p>
+<h3 id="cluster-placement-group">Cluster Placement Group<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cluster-placement-group" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>All instances placed on the same rack (or nearby racks) within a single AZ.
+Provides the lowest latency and highest throughput between instances.</p>
+<pre><code>    Rack 1              Rack 2
+  ┌────────┐         ┌────────┐
+  │ i-aaa  │◄───────►│ i-ccc  │   10 Gbps+ between instances
+  │ i-bbb  │ low lat │ i-ddd  │   &lt; 1ms latency
+  └────────┘         └────────┘
+  
+  Use: HPC, distributed ML training, financial simulations
+  Risk: Single rack failure takes out the group
+</code></pre>
+<h3 id="spread-placement-group">Spread Placement Group<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spread-placement-group" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Each instance is placed on distinct hardware (different racks). Maximum 7 instances
+per AZ per spread group. Minimizes correlated failure.</p>
+<pre><code>  Rack 1        Rack 2        Rack 3        Rack 4
+  ┌──────┐    ┌──────┐     ┌──────┐     ┌──────┐
+  │ i-aa │    │ i-bb │     │ i-cc │     │ i-dd │
+  └──────┘    └──────┘     └──────┘     └──────┘
+  
+  Use: Critical instances (primary DB nodes, ZooKeeper quorum)
+  Limit: 7 instances per AZ
+</code></pre>
+<h3 id="partition-placement-group">Partition Placement Group<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#partition-placement-group" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Instances are divided into logical partitions, each on separate racks. Partitions
+can contain multiple instances but share no hardware across partitions.</p>
+<pre><code>  Partition 1      Partition 2      Partition 3
+  (Rack A)         (Rack B)         (Rack C)
+  ┌──────────┐    ┌──────────┐    ┌──────────┐
+  │ i-1  i-2 │    │ i-5  i-6 │    │ i-9  i-10│
+  │ i-3  i-4 │    │ i-7  i-8 │    │ i-11 i-12│
+  └──────────┘    └──────────┘    └──────────┘
+  
+  Use: HDFS, Cassandra, Kafka (topology-aware distributed systems)
+</code></pre>
+<hr/>
+<h2 id="dedicated-hosts-vs-dedicated-instances">Dedicated Hosts vs Dedicated Instances<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dedicated-hosts-vs-dedicated-instances" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Dedicated Instance</th><th>Dedicated Host</th></tr></thead><tbody><tr><td>Hardware sharing</td><td>No sharing with other accounts</td><td>No sharing; you see the physical host</td></tr><tr><td>Visibility</td><td>Cannot see host-level details</td><td>Can see sockets, cores, host ID</td></tr><tr><td>Licensing</td><td>Cannot use BYOL</td><td>BYOL (Windows Server, SQL Server, etc.)</td></tr><tr><td>Placement</td><td>AWS chooses host within your tenancy</td><td>You control which host</td></tr><tr><td>Cost</td><td>Per-instance + per-region fee</td><td>Per-host (hourly or reserved)</td></tr></tbody></table></div>
+<p>Dedicated hosts are primarily used for <strong>Bring Your Own License (BYOL)</strong> scenarios
+where software licensing is tied to physical cores or sockets.</p>
+<hr/>
+<h2 id="instance-store-vs-ebs">Instance Store vs EBS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#instance-store-vs-ebs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="instance-store-ephemeral-storage">Instance Store (Ephemeral Storage)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#instance-store-ephemeral-storage" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Physically attached to the host machine. Extremely fast (NVMe, millions of IOPS on
+i3en instances) but data is lost when the instance stops or terminates.</p>
+<h3 id="ebs-elastic-block-store">EBS (Elastic Block Store)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ebs-elastic-block-store" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Network-attached storage that persists independently of the instance. Slower than
+instance store but durable.</p>
+<pre><code>Instance Store:                    EBS:
+┌─────────┐                       ┌─────────┐         ┌──────────┐
+│  EC2    │                       │  EC2    │◄───────►│  EBS     │
+│ Instance│  ← NVMe local disk    │ Instance│ network │  Volume  │
+│         │  ← Lost on stop/term  │         │         │  (persist│
+└─────────┘                       └─────────┘         │  on stop)│
+                                                      └──────────┘
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Instance Store</th><th>EBS</th></tr></thead><tbody><tr><td>Persistence</td><td>Ephemeral</td><td>Persistent</td></tr><tr><td>Performance</td><td>Very high IOPS</td><td>Up to 256,000 IOPS (io2)</td></tr><tr><td>Cost</td><td>Included with instance</td><td>Separate charge</td></tr><tr><td>Snapshots</td><td>Not supported</td><td>Yes (to S3)</td></tr><tr><td>Encryption</td><td>Supported</td><td>Supported (KMS)</td></tr><tr><td>Use case</td><td>Caches, scratch data</td><td>Boot volumes, databases</td></tr></tbody></table></div>
+<hr/>
+<h2 id="gpu-and-accelerated-instances">GPU and Accelerated Instances<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gpu-and-accelerated-instances" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="gpu-instances-for-machine-learning">GPU Instances for Machine Learning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gpu-instances-for-machine-learning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Instance</th><th>GPU</th><th>GPU Memory</th><th>Use Case</th></tr></thead><tbody><tr><td>p5.48xl</td><td>8x NVIDIA H100</td><td>640 GB HBM</td><td>Large model training</td></tr><tr><td>p4d.24xl</td><td>8x NVIDIA A100</td><td>320 GB HBM</td><td>Distributed training</td></tr><tr><td>g5.xlarge</td><td>1x NVIDIA A10G</td><td>24 GB</td><td>Inference, graphics</td></tr><tr><td>g6.xlarge</td><td>1x NVIDIA L4</td><td>24 GB</td><td>Inference (cost-optimized)</td></tr><tr><td>inf2.xl</td><td>1x AWS Inferentia2</td><td>32 GB</td><td>High-throughput inference</td></tr><tr><td>trn1.32xl</td><td>16x AWS Trainium</td><td>512 GB</td><td>Training (cost-optimized)</td></tr></tbody></table></div>
+<h3 id="elastic-fabric-adapter-efa">Elastic Fabric Adapter (EFA)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#elastic-fabric-adapter-efa" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For distributed ML training across multiple GPU instances, EFA provides OS-bypass
+networking, achieving near-HPC-level inter-node communication. Combined with NCCL
+(NVIDIA Collective Communications Library), it enables efficient multi-node GPU
+training.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Launch p4d instance with EFA</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run-instances</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --instance-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> p4d.24xlarge</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --network-interfaces</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;DeviceIndex=0,InterfaceType=efa,Groups=sg-xxx,SubnetId=subnet-xxx&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --placement</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;GroupName=my-cluster-pg&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="launch-templates">Launch Templates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#launch-templates" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Launch templates are versioned configurations that define everything needed to launch
+an instance. They replace the older Launch Configurations and are required for modern
+ASG features.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-launch-template</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --launch-template-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> myapp-template</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --version-description</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;v1 - initial&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --launch-template-data</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;ImageId&quot;: &quot;ami-0abcdef1234567890&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;InstanceType&quot;: &quot;m6i.xlarge&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;KeyName&quot;: &quot;my-key&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;SecurityGroupIds&quot;: [&quot;sg-903004f8&quot;],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;BlockDeviceMappings&quot;: [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;DeviceName&quot;: &quot;/dev/xvda&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;Ebs&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">          &quot;VolumeSize&quot;: 100,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">          &quot;VolumeType&quot;: &quot;gp3&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">          &quot;Iops&quot;: 3000,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">          &quot;Throughput&quot;: 125,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">          &quot;Encrypted&quot;: true</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        }</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      }</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    ],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;UserData&quot;: &quot;IyEvYmluL2Jhc2gKeXVtIHVwZGF0ZSAteQo=&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;TagSpecifications&quot;: [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;ResourceType&quot;: &quot;instance&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;Tags&quot;: [{&quot;Key&quot;: &quot;Environment&quot;, &quot;Value&quot;: &quot;production&quot;}]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      }</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    ],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;MetadataOptions&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;HttpTokens&quot;: &quot;required&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;HttpEndpoint&quot;: &quot;enabled&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    }</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }'</span></span></code></pre></figure>
+<hr/>
+<h2 id="user-data-and-instance-initialization">User Data and Instance Initialization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#user-data-and-instance-initialization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>User data scripts run on first boot (or every boot with cloud-init configuration).
+They configure the instance after launch.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># User data script for a web server</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Update packages</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">yum</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> update</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -y</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Install and start nginx</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">amazon-linux-extras</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> nginx1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -y</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">systemctl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> enable</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> nginx</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">systemctl</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> start</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> nginx</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Pull application code</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cp</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3://my-app-bucket/release/latest.tar.gz</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /opt/app/</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /opt/app</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> &amp;&amp; </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">tar</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> xzf</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> latest.tar.gz</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Signal CloudFormation that setup is complete</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">/opt/aws/bin/cfn-signal</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -e</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> $?</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --stack</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ${AWS</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">::</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">StackName} </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --resource</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> AutoScalingGroup</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --region</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ${AWS</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">::</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Region}</span></span></code></pre></figure>
+<p>For more complex initialization, use <strong>cfn-init</strong> (AWS-specific) or <strong>cloud-init</strong>
+(cross-cloud) to declaratively define packages, files, services, and commands.</p>
+<hr/>
+<h2 id="instance-selection-decision-tree">Instance Selection Decision Tree<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#instance-selection-decision-tree" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>START: What kind of workload?
+│
+├── Web server / App server (balanced CPU + memory)
+│   ├── Steady traffic ──► M-family (m7i, m7g, m7a)
+│   └── Variable/spikey traffic ──► T-family (t3, t4g) if CPU &lt; 30% avg
+│
+├── CPU-intensive (video encoding, batch compute, scientific)
+│   └── C-family (c7i, c7g, c7a)
+│
+├── Memory-intensive (in-memory DB, real-time analytics)
+│   ├── Up to 512 GB ──► R-family (r7i, r7g)
+│   └── > 512 GB (SAP HANA) ──► X-family (x2idn) or High Memory (u-)
+│
+├── Storage-intensive (NoSQL, data warehouse)
+│   ├── High random IOPS ──► I-family (i4i) with NVMe instance store
+│   └── High sequential throughput ──► D-family (d3en) with HDD
+│
+├── Machine Learning
+│   ├── Training ──► P-family (p5, p4d) or Trn1
+│   └── Inference ──► G-family (g6, g5) or Inf2
+│
+└── Cost-optimized?
+    ├── Use Graviton (g suffix) for 40% better price/performance
+    ├── Use AMD (a suffix) for 10% lower price
+    └── Use Spot Instances for up to 90% savings on fault-tolerant work
+</code></pre>
+<hr/>
+<h2 id="bare-metal-instances">Bare Metal Instances<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bare-metal-instances" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Bare metal instances (e.g., <code>m5.metal</code>, <code>c6i.metal</code>) provide direct access to the
+host hardware with no hypervisor. Use cases include:</p>
+<ul>
+<li>Workloads that need access to hardware feature sets (performance counters, Intel VT)</li>
+<li>Applications that require a non-virtualized environment for licensing or compliance</li>
+<li>Running your own hypervisor (nested virtualization)</li>
+<li>Performance benchmarking without hypervisor noise</li>
+</ul>
+<p>Bare metal instances still use Nitro Cards for networking and storage, so you get
+the same VPC and EBS experience as virtualized instances.</p>
+<hr/>
+<h2 id="purchasing-options">Purchasing Options<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#purchasing-options" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Option</th><th>Discount</th><th>Commitment</th><th>Best For</th></tr></thead><tbody><tr><td>On-Demand</td><td>0%</td><td>None</td><td>Unpredictable, short-term work</td></tr><tr><td>Reserved (1yr)</td><td>~30-40%</td><td>1 year</td><td>Steady-state, predictable</td></tr><tr><td>Reserved (3yr)</td><td>~50-60%</td><td>3 years</td><td>Long-term, stable workloads</td></tr><tr><td>Savings Plans</td><td>~30-60%</td><td>$/hr commitment</td><td>Flexible across instance types</td></tr><tr><td>Spot</td><td>Up to 90%</td><td>Can be interrupted</td><td>Fault-tolerant, flexible timing</td></tr><tr><td>Dedicated Host</td><td>Varies</td><td>Per-host billing</td><td>BYOL licensing</td></tr></tbody></table></div>
+<h3 id="spot-instance-strategies">Spot Instance Strategies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spot-instance-strategies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Spot instances can be interrupted with 2 minutes notice. Design for interruption:</p>
+<ul>
+<li>Use multiple instance types and AZs in your Spot Fleet/ASG</li>
+<li>Persist state externally (S3, DynamoDB, EFS)</li>
+<li>Use Spot Instance interruption notices (via metadata or EventBridge)</li>
+<li>Combine with On-Demand as a baseline capacity</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Mixed instances ASG with Spot</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> autoscaling</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-auto-scaling-group</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --auto-scaling-group-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> myapp-asg</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --mixed-instances-policy</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;LaunchTemplate&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;LaunchTemplateSpecification&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;LaunchTemplateName&quot;: &quot;myapp-template&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;Version&quot;: &quot;$Latest&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;Overrides&quot;: [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        {&quot;InstanceType&quot;: &quot;m5.xlarge&quot;},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        {&quot;InstanceType&quot;: &quot;m5a.xlarge&quot;},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        {&quot;InstanceType&quot;: &quot;m5d.xlarge&quot;},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        {&quot;InstanceType&quot;: &quot;m4.xlarge&quot;}</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      ]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;InstancesDistribution&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;OnDemandBaseCapacity&quot;: 2,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;OnDemandPercentageAboveBaseCapacity&quot;: 25,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;SpotAllocationStrategy&quot;: &quot;capacity-optimized&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    }</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }'</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --min-size</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 4</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --max-size</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 20</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --desired-capacity</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 8</span></span></code></pre></figure>
+<hr/>
+<h2 id="practical-takeaways">Practical Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#practical-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Start with Graviton</strong> unless you have a specific x86 dependency. The
+price-performance advantage is significant and growing.</p>
+</li>
+<li>
+<p><strong>Right-size before reserving.</strong> Use AWS Compute Optimizer or CloudWatch CPU/memory
+metrics to identify oversized instances before committing to Reserved Instances.</p>
+</li>
+<li>
+<p><strong>Use T instances wisely.</strong> Monitor CPU credit balance. If credits stay at zero,
+switch to M/C family.</p>
+</li>
+<li>
+<p><strong>Layer purchasing options.</strong> Use Reserved/Savings Plans for baseline, On-Demand for
+variable load, and Spot for fault-tolerant batch work.</p>
+</li>
+<li>
+<p><strong>Encrypt everything.</strong> IMDSv2 (instance metadata service v2) should be required
+(<code>HttpTokens=required</code>) to prevent SSRF attacks. EBS encryption should be on by
+default at the account level.</p>
+</li>
+<li>
+<p><strong>Automate AMI creation.</strong> Use EC2 Image Builder or Packer in a CI/CD pipeline.
+Never hand-craft production AMIs.</p>
+</li>
+<li>
+<p><strong>Treat instances as cattle, not pets.</strong> Use Auto Scaling Groups, launch templates,
+and immutable deployments. If an instance has problems, replace it; do not SSH in
+and fix it.</p>
+</li>
+</ol>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="priority-queues-binary-heaps--auto-scaling-group-instance-selection">Priority Queues (Binary Heaps) — Auto Scaling Group Instance Selection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#priority-queues-binary-heaps--auto-scaling-group-instance-selection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A priority queue is a data structure that always surfaces the highest-priority element in O(log n) time, typically implemented as a binary heap. When an Auto Scaling Group needs to terminate instances during a scale-in event, it must select which instances to remove based on a policy (e.g., oldest launch configuration, closest to the next billing hour, or the AZ with the most instances). Internally, the ASG scheduler maintains a priority-ordered structure of instances keyed by the termination policy criteria. When scale-in is triggered, the scheduler extracts the highest-priority candidate in O(log n) time rather than scanning all instances linearly. This same pattern applies to Spot Fleet allocation, where the fleet manager must continuously select instance types and AZs that offer the lowest interruption probability and best price, maintaining a priority queue of capacity pools ranked by the <code>capacity-optimized</code> or <code>lowest-price</code> strategy.</p>
+<h3 id="bin-packing--ec2-placement-and-instance-scheduling">Bin Packing — EC2 Placement and Instance Scheduling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bin-packing--ec2-placement-and-instance-scheduling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bin packing is an NP-hard optimization problem where items of varying sizes must be packed into a finite number of bins with fixed capacity, minimizing wasted space. The AWS hypervisor layer solves a variant of bin packing when placing EC2 instances onto physical hosts. Each Nitro-based physical server has a fixed amount of CPU, memory, and network bandwidth, and incoming instance requests (the “items”) must be packed onto hosts (the “bins”) to maximize utilization while respecting isolation guarantees. The scheduler uses heuristics like first-fit-decreasing (sort instances by resource demand, then place each on the first host with sufficient capacity) to achieve near-optimal packing. This is why launching a very large instance type (like <code>p5.48xlarge</code>) may occasionally fail with an <code>InsufficientInstanceCapacity</code> error — the bin packing solver cannot find a host with enough contiguous resources, even though aggregate capacity exists across fragmented hosts.</p>
+<h3 id="round-robin-scheduling--cpu-credit-model-for-burstable-instances">Round-Robin Scheduling — CPU Credit Model for Burstable Instances<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#round-robin-scheduling--cpu-credit-model-for-burstable-instances" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Round-robin is a scheduling algorithm that assigns equal time slices to each process in a circular queue, ensuring fair CPU sharing. The T-family burstable instance credit model is a direct application of CPU scheduling theory: each vCPU earns credits at a fixed rate (analogous to a token bucket), and the instance is allowed to burst above its baseline only while tokens remain. Under the hood, the Nitro hypervisor implements a variant of weighted fair queuing where burstable instances receive a guaranteed baseline share (e.g., 20% for t3.medium) and can borrow additional cycles up to their credit balance. When credits are exhausted in <code>standard</code> mode, the scheduler enforces the baseline by throttling the instance back to its guaranteed time slice — exactly like a round-robin scheduler with a strict quantum. Understanding this as a scheduling problem explains why sustained workloads above baseline are better served by M/C families: they receive a full, unthrottled time quantum without the credit overhead.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-18" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#cloud-compute-architecture" data-for="cloud-compute-architecture">Cloud Compute Architecture</a></li><li class="depth-1"><a href="#introduction" data-for="introduction">Introduction</a></li><li class="depth-1"><a href="#the-nitro-system-foundation-of-modern-ec2" data-for="the-nitro-system-foundation-of-modern-ec2">The Nitro System: Foundation of Modern EC2</a></li><li class="depth-2"><a href="#nitro-components" data-for="nitro-components">Nitro Components</a></li><li class="depth-1"><a href="#instance-families-and-types" data-for="instance-families-and-types">Instance Families and Types</a></li><li class="depth-2"><a href="#the-naming-convention" data-for="the-naming-convention">The Naming Convention</a></li><li class="depth-2"><a href="#instance-family-reference" data-for="instance-family-reference">Instance Family Reference</a></li><li class="depth-2"><a href="#graviton-processors" data-for="graviton-processors">Graviton Processors</a></li><li class="depth-1"><a href="#burstable-instances-t-family-deep-dive" data-for="burstable-instances-t-family-deep-dive">Burstable Instances (T Family) Deep Dive</a></li><li class="depth-2"><a href="#the-cpu-credit-model" data-for="the-cpu-credit-model">The CPU Credit Model</a></li><li class="depth-2"><a href="#unlimited-mode" data-for="unlimited-mode">Unlimited Mode</a></li><li class="depth-2"><a href="#when-not-to-use-t-instances" data-for="when-not-to-use-t-instances">When NOT to Use T Instances</a></li><li class="depth-1"><a href="#instance-lifecycle" data-for="instance-lifecycle">Instance Lifecycle</a></li><li class="depth-1"><a href="#amazon-machine-images-amis" data-for="amazon-machine-images-amis">Amazon Machine Images (AMIs)</a></li><li class="depth-2"><a href="#ami-lifecycle" data-for="ami-lifecycle">AMI Lifecycle</a></li><li class="depth-2"><a href="#golden-ami-pipeline" data-for="golden-ami-pipeline">Golden AMI Pipeline</a></li><li class="depth-1"><a href="#placement-groups" data-for="placement-groups">Placement Groups</a></li><li class="depth-2"><a href="#cluster-placement-group" data-for="cluster-placement-group">Cluster Placement Group</a></li><li class="depth-2"><a href="#spread-placement-group" data-for="spread-placement-group">Spread Placement Group</a></li><li class="depth-2"><a href="#partition-placement-group" data-for="partition-placement-group">Partition Placement Group</a></li><li class="depth-1"><a href="#dedicated-hosts-vs-dedicated-instances" data-for="dedicated-hosts-vs-dedicated-instances">Dedicated Hosts vs Dedicated Instances</a></li><li class="depth-1"><a href="#instance-store-vs-ebs" data-for="instance-store-vs-ebs">Instance Store vs EBS</a></li><li class="depth-2"><a href="#instance-store-ephemeral-storage" data-for="instance-store-ephemeral-storage">Instance Store (Ephemeral Storage)</a></li><li class="depth-2"><a href="#ebs-elastic-block-store" data-for="ebs-elastic-block-store">EBS (Elastic Block Store)</a></li><li class="depth-1"><a href="#gpu-and-accelerated-instances" data-for="gpu-and-accelerated-instances">GPU and Accelerated Instances</a></li><li class="depth-2"><a href="#gpu-instances-for-machine-learning" data-for="gpu-instances-for-machine-learning">GPU Instances for Machine Learning</a></li><li class="depth-2"><a href="#elastic-fabric-adapter-efa" data-for="elastic-fabric-adapter-efa">Elastic Fabric Adapter (EFA)</a></li><li class="depth-1"><a href="#launch-templates" data-for="launch-templates">Launch Templates</a></li><li class="depth-1"><a href="#user-data-and-instance-initialization" data-for="user-data-and-instance-initialization">User Data and Instance Initialization</a></li><li class="depth-1"><a href="#instance-selection-decision-tree" data-for="instance-selection-decision-tree">Instance Selection Decision Tree</a></li><li class="depth-1"><a href="#bare-metal-instances" data-for="bare-metal-instances">Bare Metal Instances</a></li><li class="depth-1"><a href="#purchasing-options" data-for="purchasing-options">Purchasing Options</a></li><li class="depth-2"><a href="#spot-instance-strategies" data-for="spot-instance-strategies">Spot Instance Strategies</a></li><li class="depth-1"><a href="#practical-takeaways" data-for="practical-takeaways">Practical Takeaways</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#priority-queues-binary-heaps--auto-scaling-group-instance-selection" data-for="priority-queues-binary-heaps--auto-scaling-group-instance-selection">Priority Queues (Binary Heaps) — Auto Scaling Group Instance Selection</a></li><li class="depth-2"><a href="#bin-packing--ec2-placement-and-instance-scheduling" data-for="bin-packing--ec2-placement-and-instance-scheduling">Bin Packing — EC2 Placement and Instance Scheduling</a></li><li class="depth-2"><a href="#round-robin-scheduling--cpu-credit-model-for-burstable-instances" data-for="round-robin-scheduling--cpu-credit-model-for-burstable-instances">Round-Robin Scheduling — CPU Credit Model for Burstable Instances</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

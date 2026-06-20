@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>TESTING_GUIDE</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="TESTING_GUIDE"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="TESTING_GUIDE"/><meta name="twitter:description" content="BridgeOnline — Dev-Mode Testing Guide Scope: Covers all changes shipped in Sessions 001–006."/><meta property="og:description" content="BridgeOnline — Dev-Mode Testing Guide Scope: Covers all changes shipped in Sessions 001–006."/><meta property="og:image:alt" content="BridgeOnline — Dev-Mode Testing Guide Scope: Covers all changes shipped in Sessions 001–006."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/bridgeonline/TESTING_GUIDE"/><meta property="twitter:url" content="https://study.tpresearcher.online/bridgeonline/TESTING_GUIDE"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="BridgeOnline — Dev-Mode Testing Guide Scope: Covers all changes shipped in Sessions 001–006."/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="bridgeonline/TESTING_GUIDE"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-25"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-25" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../bridgeonline/">bridgeonline</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>TESTING_GUIDE</a></div></nav><h1 class="article-title">TESTING_GUIDE</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.401Z">Jun 20, 2026</time><span>11 min read</span></p></div></div><article class="popover-hint"><h1 id="bridgeonline--dev-mode-testing-guide">BridgeOnline — Dev-Mode Testing Guide<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bridgeonline--dev-mode-testing-guide" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Scope:</strong> Covers all changes shipped in Sessions 001–006.<br/>
+Follow this guide end-to-end to confirm every layer is working correctly on a fresh clone or after pulling the latest code.</p>
+</blockquote>
+<hr/>
+<h2 id="table-of-contents">Table of Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#table-of-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><a href="#1-prerequisites" class="internal alias">Prerequisites</a></li>
+<li><a href="#2-clone--install" class="internal alias">Clone &amp; Install</a></li>
+<li><a href="#3-environment-setup" class="internal alias">Environment Setup</a></li>
+<li><a href="#4-start-the-dev-server" class="internal alias">Start the Dev Server</a></li>
+<li><a href="#5-run-test-suites" class="internal alias">Run Test Suites</a>
+<ul>
+<li>5.1 <a href="#51-unit-tests-123-tests" class="internal alias">Unit Tests (123 tests)</a></li>
+<li>5.2 <a href="#52-socketio-integration-tests-20-tests" class="internal alias">Socket.io Integration Tests (20 tests)</a></li>
+<li>5.3 <a href="#53-db-integration-tests-35-tests-docker-required" class="internal alias">DB Integration Tests (35 tests, Docker required)</a></li>
+<li>5.4 <a href="#54-typescript-build-check-2323-pages" class="internal alias">TypeScript Build Check (23/23 pages)</a></li>
+<li>5.5 <a href="#55-e2e-tests-playwright" class="internal alias">E2E Tests (Playwright)</a></li>
+</ul>
+</li>
+<li><a href="#6-manual-ui-walkthrough" class="internal alias">Manual UI Walkthrough</a></li>
+<li><a href="#7-api-level-curl-tests" class="internal alias">API-Level curl Tests</a>
+<ul>
+<li>7.1 <a href="#71-auth-flow" class="internal alias">Auth Flow</a></li>
+<li>7.2 <a href="#72-room-lifecycle" class="internal alias">Room Lifecycle</a></li>
+<li>7.3 <a href="#73-bid-flow--passed-out-redeal" class="internal alias">Bid Flow &amp; Passed-Out Redeal</a></li>
+</ul>
+</li>
+<li><a href="#8-known-issues--workarounds" class="internal alias">Known Issues &amp; Workarounds</a></li>
+</ol>
+<hr/>
+<h2 id="1-prerequisites">1. Prerequisites<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-prerequisites" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Tool</th><th>Version</th><th>Notes</th></tr></thead><tbody><tr><td>Node.js</td><td>≥ 20 (recommend 20 LTS)</td><td>Node 24 changes some defaults — see §8</td></tr><tr><td>npm</td><td>≥ 10</td><td>Bundled with Node 20</td></tr><tr><td>Docker Desktop</td><td>Any recent</td><td>Required for DB integration tests only</td></tr><tr><td>Git</td><td>Any</td><td>—</td></tr><tr><td>curl + jq</td><td>Any</td><td>For §7 API tests; <code>brew install jq</code> / <code>apt install jq</code></td></tr></tbody></table></div>
+<p><strong>Optional — Supabase (hosted Postgres):</strong><br/>
+If you are using a Supabase free-tier project for <code>DATABASE_URL</code> it may be paused after 1 week of inactivity. Wake it up at <a href="https://supabase.com/dashboard" class="external">https://supabase.com/dashboard<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> before running any DB-connected tests or the dev server.</p>
+<hr/>
+<h2 id="2-clone--install">2. Clone &amp; Install<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-clone--install" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> clone</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> https://github.com/AkhtarShadab/BridgeOnline.git</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> BridgeOnline</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> install</span></span></code></pre></figure>
+<hr/>
+<h2 id="3-environment-setup">3. Environment Setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-environment-setup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-main-app-environment-envlocal">3.1 Main app environment (<code>.env.local</code>)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-main-app-environment-envlocal" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Copy the example file and fill in your values:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">cp</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .env.example</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .env.local</span></span></code></pre></figure>
+<p>Edit <code>.env.local</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="env" data-theme="github-light github-dark"><code data-language="env" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>DATABASE_URL=&quot;postgresql://user:password@localhost:5432/bridgeonline?schema=public&quot;</span></span>
+<span data-line><span>DIRECT_URL=&quot;postgresql://user:password@localhost:5432/bridgeonline?schema=public&quot;</span></span>
+<span data-line><span>NEXTAUTH_URL=&quot;http://localhost:3000&quot;</span></span>
+<span data-line><span>NEXTAUTH_SECRET=&quot;&lt;generate with: openssl rand -base64 32>&quot;</span></span>
+<span data-line><span>NEXT_PUBLIC_SOCKET_URL=&quot;http://localhost:3001&quot;</span></span></code></pre></figure>
+<blockquote>
+<p><strong>Supabase users:</strong> Replace <code>DATABASE_URL</code> and <code>DIRECT_URL</code> with the values from<br/>
+<em>Project → Settings → Database → Connection String → URI</em>.<br/>
+Use the <strong>Pooled</strong> URL for <code>DATABASE_URL</code> and the <strong>Direct</strong> URL for <code>DIRECT_URL</code>.</p>
+</blockquote>
+<h3 id="32-apply-the-database-schema">3.2 Apply the database schema<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-apply-the-database-schema" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> prisma</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> db</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> push</span></span></code></pre></figure>
+<p>You should see <code>Your database is now in sync with your Prisma schema.</code></p>
+<hr/>
+<h2 id="4-start-the-dev-server">4. Start the Dev Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-start-the-dev-server" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> dev</span></span></code></pre></figure>
+<p>This starts <strong>two</strong> processes concurrently:</p>
+<ul>
+<li><strong>Next.js</strong> on <code>http://localhost:3000</code></li>
+<li><strong>Socket.io server</strong> on <code>http://localhost:3001</code></li>
+</ul>
+<p><strong>Expected output (no errors):</strong></p>
+<pre><code>▲ Next.js 15.x.x
+- Local:  http://localhost:3000
+✓ Ready in ~2s
+
+Socket.io server listening on port 3001
+</code></pre>
+<p>Open <code>http://localhost:3000</code> in your browser — you should see the landing / login page.</p>
+<hr/>
+<h2 id="5-run-test-suites">5. Run Test Suites<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-run-test-suites" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-unit-tests-123-tests">5.1 Unit Tests (123 tests)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-unit-tests-123-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tests pure game logic with no external dependencies (no DB, no network).</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test</span></span></code></pre></figure>
+<p><strong>What is covered:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>What it tests</th></tr></thead><tbody><tr><td><code>__tests__/unit/deck.test.ts</code></td><td>Card creation, shuffling, dealing</td></tr><tr><td><code>__tests__/unit/cardUtils.test.ts</code></td><td>Card comparisons, suit hierarchy</td></tr><tr><td><code>__tests__/unit/bidding.test.ts</code></td><td>Bid validity, ACBL rules, double/redouble</td></tr><tr><td><code>__tests__/unit/playing.test.ts</code></td><td>Must-follow-suit, trick resolution, dummy reveal</td></tr><tr><td><code>__tests__/unit/scoring.test.ts</code></td><td>ACBL duplicate scoring, game/slam bonuses</td></tr></tbody></table></div>
+<p><strong>Expected result:</strong></p>
+<pre><code>Test Files  5 passed (5)
+Tests       123 passed (123)
+Duration    ~2s
+</code></pre>
+<p><strong>Session coverage:</strong> Sessions 001–004 game logic; Session 005 bidding rule fixes.</p>
+<hr/>
+<h3 id="52-socketio-integration-tests-20-tests">5.2 Socket.io Integration Tests (20 tests)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-socketio-integration-tests-20-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tests real-time events between the server and connected clients. No DB required.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:socket</span></span></code></pre></figure>
+<p><strong>What is covered:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>What it tests</th></tr></thead><tbody><tr><td><code>__tests__/socket/room.test.ts</code></td><td>Player join/leave, ready state, room lifecycle</td></tr><tr><td><code>__tests__/socket/game.test.ts</code></td><td>game:started, game:bid_made, game:contract_established, game:card_played, game:passed_out</td></tr><tr><td><code>__tests__/socket/voice-signaling.test.ts</code></td><td>WebRTC offer/answer/ICE relay through Socket.io</td></tr></tbody></table></div>
+<p><strong>Expected result:</strong></p>
+<pre><code>Test Files  3 passed (3)
+Tests       20 passed (20)
+Duration    ~3s
+</code></pre>
+<p><strong>Timeout:</strong> Each test has a 15 s timeout — failures pointing to timeouts suggest the Socket.io server process did not start correctly inside the test harness.</p>
+<hr/>
+<h3 id="53-db-integration-tests-35-tests-docker-required">5.3 DB Integration Tests (35 tests, Docker required)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-db-integration-tests-35-tests-docker-required" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Tests Prisma queries against a real PostgreSQL instance running in Docker.</p>
+<h4 id="step-1--start-test-database">Step 1 — Start test database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-1--start-test-database" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:db:start</span></span></code></pre></figure>
+<p>This runs <code>docker-compose.test.yml</code> which starts PostgreSQL 16 on port <strong>5433</strong> (separate from your dev DB on 5432) with in-memory storage (<code>tmpfs</code>) so it is always clean.</p>
+<p>Verify it is up:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ps</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> bridgeonline_test</span></span></code></pre></figure>
+<h4 id="step-2--apply-schema-to-test-database">Step 2 — Apply schema to test database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-2--apply-schema-to-test-database" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:db:reset</span></span></code></pre></figure>
+<p>This runs <code>prisma db push --force-reset</code> against <code>.env.test</code> (port 5433).</p>
+<h4 id="step-3--run-tests">Step 3 — Run tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-3--run-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:db</span></span></code></pre></figure>
+<p><strong>What is covered:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>What it tests</th></tr></thead><tbody><tr><td><code>__tests__/db/users.test.ts</code></td><td>User creation, auth lookup, unique constraints</td></tr><tr><td><code>__tests__/db/rooms.test.ts</code></td><td>Room CRUD, invite codes, seat assignment</td></tr><tr><td><code>__tests__/db/games.test.ts</code></td><td>Game creation, move persistence, state transitions</td></tr><tr><td><code>__tests__/db/hand-filter.test.ts</code></td><td>Hand data returned to each player (no peeking at others’ cards)</td></tr></tbody></table></div>
+<p><strong>Expected result:</strong></p>
+<pre><code>Test Files  4 passed (4)
+Tests       ~35 passed
+Duration    ~10–20s
+</code></pre>
+<p>Tests run <strong>serially</strong> (<code>singleFork: true</code>) to avoid Prisma connection pool conflicts. Each test file wraps operations in transactions that are rolled back on teardown.</p>
+<h4 id="step-4--stop-test-database-optional">Step 4 — Stop test database (optional)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-4--stop-test-database-optional" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:db:stop</span></span></code></pre></figure>
+<hr/>
+<h3 id="54-typescript-build-check-2323-pages">5.4 TypeScript Build Check (23/23 pages)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-typescript-build-check-2323-pages" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Verifies the entire Next.js app compiles without TypeScript errors — the key deliverable of Session 006.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> build</span></span></code></pre></figure>
+<p><strong>Expected output (last few lines):</strong></p>
+<pre><code>Route (app)                              Size     First Load JS
+┌ ○ /                                    ...
+...
+✓ Compiled successfully
+   Generating static pages (23/23)
+</code></pre>
+<p>All 23 pages must compile without errors or warnings. Any TypeScript error will cause a non-zero exit code.</p>
+<blockquote>
+<p><strong>Note:</strong> The build uses your <code>.env.local</code> for environment variables. Make sure <code>DATABASE_URL</code> is reachable; the build does not execute queries but Prisma client generation needs the env var present.</p>
+</blockquote>
+<hr/>
+<h3 id="55-e2e-tests-playwright">5.5 E2E Tests (Playwright)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#55-e2e-tests-playwright" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Runs full browser automation against a locally-started Next.js server.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:e2e</span></span></code></pre></figure>
+<p>Or with the interactive Playwright UI:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:e2e:ui</span></span></code></pre></figure>
+<p><strong>What is covered:</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>Scenario</th></tr></thead><tbody><tr><td><code>auth.spec.ts</code></td><td>Register, login, logout</td></tr><tr><td><code>room-lifecycle.spec.ts</code></td><td>Create room, join, seat selection, ready state</td></tr><tr><td><code>full-game.spec.ts</code></td><td>Complete game: bidding through scoring</td></tr><tr><td><code>reconnect.spec.ts</code></td><td>Player disconnect and reconnect within 30 s</td></tr><tr><td><code>voice-signaling.spec.ts</code></td><td>WebRTC offer/answer exchange</td></tr></tbody></table></div>
+<p><strong>Important:</strong> E2E tests require a working database. Make sure your <code>.env.local</code> points to a live PostgreSQL instance before running.</p>
+<p><strong>Known partial failures:</strong> <code>full-game.spec.ts</code> may fail on the bidding → playing transition because the <code>game:passed_out</code> Socket.io event does not yet have a client-side UI handler. See §8 for details.</p>
+<hr/>
+<h2 id="6-manual-ui-walkthrough">6. Manual UI Walkthrough<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-manual-ui-walkthrough" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Use four browser tabs (or separate incognito windows) to simulate four players.</p>
+<h3 id="61-register-four-accounts">6.1 Register four accounts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-register-four-accounts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Navigate to <code>http://localhost:3000/register</code> in each tab and create:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Player</th><th>Username</th><th>Email</th></tr></thead><tbody><tr><td>1</td><td><code>north_player</code></td><td><code>north@test.com</code></td></tr><tr><td>2</td><td><code>east_player</code></td><td><code>east@test.com</code></td></tr><tr><td>3</td><td><code>south_player</code></td><td><code>south@test.com</code></td></tr><tr><td>4</td><td><code>west_player</code></td><td><code>west@test.com</code></td></tr></tbody></table></div>
+<h3 id="62-create-a-room-player-1">6.2 Create a room (Player 1)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-create-a-room-player-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Log in as <code>north_player</code>.</li>
+<li>Go to <code>http://localhost:3000/dashboard</code>.</li>
+<li>Click <strong>Create Room</strong>.</li>
+<li>Note the <strong>Invite Code</strong> displayed (e.g. <code>ABC123</code>).</li>
+<li>Select seat <strong>North</strong>.</li>
+<li>Click <strong>Ready</strong>.</li>
+</ol>
+<h3 id="63-join-the-room-players-24">6.3 Join the room (Players 2–4)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-join-the-room-players-24" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>In each remaining tab:</p>
+<ol>
+<li>Log in as the respective player.</li>
+<li>Go to <code>http://localhost:3000/join-room</code>.</li>
+<li>Enter the invite code.</li>
+<li>Select a different seat (East / South / West).</li>
+<li>Click <strong>Ready</strong>.</li>
+</ol>
+<h3 id="64-start-the-game">6.4 Start the game<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#64-start-the-game" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Once all four players are marked Ready, the game starts automatically.</p>
+<p><strong>What to verify:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Each player sees their 13 cards.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Dealer indicator is shown correctly.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Bidding box is enabled only for the dealer on the first turn.</li>
+</ul>
+<h3 id="65-bid-through-the-auction">6.5 Bid through the auction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#65-bid-through-the-auction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Use the bidding box to make bids. Standard test sequence to trigger a <strong>contract</strong>:</p>
+<pre><code>North: 1NT  →  East: Pass  →  South: Pass  →  West: Pass
+</code></pre>
+<p><strong>Expected result:</strong></p>
+<ul>
+<li>Contract is shown as <code>1NT by North</code>.</li>
+<li>Phase transitions to PLAYING.</li>
+<li>West (left of declarer) leads first.</li>
+<li>Dummy (South) hand is revealed face-up.</li>
+</ul>
+<h3 id="66-trigger-a-passed-out-redeal-session-006-feature">6.6 Trigger a passed-out redeal (Session 006 feature)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#66-trigger-a-passed-out-redeal-session-006-feature" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>To test the passed-out redeal, all four players must pass without any bid:</p>
+<pre><code>North: Pass  →  East: Pass  →  South: Pass  →  West: Pass
+</code></pre>
+<p><strong>Expected result (Session 006 fix):</strong></p>
+<ul>
+<li>A new board is dealt automatically (board number increments).</li>
+<li>Dealer rotates clockwise to the next player.</li>
+<li>Vulnerability updates for the new board number.</li>
+<li>Bidding starts fresh.</li>
+<li><strong>Note:</strong> There is currently no visual notification in the UI for the redeal (the <code>game:passed_out</code> event is handled server-side and emitted via Socket.io, but the client does not yet display a modal or banner). Refresh the page to confirm the new hand is in place.</li>
+</ul>
+<h3 id="67-play-a-trick">6.7 Play a trick<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#67-play-a-trick" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>After the opening lead, click a legal card to play. Verify:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Must-follow-suit enforcement: clicking an off-suit card when you have the led suit is blocked.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Trick completes when all 4 players have played.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Trick winner leads the next trick.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Dummy is played by declarer.</li>
+</ul>
+<hr/>
+<h2 id="7-api-level-curl-tests">7. API-Level curl Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-api-level-curl-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Use these to verify the backend independently of the UI. Export variables to reuse across commands:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> BASE</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;http://localhost:3000&quot;</span></span></code></pre></figure>
+<h3 id="71-auth-flow">7.1 Auth Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-auth-flow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Register:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/auth/register&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{&quot;email&quot;:&quot;tester@example.com&quot;,&quot;username&quot;:&quot;tester&quot;,&quot;password&quot;:&quot;Password123!&quot;}'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span></span></code></pre></figure>
+<p>Expected: <code>{&quot;message&quot;: &quot;User created successfully&quot;}</code></p>
+<p><strong>Login (get session cookie):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># NextAuth uses form-based sign-in; obtain CSRF token first</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">CSRF</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/auth/csrf&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '.csrfToken'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -c</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/auth/callback/credentials&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;csrfToken=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$CSRF</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&amp;email=tester@example.com&amp;password=Password123!&amp;callbackUrl=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> head</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -5</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Cookies saved to /tmp/cookies.txt&quot;</span></span></code></pre></figure>
+<p>All subsequent requests that need auth pass <code>-b /tmp/cookies.txt</code>.</p>
+<hr/>
+<h3 id="72-room-lifecycle">7.2 Room Lifecycle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-room-lifecycle" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Create a room:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">ROOM</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/rooms/create&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">echo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> $ROOM</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">ROOM_ID</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">echo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> $ROOM </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '.roomId'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">INVITE</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">echo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> $ROOM </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '.inviteCode'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Room: </span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$ROOM_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  Invite: </span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$INVITE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span></span></code></pre></figure>
+<p><strong>Join the room (second user — repeat login flow for second cookie jar):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies2.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/rooms/join&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">inviteCode</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$INVITE</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span></span></code></pre></figure>
+<p><strong>Select a seat:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> PATCH</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/rooms/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$ROOM_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/seat&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{&quot;seat&quot;:&quot;NORTH&quot;}'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span></span></code></pre></figure>
+<p><strong>Mark ready:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> PATCH</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/rooms/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$ROOM_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/ready&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{&quot;isReady&quot;:true}'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span></span></code></pre></figure>
+<hr/>
+<h3 id="73-bid-flow--passed-out-redeal">7.3 Bid Flow &amp; Passed-Out Redeal<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#73-bid-flow--passed-out-redeal" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Once all four players are seated, ready, and the game has started, obtain the game ID:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">GAME_STATE</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/games/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$GAME_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/state&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">echo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> $GAME_STATE </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{phase: .phase, dealer: .dealer, boardNumber: .boardNumber}'</span></span></code></pre></figure>
+<p><strong>Make a bid (1NT):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/games/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$GAME_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/bid&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{&quot;action&quot;:&quot;bid&quot;,&quot;bid&quot;:{&quot;level&quot;:1,&quot;suit&quot;:&quot;NT&quot;}}'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span></span></code></pre></figure>
+<p>Expected: <code>{&quot;success&quot;: true, &quot;phase&quot;: &quot;BIDDING&quot;}</code></p>
+<p><strong>Pass:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/games/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$GAME_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/bid&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{&quot;action&quot;:&quot;pass&quot;}'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span></span></code></pre></figure>
+<p><strong>Test passed-out redeal (all 4 pass — use 4 cookie jars):</strong></p>
+<p>After all four players pass with no bid made, verify the redeal:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># After 4 passes, check new state</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">NEW_STATE</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/games/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$GAME_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/state&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">echo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> $NEW_STATE </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  phase: .phase,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  boardNumber: .boardNumber,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  dealer: .dealer,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  vulnerability: .vulnerability,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  bidHistory: (.bidHistory | length)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}'</span></span></code></pre></figure>
+<p><strong>Expected result from Session 006 fix:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;phase&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;BIDDING&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;boardNumber&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;dealer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;&lt;rotated from board 1>&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;vulnerability&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;&lt;recalculated for board 2>&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;bidHistory&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><code>bidHistory</code> must be <code>0</code> (reset), <code>boardNumber</code> must have incremented, and <code>phase</code> must be <code>&quot;BIDDING&quot;</code>.</p>
+<p><strong>Play a card (once in PLAYING phase):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -s</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /tmp/cookies.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$BASE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/api/games/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">$GAME_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/play&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{&quot;card&quot;:{&quot;suit&quot;:&quot;SPADES&quot;,&quot;rank&quot;:&quot;ACE&quot;}}'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span></span></code></pre></figure>
+<hr/>
+<h2 id="8-known-issues--workarounds">8. Known Issues &amp; Workarounds<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-known-issues--workarounds" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="81-getnextplayer-turn-order-bug">8.1 <code>getNextPlayer</code> turn order bug<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-getnextplayer-turn-order-bug" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptom:</strong> After winning a trick the wrong player is set as current player.</p>
+<p><strong>Root cause:</strong> <code>getNextPlayer()</code> in <code>app/api/games/[gameId]/bid/route.ts</code> uses the seat order <code>['NORTH', 'EAST', 'SOUTH', 'WEST']</code>. The correct clockwise Bridge order is <code>NORTH → EAST → SOUTH → WEST</code>, but within the deal the West seat should follow South (not East following North as sometimes generated). This can produce an off-by-one in trick-leading after unusual bidding sequences.</p>
+<p><strong>Workaround:</strong> For manual testing, follow a standard auction so the opening leader is always the hand to the left of declarer. Avoid testing edge cases around trick-leading order until this is fixed.</p>
+<p><strong>Tracking:</strong> To be addressed in a future session.</p>
+<hr/>
+<h3 id="82-gamepassed_out-client-handler-not-in-ui">8.2 <code>game:passed_out</code> client handler not in UI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#82-gamepassed_out-client-handler-not-in-ui" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptom:</strong> After all four players pass (passed-out board), the UI does not update automatically. The new hand does exist in the database and state is correct server-side, but there is no visual feedback.</p>
+<p><strong>Root cause:</strong> The Socket.io <code>game:passed_out</code> event is emitted by the server (Session 006) but the React client does not yet subscribe to it.</p>
+<p><strong>Workaround:</strong> After a passed-out board, manually reload the page (<code>F5</code>). The new hand will load correctly from the server state.</p>
+<p><strong>Tracking:</strong> Add <code>socket.on('game:passed_out', ...)</code> handler to <code>app/game/[gameId]/page.tsx</code> in the next UI session.</p>
+<hr/>
+<h3 id="83-supabase-free-tier-pause">8.3 Supabase free-tier pause<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#83-supabase-free-tier-pause" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptom:</strong> <code>DATABASE_URL</code> connection times out; Prisma throws <code>Error: Can't reach database server</code>.</p>
+<p><strong>Root cause:</strong> Supabase pauses free-tier projects after ~1 week of inactivity.</p>
+<p><strong>Workaround:</strong></p>
+<ol>
+<li>Go to <a href="https://supabase.com/dashboard" class="external">https://supabase.com/dashboard<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Open your project.</li>
+<li>If it shows “Paused”, click <strong>Restore project</strong> and wait ~30 s.</li>
+<li>Re-run <code>npx prisma db push</code> to confirm connectivity.</li>
+</ol>
+<p>For uninterrupted local development, use a local PostgreSQL instead (e.g. via Docker: <code>docker run -e POSTGRES_PASSWORD=dev -p 5432:5432 postgres:16-alpine</code>).</p>
+<hr/>
+<h3 id="84-nodejs-24-node_env-default">8.4 Node.js 24 <code>NODE_ENV</code> default<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#84-nodejs-24-node_env-default" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptom:</strong> <code>npm run test:e2e</code> fails with auth errors or missing session data when running on Node 24.</p>
+<p><strong>Root cause:</strong> Node 24 defaults <code>process.env.NODE_ENV</code> to <code>&quot;production&quot;</code> when not explicitly set. NextAuth behaves differently in production mode (stricter cookie settings, HTTPS-only, etc.).</p>
+<p><strong>Workaround:</strong> The Playwright config already sets <code>NODE_ENV: 'development'</code> for the web server process. If you run tests manually or in CI on Node 24, prepend:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">NODE_ENV</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">development</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:e2e</span></span></code></pre></figure>
+<hr/>
+<h2 id="quick-reference">Quick Reference<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quick-reference" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>What it does</th></tr></thead><tbody><tr><td><code>npm run dev</code></td><td>Start Next.js + Socket.io in dev mode</td></tr><tr><td><code>npm test</code></td><td>123 unit tests (no external deps)</td></tr><tr><td><code>npm run test:socket</code></td><td>20 Socket.io tests (no DB)</td></tr><tr><td><code>npm run test:db:start</code></td><td>Start Docker test-DB on port 5433</td></tr><tr><td><code>npm run test:db:reset</code></td><td>Apply schema to test-DB</td></tr><tr><td><code>npm run test:db</code></td><td>35 DB integration tests</td></tr><tr><td><code>npm run test:db:stop</code></td><td>Stop Docker test-DB</td></tr><tr><td><code>npm run build</code></td><td>TypeScript build — expect 23/23 pages clean</td></tr><tr><td><code>npm run test:e2e</code></td><td>Playwright E2E (needs live DB)</td></tr><tr><td><code>npm run test:all</code></td><td>Unit + Socket + DB + E2E in sequence</td></tr><tr><td><code>npx prisma studio</code></td><td>Browse database at <a href="http://localhost:5555" class="external">http://localhost:5555<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></td></tr><tr><td><code>npx prisma db push</code></td><td>Sync schema to database</td></tr></tbody></table></div>
+<hr/>
+<p><em>Generated for Sessions 001–006 · Last updated: 2026-04-26</em></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-14" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#bridgeonline--dev-mode-testing-guide" data-for="bridgeonline--dev-mode-testing-guide">BridgeOnline — Dev-Mode Testing Guide</a></li><li class="depth-1"><a href="#table-of-contents" data-for="table-of-contents">Table of Contents</a></li><li class="depth-1"><a href="#1-prerequisites" data-for="1-prerequisites">1. Prerequisites</a></li><li class="depth-1"><a href="#2-clone--install" data-for="2-clone--install">2. Clone &amp; Install</a></li><li class="depth-1"><a href="#3-environment-setup" data-for="3-environment-setup">3. Environment Setup</a></li><li class="depth-2"><a href="#31-main-app-environment-envlocal" data-for="31-main-app-environment-envlocal">3.1 Main app environment (.env.local)</a></li><li class="depth-2"><a href="#32-apply-the-database-schema" data-for="32-apply-the-database-schema">3.2 Apply the database schema</a></li><li class="depth-1"><a href="#4-start-the-dev-server" data-for="4-start-the-dev-server">4. Start the Dev Server</a></li><li class="depth-1"><a href="#5-run-test-suites" data-for="5-run-test-suites">5. Run Test Suites</a></li><li class="depth-2"><a href="#51-unit-tests-123-tests" data-for="51-unit-tests-123-tests">5.1 Unit Tests (123 tests)</a></li><li class="depth-2"><a href="#52-socketio-integration-tests-20-tests" data-for="52-socketio-integration-tests-20-tests">5.2 Socket.io Integration Tests (20 tests)</a></li><li class="depth-2"><a href="#53-db-integration-tests-35-tests-docker-required" data-for="53-db-integration-tests-35-tests-docker-required">5.3 DB Integration Tests (35 tests, Docker required)</a></li><li class="depth-2"><a href="#54-typescript-build-check-2323-pages" data-for="54-typescript-build-check-2323-pages">5.4 TypeScript Build Check (23/23 pages)</a></li><li class="depth-2"><a href="#55-e2e-tests-playwright" data-for="55-e2e-tests-playwright">5.5 E2E Tests (Playwright)</a></li><li class="depth-1"><a href="#6-manual-ui-walkthrough" data-for="6-manual-ui-walkthrough">6. Manual UI Walkthrough</a></li><li class="depth-2"><a href="#61-register-four-accounts" data-for="61-register-four-accounts">6.1 Register four accounts</a></li><li class="depth-2"><a href="#62-create-a-room-player-1" data-for="62-create-a-room-player-1">6.2 Create a room (Player 1)</a></li><li class="depth-2"><a href="#63-join-the-room-players-24" data-for="63-join-the-room-players-24">6.3 Join the room (Players 2–4)</a></li><li class="depth-2"><a href="#64-start-the-game" data-for="64-start-the-game">6.4 Start the game</a></li><li class="depth-2"><a href="#65-bid-through-the-auction" data-for="65-bid-through-the-auction">6.5 Bid through the auction</a></li><li class="depth-2"><a href="#66-trigger-a-passed-out-redeal-session-006-feature" data-for="66-trigger-a-passed-out-redeal-session-006-feature">6.6 Trigger a passed-out redeal (Session 006 feature)</a></li><li class="depth-2"><a href="#67-play-a-trick" data-for="67-play-a-trick">6.7 Play a trick</a></li><li class="depth-1"><a href="#7-api-level-curl-tests" data-for="7-api-level-curl-tests">7. API-Level curl Tests</a></li><li class="depth-2"><a href="#71-auth-flow" data-for="71-auth-flow">7.1 Auth Flow</a></li><li class="depth-2"><a href="#72-room-lifecycle" data-for="72-room-lifecycle">7.2 Room Lifecycle</a></li><li class="depth-2"><a href="#73-bid-flow--passed-out-redeal" data-for="73-bid-flow--passed-out-redeal">7.3 Bid Flow &amp; Passed-Out Redeal</a></li><li class="depth-1"><a href="#8-known-issues--workarounds" data-for="8-known-issues--workarounds">8. Known Issues &amp; Workarounds</a></li><li class="depth-2"><a href="#81-getnextplayer-turn-order-bug" data-for="81-getnextplayer-turn-order-bug">8.1 getNextPlayer turn order bug</a></li><li class="depth-2"><a href="#82-gamepassed_out-client-handler-not-in-ui" data-for="82-gamepassed_out-client-handler-not-in-ui">8.2 game:passed_out client handler not in UI</a></li><li class="depth-2"><a href="#83-supabase-free-tier-pause" data-for="83-supabase-free-tier-pause">8.3 Supabase free-tier pause</a></li><li class="depth-2"><a href="#84-nodejs-24-node_env-default" data-for="84-nodejs-24-node_env-default">8.4 Node.js 24 NODE_ENV default</a></li><li class="depth-1"><a href="#quick-reference" data-for="quick-reference">Quick Reference</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

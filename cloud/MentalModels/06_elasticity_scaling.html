@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>06_elasticity_scaling</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="06_elasticity_scaling"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="06_elasticity_scaling"/><meta name="twitter:description" content="Elasticity and Scaling Mental Model Core Idea: Capacity Should Match Demand In a traditional data center, capacity is a step function: you buy servers in batches, and capacity jumps up in large increments."/><meta property="og:description" content="Elasticity and Scaling Mental Model Core Idea: Capacity Should Match Demand In a traditional data center, capacity is a step function: you buy servers in batches, and capacity jumps up in large increments."/><meta property="og:image:alt" content="Elasticity and Scaling Mental Model Core Idea: Capacity Should Match Demand In a traditional data center, capacity is a step function: you buy servers in batches, and capacity jumps up in large increments."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/MentalModels/06_elasticity_scaling"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/MentalModels/06_elasticity_scaling"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Elasticity and Scaling Mental Model Core Idea: Capacity Should Match Demand In a traditional data center, capacity is a step function: you buy servers in batches, and capacity jumps up in large increments."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/MentalModels/06_elasticity_scaling"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-44"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-44" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/MentalModels/">MentalModels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>06_elasticity_scaling</a></div></nav><h1 class="article-title">06_elasticity_scaling</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.327Z">Jun 20, 2026</time><span>15 min read</span></p></div></div><article class="popover-hint"><h1 id="elasticity-and-scaling-mental-model">Elasticity and Scaling Mental Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#elasticity-and-scaling-mental-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="core-idea-capacity-should-match-demand">Core Idea: Capacity Should Match Demand<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-idea-capacity-should-match-demand" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>In a traditional data center, capacity is a step function: you buy
+servers in batches, and capacity jumps up in large increments. Demand,
+meanwhile, is a continuous curve that rises and falls with business
+cycles, time of day, marketing campaigns, and viral events.</p>
+<p>The gap between the capacity step function and the demand curve is
+<strong>waste</strong> (when capacity exceeds demand) or <strong>failure</strong> (when demand
+exceeds capacity).</p>
+<p>Cloud elasticity closes this gap. Capacity can scale continuously to
+match demand — up when traffic rises, down when it falls.</p>
+<pre><code>  TRADITIONAL vs ELASTIC CAPACITY
+  =================================
+
+  Traditional (Fixed Capacity):
+  Capacity ^
+           |          +-----------+
+           |          |           |  &lt;-- Over-provisioned (waste)
+           |     +----+           |
+           |     |    demand curve|
+           |  +--+ ...           |
+           |  |       ***        |
+           |  |     **   **      |
+           +--+-*-*--------**----+---> Time
+              |  demand > capacity
+              |  = OUTAGE
+
+  Elastic (Auto Scaling):
+  Capacity ^
+           |         ****
+           |       **    **     &lt;-- Capacity tracks demand
+           |     **        **
+           |   **            **
+           | **                **
+           +---------------------> Time
+              No waste, no outage (in theory)
+</code></pre>
+<hr/>
+<h2 id="vertical-vs-horizontal-scaling">Vertical vs Horizontal Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vertical-vs-horizontal-scaling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>There are two fundamental approaches to adding capacity.</p>
+<h3 id="vertical-scaling-scale-up">Vertical Scaling (Scale Up)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vertical-scaling-scale-up" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Replace a server with a bigger server: more CPU, more RAM, faster
+storage. Simple but limited.</p>
+<pre><code>  VERTICAL SCALING
+  ================
+
+  Before:                    After:
+  +------------+             +------------------+
+  | 4 vCPU     |     -->     | 16 vCPU          |
+  | 16 GB RAM  |             | 64 GB RAM        |
+  | t3.large   |             | m5.4xlarge       |
+  +------------+             +------------------+
+
+  Pros:
+  - Simple: no application changes needed
+  - Works for monoliths and databases
+  - No distributed systems complexity
+
+  Cons:
+  - Has a ceiling (largest instance: 448 vCPU, 24 TB RAM on u-24tb1)
+  - Requires downtime (usually) to resize
+  - Single point of failure (one big server)
+  - Not true elasticity (manual, slow process)
+</code></pre>
+<h3 id="horizontal-scaling-scale-out">Horizontal Scaling (Scale Out)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#horizontal-scaling-scale-out" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Add more servers of the same size. More complex but virtually unlimited.</p>
+<pre><code>  HORIZONTAL SCALING
+  ==================
+
+  Before:                    After:
+  +--------+                 +--------+ +--------+ +--------+
+  | Server |        -->      | Server | | Server | | Server |
+  |   1    |                 |   1    | |   2    | |   3    |
+  +--------+                 +--------+ +--------+ +--------+
+                                    |       |       |
+                             +------+-------+-------+
+                             |  Load Balancer        |
+                             +-----------------------+
+
+  Pros:
+  - No ceiling (add as many servers as needed)
+  - No downtime to scale
+  - Fault tolerant (losing one server is not catastrophic)
+  - True elasticity (automated, fast)
+
+  Cons:
+  - Application must be stateless (session data externalized)
+  - Distributed systems complexity (consistency, coordination)
+  - Data layer is harder to scale horizontally
+  - Load balancer required
+</code></pre>
+<hr/>
+<h2 id="the-stateless-design-requirement">The Stateless Design Requirement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-stateless-design-requirement" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Horizontal scaling only works if each server can handle any request
+without depending on local state from a previous request. This means:</p>
+<pre><code>  STATEFUL vs STATELESS
+  ======================
+
+  STATEFUL (Cannot Scale Horizontally):
+  +----------+
+  | Server A |  Session data stored in local memory
+  |  session |  User must always go to Server A
+  |   data   |  If A dies, session is lost
+  +----------+
+
+  STATELESS (Can Scale Horizontally):
+  +----------+ +----------+ +----------+
+  | Server A | | Server B | | Server C |
+  |  (no     | |  (no     | |  (no     |
+  |  local   | |  local   | |  local   |
+  |  state)  | |  state)  | |  state)  |
+  +----------+ +----------+ +----------+
+        |           |           |
+  +------+-----------+-----------+------+
+  |     External Session Store          |
+  |  (Redis / DynamoDB / Memcached)     |
+  +-------------------------------------+
+
+  Any server can handle any request.
+  Servers are interchangeable and disposable.
+</code></pre>
+<h3 id="what-must-be-externalized">What Must Be Externalized<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-must-be-externalized" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>State Type</th><th>Where to Store It</th></tr></thead><tbody><tr><td>User sessions</td><td>Redis, Memcached, DynamoDB</td></tr><tr><td>File uploads</td><td>S3, GCS, Azure Blob Storage</td></tr><tr><td>Application config</td><td>Parameter Store, Secrets Manager, env vars</td></tr><tr><td>Job queues</td><td>SQS, RabbitMQ, Kafka</td></tr><tr><td>Cache</td><td>ElastiCache (Redis/Memcached), CloudFront</td></tr><tr><td>Logs</td><td>CloudWatch, ELK, Datadog</td></tr></tbody></table></div>
+<hr/>
+<h2 id="scaling-triggers-and-metrics">Scaling Triggers and Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scaling-triggers-and-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Auto scaling requires a signal: when should the system add or remove
+capacity? The signal comes from <strong>metrics</strong>.</p>
+<h3 id="common-scaling-metrics">Common Scaling Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-scaling-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Good For</th><th>Watch Out For</th></tr></thead><tbody><tr><td>CPU utilization</td><td>Compute-bound workloads</td><td>Not useful for I/O-bound</td></tr><tr><td>Memory utilization</td><td>Memory-intensive apps</td><td>Slow to change</td></tr><tr><td>Request count</td><td>Web servers, APIs</td><td>Includes health checks</td></tr><tr><td>Queue depth (SQS)</td><td>Async processing workers</td><td>Best for decoupled arch</td></tr><tr><td>Active connections</td><td>WebSocket, long-lived conns</td><td>Connection reuse skews</td></tr><tr><td>Response latency</td><td>Latency-sensitive apps</td><td>Spikes may be transient</td></tr><tr><td>Custom business</td><td>Application-specific</td><td>Requires instrumentation</td></tr><tr><td>metric (orders/sec)</td><td></td><td></td></tr></tbody></table></div>
+<h3 id="which-metric-to-choose">Which Metric to Choose<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#which-metric-to-choose" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  DECISION TREE FOR SCALING METRIC
+  ==================================
+
+  Is your workload compute-bound?
+    Yes --> CPU utilization (target: 60-70%)
+    No  --> Is it memory-bound?
+      Yes --> Memory utilization (target: 70-80%)
+      No  --> Is it queue-based?
+        Yes --> Queue depth / messages visible (target: 0-10)
+        No  --> Is latency the SLA?
+          Yes --> Response time (target: p99 &lt; X ms)
+          No  --> Use request count or custom metric
+</code></pre>
+<hr/>
+<h2 id="scaling-policies-target-tracking-step-and-predictive">Scaling Policies: Target Tracking, Step, and Predictive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scaling-policies-target-tracking-step-and-predictive" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="target-tracking-scaling">Target Tracking Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#target-tracking-scaling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The simplest and most common policy. You set a target value for a metric,
+and the auto scaler adjusts capacity to maintain that target.</p>
+<pre><code>  TARGET TRACKING
+  ================
+
+  Policy: &quot;Keep average CPU at 60%&quot;
+
+  If CPU > 60%: add instances to bring average down
+  If CPU &lt; 60%: remove instances to bring average up
+
+  It's like a thermostat:
+  - Target temperature: 72F
+  - Too hot?  Turn on AC (add instances)
+  - Too cold? Turn off AC (remove instances)
+</code></pre>
+<h3 id="step-scaling">Step Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-scaling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>More granular control. Different scaling actions for different severity
+levels.</p>
+<pre><code>  STEP SCALING
+  =============
+
+  CPU 50-60%:  do nothing (within target)
+  CPU 60-70%:  add 1 instance
+  CPU 70-80%:  add 2 instances
+  CPU 80-90%:  add 3 instances
+  CPU > 90%:   add 5 instances
+
+  CPU 40-50%:  remove 1 instance
+  CPU &lt; 40%:   remove 2 instances
+
+  Advantage: proportional response to demand changes.
+  The bigger the spike, the more aggressively you scale out.
+</code></pre>
+<h3 id="predictive-scaling">Predictive Scaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#predictive-scaling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Uses machine learning to forecast demand based on historical patterns
+and scales proactively. Available in AWS Auto Scaling.</p>
+<pre><code>  PREDICTIVE SCALING
+  ===================
+
+  Historical data (last 14 days):
+  Day 1:  ___/\___/\___ (traffic peak at 9 AM and 2 PM)
+  Day 2:  ___/\___/\___
+  Day 3:  ___/\___/\___
+  ...
+
+  ML model predicts: tomorrow at 8:45 AM, demand will rise.
+  Pre-scales capacity at 8:30 AM, before the traffic arrives.
+
+  Advantage: no cold-start delay during predictable peaks.
+  Limitation: cannot predict unprecedented events (viral tweets).
+</code></pre>
+<hr/>
+<h2 id="scale-out-vs-scale-in-asymmetry">Scale-Out vs Scale-In Asymmetry<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scale-out-vs-scale-in-asymmetry" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>A critical operational principle: <strong>scale out aggressively, scale in
+conservatively.</strong> The costs of each mistake are asymmetric.</p>
+<pre><code>  SCALING ASYMMETRY
+  ==================
+
+  Scale out too slowly: Users see errors, latency spikes, SLA breach.
+    Cost: Revenue loss, reputation damage, SLA penalties.
+
+  Scale in too aggressively: Users see errors when traffic returns.
+    Cost: Same as above -- you removed capacity too soon.
+
+  Scale out too aggressively: You pay for unused instances for a few
+    minutes until the scaler adjusts.
+    Cost: Small amount of wasted compute (dollars, not outages).
+
+  Scale in too slowly: You pay for unused instances longer than needed.
+    Cost: Slightly higher bill (controllable, not catastrophic).
+
+  CONCLUSION:
+  - Scale OUT: fast, aggressive, trigger at lower thresholds
+  - Scale IN:  slow, conservative, add cooldown periods
+</code></pre>
+<h3 id="cooldown-periods">Cooldown Periods<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cooldown-periods" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>After a scaling action, the system waits for a <strong>cooldown period</strong> before
+evaluating again. This prevents oscillation (rapid scale out/in cycles).</p>
+<pre><code>  WITHOUT COOLDOWN:
+  Time 0:  CPU > 70% -> add 2 instances
+  Time 1:  CPU &lt; 40% (new instances reduced avg) -> remove 2 instances
+  Time 2:  CPU > 70% (back to where we started) -> add 2 instances
+  ...OSCILLATION!
+
+  WITH COOLDOWN (5 minutes):
+  Time 0:  CPU > 70% -> add 2 instances -> start 5-min cooldown
+  Time 1:  CPU &lt; 40% -> IGNORED (cooldown active)
+  Time 3:  CPU = 55% -> IGNORED (cooldown active)
+  Time 5:  Cooldown expires -> evaluate: CPU = 58% -> stable
+</code></pre>
+<hr/>
+<h2 id="connection-draining-and-graceful-shutdown">Connection Draining and Graceful Shutdown<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#connection-draining-and-graceful-shutdown" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When scaling in (removing instances), you cannot just terminate a server
+that is actively handling requests. <strong>Connection draining</strong> allows
+in-flight requests to complete before the instance is removed.</p>
+<pre><code>  CONNECTION DRAINING
+  ====================
+
+  1. Auto scaler decides to terminate Instance C
+  2. Load balancer stops sending NEW requests to Instance C
+  3. Instance C continues processing IN-FLIGHT requests
+  4. After drain timeout (e.g., 300 seconds) or all requests complete:
+  5. Instance C is terminated
+
+  Timeline:
+  |-- new requests --|-- draining --|-- terminated
+  [A B C serving]    [A B serving]  [A B serving]
+                     [C draining]   [C gone]
+
+  Deregistration delay: 300s (default on ALB)
+  If requests take longer, they are forcefully terminated.
+</code></pre>
+<hr/>
+<h2 id="session-affinity-sticky-sessions">Session Affinity (Sticky Sessions)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#session-affinity-sticky-sessions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Session affinity routes all requests from the same user to the same
+backend server. This is sometimes necessary for stateful applications
+that have not been fully externalized.</p>
+<pre><code>  STICKY SESSIONS
+  ================
+
+  Without stickiness:
+  Request 1 -> Server A (sets session in local memory)
+  Request 2 -> Server B (no session! User logged out!)
+  Request 3 -> Server C (no session! User logged out again!)
+
+  With stickiness (cookie-based):
+  Request 1 -> Server A (sets session, LB sets cookie: srv=A)
+  Request 2 -> Server A (cookie says srv=A, routed to A)
+  Request 3 -> Server A (cookie says srv=A, routed to A)
+
+  Problems with stickiness:
+  - Uneven load: if many sticky users land on Server A, it's overloaded
+  - Scaling: can't remove Server A without losing those sessions
+  - Failover: if Server A dies, sticky users lose their sessions
+
+  RECOMMENDATION: Externalize sessions to Redis/DynamoDB.
+  Stickiness is a temporary workaround, not a design pattern.
+</code></pre>
+<hr/>
+<h2 id="database-scaling-challenges">Database Scaling Challenges<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#database-scaling-challenges" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Databases are the hardest layer to scale horizontally because they
+maintain state and consistency guarantees.</p>
+<h3 id="read-replicas">Read Replicas<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#read-replicas" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  READ REPLICAS
+  ==============
+
+  Writes (5%)                    Reads (95%)
+     |                           /    |    \
+     v                          v     v     v
+  [Primary DB]  --replication--> [Read] [Read] [Read]
+  (read-write)                  Replica Replica Replica
+                                (read-only)
+
+  Use case: Read-heavy workloads (90%+ reads)
+  Lag: Async replication has seconds of lag (eventual consistency)
+  AWS RDS: Up to 15 read replicas per primary
+  Limitation: Does not help with write-heavy workloads
+</code></pre>
+<h3 id="sharding-horizontal-partitioning">Sharding (Horizontal Partitioning)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sharding-horizontal-partitioning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  SHARDING
+  =========
+
+  Data split by a shard key (e.g., user_id):
+
+  user_id 1-1M      user_id 1M-2M     user_id 2M-3M
+  +----------+       +----------+       +----------+
+  | Shard 1  |       | Shard 2  |       | Shard 3  |
+  | (Primary |       | (Primary |       | (Primary |
+  |  + Read  |       |  + Read  |       |  + Read  |
+  |  Replica)|       |  Replica)|       |  Replica)|
+  +----------+       +----------+       +----------+
+
+  Pros: Linear write scaling (add more shards)
+  Cons: Cross-shard queries are expensive
+        Shard rebalancing is complex
+        Application must be shard-aware
+        Hot shards (uneven distribution)
+</code></pre>
+<h3 id="connection-pooling">Connection Pooling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#connection-pooling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  CONNECTION POOLING
+  ===================
+
+  Without pooling:
+  100 app servers x 10 connections each = 1,000 DB connections
+  Each connection: ~10 MB memory on the DB server
+  Total: 10 GB just for connections
+
+  With pooling (PgBouncer / RDS Proxy):
+  100 app servers -> [Connection Pooler] -> 50 DB connections
+                     (multiplexes 1000    (DB handles 50
+                      app connections      actual connections)
+                      onto 50 real ones)
+
+  RDS Proxy: Managed connection pooler
+  - Reduces DB connections by 90%+
+  - Handles failover transparently
+  - Supports IAM authentication
+  - ~$0.015/vCPU/hour
+</code></pre>
+<hr/>
+<h2 id="the-scaling-equation">The Scaling Equation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-scaling-equation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Capacity planning can be expressed as an optimization problem:</p>
+<pre><code>  THE SCALING EQUATION
+  =====================
+
+  capacity = f(demand, latency_target, cost_budget)
+
+  WHERE:
+  - demand = current requests per second (or projected)
+  - latency_target = p99 response time SLA (e.g., &lt; 200ms)
+  - cost_budget = maximum $/hour willing to spend
+
+  EXAMPLE:
+  - Demand: 10,000 requests/second
+  - Each instance handles 500 req/s at p99 &lt; 200ms
+  - Minimum instances: 10,000 / 500 = 20 instances
+  - Add 50% headroom for spikes: 30 instances
+  - Add N+1 for failure tolerance: 31 instances
+  - Budget: 31 * $0.0832/hr (c5.xlarge) = $2.58/hr = $1,886/month
+
+  AT WHAT POINT DOES COST EXCEED BUDGET?
+  - If demand grows 3x (30,000 req/s): 93 instances = $5,657/month
+  - Option 1: Accept higher cost
+  - Option 2: Optimize app to handle more req/s per instance
+  - Option 3: Use cheaper instances (Graviton: 20% cheaper)
+  - Option 4: Cache more aggressively (reduce req/s reaching app)
+</code></pre>
+<hr/>
+<h2 id="auto-scaling-group-lifecycle">Auto Scaling Group Lifecycle<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#auto-scaling-group-lifecycle" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Understanding the ASG lifecycle helps debug scaling issues.</p>
+<pre><code>  AUTO SCALING GROUP LIFECYCLE
+  =============================
+
+  1. PENDING
+     Instance is launching (AMI loading, boot, user-data scripts)
+
+  2. IN-SERVICE
+     Instance is healthy, registered with load balancer, serving traffic
+
+  3. TERMINATING (scale-in)
+     Connection draining, deregistering from LB, shutting down
+
+  4. TERMINATED
+     Instance is gone
+
+  LIFECYCLE HOOKS (optional):
+  +----------+     +-----------+     +------------+
+  | PENDING  | --> | PENDING:  | --> | IN-SERVICE |
+  |          |     | WAIT      |     |            |
+  +----------+     +-----------+     +------------+
+                   (run custom                |
+                    setup scripts,           scale-in
+                    warm cache,               |
+                    register with        +-----------+
+                    service mesh)        | TERMIN-   |
+                                         | ATING:    |
+                                         | WAIT      |
+                                         +-----------+
+                                         (drain conns,
+                                          save logs,
+                                          deregister)
+</code></pre>
+<hr/>
+<h2 id="warm-pools">Warm Pools<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#warm-pools" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cold-starting new instances takes time: boot the OS, install software,
+warm the cache, etc. This can take 3-10 minutes, which is too slow for
+sudden traffic spikes.</p>
+<p><strong>Warm pools</strong> keep pre-initialized instances in a stopped (or running)
+state, ready to be added to the ASG in seconds instead of minutes.</p>
+<pre><code>  WARM POOL
+  ==========
+
+  ASG Active:  [A] [B] [C]  (serving traffic)
+
+  Warm Pool:   [D] [E]      (stopped, pre-initialized)
+               (AMI booted, software installed, config loaded)
+               (Cost: only EBS storage, no compute charges when stopped)
+
+  Traffic spike:
+  ASG Active:  [A] [B] [C] [D] [E]  (D and E started from warm pool)
+                                      (Time to serve: 30-60 seconds
+                                       vs 3-10 minutes cold launch)
+</code></pre>
+<hr/>
+<h2 id="real-world-scaling-stories">Real-World Scaling Stories<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-scaling-stories" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pokémon-go-launch-july-2016">Pokémon GO Launch (July 2016)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pokémon-go-launch-july-2016" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Niantic expected 5x their base traffic at launch. Actual traffic was
+<strong>50x</strong> — 10 times their worst-case projection. Google Cloud (their
+provider) helped them scale, but the first week was plagued by outages.</p>
+<p><strong>Lesson:</strong> Predictive scaling has limits. Load testing should include
+scenarios at 10-50x expected demand, not just 2-5x.</p>
+<h3 id="amazon-prime-day">Amazon Prime Day<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-prime-day" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Amazon’s auto scaling infrastructure handles one of the largest
+planned traffic events on the internet. In 2023, Prime Day processed
+over 375 million items in 48 hours.</p>
+<p><strong>Key patterns:</strong></p>
+<ul>
+<li>Pre-scaling: capacity is added days before the event</li>
+<li>Feature flags: non-critical features are disabled to free resources</li>
+<li>Progressive rollout: deals launch in waves, not all at once</li>
+<li>Separate scaling for each microservice (hundreds of ASGs)</li>
+</ul>
+<h3 id="slacks-scaling-journey">Slack’s Scaling Journey<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#slacks-scaling-journey" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Slack scaled from 0 to 12 million daily active users in 5 years. Their
+architecture evolved:</p>
+<ol>
+<li><strong>Monolith</strong> (2013-2015): Single PHP application, vertical scaling</li>
+<li><strong>Service extraction</strong> (2015-2017): Broke out messaging, search,
+notifications as separate services</li>
+<li><strong>Kubernetes</strong> (2017-present): Container orchestration, horizontal
+pod autoscaler, cluster autoscaler</li>
+<li><strong>Multi-region</strong> (2019-present): Active-active across AWS regions</li>
+</ol>
+<p><strong>Lesson:</strong> Scaling architecture evolves with demand. Do not over-engineer
+early; refactor when you hit real scaling limits.</p>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dynamic-arrays-amortized-resizing--auto-scaling-group-mechanics">Dynamic Arrays (Amortized Resizing) — Auto Scaling Group Mechanics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynamic-arrays-amortized-resizing--auto-scaling-group-mechanics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A dynamic array (like Python’s <code>list</code> or Java’s <code>ArrayList</code>) doubles its backing storage when full, achieving O(1) amortized insertion despite occasional O(n) copy operations. Auto Scaling Groups follow the same pattern: capacity jumps in discrete increments (adding instances), and the system tolerates brief periods of over-provisioning after a scale-out event because the amortized cost of that extra capacity is low relative to the alternative of dropping requests. The document’s cooldown period is the scaling analog of the dynamic array’s “don’t resize again until the new capacity is actually needed” heuristic. Scale-out-fast/scale-in-slow mirrors the asymmetry in dynamic arrays, where shrinking is typically deferred until utilization falls below 25% (not 50%) to avoid thrashing — the exact same oscillation problem the cooldown mechanism prevents.</p>
+<h3 id="consistent-hashing--database-sharding-and-cache-rebalancing">Consistent Hashing — Database Sharding and Cache Rebalancing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#consistent-hashing--database-sharding-and-cache-rebalancing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Consistent hashing arranges both servers and keys on a virtual ring, so adding or removing a node only redistributes keys from its immediate neighbors — O(K/n) keys move instead of O(K). In the context of the document’s database sharding section, this is exactly how distributed caches (e.g., Memcached rings) and storage systems like DynamoDB rebalance data when nodes scale in or out. When an auto-scaler adds a new cache node, only the keys that fall between the new node and its predecessor on the ring need to migrate, keeping rebalancing overhead minimal even under rapid scaling events. Without consistent hashing, adding a shard to the document’s user_id-based partitioning scheme would require rehashing all keys — an O(K) operation that defeats the purpose of elastic scaling.</p>
+<h3 id="control-theory-pid-controllers--target-tracking-scaling-policy">Control Theory (PID Controllers) — Target Tracking Scaling Policy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#control-theory-pid-controllers--target-tracking-scaling-policy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Target tracking auto scaling is a discrete-time proportional-integral (PI) controller: the “error signal” is the difference between the current metric (e.g., CPU at 78%) and the target (50%), and the controller output is the number of instances to add or remove. The formula <code>desired = ceil(current_capacity * current_metric / target)</code> is a proportional controller (P-term), and the cooldown period acts as a low-pass filter to prevent derivative oscillation. Step scaling adds a nonlinear gain schedule (higher error = more aggressive response), which is equivalent to gain scheduling in control theory. Predictive scaling adds a feedforward term based on historical patterns, analogous to a model-predictive controller that anticipates disturbances before they arrive.</p>
+<h3 id="load-balancing-as-scheduling--weighted-round-robin-and-least-connections">Load Balancing as Scheduling — Weighted Round-Robin and Least Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#load-balancing-as-scheduling--weighted-round-robin-and-least-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The document’s load balancer distributing requests across horizontally-scaled instances is a classic scheduling problem. Round-robin is the scheduling equivalent of FIFO with time-slicing: each server gets requests in cyclic order, O(1) per dispatch, no state required. Least-connections is a priority-queue-based scheduler: the load balancer maintains a min-heap of servers keyed by active connection count, dispatching to the minimum in O(log n) time. Weighted round-robin assigns capacity-proportional shares, equivalent to the Weighted Fair Queuing algorithm used in network packet scheduling. The choice between these algorithms mirrors the classic scheduling trade-off: simpler algorithms (round-robin) have lower dispatch overhead but worse load distribution, while stateful algorithms (least-connections) achieve better balance at the cost of maintaining per-server state.</p>
+<hr/>
+<h2 id="key-takeaways">Key Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Horizontal scaling beats vertical scaling.</strong> Vertical has a ceiling
+and a single point of failure. Horizontal is unlimited and fault-
+tolerant. Design for horizontal from the start.</p>
+</li>
+<li>
+<p><strong>Statelessness is the prerequisite.</strong> You cannot scale horizontally
+if servers hold local state. Externalize sessions, files, cache, and
+config to managed services.</p>
+</li>
+<li>
+<p><strong>Scale out fast, scale in slow.</strong> The cost of over-provisioning
+(wasted compute) is far less than the cost of under-provisioning
+(outage, SLA breach, lost revenue).</p>
+</li>
+<li>
+<p><strong>Target tracking is the right default.</strong> Set a target CPU/latency
+and let the auto scaler maintain it. Use step scaling for more
+granular control. Use predictive scaling for known patterns.</p>
+</li>
+<li>
+<p><strong>The database is the bottleneck.</strong> Read replicas, connection pooling,
+and caching address read scaling. Sharding addresses write scaling
+but adds significant complexity. Consider managed databases that
+handle scaling for you (Aurora, DynamoDB, Cloud Spanner).</p>
+</li>
+<li>
+<p><strong>Warm pools eliminate cold-start latency.</strong> For workloads with sudden
+spikes, keeping pre-initialized instances ready is worth the small
+storage cost.</p>
+</li>
+<li>
+<p><strong>The scaling equation is a trade-off.</strong> Capacity is a function of
+demand, latency targets, and cost budget. All three are levers you
+can adjust. When cost grows too fast, optimize the application or
+cache more aggressively before throwing more instances at the problem.</p>
+</li>
+<li>
+<p><strong>Load test beyond your predictions.</strong> Real traffic patterns routinely
+exceed projections by 5-50x. Test for the unexpected, not just the
+expected.</p>
+</li>
+</ol></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-32" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#elasticity-and-scaling-mental-model" data-for="elasticity-and-scaling-mental-model">Elasticity and Scaling Mental Model</a></li><li class="depth-1"><a href="#core-idea-capacity-should-match-demand" data-for="core-idea-capacity-should-match-demand">Core Idea: Capacity Should Match Demand</a></li><li class="depth-1"><a href="#vertical-vs-horizontal-scaling" data-for="vertical-vs-horizontal-scaling">Vertical vs Horizontal Scaling</a></li><li class="depth-2"><a href="#vertical-scaling-scale-up" data-for="vertical-scaling-scale-up">Vertical Scaling (Scale Up)</a></li><li class="depth-2"><a href="#horizontal-scaling-scale-out" data-for="horizontal-scaling-scale-out">Horizontal Scaling (Scale Out)</a></li><li class="depth-1"><a href="#the-stateless-design-requirement" data-for="the-stateless-design-requirement">The Stateless Design Requirement</a></li><li class="depth-2"><a href="#what-must-be-externalized" data-for="what-must-be-externalized">What Must Be Externalized</a></li><li class="depth-1"><a href="#scaling-triggers-and-metrics" data-for="scaling-triggers-and-metrics">Scaling Triggers and Metrics</a></li><li class="depth-2"><a href="#common-scaling-metrics" data-for="common-scaling-metrics">Common Scaling Metrics</a></li><li class="depth-2"><a href="#which-metric-to-choose" data-for="which-metric-to-choose">Which Metric to Choose</a></li><li class="depth-1"><a href="#scaling-policies-target-tracking-step-and-predictive" data-for="scaling-policies-target-tracking-step-and-predictive">Scaling Policies: Target Tracking, Step, and Predictive</a></li><li class="depth-2"><a href="#target-tracking-scaling" data-for="target-tracking-scaling">Target Tracking Scaling</a></li><li class="depth-2"><a href="#step-scaling" data-for="step-scaling">Step Scaling</a></li><li class="depth-2"><a href="#predictive-scaling" data-for="predictive-scaling">Predictive Scaling</a></li><li class="depth-1"><a href="#scale-out-vs-scale-in-asymmetry" data-for="scale-out-vs-scale-in-asymmetry">Scale-Out vs Scale-In Asymmetry</a></li><li class="depth-2"><a href="#cooldown-periods" data-for="cooldown-periods">Cooldown Periods</a></li><li class="depth-1"><a href="#connection-draining-and-graceful-shutdown" data-for="connection-draining-and-graceful-shutdown">Connection Draining and Graceful Shutdown</a></li><li class="depth-1"><a href="#session-affinity-sticky-sessions" data-for="session-affinity-sticky-sessions">Session Affinity (Sticky Sessions)</a></li><li class="depth-1"><a href="#database-scaling-challenges" data-for="database-scaling-challenges">Database Scaling Challenges</a></li><li class="depth-2"><a href="#read-replicas" data-for="read-replicas">Read Replicas</a></li><li class="depth-2"><a href="#sharding-horizontal-partitioning" data-for="sharding-horizontal-partitioning">Sharding (Horizontal Partitioning)</a></li><li class="depth-2"><a href="#connection-pooling" data-for="connection-pooling">Connection Pooling</a></li><li class="depth-1"><a href="#the-scaling-equation" data-for="the-scaling-equation">The Scaling Equation</a></li><li class="depth-1"><a href="#auto-scaling-group-lifecycle" data-for="auto-scaling-group-lifecycle">Auto Scaling Group Lifecycle</a></li><li class="depth-1"><a href="#warm-pools" data-for="warm-pools">Warm Pools</a></li><li class="depth-1"><a href="#real-world-scaling-stories" data-for="real-world-scaling-stories">Real-World Scaling Stories</a></li><li class="depth-2"><a href="#pokémon-go-launch-july-2016" data-for="pokémon-go-launch-july-2016">Pokémon GO Launch (July 2016)</a></li><li class="depth-2"><a href="#amazon-prime-day" data-for="amazon-prime-day">Amazon Prime Day</a></li><li class="depth-2"><a href="#slacks-scaling-journey" data-for="slacks-scaling-journey">Slack’s Scaling Journey</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#dynamic-arrays-amortized-resizing--auto-scaling-group-mechanics" data-for="dynamic-arrays-amortized-resizing--auto-scaling-group-mechanics">Dynamic Arrays (Amortized Resizing) — Auto Scaling Group Mechanics</a></li><li class="depth-2"><a href="#consistent-hashing--database-sharding-and-cache-rebalancing" data-for="consistent-hashing--database-sharding-and-cache-rebalancing">Consistent Hashing — Database Sharding and Cache Rebalancing</a></li><li class="depth-2"><a href="#control-theory-pid-controllers--target-tracking-scaling-policy" data-for="control-theory-pid-controllers--target-tracking-scaling-policy">Control Theory (PID Controllers) — Target Tracking Scaling Policy</a></li><li class="depth-2"><a href="#load-balancing-as-scheduling--weighted-round-robin-and-least-connections" data-for="load-balancing-as-scheduling--weighted-round-robin-and-least-connections">Load Balancing as Scheduling — Weighted Round-Robin and Least Connections</a></li><li class="depth-1"><a href="#key-takeaways" data-for="key-takeaways">Key Takeaways</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>10-e2e-playwright-nodejs24</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="10-e2e-playwright-nodejs24"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="10-e2e-playwright-nodejs24"/><meta name="twitter:description" content="Module 10 — E2E Integration, Playwright Config, and the Node.js 24 Environment Bug Session 007 | Prerequisite: Module 05 (Testing Strategy) The Bug We Found: A Silent Environment Variable Gap Running npm run test:e2e failed immediately — before a single test ran — with this error: [WebServer] Error:..."/><meta property="og:description" content="Module 10 — E2E Integration, Playwright Config, and the Node.js 24 Environment Bug Session 007 | Prerequisite: Module 05 (Testing Strategy) The Bug We Found: A Silent Environment Variable Gap Running npm run test:e2e failed immediately — before a single test ran — with this error: [WebServer] Error:..."/><meta property="og:image:alt" content="Module 10 — E2E Integration, Playwright Config, and the Node.js 24 Environment Bug Session 007 | Prerequisite: Module 05 (Testing Strategy) The Bug We Found: A Silent Environment Variable Gap Running npm run test:e2e failed immediately — before a single test ran — with this error: [WebServer] Error:..."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/bridgeonline/10-e2e-playwright-nodejs24"/><meta property="twitter:url" content="https://study.tpresearcher.online/bridgeonline/10-e2e-playwright-nodejs24"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Module 10 — E2E Integration, Playwright Config, and the Node.js 24 Environment Bug Session 007 | Prerequisite: Module 05 (Testing Strategy) The Bug We Found: A Silent Environment Variable Gap Running npm run test:e2e failed immediately — before a single test ran — with this error: [WebServer] Error:..."/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="bridgeonline/10-e2e-playwright-nodejs24"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-20"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-20" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../bridgeonline/">bridgeonline</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>10 e2e playwright nodejs24</a></div></nav><h1 class="article-title">10-e2e-playwright-nodejs24</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.378Z">Jun 20, 2026</time><span>12 min read</span></p></div></div><article class="popover-hint"><h1 id="module-10--e2e-integration-playwright-config-and-the-nodejs-24-environment-bug">Module 10 — E2E Integration, Playwright Config, and the Node.js 24 Environment Bug<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#module-10--e2e-integration-playwright-config-and-the-nodejs-24-environment-bug" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>Session 007 | Prerequisite: Module 05 (Testing Strategy)</p>
+</blockquote>
+<hr/>
+<h2 id="the-bug-we-found-a-silent-environment-variable-gap">The Bug We Found: A Silent Environment Variable Gap<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-bug-we-found-a-silent-environment-variable-gap" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Running <code>npm run test:e2e</code> failed immediately — before a single test ran — with this error:</p>
+<pre><code>[WebServer] Error: Could not find a production build in the '.next' directory.
+Try building your app with 'next build' before starting the production server.
+</code></pre>
+<p>This error has nothing to do with the tests themselves. It comes from Next.js during server startup. Understanding why it happens requires tracing how environment variables flow from your terminal into the Playwright webServer process — and how Node.js 24 changed the default value of <code>NODE_ENV</code>.</p>
+<hr/>
+<h2 id="how-the-server-starts-the-environment-variable-chain">How the Server Starts: The Environment Variable Chain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-the-server-starts-the-environment-variable-chain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Playwright E2E tests don’t run against a pre-existing server. The <code>playwright.config.ts</code> tells Playwright to start one:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typescript" data-theme="github-light github-dark"><code data-language="typescript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">webServer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  command</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'npm run dev'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,      </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// runs `node server/index.js`</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  url</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'http://localhost:3000'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  reuseExistingServer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">CI</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    DATABASE_URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">DATABASE_URL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    NEXTAUTH_SECRET</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NEXTAUTH_SECRET</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // ...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">},</span></span></code></pre></figure>
+<p>When Playwright starts this process, it does <strong>not</strong> automatically inherit all environment variables from the parent shell. The <code>env</code> block is explicit: only the variables listed there reach <code>server/index.js</code>. Any variable not listed is absent in the child process.</p>
+<p>Inside <code>server/index.js</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light github-dark"><code data-language="javascript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> dev</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NODE_ENV</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> !==</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'production'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> app</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> next</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({ dev, hostname, port });</span></span></code></pre></figure>
+<p><code>dev</code> controls whether Next.js starts in development mode (hot reload, no build required) or production mode (serves a pre-built <code>.next/</code> directory). If <code>dev</code> is <code>false</code>, Next.js looks for a production build and crashes if none exists.</p>
+<hr/>
+<h2 id="the-nodejs-24-change-node_env-now-defaults-to-production">The Node.js 24 Change: <code>NODE_ENV</code> Now Defaults to <code>&quot;production&quot;</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-nodejs-24-change-node_env-now-defaults-to-production" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>In Node.js versions before 24, <code>process.env.NODE_ENV</code> was <code>undefined</code> when not set. The expression:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light github-dark"><code data-language="javascript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> dev</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> undefined</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> !==</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'production'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// → true → dev mode ✓</span></span></code></pre></figure>
+<p>This worked fine. E2E tests ran because <code>dev</code> was always <code>true</code> when <code>NODE_ENV</code> was unset.</p>
+<p><strong>Node.js 24 changed this.</strong> When <code>NODE_ENV</code> is not set by the caller, Node.js 24 now sets it to <code>&quot;production&quot;</code> automatically. The expression becomes:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light github-dark"><code data-language="javascript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> dev</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'production'</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> !==</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'production'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// → false → production mode ✗</span></span></code></pre></figure>
+<p>Next.js enters production mode, finds no <code>.next/</code> production build, and crashes.</p>
+<p><strong>Why this only showed up locally:</strong> The GitHub Actions CI workflow sets <code>NODE_ENV: test</code> explicitly at the job level, so the Playwright process (and its child webServer process) had <code>NODE_ENV=test</code>. Locally, <code>NODE_ENV</code> was typically unset in the shell — fine before Node 24, broken after.</p>
+<hr/>
+<h2 id="the-fix-explicitly-forward-node_env-in-the-webserver-env-block">The Fix: Explicitly Forward <code>NODE_ENV</code> in the webServer <code>env</code> Block<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-fix-explicitly-forward-node_env-in-the-webserver-env-block" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typescript" data-theme="github-light github-dark"><code data-language="typescript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// playwright.config.ts — BEFORE</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">webServer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  command</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'npm run dev'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    DATABASE_URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">DATABASE_URL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    NEXTAUTH_SECRET</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NEXTAUTH_SECRET</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    NEXTAUTH_URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NEXTAUTH_URL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'http://localhost:3000'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">},</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// playwright.config.ts — AFTER</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">webServer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  command</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'npm run dev'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // Explicitly forward NODE_ENV — Playwright's env block does NOT auto-inherit</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // parent process vars. Node.js ≥ 24 defaults NODE_ENV to &quot;production&quot; when</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // unset, which causes Next.js to require a production build. Pass &quot;development&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    // so server/index.js always starts Next.js in dev mode.</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    NODE_ENV</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NODE_ENV</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ===</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'production'</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">      ?</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'development'</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">      :</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NODE_ENV</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'development'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    DATABASE_URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">DATABASE_URL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    DIRECT_URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">DIRECT_URL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    NEXTAUTH_SECRET</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NEXTAUTH_SECRET</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    NEXTAUTH_URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NEXTAUTH_URL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'http://localhost:3000'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    NEXT_PUBLIC_SOCKET_URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NEXT_PUBLIC_SOCKET_URL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'http://localhost:3000'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">},</span></span></code></pre></figure>
+<p><strong>Why <code>process.env.NODE_ENV === 'production' ? 'development' : ...</code>:</strong></p>
+<p>In the CI E2E job, <code>NODE_ENV</code> is set to <code>test</code> at the job level. <code>test !== 'production'</code> so the condition is false and <code>NODE_ENV=test</code> passes through. Locally, <code>NODE_ENV</code> is undefined (or <code>development</code>), so <code>'development'</code> is the fallback. The <code>=== 'production'</code> guard is a safety net: if somehow the Playwright config process has <code>NODE_ENV=production</code> (e.g. a CI misconfiguration), we still override it to <code>development</code> so the webServer doesn’t crash.</p>
+<p><strong>Why <code>NEXT_PUBLIC_SOCKET_URL</code> was also added:</strong></p>
+<p>The room and game pages import this env var on the client side. Without it in the webServer env, the client-side code gets an empty string for the Socket.io URL, causing socket connections to fail silently in E2E tests.</p>
+<hr/>
+<h2 id="the-second-prerequisite-e2e-tests-need-a-live-database">The Second Prerequisite: E2E Tests Need a Live Database<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-second-prerequisite-e2e-tests-need-a-live-database" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The existing docs said E2E tests need Playwright system deps. They also need the <strong>Docker test database running</strong>. The app connects to <code>DATABASE_URL</code> — in the local E2E context, that’s <code>postgresql://test:test@localhost:5433/bridgeonline_test</code>.</p>
+<p>If the Docker container is not running, the dev server starts but every API route that touches the DB returns a 500 error. Auth fails, room creation fails, every test fails.</p>
+<p><strong>Correct local startup sequence:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># 1. Start the test DB (once — keep it running while writing tests)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:db:start</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># 2. Push the schema (first time only, or after schema changes)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> prisma</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> db</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> push</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --skip-generate</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># 3. Run E2E tests</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:e2e</span></span></code></pre></figure>
+<p><strong>Why this wasn’t needed for Layers 1–3:</strong></p>
+<ul>
+<li>Layer 1 (unit): no DB, pure functions</li>
+<li>Layer 2 (DB integration): uses the same Docker DB, but Vitest manages the lifecycle</li>
+<li>Layer 3 (Socket.io): in-process server, no real DB queries</li>
+</ul>
+<p>Layer 4+5 is the first layer that runs the <strong>entire application stack</strong>. Every layer below had their DB needs either eliminated (Layer 1, 3) or managed automatically (Layer 2). Layer 4 is the first time you have to manage it yourself.</p>
+<hr/>
+<h2 id="the-playwright-env-block-what-it-does-and-doesnt-do">The Playwright <code>env</code> Block: What It Does and Doesn’t Do<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-playwright-env-block-what-it-does-and-doesnt-do" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This is a common source of confusion. Compare three ways environment variables can reach the webServer process:</p>
+<h3 id="option-a--shell-export-does-not-work">Option A — Shell export (does NOT work)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-a--shell-export-does-not-work" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> NODE_ENV</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">development</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:e2e</span></span></code></pre></figure>
+<p>The Playwright config process sees <code>NODE_ENV=development</code>, but the webServer child process does NOT inherit it if the <code>env</code> block is specified.</p>
+<h3 id="option-b--inline-with-the-command-works-but-brittle">Option B — Inline with the command (works, but brittle)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-b--inline-with-the-command-works-but-brittle" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typescript" data-theme="github-light github-dark"><code data-language="typescript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">webServer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  command</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'NODE_ENV=development npm run dev'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // ...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p>This works because the variable is set before <code>npm</code> even starts. But it doesn’t play nicely with Windows and doesn’t allow dynamic values.</p>
+<h3 id="option-c--env-block-with-forwarding-correct">Option C — <code>env</code> block with forwarding (correct)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-c--env-block-with-forwarding-correct" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typescript" data-theme="github-light github-dark"><code data-language="typescript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">webServer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  command</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'npm run dev'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  env</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    NODE_ENV</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NODE_ENV</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'development'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// forward explicitly</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">    DATABASE_URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">DATABASE_URL</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ??</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p>When <code>env</code> is specified in the Playwright webServer config, Playwright builds a clean environment for the child process using only the keys you provide. The parent process <code>env</code> serves as a data source (via <code>process.env.*</code>) but is not automatically copied.</p>
+<p><strong>The rule:</strong> Every environment variable the webServer needs must appear explicitly in the <code>env</code> block.</p>
+<hr/>
+<h2 id="playwright-reuseexistingserver--a-hidden-state-problem">Playwright <code>reuseExistingServer</code> — A Hidden State Problem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#playwright-reuseexistingserver--a-hidden-state-problem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typescript" data-theme="github-light github-dark"><code data-language="typescript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">reuseExistingServer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">process.env.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">CI</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span></code></pre></figure>
+<p>Locally: <code>true</code> — if a server is already running at <code>localhost:3000</code>, reuse it.
+CI: <code>false</code> — always start a fresh server.</p>
+<p>This is a sensible default, but it creates a hidden state problem locally:</p>
+<p><strong>Scenario:</strong> You have a development server running (<code>npm run dev</code> in another terminal), connecting to the <strong>production Supabase DB</strong> (via <code>.env</code>). You run <code>npm run test:e2e</code>. Playwright reuses the running server — but that server is connected to Supabase, not the Docker test DB. Your E2E tests create real users and rooms in production.</p>
+<p><strong>The fix:</strong> Always make sure no dev server is running before running E2E tests locally, OR run tests with <code>CI=true</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">CI</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">true</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> npm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> test:e2e</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">   # always starts a fresh server with .env.test vars</span></span></code></pre></figure>
+<p>In CI this is automatic. Locally it’s a discipline issue to be aware of.</p>
+<hr/>
+<h2 id="dsa-connection-environment-variables-as-configuration-injection">DSA Connection: Environment Variables as Configuration Injection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connection-environment-variables-as-configuration-injection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Environment variables are an example of <strong>dependency injection</strong> at the OS level. The application code (<code>server/index.js</code>, API routes) doesn’t hardcode the database URL — it reads it from the environment at runtime. This is the same principle as passing a dependency through a constructor rather than instantiating it inside the class.</p>
+<pre><code>// Tight coupling (bad for testing)
+const prisma = new PrismaClient({
+  datasources: { db: { url: &quot;postgresql://prod-host/prod-db&quot; } }
+});
+
+// Loose coupling via injection (good for testing)
+const prisma = new PrismaClient({
+  datasources: { db: { url: process.env.DATABASE_URL } }
+});
+</code></pre>
+<p>Because the connection string is injected at runtime, we can swap it:</p>
+<ul>
+<li>Production: Supabase URL (from <code>.env</code>)</li>
+<li>Local dev: Supabase URL (from <code>.env</code>)</li>
+<li>Local E2E / CI: Docker test DB URL (from <code>.env.test</code>)</li>
+</ul>
+<p>The application code is identical across all three environments. Only the injected configuration differs.</p>
+<p><strong>Why <code>NEXT_PUBLIC_</code> prefix matters:</strong> Next.js builds client-side code at startup. Only variables prefixed <code>NEXT_PUBLIC_</code> are bundled into the client JavaScript. Variables without this prefix are server-only. If <code>NEXT_PUBLIC_SOCKET_URL</code> is not set when the dev server starts, the client bundle gets an empty string — and no amount of setting it after startup will fix it. This is why it must be in the webServer <code>env</code> block.</p>
+<hr/>
+<h2 id="the-e2e-test-suite-what-20-tests-cover">The E2E Test Suite: What 20 Tests Cover<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-e2e-test-suite-what-20-tests-cover" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="layer-4-17-tests-in-4-files">Layer 4 (17 tests in 4 files)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#layer-4-17-tests-in-4-files" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>Tests</th><th>What’s Covered</th></tr></thead><tbody><tr><td><code>auth.spec.ts</code></td><td>5</td><td>Register, duplicate email, wrong password, auth guard, logout</td></tr><tr><td><code>room-lifecycle.spec.ts</code></td><td>5</td><td>Create room, invite code, join by code, seat persistence, all 4 seats visible</td></tr><tr><td><code>full-game.spec.ts</code></td><td>3</td><td>4-player join, ready button, room page after game start</td></tr><tr><td><code>reconnect.spec.ts</code></td><td>4</td><td>Page reload, navigate away, API state check, CDP offline simulation</td></tr></tbody></table></div>
+<h3 id="layer-5-3-tests">Layer 5 (3 tests)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#layer-5-3-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>File</th><th>Tests</th><th>What’s Covered</th></tr></thead><tbody><tr><td><code>voice-signaling.spec.ts</code></td><td>3</td><td>Offer→answer→ICE relay, mute relay, user_left cleanup</td></tr></tbody></table></div>
+<h3 id="the-4-browser-context-pattern">The 4-Browser Context Pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-4-browser-context-pattern" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The core technique in <code>full-game.spec.ts</code> — running 4 isolated browser sessions in one test:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typescript" data-theme="github-light github-dark"><code data-language="typescript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">test</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'4 players can join a room'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">async</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ({ </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">browser</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Each context has its own cookies, localStorage, session — fully isolated</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> contexts</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> Promise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">all</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">([</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    browser.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">newContext</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    browser.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">newContext</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    browser.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">newContext</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    browser.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">newContext</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> pages</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> Promise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">all</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(contexts.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">map</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">ctx</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ctx.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">newPage</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">()));</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Register and log in all 4 players concurrently</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  await</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> Promise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">all</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(users.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">map</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">((</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">u</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">i</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> registerAndLogin</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(pages[i], u)));</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Player 0 creates room, players 1–3 join via invite code</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // ...</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  // Cleanup</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  await</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> Promise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">all</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(contexts.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">map</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">ctx</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ctx.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">close</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">()));</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span></code></pre></figure>
+<p><strong>Why <code>newContext()</code> and not just <code>newPage()</code>:</strong>
+Separate pages in the same context share cookies. If Alice logs in and Bob opens a new page in the same context, Bob also appears logged in as Alice. <code>newContext()</code> creates a completely isolated browser profile — separate cookie jar, separate localStorage, separate IndexedDB.</p>
+<p>This is the reason Playwright was chosen over Cypress for this project (see Module 05): Cypress doesn’t support multiple isolated contexts in a single test.</p>
+<hr/>
+<h2 id="cdp-chrome-devtools-protocol-for-network-simulation">CDP (Chrome DevTools Protocol) for Network Simulation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cdp-chrome-devtools-protocol-for-network-simulation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>reconnect.spec.ts</code> uses the Chrome DevTools Protocol to simulate a network interruption:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typescript" data-theme="github-light github-dark"><code data-language="typescript" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> client</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> page.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">context</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">().</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">newCDPSession</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(page);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> client.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">send</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'Network.emulateNetworkConditions'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  offline: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  downloadThroughput: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  uploadThroughput: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  latency: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> page.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">waitForTimeout</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2_000</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">);  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// wait while &quot;offline&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> client.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">send</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'Network.emulateNetworkConditions'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  offline: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  downloadThroughput: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  uploadThroughput: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  latency: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span></code></pre></figure>
+<p>CDP is the same protocol that Chrome DevTools uses in the browser to inspect, debug, and control the page. Playwright exposes raw CDP access via <code>newCDPSession()</code>. The <code>Network.emulateNetworkConditions</code> command tells Chromium to act as if the network connection dropped.</p>
+<p><strong>Why <code>-1</code> for throughput:</strong> <code>-1</code> means “no limit / use default.” When <code>offline: true</code>, throughput values are ignored anyway.</p>
+<p><strong>What this test verifies:</strong> After the network comes back, Socket.io reconnects automatically and the room page is still functional. This is the observable behaviour without the 30s grace-period protocol (Issue #16) — once that is implemented, the test will be extended to verify the player’s seat is preserved during the grace period.</p>
+<hr/>
+<h2 id="summary-what-changed-and-why">Summary: What Changed and Why<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#summary-what-changed-and-why" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Problem</th><th>Root Cause</th><th>Fix</th></tr></thead><tbody><tr><td>WebServer crashes on startup</td><td>Node.js 24 defaults <code>NODE_ENV</code> to <code>&quot;production&quot;</code>, Playwright <code>env</code> block doesn’t auto-forward parent vars</td><td>Add <code>NODE_ENV: process.env.NODE_ENV ?? 'development'</code> to webServer env</td></tr><tr><td>Socket.io URL empty in browser</td><td><code>NEXT_PUBLIC_SOCKET_URL</code> missing from webServer env</td><td>Add <code>NEXT_PUBLIC_SOCKET_URL</code> to webServer env</td></tr><tr><td>E2E tests fail on DB operations</td><td>Docker test DB not running</td><td>Document prerequisite: <code>npm run test:db:start</code> before <code>npm run test:e2e</code></td></tr></tbody></table></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept</th><th>Applied Where</th></tr></thead><tbody><tr><td>Explicit env injection</td><td><code>playwright.config.ts</code> webServer <code>env</code> block</td></tr><tr><td>Node.js 24 <code>NODE_ENV</code> default</td><td>Root cause of the webServer crash</td></tr><tr><td>Dependency injection via env vars</td><td>Why swapping <code>DATABASE_URL</code> per environment works</td></tr><tr><td><code>NEXT_PUBLIC_</code> build-time bundling</td><td>Why socket URL must be in webServer env, not just the shell</td></tr><tr><td>CDP network simulation</td><td><code>reconnect.spec.ts</code> offline/online test</td></tr><tr><td>Isolated browser contexts</td><td>4-player concurrent test in <code>full-game.spec.ts</code></td></tr></tbody></table></div>
+<hr/>
+<h2 id="addendum--ci-failure-npm-ci-and-optional-platform-specific-packages">Addendum — CI Failure: <code>npm ci</code> and Optional Platform-Specific Packages<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#addendum--ci-failure-npm-ci-and-optional-platform-specific-packages" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>After the E2E fixes were pushed, the GitHub Actions pipeline failed at a completely different step — not the tests, but the dependency install:</p>
+<pre><code>npm error code EUSAGE
+npm error `npm ci` can only install packages when your package.json and
+npm error package-lock.json are in sync.
+npm error Missing: @emnapi/core@1.9.2 from lock file
+npm error Missing: @emnapi/runtime@1.9.2 from lock file
+</code></pre>
+<h3 id="why-this-happened">Why This Happened<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-this-happened" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Vitest 4 uses <code>rolldown</code> (a Rust-based bundler) internally. Rolldown ships platform-specific optional bindings for every supported OS/CPU combination:</p>
+<pre><code>@rolldown/binding-linux-x64-gnu      ← installed on linux-x64
+@rolldown/binding-darwin-arm64       ← installed on macOS Apple Silicon
+@rolldown/binding-wasm32-wasi        ← fallback for WASM environments
+...
+</code></pre>
+<p>The <code>@rolldown/binding-wasm32-wasi</code> package has hard-pinned exact dependencies:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;dependencies&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;@emnapi/core&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;1.9.2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;@emnapi/runtime&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;1.9.2&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p>On <code>linux-x64</code> (both WSL and GitHub Actions), <code>npm install</code> skips the wasm binding because it’s the wrong platform. This means <code>@emnapi/core@1.9.2</code> and <code>@emnapi/runtime@1.9.2</code> are never resolved and never added to <code>package-lock.json</code>. The lockfile only had <code>@emnapi/core@1.10.0</code> (pulled in by a different package).</p>
+<p><code>npm ci</code> then runs on GitHub Actions and checks that every package listed in the lockfile has all its dependencies also in the lockfile — including optional wasm binding packages. It finds the wasm binding, reads its <code>@emnapi/core@1.9.2</code> requirement, looks for it in the lockfile, and fails.</p>
+<h3 id="why-npm-install-locally-didnt-fix-it">Why <code>npm install</code> Locally Didn’t Fix It<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-npm-install-locally-didnt-fix-it" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When you run <code>npm install --package-lock-only</code> on <code>linux-x64</code>, npm only resolves dependencies for the current platform. The wasm binding is skipped, so its deps are never written to the lockfile. The lockfile looks consistent locally but still fails <code>npm ci</code> in CI.</p>
+<h3 id="the-fix">The Fix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-fix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Change <code>npm ci</code> → <code>npm install</code> in the GitHub Actions workflow:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># BEFORE</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">- </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">npm ci</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># AFTER</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">- </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">npm install</span></span></code></pre></figure>
+<p><code>npm install</code> still reads <code>package-lock.json</code> and installs the exact pinned versions. It just doesn’t perform the strict cross-platform validation that <code>npm ci</code> does for optional packages. For a project where all tests pass cleanly (the actual correctness check), this is the right trade-off.</p>
+<p>We also bumped <code>node-version: 20</code> → <code>22</code> (LTS) to clear the deprecation warnings from GitHub Actions — Node 20 runner support ends September 2026.</p>
+<h3 id="the-rule">The Rule<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-rule" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p><strong><code>npm ci</code> is strict about ALL packages in the lockfile, including optional platform-specific ones.</strong> If your project uses a native binding package that ships wasm/platform variants (rolldown, esbuild, @swc/core, sharp, etc.), the lockfile generated on one platform will be missing the nested deps of other platforms’ optional bindings. Either use <code>npm install</code> in CI, or generate your lockfile with <code>--os=</code> and <code>--cpu=</code> flags to force all platform variants to resolve.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Symptom</th><th>Root Cause</th></tr></thead><tbody><tr><td><code>npm ci</code> fails: “Missing: X from lock file”</td><td>Optional platform-specific package has deps not resolved on current OS/CPU</td></tr><tr><td><code>npm install</code> locally shows no changes</td><td>npm only resolves current platform, wasm binding skipped</td></tr><tr><td>Fix: <code>npm install</code> in CI</td><td>Still installs exact pinned versions, skips cross-platform lockfile validation</td></tr></tbody></table></div>
+<hr/>
+<p><strong>Next:</strong> <a href="../11-reconnection-protocol" class="internal alias" data-slug="11-reconnection-protocol">Module 11 — Player Reconnection Protocol &amp; Grace Period</a> <em>(upcoming)</em></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-10" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#module-10--e2e-integration-playwright-config-and-the-nodejs-24-environment-bug" data-for="module-10--e2e-integration-playwright-config-and-the-nodejs-24-environment-bug">Module 10 — E2E Integration, Playwright Config, and the Node.js 24 Environment Bug</a></li><li class="depth-1"><a href="#the-bug-we-found-a-silent-environment-variable-gap" data-for="the-bug-we-found-a-silent-environment-variable-gap">The Bug We Found: A Silent Environment Variable Gap</a></li><li class="depth-1"><a href="#how-the-server-starts-the-environment-variable-chain" data-for="how-the-server-starts-the-environment-variable-chain">How the Server Starts: The Environment Variable Chain</a></li><li class="depth-1"><a href="#the-nodejs-24-change-node_env-now-defaults-to-production" data-for="the-nodejs-24-change-node_env-now-defaults-to-production">The Node.js 24 Change: NODE_ENV Now Defaults to &quot;production&quot;</a></li><li class="depth-1"><a href="#the-fix-explicitly-forward-node_env-in-the-webserver-env-block" data-for="the-fix-explicitly-forward-node_env-in-the-webserver-env-block">The Fix: Explicitly Forward NODE_ENV in the webServer env Block</a></li><li class="depth-1"><a href="#the-second-prerequisite-e2e-tests-need-a-live-database" data-for="the-second-prerequisite-e2e-tests-need-a-live-database">The Second Prerequisite: E2E Tests Need a Live Database</a></li><li class="depth-1"><a href="#the-playwright-env-block-what-it-does-and-doesnt-do" data-for="the-playwright-env-block-what-it-does-and-doesnt-do">The Playwright env Block: What It Does and Doesn’t Do</a></li><li class="depth-2"><a href="#option-a--shell-export-does-not-work" data-for="option-a--shell-export-does-not-work">Option A — Shell export (does NOT work)</a></li><li class="depth-2"><a href="#option-b--inline-with-the-command-works-but-brittle" data-for="option-b--inline-with-the-command-works-but-brittle">Option B — Inline with the command (works, but brittle)</a></li><li class="depth-2"><a href="#option-c--env-block-with-forwarding-correct" data-for="option-c--env-block-with-forwarding-correct">Option C — env block with forwarding (correct)</a></li><li class="depth-1"><a href="#playwright-reuseexistingserver--a-hidden-state-problem" data-for="playwright-reuseexistingserver--a-hidden-state-problem">Playwright reuseExistingServer — A Hidden State Problem</a></li><li class="depth-1"><a href="#dsa-connection-environment-variables-as-configuration-injection" data-for="dsa-connection-environment-variables-as-configuration-injection">DSA Connection: Environment Variables as Configuration Injection</a></li><li class="depth-1"><a href="#the-e2e-test-suite-what-20-tests-cover" data-for="the-e2e-test-suite-what-20-tests-cover">The E2E Test Suite: What 20 Tests Cover</a></li><li class="depth-2"><a href="#layer-4-17-tests-in-4-files" data-for="layer-4-17-tests-in-4-files">Layer 4 (17 tests in 4 files)</a></li><li class="depth-2"><a href="#layer-5-3-tests" data-for="layer-5-3-tests">Layer 5 (3 tests)</a></li><li class="depth-2"><a href="#the-4-browser-context-pattern" data-for="the-4-browser-context-pattern">The 4-Browser Context Pattern</a></li><li class="depth-1"><a href="#cdp-chrome-devtools-protocol-for-network-simulation" data-for="cdp-chrome-devtools-protocol-for-network-simulation">CDP (Chrome DevTools Protocol) for Network Simulation</a></li><li class="depth-1"><a href="#summary-what-changed-and-why" data-for="summary-what-changed-and-why">Summary: What Changed and Why</a></li><li class="depth-1"><a href="#addendum--ci-failure-npm-ci-and-optional-platform-specific-packages" data-for="addendum--ci-failure-npm-ci-and-optional-platform-specific-packages">Addendum — CI Failure: npm ci and Optional Platform-Specific Packages</a></li><li class="depth-2"><a href="#why-this-happened" data-for="why-this-happened">Why This Happened</a></li><li class="depth-2"><a href="#why-npm-install-locally-didnt-fix-it" data-for="why-npm-install-locally-didnt-fix-it">Why npm install Locally Didn’t Fix It</a></li><li class="depth-2"><a href="#the-fix" data-for="the-fix">The Fix</a></li><li class="depth-2"><a href="#the-rule" data-for="the-rule">The Rule</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../bridgeonline/README" class="internal">README</a></li><li><a href="../" class="internal">index</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../postscript.js" type="module"></script></html>

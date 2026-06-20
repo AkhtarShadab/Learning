@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>08_container_architecture</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="08_container_architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="08_container_architecture"/><meta name="twitter:description" content="Container Architecture Introduction Containers have fundamentally changed how software is built, shipped, and run."/><meta property="og:description" content="Container Architecture Introduction Containers have fundamentally changed how software is built, shipped, and run."/><meta property="og:image:alt" content="Container Architecture Introduction Containers have fundamentally changed how software is built, shipped, and run."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/Architecture/08_container_architecture"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/Architecture/08_container_architecture"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Container Architecture Introduction Containers have fundamentally changed how software is built, shipped, and run."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/Architecture/08_container_architecture"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-35"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-35" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/Architecture/">Architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>08_container_architecture</a></div></nav><h1 class="article-title">08_container_architecture</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.360Z">Jun 20, 2026</time><span>17 min read</span></p></div></div><article class="popover-hint"><h1 id="container-architecture">Container Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#container-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="introduction">Introduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#introduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Containers have fundamentally changed how software is built, shipped, and run. Before
+containers, deploying an application meant managing a complex web of dependencies,
+library versions, and OS configurations across environments. The infamous “it works on
+my machine” problem plagued every development team. Containers solve this by packaging
+an application with its entire runtime environment into a single, portable, immutable
+artifact.</p>
+<p>But containers are not virtual machines. They are lighter, faster, and more ephemeral.
+Understanding the Linux primitives that make containers possible — namespaces, cgroups,
+and union filesystems — is essential for troubleshooting, security, and performance
+optimization. This document covers container fundamentals through production
+orchestration with ECS and EKS.</p>
+<hr/>
+<h2 id="container-fundamentals">Container Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#container-fundamentals" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-makes-a-container">What Makes a Container?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-makes-a-container" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A container is a process (or group of processes) running on a host OS with three
+forms of isolation:</p>
+<pre><code>┌──────────────────────────────────────────────┐
+│                 HOST OS (Linux)               │
+│                                              │
+│  ┌─────────────────┐  ┌─────────────────┐    │
+│  │  Container A     │  │  Container B     │   │
+│  │  ┌────────────┐  │  │  ┌────────────┐  │   │
+│  │  │ App Process│  │  │  │ App Process│  │   │
+│  │  └────────────┘  │  │  └────────────┘  │   │
+│  │                  │  │                  │   │
+│  │  Namespace:      │  │  Namespace:      │   │
+│  │  - Own PID tree  │  │  - Own PID tree  │   │
+│  │  - Own network   │  │  - Own network   │   │
+│  │  - Own mounts    │  │  - Own mounts    │   │
+│  │                  │  │                  │   │
+│  │  Cgroup:         │  │  Cgroup:         │   │
+│  │  - 512MB RAM max │  │  - 1GB RAM max   │   │
+│  │  - 0.5 CPU       │  │  - 1.0 CPU       │   │
+│  │                  │  │                  │   │
+│  │  Filesystem:     │  │  Filesystem:     │   │
+│  │  - Union FS      │  │  - Union FS      │   │
+│  │  (overlay2)      │  │  (overlay2)      │   │
+│  └─────────────────┘  └─────────────────┘    │
+│                                              │
+│  ┌────────────────────────────────────────┐   │
+│  │           Shared Linux Kernel          │   │
+│  └────────────────────────────────────────┘   │
+└──────────────────────────────────────────────┘
+</code></pre>
+<h3 id="linux-namespaces">Linux Namespaces<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#linux-namespaces" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Namespaces provide isolation. Each namespace type isolates a different resource:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Namespace</th><th>Isolates</th><th>Example</th></tr></thead><tbody><tr><td>PID</td><td>Process IDs</td><td>Container sees PID 1 as its init</td></tr><tr><td>NET</td><td>Network stack</td><td>Own IP, ports, routing table</td></tr><tr><td>MNT</td><td>Mount points</td><td>Own filesystem view</td></tr><tr><td>UTS</td><td>Hostname</td><td>Container has its own hostname</td></tr><tr><td>IPC</td><td>Inter-process communication</td><td>Shared memory, semaphores</td></tr><tr><td>USER</td><td>User and group IDs</td><td>UID 0 in container != UID 0 on host</td></tr><tr><td>CGROUP</td><td>Cgroup root</td><td>Container sees only its own cgroups</td></tr></tbody></table></div>
+<h3 id="control-groups-cgroups">Control Groups (cgroups)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#control-groups-cgroups" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Cgroups limit and account for resource usage:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># What cgroups enforce for a container:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">CPU:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">     Maximum</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> CPU</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> usage</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (e.g., </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0.5</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cores</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Memory:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  Maximum</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (e.g., </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">512</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> MB</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">) — OOM killed </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">if</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> exceeded</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">I/O:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">     Block</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> device</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> I/O</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> bandwidth</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> limits</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">PIDs:</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    Maximum</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> number</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> of</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> processes</span></span></code></pre></figure>
+<h3 id="union-filesystem-overlayfs">Union Filesystem (OverlayFS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#union-filesystem-overlayfs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Container images are composed of layers. Each layer is read-only. When a container
+runs, a thin read-write layer is added on top. Changes (file edits, new files) are
+written to this top layer, leaving the image layers untouched.</p>
+<pre><code>Container Filesystem (overlay2):
+
+┌────────────────────┐
+│  Read-Write Layer  │  ← Container changes (ephemeral)
+├────────────────────┤
+│  Layer 3: app code │  ← COPY . /app
+├────────────────────┤
+│  Layer 2: deps     │  ← RUN pip install
+├────────────────────┤
+│  Layer 1: python   │  ← FROM python:3.12-slim
+├────────────────────┤
+│  Layer 0: base OS  │  ← Debian slim
+└────────────────────┘
+
+All containers from the same image share layers 0-3 (read-only).
+Only the R/W layer is unique per container.
+</code></pre>
+<hr/>
+<h2 id="docker-architecture">Docker Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#docker-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="components">Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────┐     ┌─────────────────────────┐
+│  Docker CLI │────►│     Docker Daemon        │
+│  (client)   │     │     (dockerd)            │
+└─────────────┘     │                          │
+                    │  ┌────────────────────┐  │
+                    │  │    containerd      │  │
+                    │  │  (container mgmt)  │  │
+                    │  └────────┬───────────┘  │
+                    │           │              │
+                    │  ┌────────┴───────────┐  │
+                    │  │      runc          │  │
+                    │  │  (OCI runtime)     │  │
+                    │  └────────────────────┘  │
+                    └─────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>Docker CLI</strong>: User-facing commands (<code>docker build</code>, <code>docker run</code>)</li>
+<li><strong>Docker Daemon (dockerd)</strong>: Background service that manages images, containers,
+networks, and volumes</li>
+<li><strong>containerd</strong>: Industry-standard container runtime that manages the complete
+container lifecycle</li>
+<li><strong>runc</strong>: Low-level OCI runtime that actually creates and runs containers using
+Linux primitives</li>
+</ul>
+<h3 id="multi-stage-builds">Multi-Stage Builds<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#multi-stage-builds" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Multi-stage builds reduce image size by separating build dependencies from runtime:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dockerfile" data-theme="github-light github-dark"><code data-language="dockerfile" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Stage 1: Build</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> golang:1.22 </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">AS</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> builder</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">WORKDIR</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> /app</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">COPY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> go.mod go.sum ./</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">RUN</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> go mod download</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">COPY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> . .</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">RUN</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> CGO_ENABLED=0 GOOS=linux go build -o /server</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Stage 2: Runtime (tiny image, no build tools)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> gcr.io/distroless/static-debian12</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">COPY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> --from=builder /server /server</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">EXPOSE</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> 8080</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">ENTRYPOINT</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;/server&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Result: ~15 MB image instead of ~800 MB with full Go toolchain</span></span></code></pre></figure>
+<h3 id="image-best-practices">Image Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#image-best-practices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>DO:                                    DON'T:
+✓ Use specific base image tags         ✗ Use :latest in production
+  (python:3.12.3-slim)                   (non-reproducible)
+✓ Use multi-stage builds               ✗ Install dev tools in prod image
+✓ Run as non-root user                 ✗ Run as root (security risk)
+✓ Use .dockerignore                    ✗ Copy entire repo into image
+✓ Order layers by change frequency     ✗ COPY . before RUN pip install
+  (deps first, code last)                (invalidates cache on every change)
+✓ Use HEALTHCHECK instruction          ✗ Rely on container start = healthy
+✓ Scan images for vulnerabilities      ✗ Use unvetted base images
+</code></pre>
+<hr/>
+<h2 id="amazon-ecr-elastic-container-registry">Amazon ECR (Elastic Container Registry)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-ecr-elastic-container-registry" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>ECR is a fully managed Docker container registry. It integrates with IAM for
+authentication and supports image scanning, lifecycle policies, and cross-region
+replication.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Authenticate Docker to ECR</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ecr</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> get-login-password</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --region</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> us-east-1</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">  docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> login</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --username</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> AWS</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --password-stdin</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  123456789012.dkr.ecr.us-east-1.amazonaws.com</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Build and push an image</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> build</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -t</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> myapp:v1.2.3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> .</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> tag</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> myapp:v1.2.3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 123456789012.dkr.ecr.us-east-1.amazonaws.com/myapp:v1.2.3</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">docker</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 123456789012.dkr.ecr.us-east-1.amazonaws.com/myapp:v1.2.3</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Enable image scanning on push</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ecr</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-image-scanning-configuration</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --repository-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> myapp</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --image-scanning-configuration</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> scanOnPush=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Lifecycle policy: keep only last 10 images</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ecr</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-lifecycle-policy</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --repository-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> myapp</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --lifecycle-policy-text</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;rules&quot;: [{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;rulePriority&quot;: 1,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;description&quot;: &quot;Keep last 10 images&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;selection&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;tagStatus&quot;: &quot;any&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;countType&quot;: &quot;imageCountMoreThan&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;countNumber&quot;: 10</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;action&quot;: {&quot;type&quot;: &quot;expire&quot;}</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    }]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }'</span></span></code></pre></figure>
+<hr/>
+<h2 id="amazon-ecs-architecture">Amazon ECS Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-ecs-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="core-concepts">Core Concepts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-concepts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│                   ECS CLUSTER                        │
+│                                                      │
+│  ┌─────────────────────────────────────────────┐     │
+│  │              SERVICE                         │    │
+│  │  (maintains desired count of tasks)          │    │
+│  │                                              │    │
+│  │  ┌───────────────┐  ┌───────────────┐        │    │
+│  │  │    TASK        │  │    TASK        │       │    │
+│  │  │  ┌──────────┐  │  │  ┌──────────┐  │      │    │
+│  │  │  │Container │  │  │  │Container │  │      │    │
+│  │  │  │ (app)    │  │  │  │ (app)    │  │      │    │
+│  │  │  └──────────┘  │  │  └──────────┘  │      │    │
+│  │  │  ┌──────────┐  │  │  ┌──────────┐  │      │    │
+│  │  │  │Container │  │  │  │Container │  │      │    │
+│  │  │  │ (sidecar)│  │  │  │ (sidecar)│  │      │    │
+│  │  │  └──────────┘  │  │  └──────────┘  │      │    │
+│  │  └───────────────┘  └───────────────┘        │    │
+│  └─────────────────────────────────────────────┘     │
+│                                                      │
+│  Task Definition: Blueprint for a task               │
+│  (image, CPU, memory, ports, env vars, IAM role)     │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Cluster</strong>: Logical grouping of tasks and services.
+<strong>Task Definition</strong>: A blueprint (like a docker-compose file) specifying containers,
+resources, networking, and IAM roles.
+<strong>Task</strong>: A running instance of a task definition (one or more containers).
+<strong>Service</strong>: Ensures a desired number of tasks are running, handles deployments and
+load balancer integration.</p>
+<h3 id="ecs-on-fargate-vs-ec2">ECS on Fargate vs EC2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ecs-on-fargate-vs-ec2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>ECS on Fargate:                      ECS on EC2:
+┌────────────────────┐               ┌────────────────────┐
+│  Task              │               │  EC2 Instance      │
+│  ┌──────────────┐  │               │  ┌──────────────┐  │
+│  │  Container   │  │               │  │  ECS Agent   │  │
+│  └──────────────┘  │               │  ├──────────────┤  │
+│                    │               │  │  Task 1      │  │
+│  AWS manages the   │               │  │  Task 2      │  │
+│  underlying host   │               │  │  Task 3      │  │
+│                    │               │  └──────────────┘  │
+│  No EC2 to manage  │               │                    │
+│  Pay per task      │               │  You manage EC2s   │
+│  resources         │               │  Pay per instance  │
+└────────────────────┘               └────────────────────┘
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Fargate</th><th>EC2</th></tr></thead><tbody><tr><td>Server management</td><td>None</td><td>You manage EC2 instances</td></tr><tr><td>Pricing</td><td>Per vCPU + memory per second</td><td>EC2 instance pricing</td></tr><tr><td>GPU support</td><td>No</td><td>Yes</td></tr><tr><td>Spot pricing</td><td>Fargate Spot (70% savings)</td><td>EC2 Spot instances</td></tr><tr><td>Max task size</td><td>16 vCPU, 120 GB RAM</td><td>Limited by instance type</td></tr><tr><td>Boot time</td><td>~30-60 seconds</td><td>Instant (container on host)</td></tr><tr><td>Persistent storage</td><td>EFS (no EBS)</td><td>EBS + EFS + instance store</td></tr><tr><td>Networking</td><td>awsvpc only</td><td>awsvpc, bridge, host, none</td></tr></tbody></table></div>
+<h3 id="task-definition-example">Task Definition Example<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-definition-example" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;family&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;myapp&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;networkMode&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;awsvpc&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;requiresCompatibilities&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;FARGATE&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;cpu&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;1024&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;memory&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;2048&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;executionRoleArn&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;arn:aws:iam::123456789012:role/ecsTaskExecutionRole&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;taskRoleArn&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;arn:aws:iam::123456789012:role/myapp-task-role&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;containerDefinitions&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;app&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;image&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;123456789012.dkr.ecr.us-east-1.amazonaws.com/myapp:v1.2.3&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;portMappings&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;containerPort&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">8080</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;protocol&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;tcp&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;healthCheck&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        &quot;command&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;CMD-SHELL&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;curl -f http://localhost:8080/health || exit 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        &quot;interval&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">15</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        &quot;timeout&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        &quot;retries&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">3</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        &quot;startPeriod&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">60</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;logConfiguration&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        &quot;logDriver&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;awslogs&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        &quot;options&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">          &quot;awslogs-group&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;/ecs/myapp&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">          &quot;awslogs-region&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;us-east-1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">          &quot;awslogs-stream-prefix&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;app&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;secrets&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">          &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;DB_PASSWORD&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">          &quot;valueFrom&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;arn:aws:secretsmanager:us-east-1:123456789012:secret:myapp/db-password&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      ],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;NODE_ENV&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;value&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;production&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;PORT&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;value&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;8080&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="amazon-eks-architecture">Amazon EKS Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-eks-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-is-eks">What Is EKS?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-eks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Elastic Kubernetes Service is a managed Kubernetes control plane. AWS runs the
+Kubernetes API server, etcd, and other control plane components. You manage the
+worker nodes (or use Fargate for serverless pods).</p>
+<h3 id="architecture">Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    EKS CLUSTER                          │
+│                                                         │
+│  ┌─────────────────────────────────┐  (AWS-managed)     │
+│  │        CONTROL PLANE            │                    │
+│  │  ┌────────┐ ┌────────┐         │                    │
+│  │  │API     │ │  etcd  │         │                    │
+│  │  │Server  │ │(state) │         │                    │
+│  │  └────────┘ └────────┘         │                    │
+│  │  ┌────────────┐ ┌───────────┐  │                    │
+│  │  │Controller  │ │Scheduler  │  │                    │
+│  │  │Manager     │ │           │  │                    │
+│  │  └────────────┘ └───────────┘  │                    │
+│  └────────────────┬────────────────┘                    │
+│                   │                                     │
+│  ┌────────────────┼────────────────┐  (you manage)      │
+│  │        DATA PLANE               │                    │
+│  │                                 │                    │
+│  │  ┌──────────┐  ┌──────────┐     │                    │
+│  │  │  Node    │  │  Node    │     │                    │
+│  │  │(EC2/Farg)│  │(EC2/Farg)│     │                    │
+│  │  │ ┌──────┐ │  │ ┌──────┐ │    │                    │
+│  │  │ │ Pod  │ │  │ │ Pod  │ │    │                    │
+│  │  │ │┌────┐│ │  │ │┌────┐│ │    │                    │
+│  │  │ ││cntr││ │  │ ││cntr││ │    │                    │
+│  │  │ │└────┘│ │  │ │└────┘│ │    │                    │
+│  │  │ └──────┘ │  │ └──────┘ │    │                    │
+│  │  └──────────┘  └──────────┘    │                    │
+│  └─────────────────────────────────┘                    │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="kubernetes-core-concepts">Kubernetes Core Concepts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kubernetes-core-concepts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Pod</strong>: The smallest deployable unit. Contains one or more containers that share
+network and storage. Usually one main container plus optional sidecars.</p>
+<p><strong>Deployment</strong>: Manages ReplicaSets and provides declarative updates for pods.
+Rolling updates, rollbacks, and scaling are built in.</p>
+<p><strong>Service</strong>: Provides a stable network endpoint for a set of pods. Types:
+ClusterIP (internal), NodePort (external via node port), LoadBalancer (provisions
+AWS NLB/ALB).</p>
+<p><strong>Ingress</strong>: HTTP/HTTPS routing to services. In EKS, the AWS Load Balancer
+Controller provisions ALBs from Ingress resources.</p>
+<p><strong>Horizontal Pod Autoscaler (HPA)</strong>: Scales pod count based on CPU, memory, or
+custom metrics.</p>
+<p><strong>Vertical Pod Autoscaler (VPA)</strong>: Adjusts CPU/memory requests for pods based on
+actual usage.</p>
+<h3 id="eks-deployment-example">EKS Deployment Example<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#eks-deployment-example" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># deployment.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">apps/v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">Deployment</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">myapp</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">production</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  replicas</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">3</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">RollingUpdate</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    rollingUpdate</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      maxSurge</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      maxUnavailable</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  selector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    matchLabels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      app</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">myapp</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  template</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      labels</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">        app</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">myapp</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      serviceAccountName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">myapp-sa</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # IAM Roles for Service Accounts (IRSA)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      containers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">app</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          image</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">123456789012.dkr.ecr.us-east-1.amazonaws.com/myapp:v1.2.3</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          ports</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">containerPort</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">8080</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          resources</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            requests</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">250m</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">512Mi</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            limits</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">500m</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              memory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">1Gi</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          readinessProbe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            httpGet</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/health</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">8080</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            initialDelaySeconds</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">10</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            periodSeconds</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          livenessProbe</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            httpGet</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/health</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">8080</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            initialDelaySeconds</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">30</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            periodSeconds</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">10</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">Service</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">myapp-svc</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">production</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">ClusterIP</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  selector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    app</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">myapp</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  ports</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">80</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      targetPort</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">8080</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">networking.k8s.io/v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">Ingress</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">myapp-ingress</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">production</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  annotations</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    kubernetes.io/ingress.class</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">alb</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    alb.ingress.kubernetes.io/scheme</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">internet-facing</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    alb.ingress.kubernetes.io/target-type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">ip</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    alb.ingress.kubernetes.io/certificate-arn</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">arn:aws:acm:...</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  rules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">host</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">app.example.com</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      http</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">        paths</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">          - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">/</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            pathType</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">Prefix</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            backend</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              service</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">                name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">myapp-svc</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">                port</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">                  number</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">80</span></span></code></pre></figure>
+<hr/>
+<h2 id="container-networking">Container Networking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#container-networking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ecs-awsvpc-mode">ECS awsvpc Mode<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ecs-awsvpc-mode" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Each task gets its own Elastic Network Interface (ENI) with a private IP in your
+VPC subnet. This is the only networking mode supported on Fargate and the
+recommended mode for EC2 launch type.</p>
+<pre><code>VPC Subnet: 10.0.1.0/24
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│ Task A       │  │ Task B       │  │ Task C       │
+│ IP: 10.0.1.5 │  │ IP: 10.0.1.6 │  │ IP: 10.0.1.7 │
+│ ENI: eni-aaa │  │ ENI: eni-bbb │  │ ENI: eni-ccc │
+│              │  │              │  │              │
+│ SG: sg-app   │  │ SG: sg-app   │  │ SG: sg-app   │
+└──────────────┘  └──────────────┘  └──────────────┘
+
+Each task has its own security group, like an EC2 instance.
+</code></pre>
+<h3 id="kubernetes-pod-networking-amazon-vpc-cni">Kubernetes Pod Networking (Amazon VPC CNI)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kubernetes-pod-networking-amazon-vpc-cni" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The Amazon VPC CNI plugin assigns VPC IP addresses directly to pods. Each pod gets
+a real VPC IP, enabling direct communication with other VPC resources without NAT.</p>
+<pre><code>Node (EC2 instance): 10.0.1.10
+├── Pod A: 10.0.1.11 (secondary IP on ENI)
+├── Pod B: 10.0.1.12 (secondary IP on ENI)
+└── Pod C: 10.0.1.13 (secondary IP on ENI)
+
+Pods communicate directly using VPC networking.
+Security groups can be applied at the pod level.
+</code></pre>
+<hr/>
+<h2 id="service-mesh">Service Mesh<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#service-mesh" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-is-a-service-mesh">What Is a Service Mesh?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-a-service-mesh" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A service mesh manages service-to-service communication in a microservices
+architecture. It handles traffic management, security (mTLS), and observability
+transparently via sidecar proxies.</p>
+<pre><code>Without Service Mesh:            With Service Mesh:
+┌────────┐    ┌────────┐        ┌────────┐    ┌────────┐
+│Service │───►│Service │        │Service │    │Service │
+│   A    │    │   B    │        │   A    │    │   B    │
+│        │    │        │        │┌──────┐│    │┌──────┐│
+└────────┘    └────────┘        ││Proxy ││───►││Proxy ││
+                                │└──────┘│    │└──────┘│
+App handles: retries,           └────────┘    └────────┘
+timeouts, auth, metrics
+                                Proxy handles: retries,
+                                timeouts, mTLS, metrics,
+                                traffic splitting
+</code></pre>
+<p>AWS App Mesh and Istio are the primary service mesh options on EKS.</p>
+<hr/>
+<h2 id="container-security">Container Security<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#container-security" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="image-security">Image Security<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#image-security" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Scan ECR image for vulnerabilities</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ecr</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> start-image-scan</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --repository-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> myapp</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --image-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> imageTag=v1.2.3</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Get scan findings</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ecr</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> describe-image-scan-findings</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --repository-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> myapp</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --image-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> imageTag=v1.2.3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --query</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'imageScanFindings.findingSeverityCounts'</span></span></code></pre></figure>
+<h3 id="runtime-security-best-practices">Runtime Security Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#runtime-security-best-practices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Run as non-root</strong>: Set <code>USER</code> in Dockerfile, <code>runAsNonRoot: true</code> in K8s</li>
+<li><strong>Read-only root filesystem</strong>: <code>readOnlyRootFilesystem: true</code></li>
+<li><strong>Drop all capabilities</strong>: <code>drop: [&quot;ALL&quot;]</code>, add back only what is needed</li>
+<li><strong>No privilege escalation</strong>: <code>allowPrivilegeEscalation: false</code></li>
+<li><strong>Use distroless or scratch base images</strong>: Minimal attack surface</li>
+<li><strong>Scan images in CI/CD</strong>: Fail builds with critical vulnerabilities</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Kubernetes security context</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">securityContext</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  runAsNonRoot</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  runAsUser</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1000</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  readOnlyRootFilesystem</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  allowPrivilegeEscalation</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">false</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  capabilities</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    drop</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;ALL&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]</span></span></code></pre></figure>
+<hr/>
+<h2 id="ecs-vs-eks-decision-matrix">ECS vs EKS Decision Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ecs-vs-eks-decision-matrix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Criterion</th><th>ECS</th><th>EKS</th></tr></thead><tbody><tr><td>Complexity</td><td>Lower (AWS-native)</td><td>Higher (Kubernetes)</td></tr><tr><td>Learning curve</td><td>Gentle</td><td>Steep</td></tr><tr><td>Portability</td><td>AWS only</td><td>Multi-cloud (K8s standard)</td></tr><tr><td>Ecosystem</td><td>AWS tools</td><td>Vast CNCF ecosystem</td></tr><tr><td>Team expertise</td><td>AWS-focused teams</td><td>K8s-experienced teams</td></tr><tr><td>Advanced scheduling</td><td>Basic</td><td>Highly flexible</td></tr><tr><td>Service mesh</td><td>App Mesh</td><td>Istio, Linkerd, App Mesh</td></tr><tr><td>Fargate support</td><td>Full</td><td>Full</td></tr><tr><td>Managed node groups</td><td>N/A (Fargate or EC2 ASG)</td><td>Yes (EKS Managed Nodes)</td></tr><tr><td>Cost (control plane)</td><td>Free</td><td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.10/</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mopen">(</span></span></span></span>73/mo)</td></tr><tr><td>GitOps</td><td>Limited</td><td>ArgoCD, Flux</td></tr><tr><td>Batch workloads</td><td>Good</td><td>Excellent (Argo Workflows)</td></tr></tbody></table></div>
+<p><strong>Choose ECS when</strong>: Your team is AWS-native, you want simplicity, you do not need
+Kubernetes portability, and your orchestration needs are straightforward.</p>
+<p><strong>Choose EKS when</strong>: Your team knows Kubernetes, you need multi-cloud portability,
+you want access to the CNCF ecosystem, or you have complex scheduling requirements.</p>
+<hr/>
+<h2 id="practical-takeaways">Practical Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#practical-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Start with Fargate</strong> unless you need GPUs, specific instance types, or EBS
+volumes. Fargate eliminates all node management.</p>
+</li>
+<li>
+<p><strong>Use multi-stage builds</strong> to keep images small. Smaller images pull faster,
+reduce storage costs, and have a smaller attack surface.</p>
+</li>
+<li>
+<p><strong>Never use <code>:latest</code> tag in production.</strong> Always pin to a specific version
+(e.g., <code>v1.2.3</code> or a SHA digest) for reproducibility.</p>
+</li>
+<li>
+<p><strong>Set resource requests AND limits</strong> in Kubernetes. Without requests, the
+scheduler cannot make informed placement decisions. Without limits, a runaway
+container can consume all node resources.</p>
+</li>
+<li>
+<p><strong>Use readiness probes</strong> to prevent traffic from reaching containers that are
+not ready. Use liveness probes to restart stuck containers. Do not make liveness
+probes hit external dependencies (database, cache) — that causes cascading
+restarts.</p>
+</li>
+<li>
+<p><strong>Store secrets in AWS Secrets Manager or Parameter Store</strong>, not in environment
+variables in task definitions. Use ECS secrets injection or the Kubernetes
+Secrets Store CSI Driver.</p>
+</li>
+<li>
+<p><strong>Implement image lifecycle policies</strong> in ECR to automatically clean up old
+images. Untagged and outdated images accumulate and increase storage costs.</p>
+</li>
+<li>
+<p><strong>Run containers as non-root.</strong> This single practice mitigates a large class of
+container escape vulnerabilities.</p>
+</li>
+</ol>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bin-packing--kubernetes-scheduler-and-ecs-task-placement">Bin Packing — Kubernetes Scheduler and ECS Task Placement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bin-packing--kubernetes-scheduler-and-ecs-task-placement" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bin packing is an NP-hard combinatorial optimization problem: given items of varying sizes and bins of fixed capacity, pack the items into the fewest bins possible. The Kubernetes scheduler and ECS task placement engine both solve a multi-dimensional bin packing variant where each “item” (pod or task) has CPU and memory requirements, and each “bin” (node or EC2 instance) has finite capacity. When you define <code>resources.requests.cpu: 250m</code> and <code>resources.requests.memory: 512Mi</code> in a Kubernetes deployment, the scheduler must find a node where these resources fit alongside existing pods. The scheduler uses heuristics like LeastRequestedPriority (spread workloads) or MostRequestedPriority (pack tightly for cost efficiency) — directly analogous to the first-fit-decreasing and best-fit-decreasing heuristics from bin packing literature. ECS’s <code>binpack</code> placement strategy explicitly names the algorithm: it places tasks on the instance with the least available resources that still fits the task, minimizing the number of running instances. This is why right-sizing resource requests matters so much — overestimating is like declaring items larger than they are, wasting bin capacity and increasing infrastructure cost.</p>
+<h3 id="directed-acyclic-graphs-dags--container-image-layer-dependencies-and-build-ordering">Directed Acyclic Graphs (DAGs) — Container Image Layer Dependencies and Build Ordering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#directed-acyclic-graphs-dags--container-image-layer-dependencies-and-build-ordering" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A directed acyclic graph (DAG) is a graph with directed edges and no cycles, commonly used to model dependency relationships. Docker image builds are DAGs: each instruction in a Dockerfile creates a layer that depends on all preceding layers, and multi-stage builds introduce multiple dependency chains that merge at <code>COPY --from</code> directives. The Docker build engine performs a topological sort on this DAG to determine the correct build order and to identify which layers can be cached. When you structure a Dockerfile with <code>COPY go.mod</code> and <code>RUN go mod download</code> before <code>COPY . .</code>, you are designing the DAG so that the dependency-download node has few incoming edges that change frequently, maximizing cache reuse. Kubernetes Helm charts and ECS task definitions with init containers also form DAGs: init containers must complete (in dependency order) before the main container starts, and the orchestrator topologically sorts them to determine execution sequence.</p>
+<h3 id="union-find-disjoint-set-union--container-network-namespace-isolation">Union-Find (Disjoint Set Union) — Container Network Namespace Isolation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#union-find-disjoint-set-union--container-network-namespace-isolation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Union-Find is a data structure that maintains a collection of disjoint sets, supporting near-O(1) union and find operations with path compression and union by rank. The Linux kernel’s namespace mechanism, which underpins container isolation, conceptually operates on disjoint sets: each container’s PID namespace, network namespace, and mount namespace form a separate partition of system resources. When Container A and Container B each have their own NET namespace, they belong to disjoint sets in the network resource space — Container A’s port 8080 is completely independent of Container B’s port 8080. The Kubernetes VPC CNI plugin extends this: each pod gets its own network namespace with a unique VPC IP address, creating disjoint network identities that can be individually addressed and secured with security groups. Understanding namespace isolation as disjoint sets clarifies why containers sharing a pod (same network namespace) can communicate via <code>localhost</code> — they have been “unioned” into the same set — while containers in different pods cannot, because they remain in separate partitions.</p>
+<h3 id="graph-based-dependency-resolution--kubernetes-deployment-rollout-strategy">Graph-Based Dependency Resolution — Kubernetes Deployment Rollout Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#graph-based-dependency-resolution--kubernetes-deployment-rollout-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Kubernetes deployments with rolling update strategies model the update process as a constrained graph traversal. The deployment controller maintains a state graph where each node represents a pod version (old or new) and transitions must satisfy the constraints <code>maxSurge</code> (maximum extra pods above desired count) and <code>maxUnavailable</code> (maximum pods that can be unavailable). With <code>maxSurge: 1</code> and <code>maxUnavailable: 0</code>, the controller follows a strict path: create one new pod, wait until it passes readiness checks, then terminate one old pod, repeating until all pods are updated. This is a constrained BFS through the state space of (running_old, running_new) pairs, where each transition must keep total available pods >= desired count. The Kubernetes scheduler’s affinity and anti-affinity rules further constrain this graph — a pod with <code>podAntiAffinity</code> to other pods of the same deployment cannot be placed on a node that already hosts a sibling, pruning certain paths from the traversal and ensuring fault-domain distribution across nodes and AZs.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-24" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#container-architecture" data-for="container-architecture">Container Architecture</a></li><li class="depth-1"><a href="#introduction" data-for="introduction">Introduction</a></li><li class="depth-1"><a href="#container-fundamentals" data-for="container-fundamentals">Container Fundamentals</a></li><li class="depth-2"><a href="#what-makes-a-container" data-for="what-makes-a-container">What Makes a Container?</a></li><li class="depth-2"><a href="#linux-namespaces" data-for="linux-namespaces">Linux Namespaces</a></li><li class="depth-2"><a href="#control-groups-cgroups" data-for="control-groups-cgroups">Control Groups (cgroups)</a></li><li class="depth-2"><a href="#union-filesystem-overlayfs" data-for="union-filesystem-overlayfs">Union Filesystem (OverlayFS)</a></li><li class="depth-1"><a href="#docker-architecture" data-for="docker-architecture">Docker Architecture</a></li><li class="depth-2"><a href="#components" data-for="components">Components</a></li><li class="depth-2"><a href="#multi-stage-builds" data-for="multi-stage-builds">Multi-Stage Builds</a></li><li class="depth-2"><a href="#image-best-practices" data-for="image-best-practices">Image Best Practices</a></li><li class="depth-1"><a href="#amazon-ecr-elastic-container-registry" data-for="amazon-ecr-elastic-container-registry">Amazon ECR (Elastic Container Registry)</a></li><li class="depth-1"><a href="#amazon-ecs-architecture" data-for="amazon-ecs-architecture">Amazon ECS Architecture</a></li><li class="depth-2"><a href="#core-concepts" data-for="core-concepts">Core Concepts</a></li><li class="depth-2"><a href="#ecs-on-fargate-vs-ec2" data-for="ecs-on-fargate-vs-ec2">ECS on Fargate vs EC2</a></li><li class="depth-2"><a href="#task-definition-example" data-for="task-definition-example">Task Definition Example</a></li><li class="depth-1"><a href="#amazon-eks-architecture" data-for="amazon-eks-architecture">Amazon EKS Architecture</a></li><li class="depth-2"><a href="#what-is-eks" data-for="what-is-eks">What Is EKS?</a></li><li class="depth-2"><a href="#architecture" data-for="architecture">Architecture</a></li><li class="depth-2"><a href="#kubernetes-core-concepts" data-for="kubernetes-core-concepts">Kubernetes Core Concepts</a></li><li class="depth-2"><a href="#eks-deployment-example" data-for="eks-deployment-example">EKS Deployment Example</a></li><li class="depth-1"><a href="#container-networking" data-for="container-networking">Container Networking</a></li><li class="depth-2"><a href="#ecs-awsvpc-mode" data-for="ecs-awsvpc-mode">ECS awsvpc Mode</a></li><li class="depth-2"><a href="#kubernetes-pod-networking-amazon-vpc-cni" data-for="kubernetes-pod-networking-amazon-vpc-cni">Kubernetes Pod Networking (Amazon VPC CNI)</a></li><li class="depth-1"><a href="#service-mesh" data-for="service-mesh">Service Mesh</a></li><li class="depth-2"><a href="#what-is-a-service-mesh" data-for="what-is-a-service-mesh">What Is a Service Mesh?</a></li><li class="depth-1"><a href="#container-security" data-for="container-security">Container Security</a></li><li class="depth-2"><a href="#image-security" data-for="image-security">Image Security</a></li><li class="depth-2"><a href="#runtime-security-best-practices" data-for="runtime-security-best-practices">Runtime Security Best Practices</a></li><li class="depth-1"><a href="#ecs-vs-eks-decision-matrix" data-for="ecs-vs-eks-decision-matrix">ECS vs EKS Decision Matrix</a></li><li class="depth-1"><a href="#practical-takeaways" data-for="practical-takeaways">Practical Takeaways</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#bin-packing--kubernetes-scheduler-and-ecs-task-placement" data-for="bin-packing--kubernetes-scheduler-and-ecs-task-placement">Bin Packing — Kubernetes Scheduler and ECS Task Placement</a></li><li class="depth-2"><a href="#directed-acyclic-graphs-dags--container-image-layer-dependencies-and-build-ordering" data-for="directed-acyclic-graphs-dags--container-image-layer-dependencies-and-build-ordering">Directed Acyclic Graphs (DAGs) — Container Image Layer Dependencies and Build Ordering</a></li><li class="depth-2"><a href="#union-find-disjoint-set-union--container-network-namespace-isolation" data-for="union-find-disjoint-set-union--container-network-namespace-isolation">Union-Find (Disjoint Set Union) — Container Network Namespace Isolation</a></li><li class="depth-2"><a href="#graph-based-dependency-resolution--kubernetes-deployment-rollout-strategy" data-for="graph-based-dependency-resolution--kubernetes-deployment-rollout-strategy">Graph-Based Dependency Resolution — Kubernetes Deployment Rollout Strategy</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

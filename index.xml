@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>Shadab · Learning Notes</title>
+      <link>https://study.tpresearcher.online</link>
+      <description>Last 10 notes on Shadab · Learning Notes</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>03-database-prisma</title>
+    <link>https://study.tpresearcher.online/bridgeonline/03-database-prisma</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/03-database-prisma</guid>
+    <description><![CDATA[ Module 03 — Database Design with Prisma Session 003 | Prerequisite: Module 01 Why a Relational Database, and Why PostgreSQL Specifically What “persistence” means Everything that exists only in a running program’s memory disappears when the program stops — server restart, crash, deployment. ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>TESTING_GUIDE</title>
+    <link>https://study.tpresearcher.online/bridgeonline/TESTING_GUIDE</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/TESTING_GUIDE</guid>
+    <description><![CDATA[ BridgeOnline — Dev-Mode Testing Guide Scope: Covers all changes shipped in Sessions 001–006. ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>07-scalability</title>
+    <link>https://study.tpresearcher.online/bridgeonline/07-scalability</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/07-scalability</guid>
+    <description><![CDATA[ Module 07 — Scalability Gaps &amp; Fixes Session 001 | Prerequisite: Modules 01–04 Why Scalability Matters (and When It Doesn’t) A common mistake is premature optimization — adding complexity for scale before you have users. ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>08-typescript-nextjs-patterns</title>
+    <link>https://study.tpresearcher.online/bridgeonline/08-typescript-nextjs-patterns</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/08-typescript-nextjs-patterns</guid>
+    <description><![CDATA[ Module 08 — TypeScript &amp; Next.js 14 Patterns Session 005 | Prerequisite: Modules 01–03 What This Module Covers This module is different from the others — it’s not about a feature, it’s about the engineering friction that shows up when you wire a typed Next.js 14 app to Prisma. ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>05-testing-strategy</title>
+    <link>https://study.tpresearcher.online/bridgeonline/05-testing-strategy</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/05-testing-strategy</guid>
+    <description><![CDATA[ Module 05 — Testing Strategy (5 Layers) Sessions 002, 003, 004 | Prerequisite: Modules 02, 03, 04 Why Testing Matters More for a Game Than for a CRUD App A blog application with a bug might show a slightly wrong word count or a formatting glitch. ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>06-webrtc-voice</title>
+    <link>https://study.tpresearcher.online/bridgeonline/06-webrtc-voice</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/06-webrtc-voice</guid>
+    <description><![CDATA[ Module 06 — WebRTC &amp; Voice Chat Session 001 | Prerequisite: Module 04 Why Not Just Use WebSocket for Voice? Voice is audio data — continuous streams of audio samples, 20ms of audio per packet, at ~50 packets/second per player. ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>README</title>
+    <link>https://study.tpresearcher.online/bridgeonline/README</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/README</guid>
+    <description><![CDATA[ BridgeOnline — Developer Learning Guide A session-by-session breakdown of everything built in this project, written for someone with strong DSA fundamentals and basic dev experience. ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>09-game-state-bugs-and-defensive-coding</title>
+    <link>https://study.tpresearcher.online/bridgeonline/09-game-state-bugs-and-defensive-coding</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/09-game-state-bugs-and-defensive-coding</guid>
+    <description><![CDATA[ Module 09 — Game State Bugs, Defensive Coding, and API Testing Session 006 | Prerequisite: Modules 02, 03, 05 The Bug We Found: A Missing Guard in isBiddingComplete The learning doc for Module 02 described this correct implementation: export function isBiddingComplete(history: BidAction[]): boolean ... ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>DOUBTS</title>
+    <link>https://study.tpresearcher.online/bridgeonline/DOUBTS</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/DOUBTS</guid>
+    <description><![CDATA[ 💬 Doubts &amp; Q&amp;A — BridgeOnline . ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item><item>
+    <title>12-turn-order-fix-and-passed-out-ui</title>
+    <link>https://study.tpresearcher.online/bridgeonline/12-turn-order-fix-and-passed-out-ui</link>
+    <guid>https://study.tpresearcher.online/bridgeonline/12-turn-order-fix-and-passed-out-ui</guid>
+    <description><![CDATA[ 12 — Turn Order Bug Fix &amp; game:passed_out Client Handler Date: 2026-04-28 Tasks covered: Fix getNextPlayer turn order bug (N→E→S→W clockwise) — ✅ Done Implement game:passed_out client handler in UI — 📋 Todo Part 1: getNextPlayer Turn Order Bug Fix What Was Wrong getNextPlayer in lib/game/playin... ]]></description>
+    <pubDate>Sat, 20 Jun 2026 02:46:36 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>

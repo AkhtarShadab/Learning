@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>07_serverless_architecture</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="07_serverless_architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="07_serverless_architecture"/><meta name="twitter:description" content="Serverless Architecture Introduction Serverless computing represents a fundamental shift in how we think about infrastructure."/><meta property="og:description" content="Serverless Architecture Introduction Serverless computing represents a fundamental shift in how we think about infrastructure."/><meta property="og:image:alt" content="Serverless Architecture Introduction Serverless computing represents a fundamental shift in how we think about infrastructure."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/Architecture/07_serverless_architecture"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/Architecture/07_serverless_architecture"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Serverless Architecture Introduction Serverless computing represents a fundamental shift in how we think about infrastructure."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/Architecture/07_serverless_architecture"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-34"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-34" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/Architecture/">Architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>07_serverless_architecture</a></div></nav><h1 class="article-title">07_serverless_architecture</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.362Z">Jun 20, 2026</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="serverless-architecture">Serverless Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#serverless-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="introduction">Introduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#introduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Serverless computing represents a fundamental shift in how we think about
+infrastructure. The name is misleading — servers still exist, but you never see
+them, manage them, patch them, or scale them. You write functions or configure
+services, and the cloud provider handles everything else: provisioning, scaling,
+high availability, and capacity planning. You pay only for what you use, down to
+the millisecond.</p>
+<p>But serverless is not a silver bullet. It introduces new constraints: cold starts,
+execution time limits, vendor lock-in, and debugging complexity. Understanding when
+serverless is the right choice — and when it is not — requires grasping how it
+works under the hood. This document covers serverless architecture from Lambda
+internals through event-driven patterns, orchestration, and cost modeling.</p>
+<hr/>
+<h2 id="what-serverless-really-means">What Serverless Really Means<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-serverless-really-means" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Serverless has three defining characteristics:</p>
+<ol>
+<li>
+<p><strong>No server management</strong>: You do not provision, patch, or scale servers. The
+provider handles infrastructure entirely.</p>
+</li>
+<li>
+<p><strong>Pay-per-invocation</strong>: You are charged only when your code runs. Zero requests
+means zero cost. This is fundamentally different from paying for an EC2 instance
+24/7 whether it receives traffic or not.</p>
+</li>
+<li>
+<p><strong>Auto-scaling to zero</strong>: When there is no demand, serverless resources scale
+down completely. When demand spikes, they scale up automatically (to account
+limits).</p>
+</li>
+</ol>
+<h3 id="the-serverless-spectrum">The Serverless Spectrum<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-serverless-spectrum" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Not all serverless services are equal in how fully they embody these principles:</p>
+<pre><code>Fully Serverless                              Serverless-ish
+(no servers, pay-per-use, scale to zero)      (managed, but some config)
+│                                              │
+├── Lambda                                     ├── Aurora Serverless v2
+├── API Gateway                                ├── ECS Fargate
+├── DynamoDB (on-demand)                       ├── OpenSearch Serverless
+├── S3                                         ├── MSK Serverless
+├── SQS / SNS                                 ├── ElastiCache Serverless
+├── EventBridge                                │
+├── Step Functions                             │
+└── AppSync                                    │
+</code></pre>
+<hr/>
+<h2 id="aws-lambda-internals">AWS Lambda Internals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-lambda-internals" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="execution-environment">Execution Environment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#execution-environment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When Lambda receives an invocation, it creates (or reuses) an execution
+environment — a lightweight, isolated container that runs your function code.</p>
+<pre><code>Invocation Request
+        │
+        ▼
+┌──────────────────────────────────────────────┐
+│            Lambda Service                     │
+│                                              │
+│   Is there a warm execution environment?     │
+│   ├── YES → Route request to warm env (FAST) │
+│   └── NO  → Create new environment (COLD)    │
+│                                              │
+│   ┌────────────────────────────────────────┐  │
+│   │        Execution Environment           │  │
+│   │  ┌──────────────────────────────────┐  │  │
+│   │  │  Runtime (Python, Node, Java...) │  │  │
+│   │  │  ┌────────────────────────────┐  │  │  │
+│   │  │  │    Your Function Code      │  │  │  │
+│   │  │  │    + Dependencies          │  │  │  │
+│   │  │  └────────────────────────────┘  │  │  │
+│   │  └──────────────────────────────────┘  │  │
+│   │  ┌────────┐ ┌──────┐ ┌────────────┐   │  │
+│   │  │ /tmp   │ │ RAM  │ │ CPU alloc. │   │  │
+│   │  │ 10 GB  │ │      │ │ (prop. to  │   │  │
+│   │  │ ephm.  │ │      │ │  memory)   │   │  │
+│   │  └────────┘ └──────┘ └────────────┘   │  │
+│   └────────────────────────────────────────┘  │
+└──────────────────────────────────────────────┘
+</code></pre>
+<h3 id="the-cold-start-problem">The Cold Start Problem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-cold-start-problem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A cold start occurs when Lambda creates a new execution environment. This involves:</p>
+<ol>
+<li><strong>Downloading your code</strong> (from S3 or ECR for container images)</li>
+<li><strong>Initializing the runtime</strong> (starting the Python/Node/Java interpreter)</li>
+<li><strong>Running your initialization code</strong> (outside the handler: imports, DB connections)</li>
+<li><strong>Executing the handler</strong> (your actual function logic)</li>
+</ol>
+<pre><code>Cold Start Timeline:
+├── Download code ──────── ~50-200ms (zip) / ~500ms+ (container)
+├── Init runtime ─────── ~10-100ms
+├── Init code (imports) ── ~100-2000ms (depends on your code)
+├── Handler execution ──── your code
+│
+│   Total cold start: ~200ms (Python, small) to ~5-10s (Java, large)
+
+Warm Start Timeline:
+├── Handler execution ──── your code only
+│
+│   No init overhead: ~1-2ms added latency
+</code></pre>
+<h3 id="strategies-to-minimize-cold-starts">Strategies to Minimize Cold Starts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#strategies-to-minimize-cold-starts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. Provisioned Concurrency</strong>: Keep a specified number of environments warm at
+all times. You pay for the warm environments even when idle, but there are no cold
+starts for those instances.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Set provisioned concurrency</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> lambda</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-provisioned-concurrency-config</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --function-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> my-api-handler</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --qualifier</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --provisioned-concurrent-executions</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 50</span></span></code></pre></figure>
+<p><strong>2. Minimize deployment package size</strong>: Smaller packages download faster. Use
+Lambda Layers for shared dependencies. Tree-shake unused code.</p>
+<p><strong>3. Choose efficient runtimes</strong>: Python and Node.js have the fastest cold starts
+(~200ms). Java and .NET have the slowest (~2-5s) but can be improved with GraalVM
+native-image or .NET AOT compilation.</p>
+<p><strong>4. Keep initialization outside the handler</strong>: Database connections, SDK clients,
+and configuration loaded during init persist across warm invocations.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> boto3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> os</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># INIT PHASE: runs once per cold start, persists across warm invocations</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">dynamodb </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> boto3.resource(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'dynamodb'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">table </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> dynamodb.Table(os.environ[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'TABLE_NAME'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">])</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> handler</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(event, context):</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    # HANDLER PHASE: runs on every invocation</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">    # 'table' is already initialized from the init phase</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    response </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> table.get_item(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">Key</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'id'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: event[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'id'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]})</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        'statusCode'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">200</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        'body'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: response[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'Item'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span></code></pre></figure>
+<h3 id="lambda-layers">Lambda Layers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lambda-layers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Layers let you package shared code and dependencies separately from your function
+code. A function can use up to 5 layers. The total unzipped size (function +
+layers) must be under 250 MB.</p>
+<pre><code>Function Code (small, changes often)
+├── handler.py
+│
+Layer 1: Common utilities (changes rarely)
+├── utils/
+│   ├── auth.py
+│   └── validators.py
+│
+Layer 2: Heavy dependencies (changes rarely)
+├── numpy/
+├── pandas/
+└── scipy/
+</code></pre>
+<h3 id="lambda-container-image-support">Lambda Container Image Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lambda-container-image-support" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Instead of zip packages, you can deploy Lambda functions as container images up to
+10 GB. This is useful for ML inference, where model files can be large.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dockerfile" data-theme="github-light github-dark"><code data-language="dockerfile" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> public.ecr.aws/lambda/python:3.12</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">COPY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> requirements.txt .</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">RUN</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> pip install -r requirements.txt</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">COPY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> model/ /opt/model/</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">COPY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> app.py .</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">CMD</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;app.handler&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]</span></span></code></pre></figure>
+<hr/>
+<h2 id="event-sources">Event Sources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#event-sources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Lambda is event-driven. It responds to events from dozens of AWS services:</p>
+<h3 id="synchronous-invocation">Synchronous Invocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#synchronous-invocation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The caller waits for Lambda to complete and return a response.</p>
+<pre><code>API Gateway ──► Lambda ──► Response (to client)
+ALB ──────────► Lambda ──► Response (to client)
+</code></pre>
+<h3 id="asynchronous-invocation">Asynchronous Invocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#asynchronous-invocation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The event is queued. Lambda processes it and retries on failure (up to 2 retries).
+You can configure a dead-letter queue (SQS/SNS) for failed events.</p>
+<pre><code>S3 Event ──────► Lambda Event Queue ──► Lambda
+SNS ──────────► Lambda Event Queue ──► Lambda
+EventBridge ──► Lambda Event Queue ──► Lambda
+</code></pre>
+<h3 id="poll-based-streamqueue">Poll-Based (Stream/Queue)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#poll-based-streamqueue" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Lambda polls the source for new records, processes them in batches.</p>
+<pre><code>SQS Queue ◄──── Lambda (polls every ~1s)
+DynamoDB Stream ◄──── Lambda (polls for new records)
+Kinesis Stream ◄──── Lambda (polls shards)
+</code></pre>
+<h3 id="event-source-architecture">Event Source Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#event-source-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                    EVENT SOURCES                             │
+│                                                              │
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐             │
+│  │ API Gateway│  │    S3      │  │  DynamoDB   │             │
+│  │ (sync)     │  │ (async)    │  │  Streams    │             │
+│  └─────┬──────┘  └─────┬──────┘  └──────┬──────┘            │
+│        │               │               │                    │
+│  ┌─────┴──────┐  ┌─────┴──────┐  ┌──────┴──────┐            │
+│  │  SQS       │  │EventBridge │  │  Kinesis    │            │
+│  │ (poll)     │  │ (async)    │  │  (poll)     │            │
+│  └─────┬──────┘  └─────┬──────┘  └──────┬──────┘            │
+│        │               │               │                    │
+│        └───────────┬────┴───────────────┘                    │
+│                    ▼                                         │
+│              ┌───────────┐                                   │
+│              │  Lambda   │                                   │
+│              │ Function  │                                   │
+│              └───────────┘                                   │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr/>
+<h2 id="api-gateway">API Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#api-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="rest-api-vs-http-api">REST API vs HTTP API<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rest-api-vs-http-api" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>REST API</th><th>HTTP API</th></tr></thead><tbody><tr><td>Price (per million)</td><td>$3.50</td><td>$1.00</td></tr><tr><td>Latency</td><td>Higher</td><td>~60% lower</td></tr><tr><td>Caching</td><td>Built-in</td><td>No</td></tr><tr><td>WAF integration</td><td>Yes</td><td>No</td></tr><tr><td>Usage plans/API keys</td><td>Yes</td><td>No</td></tr><tr><td>Request validation</td><td>Yes</td><td>No</td></tr><tr><td>OpenAPI import/export</td><td>Yes</td><td>Yes</td></tr><tr><td>JWT authorizer</td><td>Custom Lambda</td><td>Built-in</td></tr><tr><td>WebSocket</td><td>Yes</td><td>No</td></tr></tbody></table></div>
+<p><strong>Default choice</strong>: HTTP API (cheaper, faster). Use REST API when you need caching,
+WAF, request validation, or usage plans.</p>
+<hr/>
+<h2 id="step-functions-for-orchestration">Step Functions for Orchestration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-functions-for-orchestration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-are-step-functions">What Are Step Functions?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-are-step-functions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Step Functions let you coordinate multiple Lambda functions (and other AWS services)
+into serverless workflows using a visual state machine. Instead of writing
+orchestration logic in code (error handling, retries, parallel execution, branching),
+you define it declaratively.</p>
+<h3 id="workflow-example-order-processing">Workflow Example: Order Processing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workflow-example-order-processing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────┐    ┌──────────┐    ┌──────────┐
+│ Validate│───►│ Check    │───►│ Process  │
+│ Order   │    │ Inventory│    │ Payment  │
+└─────────┘    └────┬─────┘    └────┬─────┘
+                    │               │
+              ┌─────┴──────┐   ┌────┴─────┐
+              │ Out of     │   │ Payment  │
+              │ Stock?     │   │ Failed?  │
+              └─────┬──────┘   └────┬─────┘
+                    │YES            │YES
+                    ▼               ▼
+              ┌──────────┐   ┌──────────┐
+              │ Notify   │   │ Retry    │
+              │ Customer │   │ (3x)    │
+              │ (email)  │   │ then     │
+              └──────────┘   │ Cancel   │
+                             └──────────┘
+
+                    │NO
+                    ▼
+              ┌──────────────────┐
+              │  Parallel:       │
+              │  ├── Ship Order  │
+              │  ├── Send Email  │
+              │  └── Update DB   │
+              └──────────────────┘
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;Comment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Order Processing Workflow&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;StartAt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;ValidateOrder&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;States&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;ValidateOrder&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Task&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;arn:aws:lambda:us-east-1:123456789012:function:validate-order&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Next&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;CheckInventory&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Retry&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;ErrorEquals&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;States.TaskFailed&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">], </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;MaxAttempts&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;CheckInventory&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Task&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;arn:aws:lambda:us-east-1:123456789012:function:check-inventory&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Next&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;InStock?&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;InStock?&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Choice&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Choices&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Variable&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;$.inStock&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;BooleanEquals&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Next&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;ProcessPayment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      ],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Default&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;NotifyOutOfStock&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;ProcessPayment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Task&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;arn:aws:lambda:us-east-1:123456789012:function:process-payment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Next&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;FulfillOrder&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;FulfillOrder&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Parallel&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Branches&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;StartAt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;ShipOrder&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;States&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;ShipOrder&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Task&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;End&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}}},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;StartAt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;SendConfirmation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;States&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;SendConfirmation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Task&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;End&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}}}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      ],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;End&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;NotifyOutOfStock&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Task&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;arn:aws:lambda:us-east-1:123456789012:function:notify-customer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;End&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<h3 id="express-vs-standard-workflows">Express vs Standard Workflows<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#express-vs-standard-workflows" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Standard</th><th>Express</th></tr></thead><tbody><tr><td>Duration</td><td>Up to 1 year</td><td>Up to 5 minutes</td></tr><tr><td>Execution model</td><td>Exactly-once</td><td>At-least-once</td></tr><tr><td>Price</td><td>Per state transition</td><td>Per execution + duration</td></tr><tr><td>Audit history</td><td>Full execution history</td><td>CloudWatch Logs only</td></tr><tr><td>Use case</td><td>Long-running workflows</td><td>High-volume, short flows</td></tr></tbody></table></div>
+<hr/>
+<h2 id="serverless-patterns">Serverless Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#serverless-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pattern-1-api-backend">Pattern 1: API Backend<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-1-api-backend" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Client ──► API Gateway ──► Lambda ──► DynamoDB
+                │
+                └──► Lambda Authorizer (JWT validation)
+</code></pre>
+<h3 id="pattern-2-event-processing-pipeline">Pattern 2: Event Processing Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-2-event-processing-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>S3 Upload ──► Lambda ──► Process ──► DynamoDB
+    │                                    │
+    │                              EventBridge ──► Lambda ──► SNS
+    │                                                        (notify)
+    └──► SQS (DLQ for failures)
+</code></pre>
+<h3 id="pattern-3-scheduled-jobs">Pattern 3: Scheduled Jobs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-3-scheduled-jobs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>EventBridge Rule ──► Lambda (every 5 min)
+(cron: 0/5 * * * *)    │
+                        ├── Check for stale records
+                        ├── Generate reports
+                        └── Sync external API
+</code></pre>
+<h3 id="pattern-4-fan-out--fan-in">Pattern 4: Fan-Out / Fan-In<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-4-fan-out--fan-in" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Input ──► Lambda ──► SNS Topic ──► SQS Queue 1 ──► Lambda (process A)
+                              ──► SQS Queue 2 ──► Lambda (process B)
+                              ──► SQS Queue 3 ──► Lambda (process C)
+                                                        │
+                                                        ▼
+                                                   DynamoDB (aggregate)
+</code></pre>
+<h3 id="pattern-5-saga-pattern-for-distributed-transactions">Pattern 5: Saga Pattern for Distributed Transactions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-5-saga-pattern-for-distributed-transactions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When a workflow spans multiple services and any step can fail, the saga pattern
+provides compensating transactions:</p>
+<pre><code>Step Functions Saga:
+1. Reserve Inventory  ──► Success
+2. Process Payment    ──► Success
+3. Book Shipping      ──► FAILURE
+   │
+   ▼ Compensate:
+3c. Cancel Shipping   ──► (no-op, booking failed)
+2c. Refund Payment    ──► Success
+1c. Release Inventory ──► Success
+</code></pre>
+<hr/>
+<h2 id="lambdaedge-and-cloudfront-functions">Lambda@Edge and CloudFront Functions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lambdaedge-and-cloudfront-functions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="lambdaedge">Lambda@Edge<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lambdaedge" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Run Lambda functions at CloudFront edge locations. Four trigger points:</p>
+<pre><code>Client ──► CloudFront ──────────────────────────────► Origin
+           │                                    │
+      ┌────┴────┐                          ┌────┴────┐
+      │ Viewer  │                          │ Origin  │
+      │ Request │                          │ Request │
+      └─────────┘                          └─────────┘
+      ┌─────────┐                          ┌─────────┐
+      │ Viewer  │                          │ Origin  │
+      │ Response│                          │ Response│
+      └────┬────┘                          └────┬────┘
+           │                                    │
+Client ◄───┘                               Origin
+</code></pre>
+<p>Use cases:</p>
+<ul>
+<li>URL rewriting (A/B testing, feature flags)</li>
+<li>Authentication at the edge</li>
+<li>Dynamic content generation (SSR)</li>
+<li>Header manipulation (security headers, CORS)</li>
+<li>Geographic content customization</li>
+</ul>
+<h3 id="cloudfront-functions">CloudFront Functions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudfront-functions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Even lighter than Lambda@Edge: run JavaScript functions in under 1 ms at every
+CloudFront edge location. Limited to viewer request/response events.</p>
+<p>Use cases: URL redirects, header manipulation, cache key normalization, simple
+A/B testing.</p>
+<hr/>
+<h2 id="limitations-and-anti-patterns">Limitations and Anti-Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#limitations-and-anti-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="lambda-limits">Lambda Limits<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lambda-limits" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Limit</th><th>Value</th></tr></thead><tbody><tr><td>Max execution time</td><td>15 minutes</td></tr><tr><td>Memory</td><td>128 MB - 10,240 MB</td></tr><tr><td>Deployment package (zip)</td><td>50 MB (250 MB unzipped)</td></tr><tr><td>Container image</td><td>10 GB</td></tr><tr><td>/tmp storage</td><td>512 MB - 10 GB</td></tr><tr><td>Concurrent executions</td><td>1,000 (default, can increase)</td></tr><tr><td>Payload (sync invocation)</td><td>6 MB</td></tr><tr><td>Payload (async invocation)</td><td>256 KB</td></tr><tr><td>Environment variables</td><td>4 KB total</td></tr></tbody></table></div>
+<h3 id="anti-patterns">Anti-Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#anti-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>1. Long-running processes</strong>: If your function regularly hits the 15-minute limit,
+use ECS Fargate or Step Functions to orchestrate shorter Lambda functions.</p>
+<p><strong>2. Monolithic Lambda</strong>: A single 200 MB Lambda that handles all API routes. Break
+it into focused, single-purpose functions.</p>
+<p><strong>3. Synchronous chains</strong>: Lambda A calls Lambda B calls Lambda C synchronously.
+If B is slow, A times out. Use SQS/SNS/Step Functions for decoupling.</p>
+<p><strong>4. Relational databases without connection pooling</strong>: Each Lambda invocation opens
+a new database connection. At 1,000 concurrent invocations, you have 1,000 database
+connections. Use RDS Proxy to pool connections.</p>
+<pre><code>Without RDS Proxy:                    With RDS Proxy:
+1000 Lambda instances                 1000 Lambda instances
+     │                                     │
+     ├── 1000 DB connections               ├── 1000 connections to Proxy
+     │   (database overwhelmed)            │   (Proxy pools ~50 to DB)
+     ▼                                     ▼
+   RDS (max_connections exceeded)        RDS Proxy ──► RDS (healthy)
+</code></pre>
+<hr/>
+<h2 id="cost-modeling">Cost Modeling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-modeling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="when-serverless-is-cheaper">When Serverless Is Cheaper<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-serverless-is-cheaper" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Lambda pricing: <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">0.20</span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.02778em;">er</span><span class="mord mathnormal">mi</span><span class="mord mathnormal" style="margin-right:0.01968em;">ll</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">re</span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal">u</span><span class="mord mathnormal">es</span><span class="mord mathnormal">t</span><span class="mord mathnormal">s</span><span class="mord">+</span></span></span></span>0.0000166667 per GB-second.</p>
+<p>For a function with 256 MB memory running for 200ms:</p>
+<ul>
+<li>Cost per invocation: <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.0000008333</span><span class="mopen">(</span><span class="mord mathnormal">co</span><span class="mord mathnormal">m</span><span class="mord mathnormal">p</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">e</span><span class="mclose">)</span><span class="mord">+</span></span></span></span>0.0000002 (request) = ~$0.000001</li>
+<li>1 million invocations/month: ~$1.05</li>
+</ul>
+<p>The same workload on a t3.micro EC2 instance (always-on): ~$7.60/month.</p>
+<p><strong>Lambda wins</strong> when:</p>
+<ul>
+<li>Traffic is spiky or unpredictable</li>
+<li>Average utilization of an equivalent server would be &lt; 15-20%</li>
+<li>The workload naturally decomposes into short-lived functions</li>
+<li>You value zero operational overhead</li>
+</ul>
+<p><strong>EC2/Fargate wins</strong> when:</p>
+<ul>
+<li>Traffic is steady and predictable</li>
+<li>Functions run for several minutes</li>
+<li>High and consistent request volume (millions per hour)</li>
+<li>You need long-running processes, WebSockets, or specialized runtimes</li>
+</ul>
+<h3 id="cost-comparison-table">Cost Comparison Table<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-comparison-table" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Requests/month    Lambda (256MB, 200ms)    t3.medium (always-on)
+───────────────   ─────────────────────    ─────────────────────
+100K              $0.11                    $30.37
+1M                $1.05                    $30.37
+10M               $10.50                   $30.37
+50M               $52.50                   $30.37    ← breakeven zone
+100M              $105.00                  $30.37
+500M              $525.00                  $30.37
+</code></pre>
+<p>At ~30-50 million requests per month with steady traffic, EC2 becomes cheaper.
+But this ignores operational cost: patching, monitoring, scaling, availability
+engineering. For many teams, the operational simplicity of Lambda justifies a
+higher compute cost.</p>
+<hr/>
+<h2 id="serverless-web-application-architecture">Serverless Web Application Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#serverless-web-application-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                    SERVERLESS WEB APP                        │
+│                                                              │
+│  ┌─────────┐     ┌───────────┐     ┌──────────┐             │
+│  │CloudFron│────►│ S3 Bucket │     │ Cognito  │             │
+│  │  (CDN)  │     │ (static   │     │ (auth)   │             │
+│  │         │     │  assets)  │     │          │             │
+│  └────┬────┘     └───────────┘     └────┬─────┘             │
+│       │                                 │                    │
+│       │          ┌───────────┐          │                    │
+│       └─────────►│ API GW    │◄─────────┘ (JWT validation)  │
+│                  │ (HTTP API)│                                │
+│                  └─────┬─────┘                               │
+│            ┌───────────┼───────────┐                         │
+│            ▼           ▼           ▼                         │
+│       ┌────────┐  ┌────────┐  ┌────────┐                    │
+│       │Lambda  │  │Lambda  │  │Lambda  │                    │
+│       │GET /   │  │POST /  │  │PUT /   │                    │
+│       │users   │  │orders  │  │orders  │                    │
+│       └───┬────┘  └───┬────┘  └───┬────┘                    │
+│           │           │           │                          │
+│           ▼           ▼           ▼                          │
+│       ┌──────────────────────────────┐                       │
+│       │         DynamoDB             │                       │
+│       │    (users, orders tables)    │                       │
+│       └──────────────────────────────┘                       │
+│                                                              │
+│  Async Processing:                                           │
+│  DynamoDB Stream ──► Lambda ──► SES (email)                  │
+│                            ──► SQS ──► Lambda (analytics)    │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr/>
+<h2 id="practical-takeaways">Practical Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#practical-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Start serverless</strong> for new projects. It is faster to build, cheaper to run at
+low scale, and eliminates operational overhead. Migrate to containers only when
+you hit actual limitations.</p>
+</li>
+<li>
+<p><strong>Design for cold starts.</strong> Keep packages small, use efficient runtimes, initialize
+connections outside the handler. Use provisioned concurrency for latency-sensitive
+paths.</p>
+</li>
+<li>
+<p><strong>Use SQS between components</strong>, not synchronous Lambda-to-Lambda calls. SQS
+provides buffering, retry, and dead-letter queues.</p>
+</li>
+<li>
+<p><strong>Use RDS Proxy</strong> if you must connect Lambda to a relational database. Without it,
+connection exhaustion is inevitable at scale.</p>
+</li>
+<li>
+<p><strong>Prefer Step Functions</strong> over orchestration-in-code. They provide built-in retry,
+error handling, parallel execution, and visual debugging.</p>
+</li>
+<li>
+<p><strong>Set concurrency limits</strong> per function to prevent a traffic spike in one function
+from consuming your account’s entire concurrency pool.</p>
+</li>
+<li>
+<p><strong>Use EventBridge</strong> as your default event bus. It supports content-based filtering,
+schema discovery, archive and replay, and integrates with 100+ AWS services.</p>
+</li>
+<li>
+<p><strong>Monitor with X-Ray.</strong> Distributed tracing across API Gateway, Lambda, DynamoDB,
+and other services is essential for debugging serverless architectures.</p>
+</li>
+</ol>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="event-queues-fifo-queues--sqs-as-a-bounded-buffer-between-lambda-functions">Event Queues (FIFO Queues) — SQS as a Bounded Buffer Between Lambda Functions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#event-queues-fifo-queues--sqs-as-a-bounded-buffer-between-lambda-functions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A queue is a first-in-first-out (FIFO) data structure that decouples producers from consumers, enabling asynchronous processing. SQS is a distributed implementation of the classic bounded-buffer (producer-consumer) pattern from concurrent programming: one Lambda function produces messages, SQS buffers them, and another Lambda function consumes them. The bounded-buffer problem requires synchronization to prevent producers from overwhelming consumers — SQS handles this with visibility timeouts (a consumed message is hidden until acknowledged or the timeout expires, preventing double-processing) and dead-letter queues (messages that fail N times are moved aside, preventing poison-pill messages from blocking the queue). When Lambda polls SQS, it operates as a consumer thread pool that scales up to match the queue depth, processing up to 10 messages per batch. This pattern is why the document recommends SQS between components rather than synchronous Lambda-to-Lambda calls: the queue absorbs traffic spikes, provides backpressure, and guarantees at-least-once delivery — all properties of a well-implemented bounded buffer.</p>
+<h3 id="topological-sort--step-functions-workflow-execution-order">Topological Sort — Step Functions Workflow Execution Order<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#topological-sort--step-functions-workflow-execution-order" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Topological sort orders the nodes of a directed acyclic graph (DAG) so that for every directed edge from node A to node B, A appears before B in the ordering. Step Functions workflows are DAGs: each state (Task, Choice, Parallel) is a node, and transitions are directed edges. When the Step Functions engine executes a workflow, it performs a topological sort to determine the valid execution order, ensuring that no state runs before its dependencies have completed. The <code>Parallel</code> state type introduces concurrent branches that are independent subgraphs within the DAG, each of which can be topologically sorted independently. The Saga pattern for distributed transactions (ValidateOrder <span>→</span> CheckInventory <span>→</span> ProcessPayment <span>→</span> FulfillOrder, with compensating rollbacks) is a linear topological order with reverse-order compensation edges. If you model the order processing workflow from the document as a graph, the Step Functions engine ensures that <code>ProcessPayment</code> never executes before <code>CheckInventory</code> completes, exactly as topological sort guarantees.</p>
+<h3 id="producer-consumer-pattern--asynchronous-lambda-invocation-and-fan-outfan-in">Producer-Consumer Pattern — Asynchronous Lambda Invocation and Fan-Out/Fan-In<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#producer-consumer-pattern--asynchronous-lambda-invocation-and-fan-outfan-in" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The producer-consumer pattern uses a shared buffer to decouple the rate at which work is produced from the rate at which it is consumed, allowing independent scaling of each side. The serverless fan-out/fan-in pattern in the document (SNS Topic <span>→</span> multiple SQS Queues <span>→</span> multiple Lambda consumers <span>→</span> DynamoDB aggregation) is a multi-consumer variant: one producer publishes to an SNS topic, which fans out to N SQS queues (each a separate bounded buffer), each consumed by independent Lambda functions. The fan-in step, where results aggregate into DynamoDB, acts as a barrier synchronization point. This maps directly to the MapReduce paradigm: SNS fan-out is the “map” phase distributing work, individual Lambda consumers process their partition, and DynamoDB aggregation is the “reduce” phase. The practical benefit is that each consumer scales independently based on its queue depth, and a slow consumer does not block fast ones — achieving the same decoupling that the bounded-buffer pattern provides in concurrent programming.</p>
+<h3 id="hash-maps--lambda-execution-environment-warm-pool-management">Hash Maps — Lambda Execution Environment Warm Pool Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hash-maps--lambda-execution-environment-warm-pool-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A hash map provides O(1) average-case lookups by key, making it the ideal structure for routing requests to pre-existing resources. The Lambda service internally maintains a mapping from (function ARN + configuration hash) to available warm execution environments. When an invocation arrives, the Lambda control plane hashes the function identifier and checks whether a warm environment exists — a cache hit means a warm start (sub-millisecond overhead), while a cache miss triggers a cold start (environment creation). Provisioned concurrency pre-populates this map with a guaranteed number of warm entries, eliminating cold starts for those slots. The strategy of initializing database connections and SDK clients outside the handler exploits the fact that warm environments persist in this pool: once an environment is created and its init phase completes, subsequent invocations that hash to the same environment reuse the already-initialized connections, exactly as a cache hit returns a precomputed value without re-deriving it.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-23" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#serverless-architecture" data-for="serverless-architecture">Serverless Architecture</a></li><li class="depth-1"><a href="#introduction" data-for="introduction">Introduction</a></li><li class="depth-1"><a href="#what-serverless-really-means" data-for="what-serverless-really-means">What Serverless Really Means</a></li><li class="depth-2"><a href="#the-serverless-spectrum" data-for="the-serverless-spectrum">The Serverless Spectrum</a></li><li class="depth-1"><a href="#aws-lambda-internals" data-for="aws-lambda-internals">AWS Lambda Internals</a></li><li class="depth-2"><a href="#execution-environment" data-for="execution-environment">Execution Environment</a></li><li class="depth-2"><a href="#the-cold-start-problem" data-for="the-cold-start-problem">The Cold Start Problem</a></li><li class="depth-2"><a href="#strategies-to-minimize-cold-starts" data-for="strategies-to-minimize-cold-starts">Strategies to Minimize Cold Starts</a></li><li class="depth-2"><a href="#lambda-layers" data-for="lambda-layers">Lambda Layers</a></li><li class="depth-2"><a href="#lambda-container-image-support" data-for="lambda-container-image-support">Lambda Container Image Support</a></li><li class="depth-1"><a href="#event-sources" data-for="event-sources">Event Sources</a></li><li class="depth-2"><a href="#synchronous-invocation" data-for="synchronous-invocation">Synchronous Invocation</a></li><li class="depth-2"><a href="#asynchronous-invocation" data-for="asynchronous-invocation">Asynchronous Invocation</a></li><li class="depth-2"><a href="#poll-based-streamqueue" data-for="poll-based-streamqueue">Poll-Based (Stream/Queue)</a></li><li class="depth-2"><a href="#event-source-architecture" data-for="event-source-architecture">Event Source Architecture</a></li><li class="depth-1"><a href="#api-gateway" data-for="api-gateway">API Gateway</a></li><li class="depth-2"><a href="#rest-api-vs-http-api" data-for="rest-api-vs-http-api">REST API vs HTTP API</a></li><li class="depth-1"><a href="#step-functions-for-orchestration" data-for="step-functions-for-orchestration">Step Functions for Orchestration</a></li><li class="depth-2"><a href="#what-are-step-functions" data-for="what-are-step-functions">What Are Step Functions?</a></li><li class="depth-2"><a href="#workflow-example-order-processing" data-for="workflow-example-order-processing">Workflow Example: Order Processing</a></li><li class="depth-2"><a href="#express-vs-standard-workflows" data-for="express-vs-standard-workflows">Express vs Standard Workflows</a></li><li class="depth-1"><a href="#serverless-patterns" data-for="serverless-patterns">Serverless Patterns</a></li><li class="depth-2"><a href="#pattern-1-api-backend" data-for="pattern-1-api-backend">Pattern 1: API Backend</a></li><li class="depth-2"><a href="#pattern-2-event-processing-pipeline" data-for="pattern-2-event-processing-pipeline">Pattern 2: Event Processing Pipeline</a></li><li class="depth-2"><a href="#pattern-3-scheduled-jobs" data-for="pattern-3-scheduled-jobs">Pattern 3: Scheduled Jobs</a></li><li class="depth-2"><a href="#pattern-4-fan-out--fan-in" data-for="pattern-4-fan-out--fan-in">Pattern 4: Fan-Out / Fan-In</a></li><li class="depth-2"><a href="#pattern-5-saga-pattern-for-distributed-transactions" data-for="pattern-5-saga-pattern-for-distributed-transactions">Pattern 5: Saga Pattern for Distributed Transactions</a></li><li class="depth-1"><a href="#lambdaedge-and-cloudfront-functions" data-for="lambdaedge-and-cloudfront-functions">Lambda@Edge and CloudFront Functions</a></li><li class="depth-2"><a href="#lambdaedge" data-for="lambdaedge">Lambda@Edge</a></li><li class="depth-2"><a href="#cloudfront-functions" data-for="cloudfront-functions">CloudFront Functions</a></li><li class="depth-1"><a href="#limitations-and-anti-patterns" data-for="limitations-and-anti-patterns">Limitations and Anti-Patterns</a></li><li class="depth-2"><a href="#lambda-limits" data-for="lambda-limits">Lambda Limits</a></li><li class="depth-2"><a href="#anti-patterns" data-for="anti-patterns">Anti-Patterns</a></li><li class="depth-1"><a href="#cost-modeling" data-for="cost-modeling">Cost Modeling</a></li><li class="depth-2"><a href="#when-serverless-is-cheaper" data-for="when-serverless-is-cheaper">When Serverless Is Cheaper</a></li><li class="depth-2"><a href="#cost-comparison-table" data-for="cost-comparison-table">Cost Comparison Table</a></li><li class="depth-1"><a href="#serverless-web-application-architecture" data-for="serverless-web-application-architecture">Serverless Web Application Architecture</a></li><li class="depth-1"><a href="#practical-takeaways" data-for="practical-takeaways">Practical Takeaways</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#event-queues-fifo-queues--sqs-as-a-bounded-buffer-between-lambda-functions" data-for="event-queues-fifo-queues--sqs-as-a-bounded-buffer-between-lambda-functions">Event Queues (FIFO Queues) — SQS as a Bounded Buffer Between Lambda Functions</a></li><li class="depth-2"><a href="#topological-sort--step-functions-workflow-execution-order" data-for="topological-sort--step-functions-workflow-execution-order">Topological Sort — Step Functions Workflow Execution Order</a></li><li class="depth-2"><a href="#producer-consumer-pattern--asynchronous-lambda-invocation-and-fan-outfan-in" data-for="producer-consumer-pattern--asynchronous-lambda-invocation-and-fan-outfan-in">Producer-Consumer Pattern — Asynchronous Lambda Invocation and Fan-Out/Fan-In</a></li><li class="depth-2"><a href="#hash-maps--lambda-execution-environment-warm-pool-management" data-for="hash-maps--lambda-execution-environment-warm-pool-management">Hash Maps — Lambda Execution Environment Warm Pool Management</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>03_storage_architecture</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="03_storage_architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="03_storage_architecture"/><meta name="twitter:description" content="Cloud Storage Architecture Introduction Storage is one of the three foundational pillars of cloud computing alongside compute and networking."/><meta property="og:description" content="Cloud Storage Architecture Introduction Storage is one of the three foundational pillars of cloud computing alongside compute and networking."/><meta property="og:image:alt" content="Cloud Storage Architecture Introduction Storage is one of the three foundational pillars of cloud computing alongside compute and networking."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/Architecture/03_storage_architecture"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/Architecture/03_storage_architecture"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Cloud Storage Architecture Introduction Storage is one of the three foundational pillars of cloud computing alongside compute and networking."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/Architecture/03_storage_architecture"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-30"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-30" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/Architecture/">Architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>03_storage_architecture</a></div></nav><h1 class="article-title">03_storage_architecture</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.354Z">Jun 20, 2026</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="cloud-storage-architecture">Cloud Storage Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-storage-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="introduction">Introduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#introduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Storage is one of the three foundational pillars of cloud computing alongside compute
+and networking. Unlike compute, which is transient — instances come and go — storage
+is where your data lives, persists, and must be protected. Choosing the wrong storage
+type, tier, or replication strategy can mean the difference between a system that
+handles petabytes gracefully and one that bleeds money or loses data.</p>
+<p>Cloud storage divides into three fundamental categories: <strong>block storage</strong> (raw disk
+volumes), <strong>file storage</strong> (shared file systems with POSIX semantics), and <strong>object
+storage</strong> (flat namespace for unstructured data). Each exists because no single storage
+paradigm optimally serves all workloads. This document covers all three in depth,
+including internal architectures, performance characteristics, cost optimization
+strategies, and decision frameworks.</p>
+<hr/>
+<h2 id="storage-type-overview">Storage Type Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#storage-type-overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│                   CLOUD STORAGE TYPES                    │
+├──────────────┬──────────────────┬─────────────────────── ┤
+│  BLOCK       │  FILE            │  OBJECT                │
+│  (EBS)       │  (EFS, FSx)      │  (S3)                  │
+│              │                  │                        │
+│  ┌────────┐  │  ┌────────────┐  │  ┌────────────┐        │
+│  │ Volume │  │  │ Shared FS  │  │  │  Bucket    │        │
+│  │ ┌────┐ │  │  │ ┌────┐    │  │  │ ┌────────┐ │        │
+│  │ │Blk │ │  │  │ │File│    │  │  │ │ Object │ │        │
+│  │ │Blk │ │  │  │ │File│    │  │  │ │ Object │ │        │
+│  │ │Blk │ │  │  │ │Dir/│    │  │  │ │ Object │ │        │
+│  │ └────┘ │  │  │ └────┘    │  │  │ └────────┘ │        │
+│  └────────┘  │  └────────────┘  │  └────────────┘        │
+│              │                  │                        │
+│  Attached to │  Mounted by many │  Accessed via HTTP     │
+│  one instance│  instances       │  API (PUT/GET/DELETE)  │
+│  (like a HD) │  (like NFS)      │  (like a key-value)    │
+└──────────────┴──────────────────┴────────────────────────┘
+</code></pre>
+<hr/>
+<h2 id="block-storage-amazon-ebs">Block Storage: Amazon EBS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#block-storage-amazon-ebs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-is-ebs">What Is EBS?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-ebs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Elastic Block Store provides persistent block-level storage volumes that attach to
+EC2 instances over the network. An EBS volume appears as a raw block device to the
+operating system — you format it with a filesystem (ext4, XFS) and mount it. EBS
+volumes persist independently of the instance lifecycle.</p>
+<h3 id="ebs-volume-types">EBS Volume Types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ebs-volume-types" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Type</th><th>Name</th><th>IOPS (max)</th><th>Throughput (max)</th><th>Latency</th><th>Use Case</th></tr></thead><tbody><tr><td>gp3</td><td>General Purpose SSD</td><td>16,000</td><td>1,000 MB/s</td><td>&lt; 1 ms</td><td>Boot volumes, most workloads</td></tr><tr><td>gp2</td><td>General Purpose SSD (prev)</td><td>16,000</td><td>250 MB/s</td><td>&lt; 1 ms</td><td>Legacy; migrate to gp3</td></tr><tr><td>io2</td><td>Provisioned IOPS SSD</td><td>64,000</td><td>1,000 MB/s</td><td>sub-ms</td><td>Databases requiring consistent I/O</td></tr><tr><td>io2 BE</td><td>io2 Block Express</td><td>256,000</td><td>4,000 MB/s</td><td>sub-ms</td><td>Largest databases, SAP HANA</td></tr><tr><td>st1</td><td>Throughput Optimized HDD</td><td>500</td><td>500 MB/s</td><td>~5-10 ms</td><td>Big data, log processing</td></tr><tr><td>sc1</td><td>Cold HDD</td><td>250</td><td>250 MB/s</td><td>~5-10 ms</td><td>Infrequent access archives</td></tr></tbody></table></div>
+<h3 id="gp3-vs-gp2-why-gp3-wins">gp3 vs gp2: Why gp3 Wins<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gp3-vs-gp2-why-gp3-wins" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>gp2 links IOPS to volume size (3 IOPS per GB, bursting to 3,000). To get 16,000
+IOPS, you need a 5,334 GB volume even if you only need 100 GB of space.</p>
+<p>gp3 decouples IOPS and throughput from volume size. A 100 GB gp3 volume provides
+3,000 IOPS and 125 MB/s baseline for free, and you can provision up to 16,000 IOPS
+and 1,000 MB/s independently at additional cost.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create a gp3 volume with custom IOPS and throughput</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-volume</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --volume-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> gp3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --size</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 100</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --iops</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 6000</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --throughput</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 400</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --availability-zone</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> us-east-1a</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --encrypted</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --tag-specifications</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'ResourceType=volume,Tags=[{Key=Name,Value=myapp-data}]'</span></span></code></pre></figure>
+<h3 id="io2-block-express">io2 Block Express<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#io2-block-express" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For the most demanding database workloads, io2 Block Express volumes provide up to
+256,000 IOPS with sub-millisecond latency. They support Multi-Attach, allowing a
+single volume to be attached to up to 16 Nitro-based instances simultaneously (useful
+for clustered databases).</p>
+<h3 id="ebs-snapshots">EBS Snapshots<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ebs-snapshots" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Snapshots are incremental backups stored in S3 (managed by AWS, not visible in your
+S3 buckets). Only changed blocks since the last snapshot are stored.</p>
+<pre><code>Time 0: Full snapshot         Time 1: Incremental        Time 2: Incremental
+┌──────────────┐              ┌──────────────┐           ┌──────────────┐
+│ Block A ─────│──────────►   │ (unchanged)  │           │ Block A' ────│──►
+│ Block B ─────│──────────►   │ Block B' ────│──────►    │ (unchanged)  │
+│ Block C ─────│──────────►   │ (unchanged)  │           │ (unchanged)  │
+│ Block D ─────│──────────►   │ Block D' ────│──────►    │ (unchanged)  │
+└──────────────┘              └──────────────┘           └──────────────┘
+
+Each snapshot is independently restorable (AWS manages block references)
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create a snapshot</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-snapshot</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --volume-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> vol-0123456789abcdef0</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --description</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Pre-deployment backup $(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> +%Y%m%d-%H%M)&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create a volume from a snapshot (can be in a different AZ)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-volume</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --snapshot-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> snap-0123456789abcdef0</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --availability-zone</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> us-east-1b</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --volume-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> gp3</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Copy snapshot to another region (for DR)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> copy-snapshot</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --source-region</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> us-east-1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --source-snapshot-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> snap-0123456789abcdef0</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --destination-region</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> eu-west-1</span></span></code></pre></figure>
+<h3 id="ebs-encryption">EBS Encryption<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ebs-encryption" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>EBS encryption uses AES-256 and integrates with AWS KMS. When encryption is enabled:</p>
+<ul>
+<li>Data at rest on the volume is encrypted</li>
+<li>Data in transit between the instance and EBS is encrypted</li>
+<li>Snapshots are encrypted</li>
+<li>Volumes created from encrypted snapshots are encrypted</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Enable EBS encryption by default for the entire account/region</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> enable-ebs-encryption-by-default</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Set a custom default KMS key</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> modify-ebs-default-kms-key-id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --kms-key-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> arn:aws:kms:us-east-1:123456789012:key/abcd-1234-efgh</span></span></code></pre></figure>
+<hr/>
+<h2 id="object-storage-amazon-s3">Object Storage: Amazon S3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#object-storage-amazon-s3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="s3-internal-architecture">S3 Internal Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-internal-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>S3 is not a file system. It is a flat key-value object store. The “folders” you see
+in the console are a UI convention based on the <code>/</code> delimiter in keys.</p>
+<pre><code>Bucket: my-application-data
+│
+├── Key: images/profile/user123.jpg     →  Object (binary + metadata)
+├── Key: images/profile/user456.jpg     →  Object
+├── Key: logs/2024/01/15/access.log.gz  →  Object
+└── Key: config/app.json                →  Object
+
+There is no &quot;images&quot; directory. The prefix &quot;images/&quot; is just part of the key string.
+</code></pre>
+<p>Internally, S3 stores each object across a minimum of three Availability Zones within
+a region. The data is written synchronously to all AZs before S3 returns a success
+response, providing 99.999999999% (11 nines) durability.</p>
+<h3 id="s3-storage-classes">S3 Storage Classes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-storage-classes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Class</th><th>Durability</th><th>Availability</th><th>Min Duration</th><th>Use Case</th></tr></thead><tbody><tr><td>S3 Standard</td><td>11 nines</td><td>99.99%</td><td>None</td><td>Frequently accessed data</td></tr><tr><td>S3 Intelligent-Tiering</td><td>11 nines</td><td>99.9%</td><td>None</td><td>Unknown or changing access</td></tr><tr><td>S3 Standard-IA</td><td>11 nines</td><td>99.9%</td><td>30 days</td><td>Infrequent but rapid access</td></tr><tr><td>S3 One Zone-IA</td><td>11 nines</td><td>99.5%</td><td>30 days</td><td>Reproducible infrequent data</td></tr><tr><td>S3 Glacier Instant</td><td>11 nines</td><td>99.9%</td><td>90 days</td><td>Archive with instant retrieval</td></tr><tr><td>S3 Glacier Flexible</td><td>11 nines</td><td>99.99%*</td><td>90 days</td><td>Archive (minutes to hours)</td></tr><tr><td>S3 Glacier Deep Archive</td><td>11 nines</td><td>99.99%*</td><td>180 days</td><td>Long-term archive (12+ hours)</td></tr></tbody></table></div>
+<p>*After restoration</p>
+<h3 id="s3-lifecycle-policies">S3 Lifecycle Policies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-lifecycle-policies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Automate object transitions between storage classes based on age:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;Rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;ID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;ArchiveOldLogs&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Enabled&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Filter&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Prefix&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;logs/&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">},</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Transitions&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Days&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">30</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;StorageClass&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;STANDARD_IA&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Days&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">90</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;StorageClass&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;GLACIER_IR&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Days&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">365</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;StorageClass&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;DEEP_ARCHIVE&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      ],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Expiration&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Days&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2555</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<pre><code>Day 0        Day 30           Day 90              Day 365         Day 2555
+  │            │                │                   │                │
+  ▼            ▼                ▼                   ▼                ▼
+Standard ──► Standard-IA ──► Glacier Instant ──► Deep Archive ──► DELETE
+</code></pre>
+<h3 id="s3-versioning">S3 Versioning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-versioning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Versioning preserves every version of every object. Deleting a versioned object
+creates a “delete marker” rather than actually removing data. This provides
+protection against accidental deletes and overwrites.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Enable versioning</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3api</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-bucket-versioning</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --bucket</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> my-bucket</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --versioning-configuration</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Status=Enabled</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># List object versions</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3api</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> list-object-versions</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --bucket</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> my-bucket</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --prefix</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> config/app.json</span></span></code></pre></figure>
+<p>Combine versioning with lifecycle rules to automatically delete old versions:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;Rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;ID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;DeleteOldVersions&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;Status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Enabled&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;NoncurrentVersionTransitions&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;NoncurrentDays&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">30</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;StorageClass&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;STANDARD_IA&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    ],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;NoncurrentVersionExpiration&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;NoncurrentDays&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">90</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  }]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<h3 id="s3-replication">S3 Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-replication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cross-Region Replication (CRR):</strong> Replicate objects to a bucket in a different
+region for DR, compliance, or latency.</p>
+<p><strong>Same-Region Replication (SRR):</strong> Replicate to another bucket in the same region
+for log aggregation, live replication between accounts, or compliance.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Enable CRR (requires versioning on both buckets)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3api</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-bucket-replication</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --bucket</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> source-bucket</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --replication-configuration</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;Role&quot;: &quot;arn:aws:iam::123456789012:role/s3-replication-role&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;Rules&quot;: [{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;Status&quot;: &quot;Enabled&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;Destination&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;Bucket&quot;: &quot;arn:aws:s3:::destination-bucket-eu&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;StorageClass&quot;: &quot;STANDARD_IA&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      }</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    }]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }'</span></span></code></pre></figure>
+<h3 id="presigned-urls">Presigned URLs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#presigned-urls" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Grant time-limited access to private objects without changing bucket policy or
+making objects public:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Generate a presigned URL valid for 1 hour</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> presign</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3://my-bucket/reports/q4-financials.pdf</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --expires-in</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 3600</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Output: https://my-bucket.s3.amazonaws.com/reports/q4-financials.pdf?X-Amz-...</span></span></code></pre></figure>
+<p>Use cases: allowing users to download private files, enabling direct-to-S3 uploads
+from browsers (presigned POST), sharing temporary links to objects.</p>
+<h3 id="s3-event-notifications">S3 Event Notifications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-event-notifications" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>S3 can trigger actions when objects are created, deleted, or restored:</p>
+<pre><code>S3 Bucket ──► Event ──► Lambda Function
+                   ──► SQS Queue
+                   ──► SNS Topic
+                   ──► EventBridge
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Configure event notification to trigger Lambda on object creation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3api</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-bucket-notification-configuration</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --bucket</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> my-upload-bucket</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --notification-configuration</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;LambdaFunctionConfigurations&quot;: [{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;LambdaFunctionArn&quot;: &quot;arn:aws:lambda:us-east-1:123456789012:function:ProcessUpload&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;Events&quot;: [&quot;s3:ObjectCreated:*&quot;],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      &quot;Filter&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">        &quot;Key&quot;: {&quot;FilterRules&quot;: [{&quot;Name&quot;: &quot;suffix&quot;, &quot;Value&quot;: &quot;.jpg&quot;}]}</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      }</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    }]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }'</span></span></code></pre></figure>
+<h3 id="s3-performance-optimization">S3 Performance Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#s3-performance-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>S3 supports 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second
+per prefix. For high-throughput workloads:</p>
+<ol>
+<li><strong>Distribute keys across prefixes</strong> to parallelize I/O</li>
+<li><strong>Use multipart upload</strong> for objects larger than 100 MB</li>
+<li><strong>Use S3 Transfer Acceleration</strong> for long-distance uploads (uses CloudFront edge)</li>
+<li><strong>Use byte-range fetches</strong> for large objects (GET with Range header)</li>
+<li><strong>Use S3 Select / Glacier Select</strong> to retrieve subsets of data within objects</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Multipart upload for large files</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cp</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> large-file.tar.gz</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3://my-bucket/</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --expected-size</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 10737418240</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --storage-class</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> STANDARD_IA</span></span></code></pre></figure>
+<hr/>
+<h2 id="file-storage-amazon-efs">File Storage: Amazon EFS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-storage-amazon-efs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-is-efs">What Is EFS?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-efs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Elastic File System provides a fully managed NFS file system that can be mounted
+by thousands of EC2 instances simultaneously. It grows and shrinks automatically
+as you add and remove files — no provisioning required.</p>
+<h3 id="efs-architecture">EFS Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#efs-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>                    Region: us-east-1
+┌────────────────────────────────────────────────┐
+│                                                │
+│   AZ-a                AZ-b                     │
+│   ┌────────────┐      ┌────────────┐           │
+│   │ Mount      │      │ Mount      │           │
+│   │ Target     │      │ Target     │           │
+│   │ (ENI)      │      │ (ENI)      │           │
+│   └─────┬──────┘      └─────┬──────┘           │
+│         │                   │                  │
+│         │   ┌───────────────┤                  │
+│         │   │   EFS File System                │
+│         │   │   (distributed storage           │
+│         │   │    across all AZs)               │
+│         │   └───────────────┤                  │
+│         │                   │                  │
+│   ┌─────┴──────┐      ┌────┴───────┐          │
+│   │ EC2 inst.  │      │ EC2 inst.  │          │
+│   │ (mount via │      │ (mount via │          │
+│   │  NFS 4.1)  │      │  NFS 4.1)  │          │
+│   └────────────┘      └────────────┘          │
+└────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="efs-performance-modes">EFS Performance Modes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#efs-performance-modes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Mode</th><th>Latency</th><th>Throughput</th><th>Use Case</th></tr></thead><tbody><tr><td>General Purpose</td><td>&lt; 1 ms</td><td>Good</td><td>Web serving, CMS, home dirs</td></tr><tr><td>Max I/O</td><td>Higher</td><td>Higher aggregate</td><td>Big data, media processing</td></tr><tr><td>Elastic Throughput</td><td>&lt; 1 ms</td><td>Scales with load</td><td>Spiky workloads</td></tr></tbody></table></div>
+<h3 id="efs-storage-classes">EFS Storage Classes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#efs-storage-classes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Standard</strong>: Frequently accessed files</li>
+<li><strong>Infrequent Access (IA)</strong>: Files not accessed for 30+ days (configurable), 92% lower cost</li>
+<li><strong>Archive</strong>: Files not accessed for 90+ days, lowest cost</li>
+</ul>
+<p>Lifecycle management automatically moves files between classes based on access patterns.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create EFS with lifecycle policy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> efs</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-file-system</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --performance-mode</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> generalPurpose</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --throughput-mode</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> elastic</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --encrypted</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --lifecycle-policies</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;[{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">TransitionToIA</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">AFTER_30_DAYS</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">},{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">TransitionToArchive</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">AFTER_90_DAYS</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}]&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="amazon-fsx">Amazon FSx<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#amazon-fsx" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>FSx provides fully managed third-party file systems:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>FSx Variant</th><th>Protocol</th><th>Use Case</th></tr></thead><tbody><tr><td>FSx for Lustre</td><td>Lustre</td><td>HPC, ML training, video processing</td></tr><tr><td>FSx for Windows</td><td>SMB</td><td>Windows workloads, .NET applications</td></tr><tr><td>FSx for NetApp ONTAP</td><td>NFS/SMB</td><td>Hybrid cloud, multi-protocol access</td></tr><tr><td>FSx for OpenZFS</td><td>NFS</td><td>Linux workloads needing ZFS features</td></tr></tbody></table></div>
+<p>FSx for Lustre can be linked to an S3 bucket, presenting S3 objects as files in
+a high-performance POSIX file system. This is powerful for ML training: your training
+data lives cheaply in S3, and Lustre provides fast parallel access during training.</p>
+<hr/>
+<h2 id="aws-storage-gateway">AWS Storage Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-storage-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Storage Gateway bridges on-premises storage and AWS cloud storage:</p>
+<pre><code>On-Premises                              AWS Cloud
+┌──────────────────┐                ┌──────────────────┐
+│  Applications    │                │                  │
+│       │          │                │  S3 / S3 Glacier │
+│       ▼          │                │  EBS Snapshots   │
+│  Storage Gateway │◄──────────────►│  FSx             │
+│  (VM or HW)      │   Encrypted   │                  │
+│                  │   over SSL    │                  │
+└──────────────────┘                └──────────────────┘
+</code></pre>
+<p>Three modes:</p>
+<ul>
+<li><strong>S3 File Gateway</strong>: NFS/SMB interface backed by S3</li>
+<li><strong>Volume Gateway</strong>: iSCSI volumes backed by EBS snapshots</li>
+<li><strong>Tape Gateway</strong>: Virtual tape library backed by S3 Glacier</li>
+</ul>
+<hr/>
+<h2 id="storage-decision-matrix">Storage Decision Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#storage-decision-matrix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>What kind of data?
+│
+├── Structured, needs POSIX filesystem semantics
+│   ├── Single instance attachment ──► EBS (gp3 or io2)
+│   ├── Shared across Linux instances ──► EFS
+│   ├── Shared across Windows instances ──► FSx for Windows
+│   └── High-performance parallel I/O ──► FSx for Lustre
+│
+├── Unstructured (images, videos, logs, backups, data lake)
+│   └── S3 (choose storage class based on access pattern)
+│
+├── Database storage
+│   ├── Boot volume / single-instance DB ──► EBS (gp3)
+│   ├── High-IOPS DB (Oracle, SQL Server) ──► EBS (io2 Block Express)
+│   └── Managed DB ──► Let RDS/Aurora manage storage for you
+│
+└── Archive / compliance retention
+    ├── Access within milliseconds ──► S3 Glacier Instant Retrieval
+    ├── Access within minutes/hours ──► S3 Glacier Flexible
+    └── Access rarely (compliance) ──► S3 Glacier Deep Archive
+</code></pre>
+<hr/>
+<h2 id="cost-optimization-strategies">Cost Optimization Strategies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-optimization-strategies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-right-size-ebs-volumes">1. Right-Size EBS Volumes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-right-size-ebs-volumes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Monitor actual IOPS and throughput usage with CloudWatch. Many volumes are
+over-provisioned. A 1 TB gp3 volume costs the same as a 100 GB gp3 volume
+in IOPS if you do not provision additional IOPS, but the storage cost is 10x.</p>
+<h3 id="2-use-s3-intelligent-tiering">2. Use S3 Intelligent-Tiering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-use-s3-intelligent-tiering" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>If you cannot predict access patterns, Intelligent-Tiering automatically moves
+objects between access tiers with no retrieval charges. There is a small monitoring
+fee per object, but it is cheaper than guessing wrong.</p>
+<h3 id="3-delete-unused-ebs-snapshots">3. Delete Unused EBS Snapshots<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-delete-unused-ebs-snapshots" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Old snapshots accumulate silently. Audit regularly:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Find snapshots older than 90 days</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> describe-snapshots</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --owner-ids</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> self</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --query</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Snapshots[?StartTime&lt;='$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">date</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> -d</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '-90 days' +%Y-%m-%d)'].{ID:SnapshotId,Size:VolumeSize,Date:StartTime}&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --output</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> table</span></span></code></pre></figure>
+<h3 id="4-use-s3-storage-lens">4. Use S3 Storage Lens<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-use-s3-storage-lens" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>S3 Storage Lens provides organization-wide visibility into storage usage, activity
+trends, and cost optimization recommendations across all buckets.</p>
+<h3 id="5-compress-before-storing">5. Compress Before Storing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-compress-before-storing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For log files and text data, compressing with gzip or zstd before uploading to S3
+can reduce storage costs by 70-90%.</p>
+<h3 id="6-use-efs-ia-and-archive-tiers">6. Use EFS IA and Archive Tiers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-use-efs-ia-and-archive-tiers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>EFS Infrequent Access is 92% cheaper than Standard. With lifecycle policies,
+cold files move automatically. Ensure your access patterns justify the per-access
+retrieval charge.</p>
+<hr/>
+<h2 id="data-protection-and-durability">Data Protection and Durability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-protection-and-durability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Service</th><th>Durability</th><th>Mechanism</th></tr></thead><tbody><tr><td>S3</td><td>99.999999999% (11 9s)</td><td>3+ AZ replication, checksums</td></tr><tr><td>EBS</td><td>99.999% (5 9s)</td><td>Replicated within AZ</td></tr><tr><td>EFS</td><td>99.999999999% (11 9s)</td><td>3 AZ replication</td></tr><tr><td>Glacier</td><td>99.999999999% (11 9s)</td><td>3+ AZ replication</td></tr></tbody></table></div>
+<p>EBS is the outlier with “only” five nines of durability because it replicates within
+a single AZ. This is why EBS snapshots (stored in S3, 11 nines) are critical for
+disaster recovery.</p>
+<hr/>
+<h2 id="practical-takeaways">Practical Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#practical-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Default to gp3</strong> for EBS volumes. It is cheaper than gp2 and decouples IOPS
+from volume size.</p>
+</li>
+<li>
+<p><strong>Enable EBS encryption by default</strong> at the account level. There is zero
+performance impact on Nitro instances.</p>
+</li>
+<li>
+<p><strong>Use S3 versioning + MFA Delete</strong> for critical buckets to protect against
+accidental or malicious deletion.</p>
+</li>
+<li>
+<p><strong>Lifecycle policies are mandatory</strong> for any bucket that accumulates data over
+time. Without them, storage costs grow linearly forever.</p>
+</li>
+<li>
+<p><strong>Never store application state on instance store.</strong> Use it only for caches,
+temporary scratch data, or shuffle space.</p>
+</li>
+<li>
+<p><strong>Monitor EBS burst balance</strong> on gp2 volumes (or migrate to gp3 to avoid the
+burst/credit model entirely).</p>
+</li>
+<li>
+<p><strong>Use multipart upload</strong> for any S3 object over 100 MB. The AWS CLI does this
+automatically with <code>aws s3 cp</code>.</p>
+</li>
+<li>
+<p><strong>Block public access</strong> at the account level unless you explicitly need public
+buckets:</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> s3control</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-public-access-block</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --account-id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 123456789012</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --public-access-block-configuration</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="hash-maps--s3-object-storage-and-key-value-lookups">Hash Maps — S3 Object Storage and Key-Value Lookups<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hash-maps--s3-object-storage-and-key-value-lookups" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A hash map is a data structure that maps keys to values using a hash function, providing average-case O(1) lookups, inserts, and deletes. S3 is, at its core, a massively distributed hash map: each object is stored under a key (like <code>images/profile/user123.jpg</code>), and the storage layer hashes this key to determine which partition and which set of storage nodes hold the data. When you call <code>GetObject</code>, S3 does not traverse a directory tree — it hashes the key, locates the partition, and retrieves the object directly. This is why S3 has no concept of directories (the “folders” in the console are a UI trick based on the <code>/</code> delimiter) and why S3 can achieve 5,500 GET requests per second per prefix — the hash-based distribution ensures that keys with different prefixes land on different partitions, enabling parallelism. The recommendation to distribute keys across prefixes for high-throughput workloads is essentially the same advice as choosing a good hash function to avoid bucket collisions.</p>
+<h3 id="lru-cache-doubly-linked-list--hash-map--efs-lifecycle-and-s3-intelligent-tiering">LRU Cache (Doubly-Linked List + Hash Map) — EFS Lifecycle and S3 Intelligent-Tiering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lru-cache-doubly-linked-list--hash-map--efs-lifecycle-and-s3-intelligent-tiering" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>An LRU (Least Recently Used) cache combines a doubly-linked list with a hash map to evict the least-recently-accessed item in O(1) time: the hash map provides fast lookups, and the linked list maintains access order. S3 Intelligent-Tiering and EFS lifecycle policies implement an LRU-like eviction strategy at storage scale. When S3 Intelligent-Tiering monitors object access patterns, it maintains metadata tracking the last access timestamp for each object. Objects not accessed for 30 days are moved to Infrequent Access, then to Archive Access after 90 days — mirroring how an LRU cache evicts cold entries to make room for hot ones. Similarly, EFS lifecycle management moves files untouched for 30+ days to Infrequent Access storage at 92% lower cost. The key insight is that these tiered storage systems are applying the same temporal locality principle that makes LRU caches effective: recently accessed data is likely to be accessed again, so it stays in the fast (expensive) tier.</p>
+<h3 id="b-trees--ebs-volume-indexing-and-filesystem-metadata">B-Trees — EBS Volume Indexing and Filesystem Metadata<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#b-trees--ebs-volume-indexing-and-filesystem-metadata" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A B-tree is a self-balancing tree data structure that maintains sorted data and allows searches, insertions, and deletions in O(log n) time, with high fanout to minimize disk reads. When you format an EBS volume with ext4 or XFS and mount it to an EC2 instance, the filesystem uses B-tree variants to organize block metadata. XFS in particular uses B+ trees for its inode allocation, directory entries, and extent maps — this is why XFS is the recommended filesystem for high-IOPS workloads on io2 Block Express volumes. Each directory lookup traverses a B+ tree where each node is sized to fit a single disk block (typically 4 KB), maximizing the data retrieved per I/O operation. For a volume with millions of files, the B-tree structure ensures that locating any file requires only 3-4 disk reads regardless of directory size, which is critical when your io2 Block Express volume is handling 256,000 IOPS — every wasted I/O operation matters at that scale.</p>
+<h3 id="incremental-snapshots-as-merkle-like-structures--ebs-snapshot-efficiency">Incremental Snapshots as Merkle-Like Structures — EBS Snapshot Efficiency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#incremental-snapshots-as-merkle-like-structures--ebs-snapshot-efficiency" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A Merkle tree is a hash tree where every leaf node contains a hash of a data block and every non-leaf node contains a hash of its children, enabling efficient verification and diffing of large datasets. EBS snapshots use a conceptually similar approach to achieve incremental backups: the storage layer maintains a block-level mapping that tracks which blocks have changed since the last snapshot. When you create a new snapshot, EBS compares block hashes between the current volume state and the previous snapshot, and only copies the changed blocks to S3. This is why each snapshot is independently restorable even though it only stores the delta — AWS manages the chain of block references internally, similar to how a Merkle tree can prove the integrity of any leaf by walking the hash chain to the root. The practical benefit is dramatic: a 1 TB volume with 10 GB of changes produces a snapshot that stores only 10 GB of new data, while still being fully restorable as a complete 1 TB volume.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-19" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#cloud-storage-architecture" data-for="cloud-storage-architecture">Cloud Storage Architecture</a></li><li class="depth-1"><a href="#introduction" data-for="introduction">Introduction</a></li><li class="depth-1"><a href="#storage-type-overview" data-for="storage-type-overview">Storage Type Overview</a></li><li class="depth-1"><a href="#block-storage-amazon-ebs" data-for="block-storage-amazon-ebs">Block Storage: Amazon EBS</a></li><li class="depth-2"><a href="#what-is-ebs" data-for="what-is-ebs">What Is EBS?</a></li><li class="depth-2"><a href="#ebs-volume-types" data-for="ebs-volume-types">EBS Volume Types</a></li><li class="depth-2"><a href="#gp3-vs-gp2-why-gp3-wins" data-for="gp3-vs-gp2-why-gp3-wins">gp3 vs gp2: Why gp3 Wins</a></li><li class="depth-2"><a href="#io2-block-express" data-for="io2-block-express">io2 Block Express</a></li><li class="depth-2"><a href="#ebs-snapshots" data-for="ebs-snapshots">EBS Snapshots</a></li><li class="depth-2"><a href="#ebs-encryption" data-for="ebs-encryption">EBS Encryption</a></li><li class="depth-1"><a href="#object-storage-amazon-s3" data-for="object-storage-amazon-s3">Object Storage: Amazon S3</a></li><li class="depth-2"><a href="#s3-internal-architecture" data-for="s3-internal-architecture">S3 Internal Architecture</a></li><li class="depth-2"><a href="#s3-storage-classes" data-for="s3-storage-classes">S3 Storage Classes</a></li><li class="depth-2"><a href="#s3-lifecycle-policies" data-for="s3-lifecycle-policies">S3 Lifecycle Policies</a></li><li class="depth-2"><a href="#s3-versioning" data-for="s3-versioning">S3 Versioning</a></li><li class="depth-2"><a href="#s3-replication" data-for="s3-replication">S3 Replication</a></li><li class="depth-2"><a href="#presigned-urls" data-for="presigned-urls">Presigned URLs</a></li><li class="depth-2"><a href="#s3-event-notifications" data-for="s3-event-notifications">S3 Event Notifications</a></li><li class="depth-2"><a href="#s3-performance-optimization" data-for="s3-performance-optimization">S3 Performance Optimization</a></li><li class="depth-1"><a href="#file-storage-amazon-efs" data-for="file-storage-amazon-efs">File Storage: Amazon EFS</a></li><li class="depth-2"><a href="#what-is-efs" data-for="what-is-efs">What Is EFS?</a></li><li class="depth-2"><a href="#efs-architecture" data-for="efs-architecture">EFS Architecture</a></li><li class="depth-2"><a href="#efs-performance-modes" data-for="efs-performance-modes">EFS Performance Modes</a></li><li class="depth-2"><a href="#efs-storage-classes" data-for="efs-storage-classes">EFS Storage Classes</a></li><li class="depth-1"><a href="#amazon-fsx" data-for="amazon-fsx">Amazon FSx</a></li><li class="depth-1"><a href="#aws-storage-gateway" data-for="aws-storage-gateway">AWS Storage Gateway</a></li><li class="depth-1"><a href="#storage-decision-matrix" data-for="storage-decision-matrix">Storage Decision Matrix</a></li><li class="depth-1"><a href="#cost-optimization-strategies" data-for="cost-optimization-strategies">Cost Optimization Strategies</a></li><li class="depth-2"><a href="#1-right-size-ebs-volumes" data-for="1-right-size-ebs-volumes">1. Right-Size EBS Volumes</a></li><li class="depth-2"><a href="#2-use-s3-intelligent-tiering" data-for="2-use-s3-intelligent-tiering">2. Use S3 Intelligent-Tiering</a></li><li class="depth-2"><a href="#3-delete-unused-ebs-snapshots" data-for="3-delete-unused-ebs-snapshots">3. Delete Unused EBS Snapshots</a></li><li class="depth-2"><a href="#4-use-s3-storage-lens" data-for="4-use-s3-storage-lens">4. Use S3 Storage Lens</a></li><li class="depth-2"><a href="#5-compress-before-storing" data-for="5-compress-before-storing">5. Compress Before Storing</a></li><li class="depth-2"><a href="#6-use-efs-ia-and-archive-tiers" data-for="6-use-efs-ia-and-archive-tiers">6. Use EFS IA and Archive Tiers</a></li><li class="depth-1"><a href="#data-protection-and-durability" data-for="data-protection-and-durability">Data Protection and Durability</a></li><li class="depth-1"><a href="#practical-takeaways" data-for="practical-takeaways">Practical Takeaways</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#hash-maps--s3-object-storage-and-key-value-lookups" data-for="hash-maps--s3-object-storage-and-key-value-lookups">Hash Maps — S3 Object Storage and Key-Value Lookups</a></li><li class="depth-2"><a href="#lru-cache-doubly-linked-list--hash-map--efs-lifecycle-and-s3-intelligent-tiering" data-for="lru-cache-doubly-linked-list--hash-map--efs-lifecycle-and-s3-intelligent-tiering">LRU Cache (Doubly-Linked List + Hash Map) — EFS Lifecycle and S3 Intelligent-Tiering</a></li><li class="depth-2"><a href="#b-trees--ebs-volume-indexing-and-filesystem-metadata" data-for="b-trees--ebs-volume-indexing-and-filesystem-metadata">B-Trees — EBS Volume Indexing and Filesystem Metadata</a></li><li class="depth-2"><a href="#incremental-snapshots-as-merkle-like-structures--ebs-snapshot-efficiency" data-for="incremental-snapshots-as-merkle-like-structures--ebs-snapshot-efficiency">Incremental Snapshots as Merkle-Like Structures — EBS Snapshot Efficiency</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

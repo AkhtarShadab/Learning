@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>07_cost_mental_model</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="07_cost_mental_model"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="07_cost_mental_model"/><meta name="twitter:description" content="Cloud Cost Mental Model Core Idea: The Cloud Cost Iceberg Cloud costs are like an iceberg."/><meta property="og:description" content="Cloud Cost Mental Model Core Idea: The Cloud Cost Iceberg Cloud costs are like an iceberg."/><meta property="og:image:alt" content="Cloud Cost Mental Model Core Idea: The Cloud Cost Iceberg Cloud costs are like an iceberg."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/MentalModels/07_cost_mental_model"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/MentalModels/07_cost_mental_model"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Cloud Cost Mental Model Core Idea: The Cloud Cost Iceberg Cloud costs are like an iceberg."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/MentalModels/07_cost_mental_model"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-45"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-45" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/MentalModels/">MentalModels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>07_cost_mental_model</a></div></nav><h1 class="article-title">07_cost_mental_model</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.330Z">Jun 20, 2026</time><span>17 min read</span></p></div></div><article class="popover-hint"><h1 id="cloud-cost-mental-model">Cloud Cost Mental Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-cost-mental-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="core-idea-the-cloud-cost-iceberg">Core Idea: The Cloud Cost Iceberg<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-idea-the-cloud-cost-iceberg" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cloud costs are like an iceberg. The visible portion — the compute
+instances you launch and the storage buckets you fill — represents
+only a fraction of the total bill. Below the waterline lie data
+transfer charges, API call fees, logging costs, NAT gateway fees,
+and a dozen other line items that can dwarf your compute spend if
+left unchecked.</p>
+<pre><code>  THE CLOUD COST ICEBERG
+  =======================
+
+        /\
+       /  \         VISIBLE COSTS (~40-60%)
+      / EC2 \       - Compute instances
+     / RDS   \      - Storage (S3, EBS)
+    / Lambda  \     - Managed databases
+   /___________\
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  WATERLINE
+   \           /
+    \ Data    /     HIDDEN COSTS (~40-60%)
+     \Transfer/     - Data transfer (cross-AZ, egress)
+      \NAT GW/      - NAT Gateway processing fees
+       \Logs /       - CloudWatch logs ingestion/storage
+        \API/        - API Gateway request charges
+         \/          - DNS query charges
+          |          - Load balancer hours + LCU charges
+          |          - EBS snapshots and lifecycle
+          |          - Elastic IPs (when unattached)
+          |          - KMS key operations
+          |          - Support plan fees
+</code></pre>
+<hr/>
+<h2 id="pricing-dimensions-how-you-get-charged">Pricing Dimensions: How You Get Charged<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pricing-dimensions-how-you-get-charged" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cloud pricing is not one-dimensional. Every service meters usage across
+multiple dimensions simultaneously. Understanding these dimensions is
+critical for cost prediction and optimization.</p>
+<h3 id="the-four-primary-pricing-dimensions">The Four Primary Pricing Dimensions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-four-primary-pricing-dimensions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dimension</th><th>What It Measures</th><th>Example</th><th>Surprise Factor</th></tr></thead><tbody><tr><td>Compute-time</td><td>vCPU/memory per hour</td><td>EC2 $0.0832/hr (c5.xlarge)</td><td>Low (expected)</td></tr><tr><td>Storage</td><td>GB stored per month</td><td>S3 $0.023/GB-month</td><td>Low</td></tr><tr><td>Data transfer</td><td>GB moved across networks</td><td>Egress $0.09/GB (first 10 TB)</td><td>HIGH</td></tr><tr><td>API calls</td><td>Number of requests</td><td>S3 GET $0.0004/1000 requests</td><td>Medium</td></tr></tbody></table></div>
+<h3 id="data-transfer-the-real-surprise">Data Transfer: The Real Surprise<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-transfer-the-real-surprise" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Data transfer is where most cloud bill surprises come from. The pricing
+is asymmetric and complex:</p>
+<pre><code>  DATA TRANSFER PRICING (AWS, approximate)
+  ==========================================
+
+  INBOUND (data INTO AWS):
+  From internet to AWS:                FREE
+  From other AWS services (same AZ):   FREE
+  From other AWS services (cross-AZ):  $0.01/GB each direction
+
+  OUTBOUND (data OUT OF AWS):
+  To internet (first 10 TB/month):     $0.09/GB
+  To internet (next 40 TB/month):      $0.085/GB
+  To internet (next 100 TB/month):     $0.07/GB
+  Cross-region:                        $0.02/GB
+  To CloudFront:                       FREE (from origin)
+
+  COST EXAMPLE:
+  A video streaming service serving 100 TB/month outbound:
+  10 TB  x $0.09  = $900
+  40 TB  x $0.085 = $3,400
+  50 TB  x $0.07  = $3,500
+  Total:            $7,800/month JUST for data transfer
+
+  Compare: a c5.4xlarge (16 vCPU, 32 GB) costs $489/month.
+  Data transfer can easily exceed compute costs.
+</code></pre>
+<h3 id="cross-az-data-transfer-the-hidden-tax">Cross-AZ Data Transfer: The Hidden Tax<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cross-az-data-transfer-the-hidden-tax" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  CROSS-AZ DATA TRANSFER
+  ========================
+
+  AZ-a                    AZ-b
+  +--------+              +--------+
+  | Web    | --request--> | App    |
+  | Server |              | Server |
+  |        | &lt;--response- |        |
+  +--------+              +--------+
+
+  Each direction: $0.01/GB
+  Round trip: $0.02/GB
+
+  If your app does 1 TB of cross-AZ traffic per month:
+  Cost: 1,000 GB x $0.02 = $20/month
+
+  Seems small? At scale (100 services x 10 TB each):
+  Cost: 100 x 10,000 GB x $0.02 = $200,000/month
+
+  Mitigation:
+  - Keep chattiest services in the same AZ
+  - Use AZ-affinity for service mesh routing
+  - Compress payloads between services
+  - But: single-AZ = no fault tolerance, so balance cost vs risk
+</code></pre>
+<hr/>
+<h2 id="pricing-models-reserved-on-demand-spot">Pricing Models: Reserved, On-Demand, Spot<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pricing-models-reserved-on-demand-spot" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Choosing the right pricing model is the single highest-impact cost
+optimization decision you can make.</p>
+<h3 id="on-demand">On-Demand<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#on-demand" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Full price. No commitment. Maximum flexibility.</p>
+<ul>
+<li><strong>When:</strong> Unpredictable workloads, short experiments, new projects
+before you understand demand patterns.</li>
+<li><strong>Cost:</strong> 100% of list price (baseline)</li>
+</ul>
+<h3 id="reserved-instances-ri--savings-plans">Reserved Instances (RI) / Savings Plans<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#reserved-instances-ri--savings-plans" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Commit to 1 or 3 years of usage. Discounts range from 30% to 72%.</p>
+<pre><code>  RESERVED INSTANCE PRICING (c5.xlarge example)
+  ===============================================
+
+  Pricing Model          Monthly Cost    Savings vs On-Demand
+  ----------------       ------------    --------------------
+  On-Demand              $120.96         0%
+  1-year No Upfront      $76.80          36%
+  1-year All Upfront     $72.00          40%
+  3-year No Upfront      $52.80          56%
+  3-year All Upfront     $43.20          64%
+
+  Break-even point for 1-year RI:
+  If you run the instance > 7-8 months/year, RI saves money.
+</code></pre>
+<h3 id="savings-plans-aws">Savings Plans (AWS)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#savings-plans-aws" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>More flexible than RIs. Commit to a <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord mathnormal">h</span><span class="mord mathnormal">o</span><span class="mord mathnormal">u</span><span class="mord mathnormal">rs</span><span class="mord mathnormal">p</span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord mathnormal">e</span><span class="mord">.</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord">.</span><span class="mpunct">,</span></span></span></span>10/hour) for
+1 or 3 years, and all compute usage up to that amount is discounted.</p>
+<pre><code>  SAVINGS PLANS
+  ==============
+
+  You commit: $10/hour for 1 year
+  Total commitment: $10 x 24 x 365 = $87,600/year
+
+  Any compute usage up to $10/hour gets discounted:
+  - EC2 instances (any family, any size, any region)
+  - Lambda functions
+  - Fargate tasks
+
+  Advantage over RIs: flexibility to change instance types
+  without losing your discount.
+</code></pre>
+<h3 id="spot-instances">Spot Instances<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spot-instances" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Buy unused capacity at 60-90% discounts. Instances can be interrupted
+with 2 minutes notice.</p>
+<pre><code>  SPOT INSTANCE STRATEGY
+  =======================
+
+  On-Demand price:  $0.0832/hr (c5.xlarge)
+  Spot price:       $0.0250/hr (c5.xlarge, varies by AZ)
+  Savings:          70%
+
+  GOOD FOR:                      BAD FOR:
+  - Batch processing             - Databases
+  - CI/CD build agents           - Stateful applications
+  - Data processing (EMR)        - User-facing web servers*
+  - Machine learning training    - Long-running transactions
+  - Testing and dev environments
+
+  *Exception: Spot can work for web servers if:
+   - Behind a load balancer
+   - Stateless
+   - Mixed with On-Demand (e.g., 70% Spot, 30% On-Demand)
+   - Using Spot Fleet with diversification across instance types/AZs
+</code></pre>
+<h3 id="the-optimal-pricing-mix">The Optimal Pricing Mix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-optimal-pricing-mix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  THE PRICING PYRAMID
+  ====================
+
+        /\
+       /  \       SPOT (10-20%)
+      / Burst\    Fault-tolerant batch, CI/CD, dev/test
+     /________\
+    /          \   ON-DEMAND (10-30%)
+   / Flexibility\  Unpredictable bursts, new workloads
+  /______________\
+  |              |  RESERVED / SAVINGS PLANS (50-70%)
+  | Steady-state |  Known baseline, 24/7 production workloads
+  |  baseline    |
+  |______________|
+
+  Aim: 50-70% committed spend, 10-30% on-demand, 10-20% spot.
+  This blend typically saves 40-60% vs all on-demand.
+</code></pre>
+<hr/>
+<h2 id="cost-allocation-tags">Cost Allocation Tags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-allocation-tags" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Tags are key-value pairs attached to resources that enable cost tracking
+by team, project, environment, or any other dimension.</p>
+<pre><code>  TAGGING STRATEGY
+  =================
+
+  Resource: EC2 instance i-0123456789abcdef0
+
+  Tags:
+    Environment:  production
+    Team:         platform-engineering
+    Project:      payment-service
+    CostCenter:   CC-4200
+    Owner:        alice@company.com
+    ManagedBy:    terraform
+
+  Cost allocation report (filtered by Project=payment-service):
+
+  Service      Jan      Feb      Mar      YTD
+  --------     -----    -----    -----    ------
+  EC2          $4,200   $4,500   $4,800   $13,500
+  RDS          $1,800   $1,800   $1,800   $5,400
+  S3           $200     $220     $250     $670
+  Data Xfer    $800     $900     $1,100   $2,800
+  Total        $7,000   $7,420   $7,950   $22,370
+
+  Without tags, you see one big bill.
+  With tags, you see cost per team, per project, per environment.
+</code></pre>
+<h3 id="tagging-best-practices">Tagging Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tagging-best-practices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Enforce tags via SCP/IAM policies.</strong> Deny resource creation without
+required tags.</li>
+<li><strong>Automate tagging in IaC.</strong> Terraform/CloudFormation should set tags
+automatically.</li>
+<li><strong>Minimum tag set:</strong> Environment, Team, Project, CostCenter, Owner.</li>
+<li><strong>Audit regularly.</strong> Untagged resources are invisible to cost reporting.</li>
+</ol>
+<hr/>
+<h2 id="the-finops-framework">The FinOps Framework<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-finops-framework" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>FinOps</strong> (Financial Operations) is the practice of bringing financial
+accountability to cloud spending. It is a cultural practice as much as
+a technical one.</p>
+<pre><code>  THE FINOPS LIFECYCLE
+  =====================
+
+  +----------+     +-----------+     +----------+
+  | INFORM   | --> | OPTIMIZE  | --> | OPERATE  |
+  | (Measure)|     | (Analyze) |     | (Act)    |
+  +----+-----+     +-----+-----+     +-----+----+
+       |                 |                  |
+       +--------&lt;--------+--------&lt;---------+
+                    (Continuous loop)
+
+  INFORM:
+  - Visibility into who is spending what
+  - Cost allocation by team, project, environment
+  - Dashboards showing trends and anomalies
+  - Shared cost model (how to split shared resources)
+
+  OPTIMIZE:
+  - Right-size instances (is that m5.4xlarge really needed?)
+  - Purchase commitments (RIs, Savings Plans)
+  - Spot instances for fault-tolerant workloads
+  - Storage tiering (S3 Standard -> Infrequent Access -> Glacier)
+  - Delete unused resources (zombie instances, old snapshots)
+
+  OPERATE:
+  - Budget alerts and guardrails
+  - Automated scaling policies
+  - Architecture decisions consider cost
+  - Teams own their cloud spend
+  - Regular cost reviews (weekly/monthly)
+</code></pre>
+<h3 id="finops-maturity-levels">FinOps Maturity Levels<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#finops-maturity-levels" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Level</th><th>Characteristics</th></tr></thead><tbody><tr><td>Crawl</td><td>Basic tagging, monthly cost review, manual reports</td></tr><tr><td>Walk</td><td>Automated reporting, RI/SP purchasing, right-sizing</td></tr><tr><td>Run</td><td>Real-time cost awareness, automated optimization,</td></tr><tr><td></td><td>cost in CI/CD, team-level accountability</td></tr></tbody></table></div>
+<hr/>
+<h2 id="the-cost-optimization-loop">The Cost Optimization Loop<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-cost-optimization-loop" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>  COST OPTIMIZATION LOOP
+  =======================
+
+  1. MEASURE
+     - Enable Cost Explorer, set up cost allocation tags
+     - Export detailed billing to S3 for analysis
+     - Set up Athena queries for custom cost analysis
+     - Dashboard: cost per service, per team, per environment
+
+  2. ANALYZE
+     - Identify top 5 cost drivers (usually EC2, RDS, data transfer)
+     - Find unused resources (instances with &lt;5% CPU for 7+ days)
+     - Find over-provisioned resources (m5.4xlarge running at 10% CPU)
+     - Check coverage ratio (% of spend covered by commitments)
+     - Review data transfer patterns (cross-AZ, egress)
+
+  3. OPTIMIZE
+     - Right-size: downsize over-provisioned instances
+     - Commit: purchase RIs/Savings Plans for steady-state workloads
+     - Spot: move fault-tolerant workloads to Spot instances
+     - Storage: tier cold data to cheaper storage classes
+     - Architect: reduce cross-AZ traffic, add caching, compress data
+     - Delete: terminate zombie instances, old snapshots, unused EIPs
+
+  4. REPEAT
+     - Monthly cadence for reviews
+     - Quarterly cadence for commitment purchases
+     - Continuous automation for right-sizing and cleanup
+</code></pre>
+<hr/>
+<h2 id="right-sizing-instances">Right-Sizing Instances<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#right-sizing-instances" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Right-sizing means matching instance types and sizes to actual workload
+requirements. It is the easiest and highest-impact optimization.</p>
+<pre><code>  RIGHT-SIZING EXAMPLE
+  =====================
+
+  Current: m5.4xlarge (16 vCPU, 64 GB RAM)
+  Avg CPU: 8%    Peak CPU: 22%
+  Avg RAM: 12 GB  Peak RAM: 18 GB
+  Cost: $561/month
+
+  Recommendation: m5.xlarge (4 vCPU, 16 GB RAM)
+  Projected CPU: 32%   Peak CPU: 88%  (still safe)
+  Projected RAM: 12 GB  (fits, with headroom)
+  Cost: $140/month
+
+  Savings: $421/month (75% reduction)
+
+  TOOLS:
+  - AWS Compute Optimizer (free, ML-based recommendations)
+  - AWS Cost Explorer right-sizing recommendations
+  - Datadog / CloudHealth / Spot.io for cross-cloud
+</code></pre>
+<h3 id="graviton--arm-cost-advantage">Graviton / ARM Cost Advantage<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#graviton--arm-cost-advantage" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AWS Graviton (ARM-based) instances offer 20-40% better price-performance
+than equivalent x86 instances for most workloads.</p>
+<pre><code>  x86 vs GRAVITON COMPARISON
+  ============================
+
+  Instance       vCPU  RAM    Price/hr   Price/month
+  -------------- ----  -----  --------   -----------
+  m5.xlarge      4     16 GB  $0.192     $140
+  m6g.xlarge     4     16 GB  $0.154     $112  (Graviton2)
+  m7g.xlarge     4     16 GB  $0.163     $119  (Graviton3)
+
+  Graviton2 savings: ~20% vs m5
+  Graviton3 savings: ~15% vs m5, but ~25% better performance
+
+  Compatible with: Linux workloads, containers, Java, Python,
+  Node.js, Go, Rust, .NET Core
+  NOT compatible with: Windows, x86-specific compiled binaries
+</code></pre>
+<hr/>
+<h2 id="data-transfer-costs-the-real-surprise">Data Transfer Costs: The Real Surprise<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-transfer-costs-the-real-surprise" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Data transfer is consistently the most surprising line item for cloud
+newcomers. Here is a comprehensive view of where data transfer costs
+lurk.</p>
+<pre><code>  DATA TRANSFER COST MAP
+  =======================
+
+  +------------------+
+  | Internet         |
+  | (Users/APIs)     |
+  +--------+---------+
+           |
+           | Egress: $0.09/GB (expensive!)
+           | Ingress: FREE
+           |
+  +--------+---------+
+  |   CloudFront     |  Origin fetch: FREE from S3/EC2 to CF
+  |   (CDN Edge)     |  CF to Internet: $0.085/GB (slightly cheaper)
+  +--------+---------+
+           |
+  +--------+---------+
+  |   Load Balancer  |  Processing: $0.008/LCU-hour
+  +--------+---------+
+           |
+  +--------+---------+
+  | VPC              |
+  |  +------+------+ |
+  |  | AZ-a | AZ-b | |  Cross-AZ: $0.01/GB each way
+  |  +------+------+ |
+  +--------+---------+
+           |
+           | Cross-region: $0.02/GB
+           |
+  +--------+---------+
+  | Another Region   |
+  +------------------+
+
+  NAT Gateway: $0.045/GB processed (ON TOP of other charges!)
+  VPC Endpoint: $0.01/GB processed (cheaper than NAT for AWS services)
+</code></pre>
+<h3 id="cost-reduction-strategies-for-data-transfer">Cost Reduction Strategies for Data Transfer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-reduction-strategies-for-data-transfer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Strategy</th><th>Savings Potential</th><th>Complexity</th></tr></thead><tbody><tr><td>Use VPC Endpoints</td><td>50-80% for AWS API calls</td><td>Low</td></tr><tr><td>CloudFront caching</td><td>40-70% for static content</td><td>Low</td></tr><tr><td>Compress inter-service payloads</td><td>30-60%</td><td>Medium</td></tr><tr><td>AZ-affinity routing</td><td>50-90% of cross-AZ costs</td><td>Medium</td></tr><tr><td>Regional S3 Transfer Acceleration</td><td>20-50% for uploads</td><td>Low</td></tr><tr><td>PrivateLink instead of internet</td><td>Eliminates egress</td><td>Medium</td></tr></tbody></table></div>
+<hr/>
+<h2 id="budgets-alerts-and-anomaly-detection">Budgets, Alerts, and Anomaly Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#budgets-alerts-and-anomaly-detection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="aws-budgets">AWS Budgets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-budgets" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  BUDGET CONFIGURATION
+  =====================
+
+  Budget: &quot;Production Monthly Spend&quot;
+  Amount: $50,000/month
+
+  Alerts:
+  1. When ACTUAL spend > 50% of budget ($25,000)  -> Email team lead
+  2. When ACTUAL spend > 80% of budget ($40,000)  -> Email + Slack
+  3. When ACTUAL spend > 100% of budget ($50,000) -> Email + PagerDuty
+  4. When FORECASTED spend > 100% of budget       -> Email team
+     (AWS predicts you will exceed based on trend)
+
+  Actions (optional):
+  - At 100%: Apply restrictive IAM policy (prevent new resource creation)
+  - At 120%: Terminate non-production instances automatically
+</code></pre>
+<h3 id="cost-anomaly-detection">Cost Anomaly Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-anomaly-detection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AWS Cost Anomaly Detection uses ML to identify unusual spending patterns.</p>
+<pre><code>  ANOMALY DETECTION EXAMPLE
+  ==========================
+
+  Normal daily spend: ~$1,600/day
+
+  Day 1: $1,580  (normal)
+  Day 2: $1,620  (normal)
+  Day 3: $1,590  (normal)
+  Day 4: $4,200  (ANOMALY DETECTED!)
+         ^
+         Anomaly alert triggered
+         Root cause: developer left 50 GPU instances running
+         Impact: $2,600 in unexpected spend
+         Action: terminated instances, saved $78,000/month
+
+  Without anomaly detection: might not notice for weeks.
+  With anomaly detection: caught in hours.
+</code></pre>
+<hr/>
+<h2 id="unit-economics-cost-per-request-cost-per-user">Unit Economics: Cost Per Request, Cost Per User<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unit-economics-cost-per-request-cost-per-user" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Mature FinOps practices track <strong>unit costs</strong> — the cost to serve one
+unit of business value. This normalizes cost against growth.</p>
+<pre><code>  UNIT ECONOMICS EXAMPLES
+  ========================
+
+  E-commerce:
+    Total cloud cost: $50,000/month
+    Orders processed: 500,000/month
+    Cost per order: $0.10
+    Trend: $0.12 -> $0.11 -> $0.10 (improving with scale)
+
+  SaaS:
+    Total cloud cost: $200,000/month
+    Active users: 100,000
+    Cost per user: $2.00/month
+    Revenue per user: $15.00/month
+    Cloud cost as % of revenue: 13.3%
+    Industry benchmark: 15-25% (you're doing well)
+
+  API Platform:
+    Total cloud cost: $30,000/month
+    API calls: 1 billion/month
+    Cost per 1M API calls: $30
+    Trend: $45 -> $38 -> $30 (optimization working)
+
+  WHY UNIT COSTS MATTER:
+  - Total spend going up is fine IF units are going up too
+  - Total spend going up while units are flat = problem
+  - Total spend flat while units are going up = optimization success
+</code></pre>
+<hr/>
+<h2 id="real-examples-of-cloud-bills-going-wrong">Real Examples of Cloud Bills Going Wrong<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-examples-of-cloud-bills-going-wrong" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="case-1-the-s3-surprise">Case 1: The S3 Surprise<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#case-1-the-s3-surprise" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A startup stored application logs in S3 Standard. After a year, they
+had 50 TB of logs they never looked at, costing <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">150/</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal">ors</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">e</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">e</span><span class="mord">.</span><span class="mord mathnormal">A</span><span class="mord mathnormal">dd</span><span class="mord mathnormal">i</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">na</span><span class="mord mathnormal" style="margin-right:0.01968em;">ll</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">ana</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">ys</span><span class="mord mathnormal">i</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mord mathnormal">o</span><span class="mord mathnormal">b</span><span class="mord mathnormal">sc</span><span class="mord mathnormal">ann</span><span class="mord mathnormal">e</span><span class="mord mathnormal">d</span><span class="mord mathnormal">A</span><span class="mord mathnormal">LL</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">s</span><span class="mord mathnormal">d</span><span class="mord mathnormal">ai</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.02778em;">er</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span></span></span></span>4,000/month in S3 GET request charges.</p>
+<p><strong>Fix:</strong></p>
+<ul>
+<li>Lifecycle policy: move logs older than 30 days to S3 Glacier ($200/month)</li>
+<li>Partition logs by date; scan only recent data</li>
+<li><strong>Result:</strong> <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">150/</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">re</span><span class="mord mathnormal">d</span><span class="mord mathnormal">u</span><span class="mord mathnormal">ce</span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span></span></span></span>450/month (91% savings)</li>
+</ul>
+<h3 id="case-2-the-nat-gateway-nightmare">Case 2: The NAT Gateway Nightmare<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#case-2-the-nat-gateway-nightmare" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A company routed all outbound traffic from private subnets through NAT
+Gateways. Their microservices architecture generated enormous inter-
+service traffic that unnecessarily traversed the NAT Gateway.</p>
+<ul>
+<li>20 TB/month through NAT Gateway</li>
+<li>NAT Gateway processing: 20,000 GB x <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.045</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span></span></span></span>900/month</li>
+<li>NAT Gateway hourly: <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">0.045</span><span class="mord mathnormal">x</span><span class="mord">730</span><span class="mord mathnormal">h</span><span class="mord mathnormal">o</span><span class="mord mathnormal">u</span><span class="mord mathnormal">rs</span><span class="mord mathnormal">x</span><span class="mord">3</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.07153em;">Z</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span></span></span></span>98.55/month</li>
+<li><strong>Total NAT cost: ~$1,000/month</strong></li>
+</ul>
+<p><strong>Fix:</strong></p>
+<ul>
+<li>VPC Endpoints for AWS service calls (<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.01/</span><span class="mord mathnormal" style="margin-right:0.05017em;">GB</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal">s</span></span></span></span>0.045/GB)</li>
+<li>Service mesh for internal service-to-service communication (no NAT)</li>
+<li><strong>Result:</strong> <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">000/</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">re</span><span class="mord mathnormal">d</span><span class="mord mathnormal">u</span><span class="mord mathnormal">ce</span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span></span></span></span>200/month</li>
+</ul>
+<h3 id="case-3-the-forgotten-dev-environment">Case 3: The Forgotten Dev Environment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#case-3-the-forgotten-dev-environment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A team spun up a full production-replica environment for testing a
+feature, including multi-AZ RDS, ElastiCache cluster, and 20 EC2
+instances. The feature shipped in 2 weeks. The environment ran for
+8 months before anyone noticed.</p>
+<ul>
+<li>Monthly cost: $12,000</li>
+<li>Total waste: <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">12</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">000</span><span class="mord mathnormal">x</span><span class="mord">6</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">s</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.02778em;">er</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal">ee</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mord mathnormal">p</span><span class="mord mathnormal">ro</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mord mathnormal">ec</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span></span></span></span>72,000</li>
+</ul>
+<p><strong>Fix:</strong></p>
+<ul>
+<li>Mandatory tagging with <code>ExpireDate</code> tag</li>
+<li>Lambda function that terminates resources past their expire date</li>
+<li>Nightly report of untagged resources</li>
+<li><strong>Prevention:</strong> Never happened again</li>
+</ul>
+<h3 id="case-4-the-log-explosion">Case 4: The Log Explosion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#case-4-the-log-explosion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A team enabled DEBUG-level logging in production “temporarily.” The
+application generated 500 GB/day of CloudWatch Logs.</p>
+<ul>
+<li>Ingestion: 500 GB x <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.50/</span><span class="mord mathnormal" style="margin-right:0.05017em;">GB</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span></span></span></span>250/day</li>
+<li>Storage: 500 GB/day x 30 days x <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.03/</span><span class="mord mathnormal" style="margin-right:0.05017em;">GB</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span></span></span></span>450/month (growing)</li>
+<li><strong>Monthly cost: ~$7,500 (just for logs)</strong></li>
+</ul>
+<p><strong>Fix:</strong></p>
+<ul>
+<li>Reduced log level to WARN in production</li>
+<li>Implemented log sampling (log 1% of DEBUG, 100% of ERROR)</li>
+<li>Set CloudWatch log retention to 7 days (not infinite default)</li>
+<li><strong>Result:</strong> <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">7</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">500/</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">re</span><span class="mord mathnormal">d</span><span class="mord mathnormal">u</span><span class="mord mathnormal">ce</span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span></span></span></span>200/month</li>
+</ul>
+<hr/>
+<h2 id="cloud-cost-optimization-checklist">Cloud Cost Optimization Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-cost-optimization-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>  COST OPTIMIZATION CHECKLIST
+  ============================
+
+  QUICK WINS (do these first):
+  [ ] Right-size instances (Compute Optimizer recommendations)
+  [ ] Delete unused resources (stopped instances, old snapshots,
+      unattached EBS volumes, unused Elastic IPs)
+  [ ] Set S3 lifecycle policies (Standard -> IA -> Glacier)
+  [ ] Set CloudWatch log retention periods (not indefinite)
+  [ ] Review and downgrade over-provisioned RDS instances
+  [ ] Remove unused NAT Gateways and load balancers
+
+  COMMITMENTS (save 30-72%):
+  [ ] Purchase Savings Plans for steady-state compute
+  [ ] Purchase Reserved Instances for RDS and ElastiCache
+  [ ] Review commitment coverage quarterly
+
+  ARCHITECTURE (save 20-60%):
+  [ ] Use VPC Endpoints instead of NAT Gateway for AWS services
+  [ ] Add CloudFront for cacheable content (reduces egress)
+  [ ] Use Graviton instances where compatible (20-40% cheaper)
+  [ ] Implement request-level caching (API Gateway, DAX, ElastiCache)
+  [ ] Compress inter-service payloads (gzip, protobuf vs JSON)
+
+  GOVERNANCE (prevent waste):
+  [ ] Enforce cost allocation tags via IAM policies
+  [ ] Set up AWS Budgets with alerts at 50%, 80%, 100%
+  [ ] Enable Cost Anomaly Detection
+  [ ] Schedule dev/test environments to stop after hours
+  [ ] Monthly cost review meetings with engineering leads
+  [ ] Track unit economics (cost per request, cost per user)
+</code></pre>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dynamic-programming-knapsack-problem--reserved-instance-purchasing">Dynamic Programming (Knapsack Problem) — Reserved Instance Purchasing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dynamic-programming-knapsack-problem--reserved-instance-purchasing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Selecting the optimal combination of Reserved Instances and Savings Plans is a variant of the 0/1 knapsack problem: each commitment option has a “weight” (upfront cost and lock-in period) and a “value” (projected savings over the term), and the budget is the knapsack capacity. The goal is to maximize total savings without exceeding the capital budget constraint. The pricing pyramid in this document — 50-70% reserved, 10-30% on-demand, 10-20% spot — is the empirically-derived solution to this knapsack. AWS Cost Explorer’s RI recommendations solve this DP internally: for each instance family and term length, the algorithm computes the break-even utilization and selects the combination that maximizes net savings, subject to the constraint that reserved capacity should not exceed steady-state demand. The overlapping subproblem structure (covering week 1’s demand informs covering week 2’s) makes DP the natural algorithmic framework.</p>
+<h3 id="greedy-algorithms--right-sizing-and-quick-win-optimization">Greedy Algorithms — Right-Sizing and Quick-Win Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#greedy-algorithms--right-sizing-and-quick-win-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The cost optimization checklist’s “quick wins” section is a greedy strategy: sort optimization opportunities by savings-to-effort ratio and execute them in descending order. Right-sizing an m5.4xlarge down to m5.xlarge (75% savings, minimal effort) is selected before architectural changes (moderate savings, high effort) because the greedy criterion — maximum immediate savings per unit of work — favors it. This mirrors the greedy algorithm for fractional knapsack, where items are sorted by value-per-weight and added in that order. The FinOps lifecycle’s Crawl/Walk/Run maturity model is itself a greedy progression: at each stage, the organization picks the highest-impact optimization it can currently execute, exactly as a greedy algorithm selects the locally optimal choice at each step.</p>
+<h3 id="trie--prefix-trees--cost-allocation-tag-hierarchies">Trie / Prefix Trees — Cost Allocation Tag Hierarchies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#trie--prefix-trees--cost-allocation-tag-hierarchies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Cost allocation tags form a hierarchical namespace that can be represented as a trie: the root branches by <code>Environment</code> (production, staging, dev), each environment branches by <code>Team</code>, each team by <code>Project</code>, and so on. Querying “what does Team Platform-Engineering spend in Production?” is a trie prefix lookup — traverse the path <code>production -> platform-engineering -> *</code> and sum all leaf costs. AWS Cost Explorer’s filtering and grouping operations perform exactly this trie traversal when generating cost breakdowns. The document’s tagging strategy (Environment, Team, Project, CostCenter, Owner) defines a 5-level trie whose depth determines the granularity of cost attribution. Untagged resources are orphan nodes outside the trie — invisible to cost reporting, which is why the document insists tags are non-negotiable.</p>
+<h3 id="anomaly-detection-as-online-algorithms--cost-spike-identification">Anomaly Detection as Online Algorithms — Cost Spike Identification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#anomaly-detection-as-online-algorithms--cost-spike-identification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The Cost Anomaly Detection system described in this document is an online algorithm: it processes a stream of daily cost data points and must decide, at each new observation, whether that point is anomalous — without the luxury of seeing the full dataset. Internally, AWS uses a sliding-window approach combined with statistical thresholds (similar to exponentially-weighted moving averages or CUSUM detectors). The algorithmic challenge is the same as maintaining a running median or a streaming percentile: the system must update its model in O(1) or O(log n) time per data point while accurately distinguishing true anomalies (<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">4</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">200</span><span class="mord mathnormal">o</span><span class="mord mathnormal">nan</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord mathnormal">ma</span><span class="mord mathnormal" style="margin-right:0.01968em;">ll</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord">−</span></span></span></span>1,600 day) from natural variance. The 50 forgotten GPU instances scenario in this document would be flagged because the cost observation falls outside the confidence interval maintained by the online algorithm — a classic application of streaming statistics.</p>
+<hr/>
+<h2 id="key-takeaways">Key Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Cloud costs are an iceberg.</strong> Compute is visible, but data transfer,
+NAT Gateway, logging, and API charges can equal or exceed compute
+spend. Monitor all cost dimensions.</p>
+</li>
+<li>
+<p><strong>Data transfer is the biggest surprise.</strong> Egress to the internet,
+cross-AZ traffic, and NAT Gateway processing fees add up fast at
+scale. Use VPC Endpoints, CloudFront, and compression to mitigate.</p>
+</li>
+<li>
+<p><strong>The pricing pyramid — commit, flex, and spot.</strong> 50-70% of spend
+on commitments (RIs/Savings Plans), 10-30% on-demand for flexibility,
+10-20% Spot for fault-tolerant work. This blend saves 40-60%.</p>
+</li>
+<li>
+<p><strong>Right-sizing is the easiest win.</strong> Most instances are over-
+provisioned by 2-4x. Use Compute Optimizer or similar tools to
+identify and downsize. Graviton/ARM adds another 20-40% savings.</p>
+</li>
+<li>
+<p><strong>Tags are non-negotiable.</strong> Without cost allocation tags, you cannot
+attribute costs to teams, projects, or environments. Enforce tagging
+at creation time.</p>
+</li>
+<li>
+<p><strong>Track unit economics, not just total spend.</strong> Cost per request,
+cost per user, and cloud cost as a percentage of revenue normalize
+costs against business growth. Total spend increasing is fine if
+unit costs are decreasing.</p>
+</li>
+<li>
+<p><strong>Automate cost governance.</strong> Budget alerts, anomaly detection,
+scheduled shutdowns of dev environments, and automated cleanup of
+expired resources prevent waste before it accumulates.</p>
+</li>
+<li>
+<p><strong>Cost optimization is continuous.</strong> The FinOps loop (measure,
+analyze, optimize, repeat) never ends. New services, new pricing,
+new workloads — the landscape shifts constantly, and so must your
+cost strategy.</p>
+</li>
+</ol></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-33" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#cloud-cost-mental-model" data-for="cloud-cost-mental-model">Cloud Cost Mental Model</a></li><li class="depth-1"><a href="#core-idea-the-cloud-cost-iceberg" data-for="core-idea-the-cloud-cost-iceberg">Core Idea: The Cloud Cost Iceberg</a></li><li class="depth-1"><a href="#pricing-dimensions-how-you-get-charged" data-for="pricing-dimensions-how-you-get-charged">Pricing Dimensions: How You Get Charged</a></li><li class="depth-2"><a href="#the-four-primary-pricing-dimensions" data-for="the-four-primary-pricing-dimensions">The Four Primary Pricing Dimensions</a></li><li class="depth-2"><a href="#data-transfer-the-real-surprise" data-for="data-transfer-the-real-surprise">Data Transfer: The Real Surprise</a></li><li class="depth-2"><a href="#cross-az-data-transfer-the-hidden-tax" data-for="cross-az-data-transfer-the-hidden-tax">Cross-AZ Data Transfer: The Hidden Tax</a></li><li class="depth-1"><a href="#pricing-models-reserved-on-demand-spot" data-for="pricing-models-reserved-on-demand-spot">Pricing Models: Reserved, On-Demand, Spot</a></li><li class="depth-2"><a href="#on-demand" data-for="on-demand">On-Demand</a></li><li class="depth-2"><a href="#reserved-instances-ri--savings-plans" data-for="reserved-instances-ri--savings-plans">Reserved Instances (RI) / Savings Plans</a></li><li class="depth-2"><a href="#savings-plans-aws" data-for="savings-plans-aws">Savings Plans (AWS)</a></li><li class="depth-2"><a href="#spot-instances" data-for="spot-instances">Spot Instances</a></li><li class="depth-2"><a href="#the-optimal-pricing-mix" data-for="the-optimal-pricing-mix">The Optimal Pricing Mix</a></li><li class="depth-1"><a href="#cost-allocation-tags" data-for="cost-allocation-tags">Cost Allocation Tags</a></li><li class="depth-2"><a href="#tagging-best-practices" data-for="tagging-best-practices">Tagging Best Practices</a></li><li class="depth-1"><a href="#the-finops-framework" data-for="the-finops-framework">The FinOps Framework</a></li><li class="depth-2"><a href="#finops-maturity-levels" data-for="finops-maturity-levels">FinOps Maturity Levels</a></li><li class="depth-1"><a href="#the-cost-optimization-loop" data-for="the-cost-optimization-loop">The Cost Optimization Loop</a></li><li class="depth-1"><a href="#right-sizing-instances" data-for="right-sizing-instances">Right-Sizing Instances</a></li><li class="depth-2"><a href="#graviton--arm-cost-advantage" data-for="graviton--arm-cost-advantage">Graviton / ARM Cost Advantage</a></li><li class="depth-1"><a href="#data-transfer-costs-the-real-surprise" data-for="data-transfer-costs-the-real-surprise">Data Transfer Costs: The Real Surprise</a></li><li class="depth-2"><a href="#cost-reduction-strategies-for-data-transfer" data-for="cost-reduction-strategies-for-data-transfer">Cost Reduction Strategies for Data Transfer</a></li><li class="depth-1"><a href="#budgets-alerts-and-anomaly-detection" data-for="budgets-alerts-and-anomaly-detection">Budgets, Alerts, and Anomaly Detection</a></li><li class="depth-2"><a href="#aws-budgets" data-for="aws-budgets">AWS Budgets</a></li><li class="depth-2"><a href="#cost-anomaly-detection" data-for="cost-anomaly-detection">Cost Anomaly Detection</a></li><li class="depth-1"><a href="#unit-economics-cost-per-request-cost-per-user" data-for="unit-economics-cost-per-request-cost-per-user">Unit Economics: Cost Per Request, Cost Per User</a></li><li class="depth-1"><a href="#real-examples-of-cloud-bills-going-wrong" data-for="real-examples-of-cloud-bills-going-wrong">Real Examples of Cloud Bills Going Wrong</a></li><li class="depth-2"><a href="#case-1-the-s3-surprise" data-for="case-1-the-s3-surprise">Case 1: The S3 Surprise</a></li><li class="depth-2"><a href="#case-2-the-nat-gateway-nightmare" data-for="case-2-the-nat-gateway-nightmare">Case 2: The NAT Gateway Nightmare</a></li><li class="depth-2"><a href="#case-3-the-forgotten-dev-environment" data-for="case-3-the-forgotten-dev-environment">Case 3: The Forgotten Dev Environment</a></li><li class="depth-2"><a href="#case-4-the-log-explosion" data-for="case-4-the-log-explosion">Case 4: The Log Explosion</a></li><li class="depth-1"><a href="#cloud-cost-optimization-checklist" data-for="cloud-cost-optimization-checklist">Cloud Cost Optimization Checklist</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#dynamic-programming-knapsack-problem--reserved-instance-purchasing" data-for="dynamic-programming-knapsack-problem--reserved-instance-purchasing">Dynamic Programming (Knapsack Problem) — Reserved Instance Purchasing</a></li><li class="depth-2"><a href="#greedy-algorithms--right-sizing-and-quick-win-optimization" data-for="greedy-algorithms--right-sizing-and-quick-win-optimization">Greedy Algorithms — Right-Sizing and Quick-Win Optimization</a></li><li class="depth-2"><a href="#trie--prefix-trees--cost-allocation-tag-hierarchies" data-for="trie--prefix-trees--cost-allocation-tag-hierarchies">Trie / Prefix Trees — Cost Allocation Tag Hierarchies</a></li><li class="depth-2"><a href="#anomaly-detection-as-online-algorithms--cost-spike-identification" data-for="anomaly-detection-as-online-algorithms--cost-spike-identification">Anomaly Detection as Online Algorithms — Cost Spike Identification</a></li><li class="depth-1"><a href="#key-takeaways" data-for="key-takeaways">Key Takeaways</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

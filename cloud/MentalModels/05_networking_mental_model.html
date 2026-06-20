@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>05_networking_mental_model</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="05_networking_mental_model"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="05_networking_mental_model"/><meta name="twitter:description" content="Cloud Networking Mental Model Core Idea: Virtual Networks Over Physical Networks In a traditional data center, networking is physical: you buy switches, routers, cables, and firewalls."/><meta property="og:description" content="Cloud Networking Mental Model Core Idea: Virtual Networks Over Physical Networks In a traditional data center, networking is physical: you buy switches, routers, cables, and firewalls."/><meta property="og:image:alt" content="Cloud Networking Mental Model Core Idea: Virtual Networks Over Physical Networks In a traditional data center, networking is physical: you buy switches, routers, cables, and firewalls."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/MentalModels/05_networking_mental_model"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/MentalModels/05_networking_mental_model"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Cloud Networking Mental Model Core Idea: Virtual Networks Over Physical Networks In a traditional data center, networking is physical: you buy switches, routers, cables, and firewalls."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/MentalModels/05_networking_mental_model"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-43"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-43" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/MentalModels/">MentalModels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>05_networking_mental_model</a></div></nav><h1 class="article-title">05_networking_mental_model</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.325Z">Jun 20, 2026</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="cloud-networking-mental-model">Cloud Networking Mental Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-networking-mental-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="core-idea-virtual-networks-over-physical-networks">Core Idea: Virtual Networks Over Physical Networks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-idea-virtual-networks-over-physical-networks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>In a traditional data center, networking is physical: you buy switches,
+routers, cables, and firewalls. In the cloud, networking is <strong>virtual</strong>:
+software defines the network topology, and it runs as an overlay on top
+of the provider’s physical network.</p>
+<p>This is called <strong>Software-Defined Networking (SDN)</strong>, and it is what
+allows every cloud customer to have their own isolated, configurable
+network — even though they all share the same physical infrastructure.</p>
+<pre><code>  PHYSICAL vs VIRTUAL NETWORKING
+  ===============================
+
+  Physical (Traditional Data Center):
+  +--------+     +--------+     +----------+
+  | Server |-----| Switch |-----| Firewall |-----> Internet
+  +--------+     +--------+     +----------+
+  Physical cables, physical devices, physical configuration.
+
+  Virtual (Cloud):
+  +--------+     +-----------+     +----------+
+  | EC2    |-----| Virtual   |-----| Internet |-----> Internet
+  |Instance|     | Switch    |     | Gateway  |
+  +--------+     +-----------+     +----------+
+  Software-defined. No physical cables. Configured via API.
+  Runs as an overlay on the provider's physical network fabric.
+</code></pre>
+<hr/>
+<h2 id="vpc-your-virtual-data-center">VPC: Your Virtual Data Center<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vpc-your-virtual-data-center" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>A <strong>Virtual Private Cloud (VPC)</strong> is a logically isolated section of the
+cloud provider’s network that you control. Think of it as your own
+private data center inside the cloud, with your own IP address range,
+subnets, routing rules, and security policies.</p>
+<h3 id="key-properties-of-a-vpc">Key Properties of a VPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-properties-of-a-vpc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Isolated:</strong> Traffic cannot flow between VPCs unless you explicitly
+allow it (via peering, Transit Gateway, or VPN).</li>
+<li><strong>Configurable:</strong> You define the IP range, subnets, route tables,
+gateways, and security rules.</li>
+<li><strong>Regional:</strong> A VPC spans all Availability Zones in a single region.</li>
+<li><strong>Free:</strong> VPCs themselves cost nothing. You pay for resources inside
+them (instances, NAT gateways, data transfer).</li>
+</ul>
+<pre><code>  VPC ARCHITECTURE (AWS Example)
+  ===============================
+
+  Region: us-east-1
+  +------------------------------------------------------+
+  | VPC: 10.0.0.0/16 (65,536 IP addresses)               |
+  |                                                        |
+  |  AZ: us-east-1a            AZ: us-east-1b             |
+  |  +-----------------------+ +-----------------------+   |
+  |  | Public Subnet         | | Public Subnet         |   |
+  |  | 10.0.1.0/24 (256 IPs) | | 10.0.2.0/24 (256 IPs)|   |
+  |  | [Web Server]          | | [Web Server]          |   |
+  |  +-----------------------+ +-----------------------+   |
+  |  +-----------------------+ +-----------------------+   |
+  |  | Private Subnet        | | Private Subnet        |   |
+  |  | 10.0.3.0/24 (256 IPs) | | 10.0.4.0/24 (256 IPs)|   |
+  |  | [App Server]          | | [App Server]          |   |
+  |  +-----------------------+ +-----------------------+   |
+  |  +-----------------------+ +-----------------------+   |
+  |  | Private Subnet        | | Private Subnet        |   |
+  |  | 10.0.5.0/24 (256 IPs) | | 10.0.6.0/24 (256 IPs)|   |
+  |  | [Database]            | | [Database Standby]    |   |
+  |  +-----------------------+ +-----------------------+   |
+  +------------------------------------------------------+
+</code></pre>
+<hr/>
+<h2 id="cidr-notation-and-subnet-math">CIDR Notation and Subnet Math<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cidr-notation-and-subnet-math" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>CIDR (Classless Inter-Domain Routing)</strong> notation defines IP address
+ranges. Mastering CIDR math is essential for cloud networking.</p>
+<h3 id="the-basics">The Basics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-basics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A CIDR block like <code>10.0.0.0/16</code> means:</p>
+<ul>
+<li>The first 16 bits are the <strong>network prefix</strong> (fixed)</li>
+<li>The remaining 16 bits are available for <strong>host addresses</strong></li>
+<li>Total addresses: 2^(32-16) = 2^16 = 65,536</li>
+</ul>
+<h3 id="quick-reference-table">Quick Reference Table<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quick-reference-table" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>CIDR</th><th>Subnet Mask</th><th>Total IPs</th><th>Usable IPs*</th><th>Use Case</th></tr></thead><tbody><tr><td>/16</td><td>255.255.0.0</td><td>65,536</td><td>65,531</td><td>Large VPC</td></tr><tr><td>/20</td><td>255.255.240.0</td><td>4,096</td><td>4,091</td><td>Medium subnet</td></tr><tr><td>/24</td><td>255.255.255.0</td><td>256</td><td>251</td><td>Standard subnet</td></tr><tr><td>/26</td><td>255.255.255.192</td><td>64</td><td>59</td><td>Small subnet</td></tr><tr><td>/28</td><td>255.255.255.240</td><td>16</td><td>11</td><td>Tiny subnet</td></tr></tbody></table></div>
+<p>*AWS reserves 5 IPs per subnet: network address, VPC router, DNS,
+future use, and broadcast.</p>
+<h3 id="subnet-planning-example">Subnet Planning Example<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#subnet-planning-example" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  SUBNET PLANNING FOR A /16 VPC
+  ===============================
+
+  VPC: 10.0.0.0/16 (65,536 addresses)
+
+  Split into /20 subnets (4,096 addresses each):
+
+  10.0.0.0/20    = 10.0.0.0   - 10.0.15.255   (Public, AZ-a)
+  10.0.16.0/20   = 10.0.16.0  - 10.0.31.255   (Public, AZ-b)
+  10.0.32.0/20   = 10.0.32.0  - 10.0.47.255   (Public, AZ-c)
+  10.0.48.0/20   = 10.0.48.0  - 10.0.63.255   (Private, AZ-a)
+  10.0.64.0/20   = 10.0.64.0  - 10.0.79.255   (Private, AZ-b)
+  10.0.80.0/20   = 10.0.80.0  - 10.0.95.255   (Private, AZ-c)
+  10.0.96.0/20   = 10.0.96.0  - 10.0.111.255  (Data, AZ-a)
+  10.0.112.0/20  = 10.0.112.0 - 10.0.127.255  (Data, AZ-b)
+  ...
+  (Room for 16 total /20 subnets in a /16 VPC)
+
+  Rule of thumb: Always allocate more IPs than you think you need.
+  Expanding CIDR ranges later is painful.
+</code></pre>
+<hr/>
+<h2 id="public-vs-private-subnets">Public vs Private Subnets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#public-vs-private-subnets" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The distinction between public and private subnets is one of the most
+important concepts in cloud networking.</p>
+<h3 id="public-subnet">Public Subnet<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#public-subnet" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Has a route to an <strong>Internet Gateway (IGW)</strong></li>
+<li>Instances can have public IP addresses</li>
+<li>Directly reachable from the internet (if security groups allow)</li>
+<li>Used for: load balancers, bastion hosts, NAT gateways</li>
+</ul>
+<h3 id="private-subnet">Private Subnet<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#private-subnet" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Has <strong>no</strong> route to an Internet Gateway</li>
+<li>Instances have only private IP addresses</li>
+<li>NOT directly reachable from the internet</li>
+<li>Can reach the internet via a <strong>NAT Gateway</strong> (outbound only)</li>
+<li>Used for: application servers, databases, internal services</li>
+</ul>
+<pre><code>  PUBLIC vs PRIVATE SUBNET TRAFFIC FLOW
+  ======================================
+
+                        Internet
+                           |
+                    +------+------+
+                    | Internet    |
+                    | Gateway     |
+                    +------+------+
+                           |
+              +------------+------------+
+              |                         |
+       +------+------+          +------+------+
+       | Public      |          | Public      |
+       | Subnet      |          | Subnet      |
+       | (Web/ALB)   |          | (NAT GW)    |
+       +------+------+          +------+------+
+              |                         |
+              +------------+------------+
+                           |
+                    +------+------+
+                    | Private     |
+                    | Subnet      |
+                    | (App/DB)    |
+                    +------+------+
+
+  Inbound: Internet -> IGW -> Public Subnet -> Private Subnet
+  Outbound: Private Subnet -> NAT GW -> IGW -> Internet
+</code></pre>
+<hr/>
+<h2 id="internet-gateway-vs-nat-gateway">Internet Gateway vs NAT Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#internet-gateway-vs-nat-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>These two components are frequently confused. They serve opposite
+purposes.</p>
+<h3 id="internet-gateway-igw">Internet Gateway (IGW)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#internet-gateway-igw" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Allows <strong>inbound and outbound</strong> internet traffic</li>
+<li>Attached to the VPC (one per VPC)</li>
+<li>Instances in public subnets use it with a public IP</li>
+<li>Free (no hourly charge, but data transfer costs apply)</li>
+<li>Horizontally scaled, redundant, and highly available by default</li>
+</ul>
+<h3 id="nat-gateway">NAT Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nat-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Allows <strong>outbound-only</strong> internet traffic from private subnets</li>
+<li>Instances initiate connections out; the internet cannot initiate
+connections in</li>
+<li>Deployed in a public subnet, referenced in private subnet route tables</li>
+<li>Costs money (~<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.045/</span><span class="mord mathnormal">h</span><span class="mord mathnormal">o</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord">+</span></span></span></span>0.045/GB processed)</li>
+<li>Use case: private instances need to download software updates,
+call external APIs</li>
+</ul>
+<pre><code>  INTERNET GATEWAY vs NAT GATEWAY
+  ================================
+
+  Internet Gateway:                NAT Gateway:
+  +-----------+                    +-----------+
+  | Internet  |                    | Internet  |
+  +-----+-----+                   +-----+-----+
+        |                               |
+  +-----+-----+                   +-----+-----+
+  | IGW       |                   | NAT GW    |  (in public subnet)
+  +-----+-----+                   +-----+-----+
+        |                               |
+  +-----+-----+                   +-----+-----+
+  | Public    |                   | Private   |
+  | Subnet    |                   | Subnet    |
+  | (has      |                   | (no       |
+  |  public IP)|                  |  public IP)|
+  +-----------+                   +-----------+
+
+  IGW: Two-way door.  Anyone can walk in or out.
+  NAT: One-way mirror. You can see out, but no one can see in.
+</code></pre>
+<hr/>
+<h2 id="route-tables-the-gps-of-your-vpc">Route Tables: The GPS of Your VPC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#route-tables-the-gps-of-your-vpc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Every subnet has a <strong>route table</strong> that determines where network traffic
+is directed. Think of it as a set of GPS directions: “to reach this
+destination, go through this gateway.”</p>
+<h3 id="route-table-example">Route Table Example<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#route-table-example" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  PUBLIC SUBNET ROUTE TABLE
+  ==========================
+
+  Destination       Target          Notes
+  ---------------  --------------  ----------------------------
+  10.0.0.0/16      local           Traffic within VPC stays local
+  0.0.0.0/0        igw-abc123      All other traffic -> internet
+
+  PRIVATE SUBNET ROUTE TABLE
+  ===========================
+
+  Destination       Target          Notes
+  ---------------  --------------  ----------------------------
+  10.0.0.0/16      local           Traffic within VPC stays local
+  0.0.0.0/0        nat-xyz789      All other traffic -> NAT GW
+
+  The key difference: public subnets route 0.0.0.0/0 to an IGW.
+  Private subnets route 0.0.0.0/0 to a NAT Gateway (or nowhere).
+</code></pre>
+<h3 id="route-evaluation">Route Evaluation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#route-evaluation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Routes are evaluated using <strong>longest prefix match</strong>. More specific
+routes (longer prefix) take priority over less specific routes.</p>
+<pre><code>  LONGEST PREFIX MATCH EXAMPLE
+  =============================
+
+  Route Table:
+  10.0.0.0/16   -> local
+  10.0.5.0/24   -> peering-connection
+  0.0.0.0/0     -> igw
+
+  Packet to 10.0.5.17:
+  - Matches 10.0.0.0/16 (16-bit prefix)
+  - Matches 10.0.5.0/24 (24-bit prefix)  &lt;-- MORE SPECIFIC, wins
+  - Matches 0.0.0.0/0 (0-bit prefix)
+  Result: Routed via peering-connection
+
+  Packet to 10.0.9.100:
+  - Matches 10.0.0.0/16 (16-bit prefix)  &lt;-- MOST SPECIFIC
+  - Matches 0.0.0.0/0 (0-bit prefix)
+  Result: Routed locally within VPC
+</code></pre>
+<hr/>
+<h2 id="security-groups-vs-nacls">Security Groups vs NACLs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security-groups-vs-nacls" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cloud networking provides two layers of firewalling. Understanding the
+difference is critical.</p>
+<h3 id="security-groups-stateful-firewall">Security Groups (Stateful Firewall)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security-groups-stateful-firewall" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Applied at the <strong>instance (ENI) level</strong></li>
+<li><strong>Stateful:</strong> If you allow inbound traffic, the response is
+automatically allowed (no need for an outbound rule)</li>
+<li><strong>Allow-only:</strong> You can only write ALLOW rules. Everything not
+explicitly allowed is denied.</li>
+<li><strong>Evaluated as a group:</strong> All rules are evaluated together; the
+most permissive rule wins.</li>
+<li>Default: all outbound allowed, all inbound denied.</li>
+</ul>
+<h3 id="nacls-stateless-firewall">NACLs (Stateless Firewall)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nacls-stateless-firewall" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Applied at the <strong>subnet level</strong></li>
+<li><strong>Stateless:</strong> You must write rules for both inbound AND outbound
+traffic. Return traffic is not automatically allowed.</li>
+<li><strong>Allow and Deny:</strong> You can write both ALLOW and DENY rules.</li>
+<li><strong>Evaluated in order:</strong> Rules are evaluated by rule number (lowest
+first). First match wins.</li>
+<li>Default: all traffic allowed (both directions).</li>
+</ul>
+<pre><code>  SECURITY GROUPS vs NACLs
+  =========================
+
+                     Security Group         NACL
+                     -----------------      -----------------
+  Applied to         Instance (ENI)         Subnet
+  Statefulness       Stateful               Stateless
+  Rule types         Allow only             Allow and Deny
+  Rule evaluation    All rules, most        In order, first
+                     permissive wins        match wins
+  Default            Deny all inbound       Allow all
+  Return traffic     Automatic              Must be explicit
+  Use case           Primary firewall       Subnet-level
+                     for instances          guard rails
+
+  MENTAL MODEL:
+  - Security Groups = bouncers at the door of each room (instance)
+  - NACLs = security checkpoint at the building entrance (subnet)
+</code></pre>
+<h3 id="example-configuration">Example Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#example-configuration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  SECURITY GROUP: web-server-sg
+  =============================
+  Inbound:
+    HTTP   (TCP 80)   from 0.0.0.0/0         ALLOW
+    HTTPS  (TCP 443)  from 0.0.0.0/0         ALLOW
+    SSH    (TCP 22)   from 10.0.0.0/16       ALLOW (VPC only)
+  Outbound:
+    All traffic       to 0.0.0.0/0           ALLOW (default)
+
+  Because Security Groups are stateful:
+  - A request on port 443 is allowed in
+  - The response on the ephemeral port is AUTOMATICALLY allowed out
+  - No outbound rule needed for the response
+</code></pre>
+<hr/>
+<h2 id="vpc-peering-vs-transit-gateway">VPC Peering vs Transit Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vpc-peering-vs-transit-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>As architectures grow, you need to connect multiple VPCs. Two primary
+approaches exist.</p>
+<h3 id="vpc-peering">VPC Peering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vpc-peering" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Direct connection between two VPCs. Traffic stays on the provider’s
+private backbone (never crosses the public internet).</p>
+<pre><code>  VPC PEERING
+  ============
+
+  VPC A (10.0.0.0/16) &lt;----peering----> VPC B (10.1.0.0/16)
+
+  Limitations:
+  - NOT transitive: if A peers with B and B peers with C,
+    A CANNOT reach C through B.
+  - One-to-one: each pair of VPCs needs its own peering connection.
+  - With N VPCs, you need N*(N-1)/2 peering connections.
+    10 VPCs = 45 connections. 50 VPCs = 1,225 connections.
+</code></pre>
+<h3 id="transit-gateway">Transit Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transit-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A centralized hub that connects multiple VPCs and on-premises networks.
+Think of it as a cloud router.</p>
+<pre><code>  TRANSIT GATEWAY
+  ================
+
+  On-Premises ----VPN/DX----+
+                             |
+  VPC A (10.0.0.0/16) ------+
+                             |
+  VPC B (10.1.0.0/16) ------+---- [Transit Gateway] ---- Hub
+                             |
+  VPC C (10.2.0.0/16) ------+
+                             |
+  VPC D (10.3.0.0/16) ------+
+
+  Benefits:
+  - Transitive routing: any VPC can reach any other VPC
+  - Centralized management: one hub instead of N^2 peerings
+  - Scales to thousands of VPCs
+  - Supports VPN and Direct Connect attachments
+
+  Cost: ~$0.05/hour + $0.02/GB processed
+</code></pre>
+<hr/>
+<h2 id="dns-route-53-and-cloud-dns">DNS: Route 53 and Cloud DNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dns-route-53-and-cloud-dns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>DNS is the phone book of the internet. In the cloud, managed DNS
+services provide additional capabilities beyond simple name resolution.</p>
+<h3 id="routing-policies">Routing Policies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#routing-policies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Policy</th><th>Behavior</th><th>Use Case</th></tr></thead><tbody><tr><td>Simple</td><td>Return one record</td><td>Single resource</td></tr><tr><td>Weighted</td><td>Distribute traffic by percentage</td><td>A/B testing, canary deploys</td></tr><tr><td>Latency-based</td><td>Route to lowest-latency region</td><td>Global applications</td></tr><tr><td>Failover</td><td>Route to primary; switch to secondary</td><td>Disaster recovery</td></tr><tr><td>Geolocation</td><td>Route based on user’s location</td><td>Content localization</td></tr><tr><td>Multi-value</td><td>Return multiple IPs, health-checked</td><td>Simple load balancing</td></tr></tbody></table></div>
+<hr/>
+<h2 id="load-balancers-l4-vs-l7">Load Balancers: L4 vs L7<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#load-balancers-l4-vs-l7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Load balancers distribute traffic across multiple targets. The key
+distinction is between Layer 4 and Layer 7 load balancers.</p>
+<h3 id="layer-4-network-load-balancer---nlb">Layer 4 (Network Load Balancer - NLB)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#layer-4-network-load-balancer---nlb" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Operates at the <strong>transport layer</strong> (TCP/UDP). Sees source IP, destination
+IP, source port, destination port. Routes based on IP and port. Does not
+inspect the content of the request.</p>
+<ul>
+<li><strong>Speed:</strong> Millions of requests per second, ultra-low latency</li>
+<li><strong>Use case:</strong> TCP/UDP traffic, gaming, IoT, non-HTTP protocols</li>
+<li><strong>Preserves:</strong> Client source IP</li>
+</ul>
+<h3 id="layer-7-application-load-balancer---alb">Layer 7 (Application Load Balancer - ALB)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#layer-7-application-load-balancer---alb" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Operates at the <strong>application layer</strong> (HTTP/HTTPS). Sees URLs, headers,
+cookies, query parameters. Can make routing decisions based on content.</p>
+<ul>
+<li><strong>Speed:</strong> Hundreds of thousands of requests per second</li>
+<li><strong>Use case:</strong> HTTP/HTTPS traffic, microservices, path-based routing</li>
+<li><strong>Features:</strong> Host-based routing, path-based routing, header inspection,
+WebSocket support, sticky sessions</li>
+</ul>
+<pre><code>  L4 vs L7 LOAD BALANCER
+  ========================
+
+  L4 (NLB):
+  Client --> [NLB sees: TCP, src:1.2.3.4:54321, dst:5.6.7.8:443]
+             Routes based on IP/port only.
+             &quot;I see a packet for port 443. Send it to target group.&quot;
+
+  L7 (ALB):
+  Client --> [ALB sees: GET /api/users HTTP/1.1, Host: myapp.com]
+             Routes based on content.
+             &quot;I see a request for /api/users. Send it to the API service.&quot;
+             &quot;I see a request for /static/logo.png. Send it to the CDN.&quot;
+
+  Routing rules (ALB):
+  /api/*        --> API target group (port 8080)
+  /admin/*      --> Admin target group (port 9090)
+  /static/*     --> S3 bucket (via redirect)
+  default       --> Web target group (port 80)
+</code></pre>
+<hr/>
+<h2 id="the-packet-journey-end-to-end">The Packet Journey: End to End<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-packet-journey-end-to-end" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Here is the complete journey of an HTTPS request from a user’s browser
+to a database and back.</p>
+<pre><code>  THE PACKET JOURNEY
+  ===================
+
+  User's Browser (Sydney, Australia)
+       |
+       | DNS lookup: app.example.com
+       v
+  [Route 53] --> Returns CloudFront distribution CNAME
+       |
+       | HTTPS request to nearest edge location
+       v
+  [CloudFront Edge - Sydney PoP]
+       |
+       | Cache MISS (dynamic content)
+       | Forwards to origin via AWS backbone
+       v
+  [Application Load Balancer - us-east-1]
+       |
+       | TLS termination (decrypts HTTPS)
+       | Inspects HTTP headers
+       | Routes based on path: /api/users
+       v
+  [EC2 Instance - Private Subnet, us-east-1a]
+       |
+       | Security Group: allows traffic from ALB only
+       | Application processes request
+       | Needs data from database
+       v
+  [RDS Instance - Private Subnet, us-east-1a]
+       |
+       | Security Group: allows port 5432 from app subnet only
+       | Queries execute, results return
+       |
+       v  (Response travels back the same path in reverse)
+
+  Total latency: ~150-300ms (Sydney to US East and back)
+  With CloudFront caching (cache HIT): ~20-50ms (served from Sydney edge)
+</code></pre>
+<h3 id="what-security-checks-happen-along-the-way">What Security Checks Happen Along the Way<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-security-checks-happen-along-the-way" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  SECURITY CHECK SEQUENCE
+  ========================
+
+  1. CloudFront:  WAF rules (block SQL injection, XSS, rate limiting)
+  2. ALB:         Security Group (allow HTTPS from CloudFront IPs)
+  3. EC2:         Security Group (allow HTTP from ALB only)
+                  NACL at subnet boundary (stateless check)
+  4. RDS:         Security Group (allow PostgreSQL from app subnet)
+                  NACL at data subnet boundary
+
+  Each layer adds defense in depth.
+</code></pre>
+<hr/>
+<h2 id="cdn-edge-locations">CDN Edge Locations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cdn-edge-locations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>A <strong>Content Delivery Network (CDN)</strong> caches content at edge locations
+close to users, reducing latency for static content (images, CSS, JS)
+and improving performance for dynamic content (via optimized backbone
+routing).</p>
+<pre><code>  CDN TOPOLOGY
+  =============
+
+  Without CDN:
+  User (Tokyo) --[public internet, 15+ hops]--> Origin (Virginia)
+  Latency: 200-400ms
+
+  With CDN:
+  User (Tokyo) --[1-2 hops]--> Edge (Tokyo) --[AWS backbone]--> Origin
+  Cache HIT:  20-50ms (served from edge, no origin contact)
+  Cache MISS: 120-200ms (fetched via optimized backbone, then cached)
+
+  AWS CloudFront: 600+ edge locations in 100+ cities
+  Azure CDN: 180+ PoPs globally
+  GCP Cloud CDN: 180+ edge locations
+</code></pre>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="graph-traversal-dijkstras-algorithm--route-table-evaluation-and-cdn-routing">Graph Traversal (Dijkstra’s Algorithm) — Route Table Evaluation and CDN Routing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#graph-traversal-dijkstras-algorithm--route-table-evaluation-and-cdn-routing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A cloud network is a weighted directed graph: nodes are VPCs, subnets, gateways, and edge locations; edges are routes with associated latency or cost weights. When Route 53 uses latency-based routing to direct a user in Tokyo to the nearest CloudFront edge, it is solving a single-source shortest-path problem — the same problem Dijkstra’s algorithm addresses in O((V + E) log V) time with a min-heap. The document’s packet journey from Sydney through CloudFront to us-east-1 traverses the shortest-latency path across AWS’s backbone graph. Similarly, BGP (Border Gateway Protocol), which underlies all internet routing including VPC-to-internet paths, uses a distance-vector algorithm that is a distributed variant of Bellman-Ford — trading Dijkstra’s centralized optimality for decentralized convergence across autonomous systems.</p>
+<h3 id="trie-prefix-tree--longest-prefix-match-in-route-tables">Trie (Prefix Tree) — Longest Prefix Match in Route Tables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#trie-prefix-tree--longest-prefix-match-in-route-tables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The longest prefix match algorithm described in the route table section — where a packet to 10.0.5.17 matches /24 over /16 over /0 — is implemented using a binary trie (also called a radix tree or Patricia trie). Each bit of the destination IP address determines a left or right branch in the trie, and the deepest matching node is the selected route. Hardware routers implement this in TCAMs (ternary content-addressable memory) for O(1) lookups, but the logical structure is a trie with up to 32 levels for IPv4. CIDR notation directly encodes the trie depth: /16 means “match the first 16 bits,” which corresponds to traversing the trie to depth 16. This is why more specific routes (longer prefixes, deeper trie nodes) always win — they represent a more precise match in the trie, just as a longer key match in a trie is always more specific than a shorter one.</p>
+<h3 id="spanning-trees--vpc-peering-vs-transit-gateway-topology">Spanning Trees — VPC Peering vs Transit Gateway Topology<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spanning-trees--vpc-peering-vs-transit-gateway-topology" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The document’s comparison of VPC peering (requiring N*(N-1)/2 connections for N VPCs) versus Transit Gateway (a centralized hub) directly mirrors the graph theory distinction between a complete graph and a star topology. VPC peering creates a complete graph K_n with O(n^2) edges, which is expensive to manage and non-transitive. Transit Gateway creates a star graph with O(n) edges and transitive routing — topologically equivalent to a spanning tree of the complete graph. This is the same optimization that the Spanning Tree Protocol (STP) performs in physical Ethernet networks: it finds a loop-free subgraph (tree) that connects all nodes with minimum edges. The Transit Gateway is, in effect, the cloud-level spanning tree that replaces an unmanageable full mesh with a minimal connected topology.</p>
+<h3 id="adjacency-lists--security-group-rule-evaluation">Adjacency Lists — Security Group Rule Evaluation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adjacency-lists--security-group-rule-evaluation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Security groups and NACLs are evaluated as rule sets that can be modeled as adjacency lists in a directed graph where nodes are (source, destination) pairs and edges represent allowed traffic flows. A security group with rules allowing HTTP from 0.0.0.0/0 and SSH from 10.0.0.0/16 defines two edges in this access graph. The stateful property of security groups means that for every edge (A <span>→</span> B) in the inbound adjacency list, the reverse edge (B <span>→</span> A) is implicitly added to the outbound list — automatic bidirectional edge insertion. NACLs, being stateless, require explicit edges in both directions. Evaluating whether a packet is allowed is a graph reachability query: “does a path exist from source to destination through the allowed-traffic graph?” Network segmentation via VPCs, subnets, and security groups is the practice of partitioning this graph into disconnected components to minimize blast radius.</p>
+<hr/>
+<h2 id="key-takeaways">Key Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>VPCs are virtual data centers.</strong> They give you a logically isolated
+network with your own IP space, subnets, route tables, and security
+policies. Learn to design VPCs before deploying workloads.</p>
+</li>
+<li>
+<p><strong>Public vs private subnets are about routing, not magic.</strong> A subnet
+is “public” if its route table has a route to an Internet Gateway. A
+subnet is “private” if it does not.</p>
+</li>
+<li>
+<p><strong>NAT Gateway enables outbound-only internet access.</strong> Private
+instances can reach the internet (for updates, API calls) without
+being reachable from the internet.</p>
+</li>
+<li>
+<p><strong>Security Groups are your primary firewall.</strong> They are stateful,
+allow-only, and applied per instance. Start with the most restrictive
+rules and open only what is needed.</p>
+</li>
+<li>
+<p><strong>CIDR math is worth learning.</strong> Subnet planning mistakes are
+expensive to fix later. Always allocate more IP space than you think
+you need.</p>
+</li>
+<li>
+<p><strong>Transit Gateway replaces the peering mesh.</strong> For more than 3-4
+VPCs, Transit Gateway is simpler and more scalable than managing
+N*(N-1)/2 peering connections.</p>
+</li>
+<li>
+<p><strong>Understand the packet journey.</strong> Knowing how a request flows from
+user to CloudFront to ALB to EC2 to RDS (and back) helps you debug
+connectivity issues, optimize latency, and design security in depth.</p>
+</li>
+<li>
+<p><strong>L4 vs L7 load balancers serve different purposes.</strong> Use NLB for raw
+TCP/UDP performance and source IP preservation. Use ALB for
+HTTP-aware routing, path-based rules, and WebSocket support.</p>
+</li>
+</ol></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-31" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#cloud-networking-mental-model" data-for="cloud-networking-mental-model">Cloud Networking Mental Model</a></li><li class="depth-1"><a href="#core-idea-virtual-networks-over-physical-networks" data-for="core-idea-virtual-networks-over-physical-networks">Core Idea: Virtual Networks Over Physical Networks</a></li><li class="depth-1"><a href="#vpc-your-virtual-data-center" data-for="vpc-your-virtual-data-center">VPC: Your Virtual Data Center</a></li><li class="depth-2"><a href="#key-properties-of-a-vpc" data-for="key-properties-of-a-vpc">Key Properties of a VPC</a></li><li class="depth-1"><a href="#cidr-notation-and-subnet-math" data-for="cidr-notation-and-subnet-math">CIDR Notation and Subnet Math</a></li><li class="depth-2"><a href="#the-basics" data-for="the-basics">The Basics</a></li><li class="depth-2"><a href="#quick-reference-table" data-for="quick-reference-table">Quick Reference Table</a></li><li class="depth-2"><a href="#subnet-planning-example" data-for="subnet-planning-example">Subnet Planning Example</a></li><li class="depth-1"><a href="#public-vs-private-subnets" data-for="public-vs-private-subnets">Public vs Private Subnets</a></li><li class="depth-2"><a href="#public-subnet" data-for="public-subnet">Public Subnet</a></li><li class="depth-2"><a href="#private-subnet" data-for="private-subnet">Private Subnet</a></li><li class="depth-1"><a href="#internet-gateway-vs-nat-gateway" data-for="internet-gateway-vs-nat-gateway">Internet Gateway vs NAT Gateway</a></li><li class="depth-2"><a href="#internet-gateway-igw" data-for="internet-gateway-igw">Internet Gateway (IGW)</a></li><li class="depth-2"><a href="#nat-gateway" data-for="nat-gateway">NAT Gateway</a></li><li class="depth-1"><a href="#route-tables-the-gps-of-your-vpc" data-for="route-tables-the-gps-of-your-vpc">Route Tables: The GPS of Your VPC</a></li><li class="depth-2"><a href="#route-table-example" data-for="route-table-example">Route Table Example</a></li><li class="depth-2"><a href="#route-evaluation" data-for="route-evaluation">Route Evaluation</a></li><li class="depth-1"><a href="#security-groups-vs-nacls" data-for="security-groups-vs-nacls">Security Groups vs NACLs</a></li><li class="depth-2"><a href="#security-groups-stateful-firewall" data-for="security-groups-stateful-firewall">Security Groups (Stateful Firewall)</a></li><li class="depth-2"><a href="#nacls-stateless-firewall" data-for="nacls-stateless-firewall">NACLs (Stateless Firewall)</a></li><li class="depth-2"><a href="#example-configuration" data-for="example-configuration">Example Configuration</a></li><li class="depth-1"><a href="#vpc-peering-vs-transit-gateway" data-for="vpc-peering-vs-transit-gateway">VPC Peering vs Transit Gateway</a></li><li class="depth-2"><a href="#vpc-peering" data-for="vpc-peering">VPC Peering</a></li><li class="depth-2"><a href="#transit-gateway" data-for="transit-gateway">Transit Gateway</a></li><li class="depth-1"><a href="#dns-route-53-and-cloud-dns" data-for="dns-route-53-and-cloud-dns">DNS: Route 53 and Cloud DNS</a></li><li class="depth-2"><a href="#routing-policies" data-for="routing-policies">Routing Policies</a></li><li class="depth-1"><a href="#load-balancers-l4-vs-l7" data-for="load-balancers-l4-vs-l7">Load Balancers: L4 vs L7</a></li><li class="depth-2"><a href="#layer-4-network-load-balancer---nlb" data-for="layer-4-network-load-balancer---nlb">Layer 4 (Network Load Balancer - NLB)</a></li><li class="depth-2"><a href="#layer-7-application-load-balancer---alb" data-for="layer-7-application-load-balancer---alb">Layer 7 (Application Load Balancer - ALB)</a></li><li class="depth-1"><a href="#the-packet-journey-end-to-end" data-for="the-packet-journey-end-to-end">The Packet Journey: End to End</a></li><li class="depth-2"><a href="#what-security-checks-happen-along-the-way" data-for="what-security-checks-happen-along-the-way">What Security Checks Happen Along the Way</a></li><li class="depth-1"><a href="#cdn-edge-locations" data-for="cdn-edge-locations">CDN Edge Locations</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#graph-traversal-dijkstras-algorithm--route-table-evaluation-and-cdn-routing" data-for="graph-traversal-dijkstras-algorithm--route-table-evaluation-and-cdn-routing">Graph Traversal (Dijkstra’s Algorithm) — Route Table Evaluation and CDN Routing</a></li><li class="depth-2"><a href="#trie-prefix-tree--longest-prefix-match-in-route-tables" data-for="trie-prefix-tree--longest-prefix-match-in-route-tables">Trie (Prefix Tree) — Longest Prefix Match in Route Tables</a></li><li class="depth-2"><a href="#spanning-trees--vpc-peering-vs-transit-gateway-topology" data-for="spanning-trees--vpc-peering-vs-transit-gateway-topology">Spanning Trees — VPC Peering vs Transit Gateway Topology</a></li><li class="depth-2"><a href="#adjacency-lists--security-group-rule-evaluation" data-for="adjacency-lists--security-group-rule-evaluation">Adjacency Lists — Security Group Rule Evaluation</a></li><li class="depth-1"><a href="#key-takeaways" data-for="key-takeaways">Key Takeaways</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

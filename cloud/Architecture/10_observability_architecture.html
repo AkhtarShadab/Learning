@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>10_observability_architecture</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="10_observability_architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="10_observability_architecture"/><meta name="twitter:description" content="Cloud Observability Architecture Table of Contents Introduction Three Pillars of Observability CloudWatch Deep Dive EventBridge for Operational Events AWS Systems Manager Health and Status OpenTelemetry Integration Observability Pipeline Architecture Best Practices and Anti-Patterns Practical Takeaw..."/><meta property="og:description" content="Cloud Observability Architecture Table of Contents Introduction Three Pillars of Observability CloudWatch Deep Dive EventBridge for Operational Events AWS Systems Manager Health and Status OpenTelemetry Integration Observability Pipeline Architecture Best Practices and Anti-Patterns Practical Takeaw..."/><meta property="og:image:alt" content="Cloud Observability Architecture Table of Contents Introduction Three Pillars of Observability CloudWatch Deep Dive EventBridge for Operational Events AWS Systems Manager Health and Status OpenTelemetry Integration Observability Pipeline Architecture Best Practices and Anti-Patterns Practical Takeaw..."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/Architecture/10_observability_architecture"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/Architecture/10_observability_architecture"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Cloud Observability Architecture Table of Contents Introduction Three Pillars of Observability CloudWatch Deep Dive EventBridge for Operational Events AWS Systems Manager Health and Status OpenTelemetry Integration Observability Pipeline Architecture Best Practices and Anti-Patterns Practical Takeaw..."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/Architecture/10_observability_architecture"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-37"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-37" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/Architecture/">Architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>10_observability_architecture</a></div></nav><h1 class="article-title">10_observability_architecture</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.357Z">Jun 20, 2026</time><span>17 min read</span></p></div></div><article class="popover-hint"><h1 id="cloud-observability-architecture">Cloud Observability Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-observability-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="table-of-contents">Table of Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#table-of-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><a href="#1-introduction" class="internal alias">Introduction</a></li>
+<li><a href="#2-three-pillars-of-observability" class="internal alias">Three Pillars of Observability</a></li>
+<li><a href="#3-cloudwatch-deep-dive" class="internal alias">CloudWatch Deep Dive</a></li>
+<li><a href="#4-eventbridge-for-operational-events" class="internal alias">EventBridge for Operational Events</a></li>
+<li><a href="#5-aws-systems-manager" class="internal alias">AWS Systems Manager</a></li>
+<li><a href="#6-health-and-status" class="internal alias">Health and Status</a></li>
+<li><a href="#7-opentelemetry-integration" class="internal alias">OpenTelemetry Integration</a></li>
+<li><a href="#8-observability-pipeline-architecture" class="internal alias">Observability Pipeline Architecture</a></li>
+<li><a href="#9-best-practices-and-anti-patterns" class="internal alias">Best Practices and Anti-Patterns</a></li>
+<li><a href="#10-practical-takeaways" class="internal alias">Practical Takeaways</a></li>
+</ol>
+<hr/>
+<h2 id="1-introduction">1. Introduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-introduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="monitoring-vs-observability">Monitoring vs. Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monitoring-vs-observability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Monitoring</strong> tells you <em>when</em> something is broken. You predefine checks, set thresholds,
+and fire alerts. It answers known-unknowns: “Is CPU above 90%?”</p>
+<p><strong>Observability</strong> tells you <em>why</em> something is broken, even when you could not have predicted
+the failure mode. It answers unknown-unknowns: “Why did latency spike for users in eu-west-1
+between 14:02 and 14:07?” Observability is the property of a system that lets you ask
+arbitrary questions about internal state by examining external outputs — metrics, logs,
+and traces.</p>
+<p>This matters in distributed systems because a single request may traverse 8-15 services,
+failure is rarely binary (a system can be “up” yet degraded), and root causes are emergent
+— a memory leak in Service A creates back-pressure on Service B, triggering retries in
+Service C that saturate a connection pool in Service D.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Challenge</th><th>How Observability Helps</th></tr></thead><tbody><tr><td>Ephemeral infrastructure</td><td>Telemetry must outlive containers and Lambdas</td></tr><tr><td>Polyglot services</td><td>Unified correlation across languages and runtimes</td></tr><tr><td>Blast radius estimation</td><td>Traces show exactly which downstream services affected</td></tr><tr><td>Compliance and audit</td><td>Immutable log streams with retention policies</td></tr><tr><td>Incident response</td><td>Dashboards + alarms + runbooks reduce MTTR</td></tr></tbody></table></div>
+<hr/>
+<h2 id="2-three-pillars-of-observability">2. Three Pillars of Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-three-pillars-of-observability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-metrics">2.1 Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Metrics are numeric measurements collected at regular intervals — cheap to store, fast to
+query, ideal for dashboards and alarms.</p>
+<p><strong>CloudWatch Metrics</strong> are identified by namespace (<code>AWS/EC2</code>, <code>AWS/Lambda</code>, or custom
+<code>MyApp/PaymentService</code>), metric name (<code>CPUUtilization</code>, <code>Duration</code>), and dimensions
+(name-value pairs like <code>FunctionName=processOrder</code>).</p>
+<p><strong>Statistics and periods</strong> — when retrieving data you choose an aggregation window (period)
+and statistic: <code>Average</code>, <code>Sum</code>, <code>Min</code>, <code>Max</code>, <code>SampleCount</code>, or extended statistics like
+<code>p50</code>/<code>p90</code>/<code>p99</code>. Standard resolution: minimum 60s period. <strong>High-resolution metrics</strong>:
+down to 1-second periods, higher cost.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Publish a high-resolution custom metric</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cloudwatch</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-metric-data</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --namespace</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;MyApp/PaymentService&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --metric-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;PaymentLatency&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --value</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 142.7</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --unit</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Milliseconds</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --storage-resolution</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --dimensions</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Environment=prod,Region=us-east-1</span></span></code></pre></figure>
+<p><strong>Embedded Metric Format (EMF)</strong> — from Lambda, emit custom metrics via structured log
+output with zero API call overhead:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;_aws&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;Timestamp&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1715300000000</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;CloudWatchMetrics&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Namespace&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;MyApp/OrderService&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Dimensions&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;OrderType&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">]],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Metrics&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;OrdersProcessed&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Unit&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Count&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;ProcessingTime&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;Unit&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Milliseconds&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;Environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;prod&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;OrderType&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;subscription&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;OrdersProcessed&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">47</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;ProcessingTime&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">230</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>Metric Math</strong> combines metrics into derived calculations directly in CloudWatch:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Pattern</th><th>Expression</th></tr></thead><tbody><tr><td>Error rate</td><td><code>(errors / total) * 100</code></td></tr><tr><td>Requests/sec</td><td><code>requestCount / PERIOD(m1)</code></td></tr><tr><td>Anomaly band</td><td><code>ANOMALY_DETECTION_BAND(m1, 2)</code></td></tr><tr><td>Rate of change</td><td><code>RATE(m1)</code></td></tr></tbody></table></div>
+<p><strong>Anomaly Detection</strong> builds an ML model of expected behavior and alerts on deviations.
+Takes ~2 weeks to establish a reliable baseline. Accounts for hourly, daily, and weekly
+seasonality.</p>
+<h3 id="22-logs">2.2 Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-logs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Logs are immutable timestamped records — richest context, most expensive to store and query.</p>
+<p><strong>CloudWatch Logs structure:</strong> Log Group (container, sets retention) > Log Stream (one per
+source) > Log Event (individual line). Retention set at group level: 1 day to 10 years, or
+never expire (default).</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> logs</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-retention-policy</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --log-group-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;/aws/lambda/processOrder&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --retention-in-days</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 30</span></span></code></pre></figure>
+<p><strong>CloudWatch Logs Insights</strong> — purpose-built query language for fast log analysis:</p>
+<pre><code># Find errors
+fields @timestamp, @message | filter @message like /ERROR/
+| sort @timestamp desc | limit 50
+
+# Error count over time
+filter @message like /ERROR/
+| stats count(*) as errorCount by bin(30m) | sort @timestamp
+
+# Parse JSON and compute percentiles
+parse @message '{&quot;level&quot;:&quot;*&quot;,&quot;requestId&quot;:&quot;*&quot;,&quot;duration&quot;:*}' as level, reqId, duration
+| filter level = &quot;ERROR&quot;
+| stats avg(duration), pct(duration, 99) as p99 by bin(5m)
+
+# Slowest Lambda invocations
+filter @type = &quot;REPORT&quot;
+| stats max(@duration) as maxDur, pct(@duration, 99) as p99 by bin(1h)
+</code></pre>
+<p><strong>Metric Filters</strong> turn log patterns into CloudWatch metrics:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> logs</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-metric-filter</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --log-group-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;/aws/lambda/processOrder&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --filter-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;ErrorCount&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --filter-pattern</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{ $.level = &quot;ERROR&quot; }'</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --metric-transformations</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> metricName=LambdaErrorCount,metricNamespace=MyApp/Logs,metricValue=1,defaultValue=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span></span></code></pre></figure>
+<p><strong>Subscription Filters</strong> stream logs in real-time to Kinesis Firehose (S3 archive), Lambda
+(processing), OpenSearch (search), or Kinesis Data Streams (fan-out).</p>
+<p><strong>Cross-Account Log Aggregation</strong> — source accounts write via subscription filters to a
+central account’s destination, controlled by resource policies:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;Version&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;2012-10-17&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;Statement&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;Effect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Allow&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;Principal&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;AWS&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;111111111111&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;222222222222&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">] },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;Action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;logs:PutSubscriptionFilter&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">    &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;arn:aws:logs:us-east-1:333333333333:destination:centralDest&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  }]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<h3 id="23-traces">2.3 Traces<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-traces" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Traces follow a single request through a distributed system, answering questions neither
+metrics nor logs can: “Which service in the chain caused the 2-second spike?”</p>
+<p><strong>AWS X-Ray concepts:</strong></p>
+<ul>
+<li><strong>Trace</strong> — full end-to-end journey, unique trace ID</li>
+<li><strong>Segment</strong> — work by one service (timing, HTTP data, fault/error flags)</li>
+<li><strong>Subsegment</strong> — finer-grained work (a DynamoDB call, a function)</li>
+<li><strong>Annotations</strong> — indexed key-value pairs for filtering (customer ID, order type)</li>
+<li><strong>Metadata</strong> — non-indexed data for debug payloads</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> aws_xray_sdk.core </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> xray_recorder</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">subsegment </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> xray_recorder.begin_subsegment(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'payment-processing'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">subsegment.put_annotation(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'customer_tier'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'premium'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)    </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># indexed</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">subsegment.put_metadata(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'request_body'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, request_body)     </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># not indexed</span></span></code></pre></figure>
+<p><strong>Service Map</strong> — X-Ray auto-builds a visual graph showing average latency, request rate,
+and error rates (color-coded) per node.</p>
+<p><strong>Sampling Rules</strong> control cost. Trace everything for high-value transactions and errors,
+sample 1-5% for normal traffic, 0% for health checks.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Traffic Type</th><th>Fixed Rate</th><th>Rationale</th></tr></thead><tbody><tr><td>Health checks</td><td>0.0</td><td>No value</td></tr><tr><td>High-value txns</td><td>1.0</td><td>Trace every one</td></tr><tr><td>Normal API</td><td>0.05</td><td>5% sample</td></tr><tr><td>Error responses</td><td>1.0</td><td>Always trace errors</td></tr></tbody></table></div>
+<p><strong>Latency debugging workflow:</strong> alarm fires > filter X-Ray traces by URL + response time >
+examine trace timeline > check annotations > compare fast vs. slow traces > correlate with
+logs using the trace ID.</p>
+<hr/>
+<h2 id="3-cloudwatch-deep-dive">3. CloudWatch Deep Dive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-cloudwatch-deep-dive" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-alarms">3.1 Alarms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-alarms" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Alarms evaluate metrics and transition between <code>OK</code>, <code>ALARM</code>, and <code>INSUFFICIENT_DATA</code>.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Threshold alarm: CPU > 80% for 3 consecutive 5-min periods</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cloudwatch</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-metric-alarm</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --alarm-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;HighCPU-WebServer&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --metric-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> CPUUtilization</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --namespace</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> AWS/EC2</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --statistic</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Average</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --period</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 300</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --threshold</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 80</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --comparison-operator</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> GreaterThanThreshold</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --evaluation-periods</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --datapoints-to-alarm</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --dimensions</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Name=InstanceId,Value=i-0abc123def</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --alarm-actions</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;arn:aws:sns:us-east-1:123456789012:ops-alerts&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --treat-missing-data</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> notBreaching</span></span></code></pre></figure>
+<p><strong>Anomaly detection alarms</strong> use <code>ANOMALY_DETECTION_BAND(metric, stddev)</code> instead of fixed
+thresholds. <strong>Composite alarms</strong> combine multiple alarms with boolean logic to prevent alert
+storms:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cloudwatch</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-composite-alarm</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --alarm-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;ServiceDegraded-OrderSystem&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --alarm-rule</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> 'ALARM(&quot;HighLatency-OrderAPI&quot;) AND</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">                (ALARM(&quot;HighErrorRate&quot;) OR ALARM(&quot;DynamoDB-Throttled&quot;))'</span></span></code></pre></figure>
+<p><strong>Alarm actions:</strong> SNS notification, Auto Scaling policy, EC2 actions (stop/terminate/
+reboot/recover), Systems Manager runbook, Lambda (via SNS).</p>
+<h3 id="32-dashboards">3.2 Dashboards<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-dashboards" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Widget types: line, stacked area, number, gauge, bar, pie, text (markdown), embedded log
+query, alarm status, metric explorer. Dashboards support <strong>cross-account and cross-region</strong>
+display via CloudWatch OAM (Observability Access Manager) links.</p>
+<h3 id="33-synthetics">3.3 Synthetics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-synthetics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Canaries are scheduled scripts that monitor endpoints before real users are affected.
+They produce success/failure metrics, HAR files, screenshots, and logs.</p>
+<h3 id="34-rum-real-user-monitoring">3.4 RUM (Real User Monitoring)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-rum-real-user-monitoring" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Captures browser telemetry: page load time, JS errors, HTTP errors, Core Web Vitals (LCP,
+FID, CLS). With <code>enableXRay: true</code>, frontend traces connect to backend X-Ray traces for
+full end-to-end visibility from click to database.</p>
+<h3 id="35-application-insights">3.5 Application Insights<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#35-application-insights" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Auto-discovers application components and configures monitoring for common stacks (.NET,
+SQL Server, Java). Groups related anomalies into “problems” with root cause narratives.</p>
+<hr/>
+<h2 id="4-eventbridge-for-operational-events">4. EventBridge for Operational Events<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-eventbridge-for-operational-events" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>EventBridge routes events from AWS services, SaaS apps, and custom sources to action
+targets: <code>Event Source > Event Bus > Rule (pattern match) > Target</code>.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Auto-remediate: detect GuardDuty high-severity finding</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;source&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;aws.guardduty&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;detail-type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;GuardDuty Finding&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;detail&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;severity&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [{ </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;numeric&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;>=&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">7</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">] }] }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p><strong>Schema Registry</strong> auto-infers event schemas, enables code binding generation (TypeScript,
+Python, Java), and tracks schema versions.</p>
+<p><strong>Operational workflow pattern:</strong></p>
+<pre><code>AWS Event (e.g., RDS failover)
+  > EventBridge Rule
+    > SNS (alert team)
+    > Step Functions (orchestrate remediation)
+    > CloudWatch Logs (audit trail)
+</code></pre>
+<hr/>
+<h2 id="5-aws-systems-manager">5. AWS Systems Manager<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-aws-systems-manager" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-parameter-store">5.1 Parameter Store<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-parameter-store" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Hierarchical store for config and secrets. Standard tier: 10K params, 4 KB, free. Advanced:
+100K+, 8 KB, $0.05/param/month. <strong>SecureString</strong> encrypts with KMS.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ssm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> put-parameter</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;/myapp/prod/db/password&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --value</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;s3cureP@ss&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> SecureString</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --key-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;alias/myapp-key&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ssm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> get-parameters-by-path</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --path</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;/myapp/prod/&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --recursive</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --with-decryption</span></span></code></pre></figure>
+<h3 id="52-session-manager">5.2 Session Manager<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-session-manager" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Interactive shell access without SSH keys, open ports, or bastion hosts. All sessions
+logged to CloudWatch/S3. Supports port forwarding to private resources (e.g., RDS).</p>
+<h3 id="53-patch-manager">5.3 Patch Manager<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-patch-manager" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Automates OS patching. Define <strong>patch baselines</strong> (which patches to approve by severity/
+classification), schedule via <strong>maintenance windows</strong> (e.g., Sunday 02:00 UTC, 4-hour
+duration, 20% concurrency).</p>
+<h3 id="54-run-command">5.4 Run Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-run-command" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Execute commands on managed instances at scale without SSH:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ssm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> send-command</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --document-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;AWS-RunShellScript&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --targets</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '[{&quot;Key&quot;:&quot;tag:Role&quot;,&quot;Values&quot;:[&quot;web-server&quot;]}]'</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --parameters</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{&quot;commands&quot;:[&quot;systemctl status nginx&quot;,&quot;df -h&quot;]}'</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --max-concurrency</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;25%&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --max-errors</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;5&quot;</span></span></code></pre></figure>
+<h3 id="55-automation-runbooks">5.5 Automation Runbooks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#55-automation-runbooks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Multi-step workflows triggered by alarms, EventBridge, or schedules. Example: stop service</p>
+<blockquote>
+<p>wait > start service > validate health > escalate to human if validation fails.</p>
+</blockquote>
+<hr/>
+<h2 id="6-health-and-status">6. Health and Status<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-health-and-status" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-aws-health-dashboard">6.1 AWS Health Dashboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-aws-health-dashboard" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Service Health</strong> — public status of all AWS services. <strong>Personal Health</strong> — events
+affecting your resources. Integrates with EventBridge for automated response to instance
+retirements, certificate expirations, etc.</p>
+<h3 id="62-trusted-advisor">6.2 Trusted Advisor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-trusted-advisor" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Inspects your environment across five categories: cost optimization, performance, security,
+fault tolerance, service limits. Full checks require Business/Enterprise support plan.</p>
+<h3 id="63-cost-explorer-and-cost-observability">6.3 Cost Explorer and Cost Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-cost-explorer-and-cost-observability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Cost is a first-class observability signal. Unexpected changes often indicate
+misconfigurations or security incidents.</p>
+<p><strong>Cost Allocation Tags</strong> — activate tags (Project, Team, Environment) for cost attribution.
+<strong>Cost Anomaly Detection</strong> — ML-based unusual spending alerts. <strong>AWS Budgets</strong> — threshold
+alerts with actual and forecasted spending notifications:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> budgets</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-budget</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --account-id</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 123456789012</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --budget</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;BudgetName&quot;: &quot;MonthlyProd&quot;, &quot;BudgetLimit&quot;: {&quot;Amount&quot;:&quot;5000&quot;,&quot;Unit&quot;:&quot;USD&quot;},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;TimeUnit&quot;: &quot;MONTHLY&quot;, &quot;BudgetType&quot;: &quot;COST&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}'</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --notifications-with-subscribers</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> '[{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;Notification&quot;: {&quot;NotificationType&quot;:&quot;ACTUAL&quot;,&quot;ComparisonOperator&quot;:&quot;GREATER_THAN&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;Threshold&quot;:80,&quot;ThresholdType&quot;:&quot;PERCENTAGE&quot;},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;Subscribers&quot;: [{&quot;SubscriptionType&quot;:&quot;EMAIL&quot;,&quot;Address&quot;:&quot;finops@example.com&quot;}]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}]'</span></span></code></pre></figure>
+<hr/>
+<h2 id="7-opentelemetry-integration">7. OpenTelemetry Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-opentelemetry-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>OpenTelemetry (OTEL)</strong> is the CNCF standard for vendor-neutral telemetry. Using it
+protects against lock-in — switch backends without re-instrumenting code.</p>
+<p><strong>ADOT (AWS Distro for OpenTelemetry)</strong> includes AWS-specific exporters: Receivers (OTLP,
+Prometheus) > Processors (batch, filter, attributes) > Exporters (CloudWatch Metrics,
+CloudWatch Logs, X-Ray).</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># otel-collector-config.yaml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">receivers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  otlp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    protocols</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      grpc</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">endpoint</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;0.0.0.0:4317&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      http</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">endpoint</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;0.0.0.0:4318&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">processors</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  batch</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">timeout</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">10s</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">send_batch_size</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">1024</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  resource</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    attributes</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      - { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">environment</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">value</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;production&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">action</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">upsert</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">exporters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  awsxray</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">region</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;us-east-1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  awsemf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">region</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;us-east-1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;MyApp/OrderService&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  awscloudwatchlogs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">region</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;us-east-1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">log_group_name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;/app/order-service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">service</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  pipelines</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    traces</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:  { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">receivers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">otlp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">], </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">processors</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">batch</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">resource</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">], </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">exporters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">awsxray</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">] }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    metrics</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">receivers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">otlp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">], </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">processors</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">batch</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">], </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">exporters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">awsemf</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">] }</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    logs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:    { </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">receivers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">otlp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">], </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">processors</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">batch</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">], </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">exporters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">awscloudwatchlogs</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">] }</span></span></code></pre></figure>
+<p><strong>Application instrumentation (Python):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> opentelemetry </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> trace</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">tracer </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> trace.get_tracer(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;order-service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">@tracer.start_as_current_span</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;process_order&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> process_order</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(order_id: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">):</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    span </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> trace.get_current_span()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    span.set_attribute(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;order.id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, order_id)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> tracer.start_as_current_span(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;validate_payment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">):</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        validate_payment(order_id)</span></span></code></pre></figure>
+<p><strong>Deployment:</strong> ECS sidecar (ADOT container alongside app container) or EKS DaemonSet (one
+collector per node). Applications send to <code>localhost:4317</code>.</p>
+<hr/>
+<h2 id="8-observability-pipeline-architecture">8. Observability Pipeline Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-observability-pipeline-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="primary-pipeline-aws-native">Primary Pipeline (AWS-Native)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#primary-pipeline-aws-native" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>                        OBSERVABILITY PIPELINE (AWS-NATIVE)
+
+  ┌──────────┐    ┌──────────────┐    ┌──────────────────────────────┐
+  │ App /    │    │ ADOT         │    │       BACKENDS               │
+  │ Service  │    │ Collector    │    │                              │
+  │          ├───>│ (sidecar /   ├───>│  CloudWatch Metrics          │
+  │ ECS/EKS/ │    │  DaemonSet)  │    │    ├── Dashboards            │
+  │ Lambda/  │    │              │    │    ├── Alarms ──> SNS         │
+  │ EC2      │    │ Receives:    │    │    │    ├── PagerDuty         │
+  │          │    │  OTLP gRPC   │    │    │    └── Slack             │
+  │ Emits:   │    │  OTLP HTTP   │    │    └── Anomaly Detection     │
+  │  traces  │    │  Prometheus  │    │                              │
+  │  metrics │    │              │    │  CloudWatch Logs              │
+  │  logs    │    │ Exports to:  │    │    ├── Logs Insights          │
+  └──────────┘    │  CW/X-Ray    │    │    ├── Metric Filters         │
+                  └──────────────┘    │    └── Sub. Filters > S3      │
+                                      │                              │
+  ┌──────────────┐                    │  X-Ray Traces                │
+  │ CW Synthetics│──metrics──>        │    ├── Service Map            │
+  │ (canaries)   │                    │    └── Trace Analytics        │
+  └──────────────┘                    └──────────────────────────────┘
+  ┌──────────────┐                    ┌──────────────────────────────┐
+  │ CW RUM       │──> Real user       │ EventBridge                  │
+  │ (browser)    │    perf data       │  > Step Functions (remediate)│
+  └──────────────┘                    │  > Lambda (custom action)    │
+                                      │  > SNS (notify)             │
+                                      └──────────────────────────────┘
+</code></pre>
+<h3 id="alternative-pipeline-prometheus--grafana">Alternative Pipeline (Prometheus + Grafana)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#alternative-pipeline-prometheus--grafana" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>                   OBSERVABILITY PIPELINE (PROMETHEUS / GRAFANA)
+
+  ┌──────────┐    ┌───────────────┐    ┌───────────────────────────┐
+  │ App      │    │ Amazon Managed│    │ Amazon Managed Grafana    │
+  │ /metrics ├───>│ Prometheus    ├───>│  ├── Dashboards           │
+  │ endpoint │    │ (AMP)         │    │  │    (SLO, capacity)     │
+  └──────────┘    └───────────────┘    │  ├── Alerting > PagerDuty │
+  ┌──────────┐    ┌───────────────┐    │  │                        │
+  │ ADOT     ├───>│ OpenSearch    ├───>│  Data Sources:            │
+  │ (logs)   │    │ Service       │    │  ├── AMP (metrics/PromQL) │
+  └──────────┘    └───────────────┘    │  ├── OpenSearch (logs)    │
+  ┌──────────┐    ┌───────────────┐    │  ├── X-Ray (traces)       │
+  │ ADOT     ├───>│ X-Ray         ├───>│  └── CloudWatch (infra)   │
+  │ (traces) │    │               │    └───────────────────────────┘
+  └──────────┘    └───────────────┘
+</code></pre>
+<h3 id="choosing-between-pipelines">Choosing Between Pipelines<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#choosing-between-pipelines" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Criterion</th><th>AWS-Native (CloudWatch)</th><th>Prometheus/Grafana (AMP/AMG)</th></tr></thead><tbody><tr><td>Setup complexity</td><td>Low (built-in)</td><td>Medium</td></tr><tr><td>Query language</td><td>Logs Insights, Metric Math</td><td>PromQL (industry standard)</td></tr><tr><td>Dashboard quality</td><td>Functional</td><td>Excellent (Grafana)</td></tr><tr><td>Multi-cloud</td><td>AWS only</td><td>Any cloud, hybrid</td></tr><tr><td>Vendor lock-in</td><td>High</td><td>Low (OTEL + Prometheus)</td></tr><tr><td>Best for</td><td>AWS-centric, small teams</td><td>Platform teams, k8s, multi-cloud</td></tr></tbody></table></div>
+<hr/>
+<h2 id="9-best-practices-and-anti-patterns">9. Best Practices and Anti-Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-best-practices-and-anti-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="91-structured-logging">9.1 Structured Logging<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#91-structured-logging" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;timestamp&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;2026-05-10T14:02:33.456Z&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;level&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;ERROR&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;order-service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;traceId&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;1-581cf771-a006649127e371903a2de979&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;correlationId&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;req-abc-123-def&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;userId&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;usr_789&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;processOrder&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;orderId&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;ord_12345&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;error&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;PaymentDeclinedException&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">&quot;message&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Card declined&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<p>Structured JSON logs are queryable (Logs Insights filters on any field), indexable (metric
+filters extract values), correlatable (trace IDs link pillars), and machine-readable.</p>
+<h3 id="92-correlation-ids">9.2 Correlation IDs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#92-correlation-ids" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Generate a unique ID at the edge, propagate through every service. During incidents, one
+query retrieves the full request journey:</p>
+<pre><code>fields @timestamp, @message, service
+| filter correlationId = &quot;req-abc-123-def&quot; | sort @timestamp asc
+</code></pre>
+<h3 id="93-log-levels">9.3 Log Levels<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#93-log-levels" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Level</th><th>When to Use</th><th>Alert?</th></tr></thead><tbody><tr><td><code>DEBUG</code></td><td>Diagnostic detail (disabled in prod)</td><td>No</td></tr><tr><td><code>INFO</code></td><td>Normal operations</td><td>No</td></tr><tr><td><code>WARN</code></td><td>Degraded but functioning</td><td>No</td></tr><tr><td><code>ERROR</code></td><td>Request failed, service continues</td><td>Maybe</td></tr><tr><td><code>FATAL</code></td><td>Service cannot continue</td><td>Yes</td></tr></tbody></table></div>
+<h3 id="94-alert-fatigue-avoidance">9.4 Alert Fatigue Avoidance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#94-alert-fatigue-avoidance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Anti-patterns:</strong> alerting on every 4xx, alerting on single data points, having 200 alarms
+where 180 are perpetually in ALARM, no runbook attached.</p>
+<p><strong>Best practices:</strong></p>
+<ol>
+<li><strong>Alert on symptoms, not causes.</strong> “Error rate > 1% for 5 min” not “CPU > 80%.”</li>
+<li><strong>Use composite alarms.</strong> One incident = one alert, not ten.</li>
+<li><strong>Require a runbook for every alarm.</strong> No runbook = you don’t understand the failure.</li>
+<li><strong>Use M-of-N evaluation.</strong> 3 of 5 periods must breach. Filters transient spikes.</li>
+<li><strong>Classify severity:</strong> P1 = wake someone, P2 = fix this shift, P3 = fix this week.</li>
+<li><strong>Review quarterly.</strong> Delete alarms that never fire or always fire.</li>
+</ol>
+<h3 id="95-sli--slo--sla">9.5 SLI / SLO / SLA<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#95-sli--slo--sla" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept</th><th>Definition</th></tr></thead><tbody><tr><td><strong>SLI</strong></td><td>A metric measuring service behavior (latency, error rate, throughput)</td></tr><tr><td><strong>SLO</strong></td><td>A target for an SLI (“p99 latency &lt; 500ms”, “availability > 99.9%“)</td></tr><tr><td><strong>SLA</strong></td><td>Contractual commitment with consequences if SLO is not met</td></tr></tbody></table></div>
+<p><strong>Error budgets</strong> — the inverse of your SLO. At 99.9% availability, your error budget is
+~43 minutes of downtime per month. Track budget consumption: alert at 50% (warning), 80%
+(action), 100% (freeze features, fix reliability).</p>
+<pre><code>  SLO Target:       99.9% availability
+  Budget Used:      ██████░░░░░░░░░░  60%
+  Budget Remaining: 17 minutes of downtime
+  Burn Rate:        1.2x (sustainable &lt; 1.0x)
+</code></pre>
+<hr/>
+<h2 id="10-practical-takeaways">10. Practical Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-practical-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="key-principles">Key Principles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-principles" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Instrument first, optimize later.</strong> Deploy observability from day one, not after the
+first outage.</li>
+<li><strong>Correlate across pillars.</strong> Metrics say something is wrong. Logs say what. Traces say
+where. Use all three via shared trace/correlation IDs.</li>
+<li><strong>Design for queryability.</strong> Structured logs, meaningful dimensions, trace annotations.</li>
+<li><strong>Separate signals from noise.</strong> Not every metric needs an alarm. Not every alarm pages.</li>
+<li><strong>Treat observability as a product.</strong> Dashboards are UIs. Alarms are features.</li>
+<li><strong>Embrace OpenTelemetry.</strong> Instrument with OTEL even if you use CloudWatch today.</li>
+</ol>
+<h3 id="common-mistakes">Common Mistakes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-mistakes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Mistake</th><th>Fix</th></tr></thead><tbody><tr><td>No log retention policy</td><td>Set 30-90 days for most groups</td></tr><tr><td>Default 5-min metric period</td><td>Use 1-min or high-res for critical SLIs</td></tr><tr><td>Alerting on individual instances</td><td>Alert on aggregate (ALB/ASG-level)</td></tr><tr><td>No structured logging</td><td>JSON logging from the start</td></tr><tr><td>Missing correlation IDs</td><td>Generate at edge, propagate everywhere</td></tr><tr><td>Dashboards without context</td><td>Add text widgets with thresholds and links</td></tr><tr><td>Ignoring cost signals</td><td>Enable Cost Anomaly Detection and budgets</td></tr><tr><td>Vendor-specific SDKs only</td><td>Use OTEL SDKs, export to CloudWatch/X-Ray</td></tr></tbody></table></div>
+<h3 id="cost-conscious-observability">Cost-Conscious Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-conscious-observability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Cost Driver</th><th>Strategy</th></tr></thead><tbody><tr><td>Log ingestion</td><td>Filter noisy logs at source, set retention</td></tr><tr><td>Custom metrics</td><td>Use EMF (free ingestion), batch API calls</td></tr><tr><td>High-resolution metrics</td><td>Only for latency-critical SLIs</td></tr><tr><td>X-Ray sampling</td><td>1-5% normal, 100% errors</td></tr><tr><td>Prometheus cardinality</td><td>Avoid high-cardinality labels (user IDs)</td></tr><tr><td>Log archival</td><td>Tier to S3 via subscription filters</td></tr></tbody></table></div>
+<p><strong>Rule of thumb:</strong> budget 5-10% of cloud spend on observability. Less = flying blind.
+More = audit cardinality and log verbosity.</p>
+<h3 id="observability-maturity-model">Observability Maturity Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#observability-maturity-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Level</th><th>Name</th><th>Characteristics</th></tr></thead><tbody><tr><td>0</td><td>Reactive</td><td>No monitoring. Learn about issues from customers.</td></tr><tr><td>1</td><td>Basic</td><td>Default CloudWatch metrics. Manual log inspection.</td></tr><tr><td>2</td><td>Proactive</td><td>Custom metrics, structured logs, basic alarms.</td></tr><tr><td>3</td><td>Correlation</td><td>Distributed tracing, correlation IDs, composite alarms.</td></tr><tr><td>4</td><td>Data-Driven</td><td>SLOs, error budgets, automated remediation.</td></tr><tr><td>5</td><td>Predictive</td><td>Anomaly detection, capacity forecasting, chaos engineering.</td></tr></tbody></table></div>
+<p>Most teams should target Level 3-4. Level 5 requires dedicated platform/SRE teams.</p>
+<h3 id="quick-reference-which-aws-service-for-what">Quick Reference: Which AWS Service for What<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quick-reference-which-aws-service-for-what" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Need</th><th>Service</th></tr></thead><tbody><tr><td>Infrastructure metrics</td><td>CloudWatch Metrics</td></tr><tr><td>Application logs</td><td>CloudWatch Logs</td></tr><tr><td>Log analysis</td><td>CloudWatch Logs Insights</td></tr><tr><td>Distributed tracing</td><td>AWS X-Ray</td></tr><tr><td>Synthetic monitoring</td><td>CloudWatch Synthetics</td></tr><tr><td>Real user monitoring</td><td>CloudWatch RUM</td></tr><tr><td>Alerting</td><td>CloudWatch Alarms + SNS</td></tr><tr><td>Event-driven automation</td><td>EventBridge</td></tr><tr><td>Config and secrets</td><td>Systems Manager Parameter Store</td></tr><tr><td>Remote access (no SSH)</td><td>Systems Manager Session Manager</td></tr><tr><td>OS patching</td><td>Systems Manager Patch Manager</td></tr><tr><td>Automated remediation</td><td>Systems Manager Automation</td></tr><tr><td>Cost monitoring</td><td>Cost Explorer + AWS Budgets</td></tr><tr><td>Vendor-neutral instrumentation</td><td>ADOT (AWS Distro for OpenTelemetry)</td></tr><tr><td>Managed Prometheus</td><td>Amazon Managed Service for Prometheus</td></tr><tr><td>Managed Grafana</td><td>Amazon Managed Grafana</td></tr><tr><td>Service health events</td><td>AWS Health + EventBridge</td></tr><tr><td>Best-practice checks</td><td>AWS Trusted Advisor</td></tr></tbody></table></div>
+<hr/>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="sliding-window--cloudwatch-metric-periods-and-alarm-evaluation">Sliding Window — CloudWatch Metric Periods and Alarm Evaluation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sliding-window--cloudwatch-metric-periods-and-alarm-evaluation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A sliding window is a technique that maintains a fixed-size window over a data stream, updating aggregate statistics in O(1) as new elements enter and old elements exit. CloudWatch alarms evaluate metrics using a sliding window: when you configure an alarm with <code>period: 300</code> (5 minutes) and <code>evaluation-periods: 3</code>, CloudWatch maintains a sliding window of three 5-minute data points and evaluates the threshold condition against each window position. The M-of-N datapoints-to-alarm feature (e.g., “3 of 5 periods must breach”) is a generalization where the window has N slots and at least M must satisfy the condition. This is the same algorithm used in network congestion detection (sliding window over packet loss rates) and rate limiting (sliding window log or counter). Anomaly detection extends this by building an ML model over a much larger window (2+ weeks of historical data) and comparing the current window against the predicted band, effectively implementing a two-level sliding window: a short window for the current value and a long window for the expected baseline.</p>
+<h3 id="reservoir-sampling--x-ray-trace-sampling-rules">Reservoir Sampling — X-Ray Trace Sampling Rules<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#reservoir-sampling--x-ray-trace-sampling-rules" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Reservoir sampling is an algorithm that selects k items uniformly at random from a stream of unknown length n, using O(k) memory. When X-Ray samples traces at a 5% rate from normal API traffic, it implements a variant of reservoir sampling: for each incoming request, a random number is generated and compared against the sampling rate threshold (0.05), and only matching requests are fully traced. The fixed-rate sampling in the document’s sampling rules table (0% for health checks, 5% for normal API, 100% for errors) is a stratified sampling scheme where different traffic types have different reservoir sizes. This ensures that the trace storage budget (the “reservoir”) is allocated to the most valuable traces rather than being overwhelmed by high-volume, low-value traffic like health checks. The practical benefit is that you can analyze latency distributions and error patterns from the sampled traces with statistical confidence, without paying to trace every single request — exactly as reservoir sampling provides a representative sample without storing the entire stream.</p>
+<h3 id="bloom-filters--cloudwatch-logs-metric-filters-and-pattern-matching">Bloom Filters — CloudWatch Logs Metric Filters and Pattern Matching<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bloom-filters--cloudwatch-logs-metric-filters-and-pattern-matching" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A Bloom filter is a probabilistic data structure that uses multiple hash functions to test set membership in O(k) time with no false negatives. CloudWatch Metric Filters process log streams at high throughput by applying pattern matching to every log event — when you define a filter pattern like <code>{ $.level = &quot;ERROR&quot; }</code>, the filter engine must evaluate this condition against millions of log events per second. Internally, the filter engine uses indexed data structures similar to Bloom filters to quickly eliminate non-matching events: the structured JSON fields are hashed and tested against a compact representation of the filter pattern before performing full pattern evaluation. This two-phase approach (fast probabilistic check, then exact verification) enables CloudWatch to support subscription filters and metric filters on high-throughput log groups (like those from a fleet of Lambda functions) without introducing backpressure on the log ingestion pipeline. The same principle applies to EventBridge content-based filtering, which must evaluate complex event patterns against high-volume event streams in real time.</p>
+<h3 id="time-series-compression-delta-of-delta-encoding--cloudwatch-metrics-storage">Time-Series Compression (Delta-of-Delta Encoding) — CloudWatch Metrics Storage<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#time-series-compression-delta-of-delta-encoding--cloudwatch-metrics-storage" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Time-series databases use delta-of-delta encoding to compress metric data: instead of storing absolute timestamps and values, they store the difference between consecutive differences, exploiting the fact that metrics are typically sampled at regular intervals with gradually changing values. CloudWatch Metrics stores billions of data points across millions of metric streams, and achieving this scale requires aggressive compression. When you publish a metric at 60-second intervals, the timestamps increment by a constant 60, so the delta is 60 and the delta-of-delta is 0 — compressible to nearly zero bits. Similarly, a CPU utilization metric hovering around 45% produces small deltas that compress efficiently. This is the same encoding used by Gorilla (Facebook’s in-memory time-series database) and Prometheus’s TSDB. Understanding this compression explains CloudWatch’s pricing model: high-resolution metrics (1-second periods) cost more not just because of increased volume, but because shorter intervals produce less predictable deltas, reducing compression ratios and consuming more storage per data point.</p>
+<p><em>The patterns here — structured logging, correlation IDs, SLOs, error budgets, OTEL
+instrumentation — are transferable to any cloud provider. Master the concepts and the
+specific service names become interchangeable.</em></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-26" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#cloud-observability-architecture" data-for="cloud-observability-architecture">Cloud Observability Architecture</a></li><li class="depth-1"><a href="#table-of-contents" data-for="table-of-contents">Table of Contents</a></li><li class="depth-1"><a href="#1-introduction" data-for="1-introduction">1. Introduction</a></li><li class="depth-2"><a href="#monitoring-vs-observability" data-for="monitoring-vs-observability">Monitoring vs. Observability</a></li><li class="depth-1"><a href="#2-three-pillars-of-observability" data-for="2-three-pillars-of-observability">2. Three Pillars of Observability</a></li><li class="depth-2"><a href="#21-metrics" data-for="21-metrics">2.1 Metrics</a></li><li class="depth-2"><a href="#22-logs" data-for="22-logs">2.2 Logs</a></li><li class="depth-2"><a href="#23-traces" data-for="23-traces">2.3 Traces</a></li><li class="depth-1"><a href="#3-cloudwatch-deep-dive" data-for="3-cloudwatch-deep-dive">3. CloudWatch Deep Dive</a></li><li class="depth-2"><a href="#31-alarms" data-for="31-alarms">3.1 Alarms</a></li><li class="depth-2"><a href="#32-dashboards" data-for="32-dashboards">3.2 Dashboards</a></li><li class="depth-2"><a href="#33-synthetics" data-for="33-synthetics">3.3 Synthetics</a></li><li class="depth-2"><a href="#34-rum-real-user-monitoring" data-for="34-rum-real-user-monitoring">3.4 RUM (Real User Monitoring)</a></li><li class="depth-2"><a href="#35-application-insights" data-for="35-application-insights">3.5 Application Insights</a></li><li class="depth-1"><a href="#4-eventbridge-for-operational-events" data-for="4-eventbridge-for-operational-events">4. EventBridge for Operational Events</a></li><li class="depth-1"><a href="#5-aws-systems-manager" data-for="5-aws-systems-manager">5. AWS Systems Manager</a></li><li class="depth-2"><a href="#51-parameter-store" data-for="51-parameter-store">5.1 Parameter Store</a></li><li class="depth-2"><a href="#52-session-manager" data-for="52-session-manager">5.2 Session Manager</a></li><li class="depth-2"><a href="#53-patch-manager" data-for="53-patch-manager">5.3 Patch Manager</a></li><li class="depth-2"><a href="#54-run-command" data-for="54-run-command">5.4 Run Command</a></li><li class="depth-2"><a href="#55-automation-runbooks" data-for="55-automation-runbooks">5.5 Automation Runbooks</a></li><li class="depth-1"><a href="#6-health-and-status" data-for="6-health-and-status">6. Health and Status</a></li><li class="depth-2"><a href="#61-aws-health-dashboard" data-for="61-aws-health-dashboard">6.1 AWS Health Dashboard</a></li><li class="depth-2"><a href="#62-trusted-advisor" data-for="62-trusted-advisor">6.2 Trusted Advisor</a></li><li class="depth-2"><a href="#63-cost-explorer-and-cost-observability" data-for="63-cost-explorer-and-cost-observability">6.3 Cost Explorer and Cost Observability</a></li><li class="depth-1"><a href="#7-opentelemetry-integration" data-for="7-opentelemetry-integration">7. OpenTelemetry Integration</a></li><li class="depth-1"><a href="#8-observability-pipeline-architecture" data-for="8-observability-pipeline-architecture">8. Observability Pipeline Architecture</a></li><li class="depth-2"><a href="#primary-pipeline-aws-native" data-for="primary-pipeline-aws-native">Primary Pipeline (AWS-Native)</a></li><li class="depth-2"><a href="#alternative-pipeline-prometheus--grafana" data-for="alternative-pipeline-prometheus--grafana">Alternative Pipeline (Prometheus + Grafana)</a></li><li class="depth-2"><a href="#choosing-between-pipelines" data-for="choosing-between-pipelines">Choosing Between Pipelines</a></li><li class="depth-1"><a href="#9-best-practices-and-anti-patterns" data-for="9-best-practices-and-anti-patterns">9. Best Practices and Anti-Patterns</a></li><li class="depth-2"><a href="#91-structured-logging" data-for="91-structured-logging">9.1 Structured Logging</a></li><li class="depth-2"><a href="#92-correlation-ids" data-for="92-correlation-ids">9.2 Correlation IDs</a></li><li class="depth-2"><a href="#93-log-levels" data-for="93-log-levels">9.3 Log Levels</a></li><li class="depth-2"><a href="#94-alert-fatigue-avoidance" data-for="94-alert-fatigue-avoidance">9.4 Alert Fatigue Avoidance</a></li><li class="depth-2"><a href="#95-sli--slo--sla" data-for="95-sli--slo--sla">9.5 SLI / SLO / SLA</a></li><li class="depth-1"><a href="#10-practical-takeaways" data-for="10-practical-takeaways">10. Practical Takeaways</a></li><li class="depth-2"><a href="#key-principles" data-for="key-principles">Key Principles</a></li><li class="depth-2"><a href="#common-mistakes" data-for="common-mistakes">Common Mistakes</a></li><li class="depth-2"><a href="#cost-conscious-observability" data-for="cost-conscious-observability">Cost-Conscious Observability</a></li><li class="depth-2"><a href="#observability-maturity-model" data-for="observability-maturity-model">Observability Maturity Model</a></li><li class="depth-2"><a href="#quick-reference-which-aws-service-for-what" data-for="quick-reference-which-aws-service-for-what">Quick Reference: Which AWS Service for What</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#sliding-window--cloudwatch-metric-periods-and-alarm-evaluation" data-for="sliding-window--cloudwatch-metric-periods-and-alarm-evaluation">Sliding Window — CloudWatch Metric Periods and Alarm Evaluation</a></li><li class="depth-2"><a href="#reservoir-sampling--x-ray-trace-sampling-rules" data-for="reservoir-sampling--x-ray-trace-sampling-rules">Reservoir Sampling — X-Ray Trace Sampling Rules</a></li><li class="depth-2"><a href="#bloom-filters--cloudwatch-logs-metric-filters-and-pattern-matching" data-for="bloom-filters--cloudwatch-logs-metric-filters-and-pattern-matching">Bloom Filters — CloudWatch Logs Metric Filters and Pattern Matching</a></li><li class="depth-2"><a href="#time-series-compression-delta-of-delta-encoding--cloudwatch-metrics-storage" data-for="time-series-compression-delta-of-delta-encoding--cloudwatch-metrics-storage">Time-Series Compression (Delta-of-Delta Encoding) — CloudWatch Metrics Storage</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

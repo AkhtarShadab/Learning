@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>04_fault_tolerance</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="04_fault_tolerance"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="04_fault_tolerance"/><meta name="twitter:description" content="Fault Tolerance Mental Model Core Idea: Everything Fails, All the Time Werner Vogels, CTO of Amazon, famously said: “Everything fails, all the time.” This is not pessimism — it is the foundational design principle of cloud computing."/><meta property="og:description" content="Fault Tolerance Mental Model Core Idea: Everything Fails, All the Time Werner Vogels, CTO of Amazon, famously said: “Everything fails, all the time.” This is not pessimism — it is the foundational design principle of cloud computing."/><meta property="og:image:alt" content="Fault Tolerance Mental Model Core Idea: Everything Fails, All the Time Werner Vogels, CTO of Amazon, famously said: “Everything fails, all the time.” This is not pessimism — it is the foundational design principle of cloud computing."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/MentalModels/04_fault_tolerance"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/MentalModels/04_fault_tolerance"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Fault Tolerance Mental Model Core Idea: Everything Fails, All the Time Werner Vogels, CTO of Amazon, famously said: “Everything fails, all the time.” This is not pessimism — it is the foundational design principle of cloud computing."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/MentalModels/04_fault_tolerance"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-42"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-42" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/MentalModels/">MentalModels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>04_fault_tolerance</a></div></nav><h1 class="article-title">04_fault_tolerance</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.321Z">Jun 20, 2026</time><span>21 min read</span></p></div></div><article class="popover-hint"><h1 id="fault-tolerance-mental-model">Fault Tolerance Mental Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fault-tolerance-mental-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="core-idea-everything-fails-all-the-time">Core Idea: Everything Fails, All the Time<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-idea-everything-fails-all-the-time" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Werner Vogels, CTO of Amazon, famously said: <strong>“Everything fails, all
+the time.”</strong> This is not pessimism — it is the foundational design
+principle of cloud computing.</p>
+<p>At the scale of a hyperscaler data center, hardware failure is not an
+exceptional event. It is a statistical certainty. With hundreds of
+thousands of servers, at any given moment, several are failing. Disks
+are dying, memory is corrupting, network links are flapping, power
+supplies are tripping. The question is not whether failures will occur,
+but whether your system is designed to tolerate them.</p>
+<pre><code>  FAILURE IS A CERTAINTY AT SCALE
+  ================================
+
+  Annual failure rates (approximate):
+  - Hard drive:         2-4% per year
+  - Server:             2-5% per year
+  - Network link:       5-10% per year (partial degradation)
+  - Power supply:       1-3% per year
+  - Top-of-rack switch: 5-8% per year
+
+  If you have 100,000 servers:
+  - 2,000-5,000 server failures per year
+  - ~6-14 server failures per day
+  - Something is failing every 2-4 hours
+
+  At this scale, failure is not an event. It is a constant.
+</code></pre>
+<hr/>
+<h2 id="mtbf-and-mttr-the-two-numbers-that-matter">MTBF and MTTR: The Two Numbers That Matter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mtbf-and-mttr-the-two-numbers-that-matter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Reliability engineering revolves around two fundamental metrics:</p>
+<h3 id="mtbf-mean-time-between-failures">MTBF (Mean Time Between Failures)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mtbf-mean-time-between-failures" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>How long a component runs, on average, before it fails. For a hard drive
+with an MTBF of 1,000,000 hours, on average one drive in a fleet of
+1,000 will fail every 1,000 hours (about every 42 days).</p>
+<h3 id="mttr-mean-time-to-recovery">MTTR (Mean Time To Recovery)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mttr-mean-time-to-recovery" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>How long it takes to detect a failure and restore service. This includes
+detection time, diagnosis time, repair/replacement time, and recovery
+time.</p>
+<h3 id="the-availability-formula">The Availability Formula<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-availability-formula" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  Availability = MTBF / (MTBF + MTTR)
+
+  Example:
+  MTBF = 1,000 hours
+  MTTR = 1 hour
+  Availability = 1000 / (1000 + 1) = 99.9%
+
+  KEY INSIGHT: You can improve availability by:
+  1. Increasing MTBF (make things fail less) -- hard, expensive
+  2. Decreasing MTTR (recover faster) -- easier, cheaper
+
+  Cloud philosophy: ACCEPT that things fail. MINIMIZE recovery time.
+  Focus on MTTR, not MTBF.
+</code></pre>
+<hr/>
+<h2 id="availability-math-the-nines">Availability Math: The Nines<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#availability-math-the-nines" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Availability is measured in “nines.” Each additional nine represents a
+10x reduction in allowed downtime.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Availability</th><th>Downtime/Year</th><th>Downtime/Month</th><th>Downtime/Day</th></tr></thead><tbody><tr><td>99% (two 9s)</td><td>3.65 days</td><td>7.3 hours</td><td>14.4 minutes</td></tr><tr><td>99.9%</td><td>8.76 hours</td><td>43.8 minutes</td><td>1.44 minutes</td></tr><tr><td>99.95%</td><td>4.38 hours</td><td>21.9 minutes</td><td>43.2 seconds</td></tr><tr><td>99.99%</td><td>52.6 minutes</td><td>4.38 minutes</td><td>8.64 seconds</td></tr><tr><td>99.999%</td><td>5.26 minutes</td><td>26.3 seconds</td><td>864 ms</td></tr></tbody></table></div>
+<h3 id="serial-vs-parallel-systems">Serial vs Parallel Systems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#serial-vs-parallel-systems" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Serial (all must work):</strong> If any component fails, the system fails.
+The overall availability is the product of individual availabilities.</p>
+<pre><code>  SERIAL SYSTEM
+  ==============
+
+  Request --> [Web Server] --> [App Server] --> [Database]
+                 99.9%           99.9%           99.9%
+
+  System availability = 0.999 * 0.999 * 0.999 = 0.997 = 99.7%
+
+  Three nines per component yields less than three nines overall.
+  The more serial components, the lower the availability.
+</code></pre>
+<p><strong>Parallel (any one must work):</strong> If any copy works, the system works.
+The failure probability is the product of individual failure probabilities.</p>
+<pre><code>  PARALLEL SYSTEM
+  ================
+
+  Request --> [Load Balancer]
+                 /    |    \
+          [Server1] [Server2] [Server3]
+            99%       99%       99%
+
+  P(all fail) = 0.01 * 0.01 * 0.01 = 0.000001
+  P(at least one works) = 1 - 0.000001 = 99.9999%
+
+  Three servers at 99% each = six nines in parallel.
+</code></pre>
+<h3 id="the-practical-formula">The Practical Formula<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-practical-formula" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Real systems combine serial and parallel paths:</p>
+<pre><code>  COMBINED AVAILABILITY
+  =====================
+
+  [LB] --> [Web (x3)] --> [App (x3)] --> [DB Primary + Standby]
+
+  Web tier:  1 - (0.01)^3 = 99.9999%
+  App tier:  1 - (0.01)^3 = 99.9999%
+  DB tier:   1 - (0.01)^2 = 99.99%
+  LB:        99.99% (managed service SLA)
+
+  Overall = 0.999999 * 0.999999 * 0.9999 * 0.9999
+          = 0.9998 = 99.98%
+
+  The weakest link (database with only 2x redundancy)
+  dominates the overall availability.
+</code></pre>
+<hr/>
+<h2 id="redundancy-patterns">Redundancy Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#redundancy-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="active-active">Active-Active<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#active-active" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>All copies serve traffic simultaneously. If one fails, the others
+absorb its load. This is the most common pattern for stateless services.</p>
+<pre><code>  ACTIVE-ACTIVE
+  ==============
+
+  Traffic --> [Load Balancer]
+                /    |    \
+           [Srv A] [Srv B] [Srv C]
+            (active)(active)(active)
+
+  Normal: Traffic split 33/33/33
+  Failure of A: Traffic split 0/50/50
+  Requirement: Each server must handle 50% headroom for failover
+</code></pre>
+<h3 id="active-passive-hot-standby">Active-Passive (Hot Standby)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#active-passive-hot-standby" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The primary handles all traffic. The standby is running and ready but
+receives no traffic. On failure, traffic switches to the standby.</p>
+<pre><code>  ACTIVE-PASSIVE
+  ===============
+
+  Traffic --> [Primary]
+                  |
+              [Standby]  (idle, synchronized, ready)
+
+  Normal: Primary handles 100%
+  Failure: Standby takes over (failover time: seconds to minutes)
+  Cost: 2x resources but standby is &quot;wasted&quot; during normal operation
+</code></pre>
+<h3 id="n1-redundancy">N+1 Redundancy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#n1-redundancy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>If you need N components to handle the load, provision N+1. If any one
+fails, you still have N functioning components.</p>
+<pre><code>  N+1 REDUNDANCY
+  ===============
+
+  Need: 4 servers to handle peak load
+  Provision: 5 servers
+
+  Normal: Load spread across 5 (each at 80% capacity)
+  Failure of 1: Load spread across 4 (each at 100% capacity)
+
+  N+1 is more cost-effective than 2N (full duplication).
+  N+2 is used for maintenance windows (1 down for maintenance,
+  1 can fail simultaneously).
+</code></pre>
+<hr/>
+<h2 id="blast-radius-thinking">Blast Radius Thinking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#blast-radius-thinking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Blast radius</strong> is the scope of impact when something fails. Designing
+for small blast radius means a failure affects as few users as possible.</p>
+<pre><code>  BLAST RADIUS HIERARCHY
+  =======================
+
+  Blast Radius    Scope of Impact          Example
+  -------------- ----------------------   -------------------------
+  Process         One request fails        Null pointer exception
+  Container       One microservice down    OOM kill
+  Instance        One server down          Hardware failure
+  Rack            ~20-40 servers down      Top-of-rack switch fails
+  Availability    Thousands of servers     Power/cooling failure
+    Zone (AZ)
+  Region          All AZs in a region      Natural disaster
+  Global          Everything everywhere    DNS failure, BGP hijack
+
+  Design principle: Contain failures at the smallest possible level.
+  A process crash should not take down a container.
+  A container crash should not take down an instance.
+  An AZ failure should not take down the application.
+</code></pre>
+<hr/>
+<h2 id="failure-domains-server-rack-az-region">Failure Domains: Server, Rack, AZ, Region<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#failure-domains-server-rack-az-region" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cloud providers organize infrastructure into nested failure domains.
+Understanding these domains is essential for designing resilient systems.</p>
+<h3 id="server">Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#server" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The smallest unit. A single physical machine. Failure causes: hardware
+fault, kernel panic, disk corruption. Impact: one instance dies.</p>
+<h3 id="rack">Rack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A physical rack containing 20-40 servers, sharing a top-of-rack (ToR)
+switch and power distribution unit (PDU). Failure causes: ToR switch
+failure, PDU failure. Impact: all servers in the rack go offline.</p>
+<h3 id="availability-zone-az">Availability Zone (AZ)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#availability-zone-az" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>One or more data center buildings with independent power, cooling, and
+networking. Failure causes: power grid outage, cooling system failure,
+network partition. Impact: all servers in the AZ go offline. AZs within
+a region are connected by low-latency links (&lt;2ms) but are physically
+separate (miles apart).</p>
+<h3 id="region">Region<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#region" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A geographic collection of 2-6 AZs. Failure causes: regional natural
+disaster, widespread network outage. Impact: all AZs in the region go
+offline. Regions are fully independent.</p>
+<pre><code>  AWS FAILURE DOMAIN HIERARCHY
+  =============================
+
+  Region: us-east-1 (N. Virginia)
+  +----------------------------------------------------+
+  |  AZ: us-east-1a      AZ: us-east-1b     AZ: 1c    |
+  |  +---------------+  +---------------+  +---------+ |
+  |  | Rack 1  Rack 2|  | Rack 1  Rack 2|  | Rack 1  | |
+  |  | [S][S]  [S][S]|  | [S][S]  [S][S]|  | [S][S]  | |
+  |  | [S][S]  [S][S]|  | [S][S]  [S][S]|  | [S][S]  | |
+  |  +---------------+  +---------------+  +---------+ |
+  +----------------------------------------------------+
+        |&lt;---- ~2ms ---->|
+        |&lt;--- independent power, cooling, networking -->|
+
+  Region: eu-west-1 (Ireland) -- completely independent
+  +----------------------------------------------------+
+  |  AZ: eu-west-1a     AZ: eu-west-1b     AZ: 1c     |
+  |  ...                 ...                 ...        |
+  +----------------------------------------------------+
+</code></pre>
+<h3 id="design-for-each-failure-domain">Design for Each Failure Domain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#design-for-each-failure-domain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Failure Domain</th><th>Design Pattern</th><th>AWS Example</th></tr></thead><tbody><tr><td>Server</td><td>Auto Scaling replaces failed instances</td><td>ASG health checks</td></tr><tr><td>Rack</td><td>Spread placement groups across racks</td><td>Spread placement group</td></tr><tr><td>AZ</td><td>Deploy across multiple AZs</td><td>Multi-AZ RDS, cross-AZ ALB</td></tr><tr><td>Region</td><td>Deploy across multiple regions</td><td>Route 53 failover routing</td></tr><tr><td>Global</td><td>DNS failover, CDN, data replication</td><td>CloudFront, Global Accelerator</td></tr></tbody></table></div>
+<hr/>
+<h2 id="chaos-engineering-proving-resilience">Chaos Engineering: Proving Resilience<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chaos-engineering-proving-resilience" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Chaos engineering is the practice of <strong>deliberately injecting failures</strong>
+into a production system to verify that it can tolerate them. Netflix
+pioneered this with their “Simian Army.”</p>
+<h3 id="netflix-chaos-monkey">Netflix Chaos Monkey<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#netflix-chaos-monkey" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Chaos Monkey randomly terminates EC2 instances in production during
+business hours. The philosophy: if your system cannot tolerate a random
+instance death during the day, when engineers are watching, how will it
+survive an instance death at 3 AM on a Saturday?</p>
+<h3 id="chaos-engineering-principles">Chaos Engineering Principles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chaos-engineering-principles" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  THE CHAOS ENGINEERING LOOP
+  ===========================
+
+  1. Define steady state (what does &quot;healthy&quot; look like?)
+     Example: 99th percentile latency &lt; 200ms, error rate &lt; 0.1%
+
+  2. Hypothesize that steady state continues during failure
+     &quot;If we kill one web server, latency stays under 200ms&quot;
+
+  3. Inject failure (the experiment)
+     Terminate an instance, block a network port, fill a disk
+
+  4. Observe the system
+     Did the hypothesis hold? Did metrics stay within bounds?
+
+  5. Learn and improve
+     If the hypothesis failed, fix the vulnerability
+     If it held, increase the scope of the next experiment
+
+  TOOLS:
+  - Netflix Chaos Monkey (instance termination)
+  - AWS Fault Injection Simulator (managed chaos)
+  - Gremlin (commercial chaos platform)
+  - Litmus (Kubernetes chaos engineering)
+  - Chaos Toolkit (open source framework)
+</code></pre>
+<hr/>
+<h2 id="circuit-breaker-pattern">Circuit Breaker Pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#circuit-breaker-pattern" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The circuit breaker pattern prevents cascading failures. When a
+downstream service starts failing, the circuit breaker “trips” and
+immediately returns an error (or fallback) instead of waiting for
+timeouts.</p>
+<pre><code>  CIRCUIT BREAKER STATE MACHINE
+  ==============================
+
+         success
+    +------------------+
+    |                  |
+    v                  |
+  [CLOSED] ---failures exceed threshold---> [OPEN]
+    ^                                          |
+    |                                          |
+    +---success in half-open---[HALF-OPEN]&lt;----+
+                                    timeout expires
+
+  CLOSED:    Requests flow normally. Failures are counted.
+  OPEN:      Requests immediately fail (no downstream calls).
+             Prevents overloading a struggling service.
+  HALF-OPEN: After a timeout, allow a few test requests through.
+             If they succeed, return to CLOSED.
+             If they fail, return to OPEN.
+</code></pre>
+<h3 id="code-example-pseudocode">Code Example (Pseudocode)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#code-example-pseudocode" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> CircuitBreaker</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    def</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> __init__</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(self, failure_threshold</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, reset_timeout</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">30</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">):</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.failure_count </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.failure_threshold </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> failure_threshold</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.reset_timeout </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> reset_timeout  </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># seconds</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.state </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;CLOSED&quot;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.last_failure_time </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> None</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> call</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(self, func, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">args):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        if</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.state </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">==</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;OPEN&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> time.now() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.last_failure_time </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">></span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.reset_timeout:</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">                self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.state </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;HALF_OPEN&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            else</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">                raise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> CircuitOpenError(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Service unavailable&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        try</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> func(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">args)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            if</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.state </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">==</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;HALF_OPEN&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">                self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.state </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;CLOSED&quot;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">                self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.failure_count </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 0</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> result</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        except</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> Exception</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> as</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> e:</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">            self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.failure_count </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">            self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.last_failure_time </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> time.now()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            if</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.failure_count </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">>=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.failure_threshold:</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">                self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.state </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;OPEN&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            raise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> e</span></span></code></pre></figure>
+<hr/>
+<h2 id="retry-with-exponential-backoff">Retry with Exponential Backoff<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#retry-with-exponential-backoff" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When a request fails, retrying immediately can make things worse
+(thundering herd). Exponential backoff spaces retries out with
+increasing delays and added randomness (jitter).</p>
+<pre><code>  EXPONENTIAL BACKOFF WITH JITTER
+  ================================
+
+  Attempt 1: wait  0ms                     (immediate)
+  Attempt 2: wait  base * 2^1 + jitter     (~200ms + rand)
+  Attempt 3: wait  base * 2^2 + jitter     (~400ms + rand)
+  Attempt 4: wait  base * 2^3 + jitter     (~800ms + rand)
+  Attempt 5: wait  base * 2^4 + jitter     (~1600ms + rand)
+  Give up after max_retries
+
+  Formula:
+  delay = min(base * 2^attempt + random(0, base), max_delay)
+
+  Why jitter?
+  Without jitter, all clients retry at the same time (thundering herd).
+  With jitter, retries are spread across time.
+
+  AWS SDK default: base=100ms, max_delay=20s, max_retries=3
+</code></pre>
+<h3 id="code-example">Code Example<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#code-example" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> time</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> random</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> retry_with_backoff</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(func, max_retries</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, base_delay</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0.1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, max_delay</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">30</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> attempt </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> range</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(max_retries):</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        try</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> func()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">        except</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> TransientError:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">            if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> attempt </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">==</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> max_retries </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">                raise</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            delay </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> min</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(base_delay </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> **</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> attempt), max_delay)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            jitter </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> random.uniform(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, base_delay)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            time.sleep(delay </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">+</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> jitter)</span></span></code></pre></figure>
+<hr/>
+<h2 id="health-checks-and-self-healing">Health Checks and Self-Healing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#health-checks-and-self-healing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cloud systems use automated health checks to detect failures and
+trigger automatic recovery.</p>
+<h3 id="types-of-health-checks">Types of Health Checks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#types-of-health-checks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  HEALTH CHECK TYPES
+  ===================
+
+  1. TCP Health Check (L4)
+     &quot;Can I open a TCP connection to port 80?&quot;
+     Checks: process is listening
+     Misses: application errors, dependency failures
+
+  2. HTTP Health Check (L7)
+     &quot;Does GET /health return 200?&quot;
+     Checks: application is responding
+     Misses: deep dependency failures
+
+  3. Deep Health Check
+     &quot;Does GET /health/deep return 200?&quot;
+     Checks: app AND database AND cache AND external APIs
+     Risk: false positives (external dependency down != this instance bad)
+
+  4. Liveness Probe (Kubernetes)
+     &quot;Is the process alive and responsive?&quot;
+     Failure action: restart the container
+
+  5. Readiness Probe (Kubernetes)
+     &quot;Is the process ready to serve traffic?&quot;
+     Failure action: remove from load balancer (don't restart)
+</code></pre>
+<h3 id="self-healing-pipeline">Self-Healing Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#self-healing-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>  SELF-HEALING FLOW
+  ==================
+
+  Health Check Fails
+       |
+       v
+  Remove from Load Balancer (stop sending traffic)
+       |
+       v
+  Attempt In-Place Recovery (restart process)
+       |
+       +-- Success --> Re-add to Load Balancer
+       |
+       +-- Failure --> Terminate Instance
+                           |
+                           v
+                    Auto Scaling Group launches replacement
+                           |
+                           v
+                    New instance passes health check
+                           |
+                           v
+                    Added to Load Balancer
+                    (total time: 2-5 minutes)
+</code></pre>
+<hr/>
+<h2 id="real-world-outage-examples-and-lessons">Real-World Outage Examples and Lessons<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-outage-examples-and-lessons" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="aws-us-east-1-s3-outage-february-2017">AWS us-east-1 S3 Outage (February 2017)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-us-east-1-s3-outage-february-2017" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>What happened:</strong> An engineer, while debugging a billing system issue,
+accidentally ran a command that removed more S3 servers than intended.
+The S3 subsystem in us-east-1 went offline for about 4 hours.</p>
+<p><strong>Blast radius:</strong> Hundreds of websites, apps, and services that stored
+assets in S3 us-east-1 went down, including many that displayed blank
+pages because they fetched images and scripts from S3.</p>
+<p><strong>Lessons:</strong></p>
+<ul>
+<li>Do not store your status page on the same infrastructure it monitors
+(the AWS status page was hosted on S3).</li>
+<li>Use multi-region for critical assets.</li>
+<li>Safeguards against large-scale removal commands.</li>
+<li>AWS subsequently added rate limits to S3 server removal.</li>
+</ul>
+<h3 id="cloudflare-outage-june-2022">Cloudflare Outage (June 2022)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudflare-outage-june-2022" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>What happened:</strong> A network configuration change intended for a small
+subset of data centers was accidentally applied to 19 major data centers
+simultaneously.</p>
+<p><strong>Blast radius:</strong> Cloudflare’s CDN went down for 75% of the internet’s
+websites for approximately 1 hour.</p>
+<p><strong>Lessons:</strong></p>
+<ul>
+<li>Canary deployments for infrastructure changes (roll out to 1 data
+center, observe, then expand).</li>
+<li>Blast radius limits in change management systems.</li>
+<li>Automated rollback when metrics deviate.</li>
+</ul>
+<h3 id="google-cloud-us-central1-outage-june-2019">Google Cloud us-central1 Outage (June 2019)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#google-cloud-us-central1-outage-june-2019" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>What happened:</strong> A network configuration change caused a cascade of
+failures across the us-central1 region, affecting Google Cloud, YouTube,
+Gmail, and Google Search.</p>
+<p><strong>Blast radius:</strong> Global impact for approximately 4 hours.</p>
+<p><strong>Lessons:</strong></p>
+<ul>
+<li>Shared infrastructure between internal Google services and external
+Google Cloud creates shared failure domains.</li>
+<li>Network configuration changes need staged rollouts with automatic
+rollback.</li>
+</ul>
+<hr/>
+<h2 id="designing-for-fault-tolerance-a-checklist">Designing for Fault Tolerance: A Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#designing-for-fault-tolerance-a-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>  FAULT TOLERANCE DESIGN CHECKLIST
+  =================================
+
+  [ ] Deploy across at least 2 Availability Zones (3 preferred)
+  [ ] Use Auto Scaling to replace failed instances automatically
+  [ ] Implement health checks at every layer (LB, app, database)
+  [ ] Use circuit breakers for inter-service communication
+  [ ] Implement retry with exponential backoff and jitter
+  [ ] Design stateless application tiers (state in managed services)
+  [ ] Use managed services with built-in redundancy (RDS Multi-AZ)
+  [ ] Set up database replication (synchronous for RPO=0)
+  [ ] Implement graceful degradation (serve stale cache if DB is down)
+  [ ] Configure connection draining for smooth instance removal
+  [ ] Run chaos engineering experiments regularly
+  [ ] Set up monitoring, alerting, and automated runbooks
+  [ ] Practice disaster recovery procedures quarterly
+  [ ] Document your RTO (recovery time) and RPO (data loss) targets
+  [ ] Build kill switches for non-critical features
+</code></pre>
+<hr/>
+<h2 id="raft-consensus-as-the-foundation-of-fault-tolerance">Raft: Consensus as the Foundation of Fault Tolerance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#raft-consensus-as-the-foundation-of-fault-tolerance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Redundancy keeps hardware alive. <strong>Consensus</strong> keeps a cluster of nodes
+agreeing on a single truth despite failures. Without consensus, three nodes
+might each believe they are the leader and accept conflicting writes —
+a split-brain scenario that corrupts data even with zero hardware failures.</p>
+<p>Raft is the consensus algorithm that powers etcd (Kubernetes), CockroachDB,
+TiKV (TiDB), Consul, and many distributed databases. Understanding Raft tells
+you exactly <em>why</em> a 3-node cluster tolerates 1 failure, but a 4-node cluster
+still only tolerates 1.</p>
+<hr/>
+<h3 id="mental-model-1-the-parliamentary-vote">Mental Model 1: The Parliamentary Vote<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mental-model-1-the-parliamentary-vote" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A parliament can only pass a bill if a <strong>majority</strong> of members vote yes.
+No two competing groups can both get a majority at the same time — by
+definition, two majorities would overlap on at least one member, and that
+member cannot vote for both sides simultaneously.</p>
+<pre><code>5-member parliament: majority = 3
+
+  Group A (3 votes) ── passes ✓
+  Group B (3 votes) ── passes ✓   ← impossible: A∩B ≥ 1 member
+
+In a 5-node Raft cluster (majority = 3):
+  Two candidates cannot both win an election simultaneously.
+  The overlap node will only vote for one.
+</code></pre>
+<p>This is why Raft is safe: <strong>quorum intersection</strong> guarantees that no two
+leaders can be elected in the same term.</p>
+<hr/>
+<h3 id="mental-model-2-the-ship-with-one-captain">Mental Model 2: The Ship with One Captain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mental-model-2-the-ship-with-one-captain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>At any moment, Raft ensures <strong>exactly one leader</strong>. The leader is the only
+node that accepts writes. It decides the order of operations and replicates
+decisions to all followers.</p>
+<pre><code>          ┌────────────┐
+          │   LEADER   │  ← accepts all writes
+          │   (Node 1) │  ← sends heartbeats every 150ms
+          └─────┬──────┘
+         ┌──────┴──────┐
+    ┌────┴───┐     ┌───┴────┐
+    │Follower│     │Follower│  ← replicate log entries from leader
+    │(Node 2)│     │(Node 3)│  ← respond to reads (or redirect to leader)
+    └────────┘     └────────┘
+</code></pre>
+<p>If the captain (leader) goes overboard (crashes or becomes unreachable),
+followers notice the absence of heartbeats, start an election, and elect
+a new captain — all automatically, typically within 150–300ms.</p>
+<p>There is <strong>never a moment</strong> where two nodes legitimately act as leader in
+the same term. If an old leader recovers after isolation, it finds a higher
+term number and steps down immediately.</p>
+<hr/>
+<h3 id="mental-model-3-the-append-only-logbook">Mental Model 3: The Append-Only Logbook<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mental-model-3-the-append-only-logbook" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Every write is an entry in a <strong>distributed log</strong>. The leader appends the
+entry first, then tells followers to append the same entry. Once a majority
+have confirmed the append, the entry is <strong>committed</strong> — permanently part of
+the log, applied to the state machine.</p>
+<pre><code>Leader log:     [1: set x=1] [2: set y=2] [3: set x=5]  ← committed
+Follower 2 log: [1: set x=1] [2: set y=2] [3: set x=5]  ← in sync
+Follower 3 log: [1: set x=1] [2: set y=2]               ← lagging
+
+Leader gets new write: set z=9
+  → appends [4: set z=9] locally
+  → sends AppendEntries RPC to followers
+  → waits for majority ACK (at least 1 follower)
+  → commits entry 4
+  → applies to state machine
+  → responds to client: success
+</code></pre>
+<p>Entries are <strong>never deleted or reordered</strong> once committed. The log grows
+monotonically. If a follower crashes and restarts, it replays the log from
+the last snapshot and catches up.</p>
+<hr/>
+<h3 id="the-three-sub-problems-raft-solves">The Three Sub-Problems Raft Solves<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-three-sub-problems-raft-solves" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="1-leader-election">1. Leader Election<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-leader-election" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>When a follower stops receiving heartbeats, it starts an election:</p>
+<pre><code>Election timeout fires (randomized: 150–300ms)
+  │
+  ├─ Follower becomes Candidate
+  ├─ Increments its term number  (e.g., term 3 → term 4)
+  ├─ Votes for itself
+  ├─ Sends RequestVote RPC to all other nodes
+  │
+  └─ Each node votes YES if:
+       (a) It hasn't voted in this term yet
+       (b) Candidate's log is at least as up-to-date as its own
+       
+  Candidate wins if it gets votes from a majority (⌊n/2⌋ + 1)
+</code></pre>
+<p><strong>Randomized timeouts</strong> prevent perpetual split votes. If two candidates
+start simultaneously, one almost always fires its next election timeout first
+and wins before the other can split the vote again.</p>
+<h4 id="2-log-replication">2. Log Replication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-log-replication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Client write → Leader
+  │
+  ├─ Leader appends entry to its log (uncommitted)
+  ├─ Sends AppendEntries RPCs to all followers (in parallel)
+  ├─ Waits for majority ACK
+  ├─ Marks entry as committed, applies to state machine
+  └─ Returns success to client
+
+  On next heartbeat → notifies followers entry is committed
+  Followers apply committed entries to their state machines
+</code></pre>
+<p>Followers that are slow or partitioned will catch up when reconnected.
+The leader tracks a <code>nextIndex</code> per follower and retries indefinitely.</p>
+<h4 id="3-safety-guarantee">3. Safety Guarantee<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-safety-guarantee" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Only a candidate whose log is <strong>at least as up-to-date</strong> as a majority of
+nodes can win an election. This prevents a stale node (that missed recent
+commits) from becoming leader and overwriting committed data.</p>
+<pre><code>&quot;Up-to-date&quot; comparison:
+  1. Higher last log term wins.
+  2. If same last log term, longer log wins.
+</code></pre>
+<p>This means: every committed entry will be present on the next leader’s log,
+by construction.</p>
+<hr/>
+<h3 id="the-quorum-math">The Quorum Math<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-quorum-math" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Cluster size (n)  │  Majority needed  │  Failures tolerated
+──────────────────┼───────────────────┼────────────────────
+        1         │        1          │         0
+        2         │        2          │         0  ← no benefit
+        3         │        2          │         1
+        4         │        3          │         1  ← same as n=3, write is slower
+        5         │        3          │         2
+        7         │        4          │         3
+
+Formula: tolerates ⌊(n-1)/2⌋ failures
+</code></pre>
+<p>This is why <strong>odd cluster sizes</strong> are the standard: adding an even node
+gives no additional failure tolerance (n=4 still tolerates 1 failure like
+n=3), but increases write latency (must wait for 3 ACKs instead of 2).</p>
+<pre><code>Write latency in Raft:
+  Leader must wait for ⌊n/2⌋ follower ACKs before committing.
+
+  n=3: wait for 1 follower  → fast
+  n=5: wait for 2 followers → latency = max(slowest 2 of 4 followers)
+  n=7: wait for 3 followers → higher tail latency
+</code></pre>
+<p>The sweet spot for most systems is <strong>n=3</strong> (tolerates 1 failure, low write
+latency) or <strong>n=5</strong> (tolerates 2 failures, moderate latency).</p>
+<hr/>
+<h3 id="where-raft-runs-in-the-cloud">Where Raft Runs in the Cloud<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#where-raft-runs-in-the-cloud" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>System</th><th>How Raft is used</th></tr></thead><tbody><tr><td><strong>etcd</strong></td><td>Single Raft group for all key-value data; backbone of every Kubernetes cluster</td></tr><tr><td><strong>CockroachDB</strong></td><td>One Raft group per range (64 MB partition); thousands of groups per cluster</td></tr><tr><td><strong>TiKV</strong> (TiDB)</td><td>One Raft group per region; Multi-Raft for parallelism</td></tr><tr><td><strong>Consul</strong></td><td>Single Raft group for service registry and config</td></tr><tr><td><strong>AWS Aurora</strong></td><td>Quorum-based storage (similar principle; 6 copies, 4/6 for write quorum)</td></tr></tbody></table></div>
+<hr/>
+<h3 id="raft-vs-active-passive-failover">Raft vs. Active-Passive Failover<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#raft-vs-active-passive-failover" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The redundancy patterns covered earlier (Active-Active, Active-Passive) are
+<strong>manual or externally-orchestrated</strong> failover. Raft is <strong>self-orchestrating</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Dimension</th><th>Active-Passive with External Failover</th><th>Raft Consensus</th></tr></thead><tbody><tr><td>Who detects leader failure?</td><td>External health check / load balancer</td><td>Raft followers (heartbeat timeout)</td></tr><tr><td>Who elects new leader?</td><td>DBA / ops / Route53 health routing</td><td>Raft election protocol</td></tr><tr><td>Time to failover</td><td>30–120 seconds (RDS Multi-AZ)</td><td>150–500ms</td></tr><tr><td>Risk of split-brain</td><td>Yes (if health check is wrong)</td><td>No (quorum prevents it)</td></tr><tr><td>Write consistency</td><td>Possible gap at failover</td><td>Guaranteed — committed entries are never lost</td></tr><tr><td>Use case</td><td>Stateful services, managed databases</td><td>Distributed databases, config stores, coordination</td></tr></tbody></table></div>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="exponential-backoff-as-a-recurrence-relation--retry-timing">Exponential Backoff as a Recurrence Relation — Retry Timing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exponential-backoff-as-a-recurrence-relation--retry-timing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The exponential backoff formula <code>delay = base * 2^attempt</code> is a recurrence relation: <code>T(n) = 2 * T(n-1)</code> with <code>T(0) = base</code>. This is the same geometric progression that governs binary search’s halving of the search space, but in reverse — each retry doubles the wait. The added jitter (<code>random(0, base)</code>) transforms the deterministic recurrence into a randomized algorithm, converting a synchronized thundering herd (where all clients retry at identical times) into a uniformly distributed load across the time interval. The AWS SDK’s default backoff (base=100ms, max=20s, max_retries=3) produces the sequence 100ms, 200ms, 400ms — capped at 20s — which is O(2^n) growth bounded by a constant, the same asymptotic pattern as doubling-strategy dynamic array resizing.</p>
+<h3 id="quorum-systems-and-majority-voting--raft-consensus">Quorum Systems and Majority Voting — Raft Consensus<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quorum-systems-and-majority-voting--raft-consensus" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Raft’s core safety property — that no two leaders can coexist in the same term — relies on the pigeonhole principle applied to sets: if two groups each contain a strict majority of n nodes, their intersection is non-empty (at least one node belongs to both groups). This is the same combinatorial argument underlying quorum-based read/write protocols in distributed databases. The quorum math <code>f = floor((n-1)/2)</code> directly parallels the analysis of fault-tolerant voting circuits in hardware design. The document’s observation that odd cluster sizes are optimal (n=4 tolerates the same failures as n=3 but with higher write latency) is an instance of the general principle that adding a node to an even-sized quorum system increases the majority threshold without improving fault tolerance — a pure pigeonhole consequence.</p>
+<h3 id="merkle-trees--data-integrity-verification">Merkle Trees — Data Integrity Verification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#merkle-trees--data-integrity-verification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A Merkle tree hashes data blocks at the leaves and recursively hashes pairs of child hashes up to a single root, enabling O(log n) verification that any single block is uncorrupted. In the context of cloud fault tolerance, Merkle trees are used by systems like Amazon’s DynamoDB (based on Dynamo’s anti-entropy protocol) and CockroachDB to detect and repair data divergence between replicas after a failure. When a node recovers from a crash, it exchanges Merkle tree roots with peers; if roots differ, the nodes walk down the tree to identify exactly which data ranges diverged, transferring only the O(log n) hashes and the changed blocks rather than the entire dataset. This makes post-failure repair efficient enough that Raft followers can catch up quickly, keeping the cluster’s MTTR low.</p>
+<h3 id="state-machine-replication--deterministic-finite-automata">State Machine Replication — Deterministic Finite Automata<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#state-machine-replication--deterministic-finite-automata" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Raft’s replicated log is an implementation of the state machine replication paradigm: every node maintains an identical deterministic finite automaton (DFA), and applying the same sequence of inputs (log entries) in the same order guarantees identical states across all replicas. This is the distributed systems analog of running the same DFA on the same input string and getting the same accept/reject result. The append-only, monotonically-indexed log ensures that the transition function is applied in a total order, which is why Raft guarantees that committed entries are never lost — any new leader’s log is a prefix-or-equal of every committed sequence, preserving the DFA’s state invariant.</p>
+<hr/>
+<h2 id="key-takeaways">Key Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Failure is a constant, not an event.</strong> At scale, something is
+always broken. Design systems that continue operating despite failures.</p>
+</li>
+<li>
+<p><strong>Focus on MTTR, not MTBF.</strong> You cannot prevent all failures, but you
+can minimize recovery time. Automate detection, failover, and
+replacement.</p>
+</li>
+<li>
+<p><strong>Availability math is multiplicative for serial systems.</strong> Every
+serial dependency reduces overall availability. Minimize serial
+dependencies; add parallelism (redundancy) at every layer.</p>
+</li>
+<li>
+<p><strong>Think in blast radii.</strong> Every component should fail with the
+smallest possible impact. Contain failures at the process, container,
+instance, AZ, and region levels.</p>
+</li>
+<li>
+<p><strong>Redundancy is not free.</strong> Active-active is efficient (both copies
+serve traffic) but complex. Active-passive is simpler but wastes the
+standby. N+1 is a pragmatic middle ground.</p>
+</li>
+<li>
+<p><strong>Chaos engineering proves your design.</strong> Testing in production,
+under controlled conditions, is the only way to know that your fault
+tolerance actually works.</p>
+</li>
+<li>
+<p><strong>Consensus is the bedrock of distributed fault tolerance.</strong> Hardware
+redundancy keeps nodes alive; Raft keeps them agreeing. Without
+consensus, redundancy produces split-brain. Use odd cluster sizes
+(3 or 5), understand the quorum math, and know which cloud services
+use Raft under the hood.</p>
+</li>
+<li>
+<p><strong>Circuit breakers and backoff prevent cascading failures.</strong> Without
+them, one failing service can bring down the entire system through
+timeout cascades and resource exhaustion.</p>
+</li>
+<li>
+<p><strong>Self-healing is the goal.</strong> Health checks detect failures, auto
+scaling replaces instances, circuit breakers isolate faults — all
+without human intervention. Aim for systems that recover automatically
+at 3 AM without paging anyone.</p>
+</li>
+</ol></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-30" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#fault-tolerance-mental-model" data-for="fault-tolerance-mental-model">Fault Tolerance Mental Model</a></li><li class="depth-1"><a href="#core-idea-everything-fails-all-the-time" data-for="core-idea-everything-fails-all-the-time">Core Idea: Everything Fails, All the Time</a></li><li class="depth-1"><a href="#mtbf-and-mttr-the-two-numbers-that-matter" data-for="mtbf-and-mttr-the-two-numbers-that-matter">MTBF and MTTR: The Two Numbers That Matter</a></li><li class="depth-2"><a href="#mtbf-mean-time-between-failures" data-for="mtbf-mean-time-between-failures">MTBF (Mean Time Between Failures)</a></li><li class="depth-2"><a href="#mttr-mean-time-to-recovery" data-for="mttr-mean-time-to-recovery">MTTR (Mean Time To Recovery)</a></li><li class="depth-2"><a href="#the-availability-formula" data-for="the-availability-formula">The Availability Formula</a></li><li class="depth-1"><a href="#availability-math-the-nines" data-for="availability-math-the-nines">Availability Math: The Nines</a></li><li class="depth-2"><a href="#serial-vs-parallel-systems" data-for="serial-vs-parallel-systems">Serial vs Parallel Systems</a></li><li class="depth-2"><a href="#the-practical-formula" data-for="the-practical-formula">The Practical Formula</a></li><li class="depth-1"><a href="#redundancy-patterns" data-for="redundancy-patterns">Redundancy Patterns</a></li><li class="depth-2"><a href="#active-active" data-for="active-active">Active-Active</a></li><li class="depth-2"><a href="#active-passive-hot-standby" data-for="active-passive-hot-standby">Active-Passive (Hot Standby)</a></li><li class="depth-2"><a href="#n1-redundancy" data-for="n1-redundancy">N+1 Redundancy</a></li><li class="depth-1"><a href="#blast-radius-thinking" data-for="blast-radius-thinking">Blast Radius Thinking</a></li><li class="depth-1"><a href="#failure-domains-server-rack-az-region" data-for="failure-domains-server-rack-az-region">Failure Domains: Server, Rack, AZ, Region</a></li><li class="depth-2"><a href="#server" data-for="server">Server</a></li><li class="depth-2"><a href="#rack" data-for="rack">Rack</a></li><li class="depth-2"><a href="#availability-zone-az" data-for="availability-zone-az">Availability Zone (AZ)</a></li><li class="depth-2"><a href="#region" data-for="region">Region</a></li><li class="depth-2"><a href="#design-for-each-failure-domain" data-for="design-for-each-failure-domain">Design for Each Failure Domain</a></li><li class="depth-1"><a href="#chaos-engineering-proving-resilience" data-for="chaos-engineering-proving-resilience">Chaos Engineering: Proving Resilience</a></li><li class="depth-2"><a href="#netflix-chaos-monkey" data-for="netflix-chaos-monkey">Netflix Chaos Monkey</a></li><li class="depth-2"><a href="#chaos-engineering-principles" data-for="chaos-engineering-principles">Chaos Engineering Principles</a></li><li class="depth-1"><a href="#circuit-breaker-pattern" data-for="circuit-breaker-pattern">Circuit Breaker Pattern</a></li><li class="depth-2"><a href="#code-example-pseudocode" data-for="code-example-pseudocode">Code Example (Pseudocode)</a></li><li class="depth-1"><a href="#retry-with-exponential-backoff" data-for="retry-with-exponential-backoff">Retry with Exponential Backoff</a></li><li class="depth-2"><a href="#code-example" data-for="code-example">Code Example</a></li><li class="depth-1"><a href="#health-checks-and-self-healing" data-for="health-checks-and-self-healing">Health Checks and Self-Healing</a></li><li class="depth-2"><a href="#types-of-health-checks" data-for="types-of-health-checks">Types of Health Checks</a></li><li class="depth-2"><a href="#self-healing-pipeline" data-for="self-healing-pipeline">Self-Healing Pipeline</a></li><li class="depth-1"><a href="#real-world-outage-examples-and-lessons" data-for="real-world-outage-examples-and-lessons">Real-World Outage Examples and Lessons</a></li><li class="depth-2"><a href="#aws-us-east-1-s3-outage-february-2017" data-for="aws-us-east-1-s3-outage-february-2017">AWS us-east-1 S3 Outage (February 2017)</a></li><li class="depth-2"><a href="#cloudflare-outage-june-2022" data-for="cloudflare-outage-june-2022">Cloudflare Outage (June 2022)</a></li><li class="depth-2"><a href="#google-cloud-us-central1-outage-june-2019" data-for="google-cloud-us-central1-outage-june-2019">Google Cloud us-central1 Outage (June 2019)</a></li><li class="depth-1"><a href="#designing-for-fault-tolerance-a-checklist" data-for="designing-for-fault-tolerance-a-checklist">Designing for Fault Tolerance: A Checklist</a></li><li class="depth-1"><a href="#raft-consensus-as-the-foundation-of-fault-tolerance" data-for="raft-consensus-as-the-foundation-of-fault-tolerance">Raft: Consensus as the Foundation of Fault Tolerance</a></li><li class="depth-2"><a href="#mental-model-1-the-parliamentary-vote" data-for="mental-model-1-the-parliamentary-vote">Mental Model 1: The Parliamentary Vote</a></li><li class="depth-2"><a href="#mental-model-2-the-ship-with-one-captain" data-for="mental-model-2-the-ship-with-one-captain">Mental Model 2: The Ship with One Captain</a></li><li class="depth-2"><a href="#mental-model-3-the-append-only-logbook" data-for="mental-model-3-the-append-only-logbook">Mental Model 3: The Append-Only Logbook</a></li><li class="depth-2"><a href="#the-three-sub-problems-raft-solves" data-for="the-three-sub-problems-raft-solves">The Three Sub-Problems Raft Solves</a></li><li class="depth-2"><a href="#the-quorum-math" data-for="the-quorum-math">The Quorum Math</a></li><li class="depth-2"><a href="#where-raft-runs-in-the-cloud" data-for="where-raft-runs-in-the-cloud">Where Raft Runs in the Cloud</a></li><li class="depth-2"><a href="#raft-vs-active-passive-failover" data-for="raft-vs-active-passive-failover">Raft vs. Active-Passive Failover</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#exponential-backoff-as-a-recurrence-relation--retry-timing" data-for="exponential-backoff-as-a-recurrence-relation--retry-timing">Exponential Backoff as a Recurrence Relation — Retry Timing</a></li><li class="depth-2"><a href="#quorum-systems-and-majority-voting--raft-consensus" data-for="quorum-systems-and-majority-voting--raft-consensus">Quorum Systems and Majority Voting — Raft Consensus</a></li><li class="depth-2"><a href="#merkle-trees--data-integrity-verification" data-for="merkle-trees--data-integrity-verification">Merkle Trees — Data Integrity Verification</a></li><li class="depth-2"><a href="#state-machine-replication--deterministic-finite-automata" data-for="state-machine-replication--deterministic-finite-automata">State Machine Replication — Deterministic Finite Automata</a></li><li class="depth-1"><a href="#key-takeaways" data-for="key-takeaways">Key Takeaways</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

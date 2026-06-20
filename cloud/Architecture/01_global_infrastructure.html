@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>01_global_infrastructure</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="01_global_infrastructure"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="01_global_infrastructure"/><meta name="twitter:description" content="Cloud Global Infrastructure Introduction Every cloud application ultimately runs on physical hardware in a physical location."/><meta property="og:description" content="Cloud Global Infrastructure Introduction Every cloud application ultimately runs on physical hardware in a physical location."/><meta property="og:image:alt" content="Cloud Global Infrastructure Introduction Every cloud application ultimately runs on physical hardware in a physical location."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/Architecture/01_global_infrastructure"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/Architecture/01_global_infrastructure"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Cloud Global Infrastructure Introduction Every cloud application ultimately runs on physical hardware in a physical location."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/Architecture/01_global_infrastructure"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-28"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-28" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/Architecture/">Architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>01_global_infrastructure</a></div></nav><h1 class="article-title">01_global_infrastructure</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.349Z">Jun 20, 2026</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="cloud-global-infrastructure">Cloud Global Infrastructure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-global-infrastructure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="introduction">Introduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#introduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Every cloud application ultimately runs on physical hardware in a physical location.
+Understanding how cloud providers organize their global infrastructure is foundational
+to designing systems that are fast, resilient, compliant, and cost-effective. This
+document explores the layered hierarchy of cloud infrastructure — from the broadest
+geographic divisions down to individual edge locations — with a primary focus on AWS,
+and comparisons to Azure and GCP where they diverge.</p>
+<p>The decisions you make at this layer (which region, how many AZs, whether to use edge
+locations) cascade into every other architectural choice: networking topology, data
+replication strategy, disaster recovery posture, and monthly spend.</p>
+<hr/>
+<h2 id="the-infrastructure-hierarchy">The Infrastructure Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-infrastructure-hierarchy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>+------------------------------------------------------------------+
+|                        GLOBAL CLOUD                              |
+|                                                                  |
+|  +------------------+  +------------------+  +--------------+    |
+|  |   REGION (e.g.   |  |   REGION (e.g.   |  |  REGION ...  |    |
+|  |   us-east-1)     |  |   eu-west-1)     |  |              |    |
+|  |                  |  |                  |  |              |    |
+|  | +----+ +----+    |  | +----+ +----+    |  |              |    |
+|  | | AZ | | AZ |    |  | | AZ | | AZ |    |  |              |    |
+|  | | 1a | | 1b |    |  | | 1a | | 1b |    |  |              |    |
+|  | +----+ +----+    |  | +----+ +----+    |  |              |    |
+|  |   +----+         |  |   +----+ +----+  |  |              |    |
+|  |   | AZ |         |  |   | AZ | | AZ |  |  |              |    |
+|  |   | 1c |         |  |   | 1c | | 1d |  |  |              |    |
+|  |   +----+         |  |   +----+ +----+  |  |              |    |
+|  +------------------+  +------------------+  +--------------+    |
+|                                                                  |
+|  +-------+  +-------+  +-------+  +-------+  +-------+          |
+|  | Edge  |  | Edge  |  | Edge  |  | Edge  |  | Edge  |  ...     |
+|  | Loc.  |  | Loc.  |  | Loc.  |  | Loc.  |  | Loc.  |          |
+|  +-------+  +-------+  +-------+  +-------+  +-------+          |
+|                                                                  |
+|  +-------------+  +-------------+                                |
+|  | Local Zone  |  | Wavelength  |  (extensions of parent region) |
+|  +-------------+  +-------------+                                |
++------------------------------------------------------------------+
+</code></pre>
+<hr/>
+<h2 id="regions">Regions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#regions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-is-a-region">What Is a Region?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-a-region" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A region is a geographic area containing a cluster of data centers. Each region is
+completely independent — it has its own control plane, its own set of services, and
+operates autonomously. A failure in <code>us-east-1</code> does not propagate to <code>eu-west-1</code>.</p>
+<p>AWS currently operates 30+ regions globally. Azure has 60+ regions. GCP has 40+ regions.
+The numbers grow yearly as providers expand.</p>
+<h3 id="naming-conventions">Naming Conventions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#naming-conventions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Provider</th><th>Example</th><th>Pattern</th></tr></thead><tbody><tr><td>AWS</td><td>us-east-1</td><td>{continent}-{direction}-{n}</td></tr><tr><td>Azure</td><td>East US</td><td>Human-readable name</td></tr><tr><td>GCP</td><td>us-central1</td><td>{continent}-{direction}{n}</td></tr></tbody></table></div>
+<h3 id="region-selection-criteria">Region Selection Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#region-selection-criteria" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Choosing the right region is one of the most consequential early decisions. Changing
+regions later is expensive (data transfer, re-architecture, downtime). Evaluate on
+these axes:</p>
+<p><strong>1. Latency to End Users</strong></p>
+<p>The speed of light is non-negotiable. A packet traveling from Tokyo to a server in
+Virginia crosses approximately 11,000 km of fiber. Even at 2/3 the speed of light
+in fiber, that is roughly 55 ms one-way, or 110 ms round trip — before any processing.</p>
+<p>Rule of thumb: deploy in the same continent as your heaviest user concentration.
+Use tools like CloudPing or the AWS Speed Test to measure real latency from target
+geographies.</p>
+<p><strong>2. Regulatory and Data Residency Compliance</strong></p>
+<p>Many jurisdictions mandate that certain data categories remain within national borders:</p>
+<ul>
+<li>GDPR (EU): Personal data of EU residents has strict transfer rules.</li>
+<li>PDPA (Singapore): Personal data must be protected during cross-border transfer.</li>
+<li>Data localization laws: Russia (Federal Law 242-FZ), China (Cybersecurity Law),
+India (proposed DPDP Act) all have requirements.</li>
+</ul>
+<p>If you serve German healthcare customers, you likely need <code>eu-central-1</code> (Frankfurt).
+If you serve the Indian government, <code>ap-south-1</code> (Mumbai) may be required.</p>
+<p><strong>3. Service Availability</strong></p>
+<p>Not all services launch in all regions simultaneously. New services typically debut
+in <code>us-east-1</code> and a handful of other regions, then roll out over months. Before
+committing to a region, check the regional services list to confirm every service
+in your architecture is available there.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Check if a service is available in a specific region</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ssm</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> get-parameters-by-path</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --path</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /aws/service/global-infrastructure/regions/eu-north-1/services</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --query</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Parameters[].Value&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --output</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> text</span></span></code></pre></figure>
+<p><strong>4. Cost</strong></p>
+<p>Pricing varies across regions, sometimes by 10-20%. Regions in South America
+(<code>sa-east-1</code>) and Asia Pacific tend to be more expensive than US regions. EC2
+on-demand pricing in <code>sa-east-1</code> can be 40% higher than <code>us-east-1</code> for the
+same instance type.</p>
+<p><strong>5. Disaster Recovery Geography</strong></p>
+<p>If your DR strategy requires a paired region, choose a primary and secondary that
+are geographically separated but close enough that data replication latency is
+tolerable. AWS does not prescribe region pairs (unlike Azure), so you choose your
+own. Common pairings: <code>us-east-1</code> + <code>us-west-2</code>, <code>eu-west-1</code> + <code>eu-central-1</code>.</p>
+<h3 id="multi-region-architecture">Multi-Region Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#multi-region-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For global applications, a single region is insufficient. Multi-region architectures
+provide:</p>
+<ul>
+<li>Lower latency for users worldwide</li>
+<li>Resilience against region-level outages (rare but real — <code>us-east-1</code> has had
+significant outages)</li>
+<li>Compliance with data residency laws in multiple jurisdictions</li>
+</ul>
+<p>Multi-region adds substantial complexity: data synchronization, conflict resolution,
+DNS-based routing, and higher cost. Only adopt it when the business requirements
+(uptime SLA, global user base, regulatory mandates) justify the engineering overhead.</p>
+<hr/>
+<h2 id="availability-zones-azs">Availability Zones (AZs)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#availability-zones-azs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-is-an-availability-zone">What Is an Availability Zone?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-an-availability-zone" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>An Availability Zone is one or more discrete data centers within a region. Each AZ has
+independent power supplies, cooling systems, and physical security. AZs within a region
+are connected via high-bandwidth, low-latency private fiber links (often called “dark
+fiber”), with round-trip latency typically under 2 ms.</p>
+<p>The critical design principle: <strong>an event that takes out one AZ should not affect
+another AZ in the same region.</strong> AZs are physically separated — often by several
+kilometers — to guard against localized disasters (fire, flood, power grid failure)
+while remaining close enough for synchronous data replication.</p>
+<h3 id="how-azs-are-identified">How AZs Are Identified<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-azs-are-identified" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>AWS maps AZ names to physical zones differently per account. Your <code>us-east-1a</code> may
+be a different physical data center than another customer’s <code>us-east-1a</code>. This
+prevents all customers from piling into the “first” AZ. Use AZ IDs (e.g., <code>use1-az1</code>)
+for cross-account coordination.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># List AZs and their IDs in a region</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> describe-availability-zones</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --region</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> us-east-1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --query</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;AvailabilityZones[].{Name:ZoneName, ID:ZoneId, State:State}&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --output</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> table</span></span></code></pre></figure>
+<h3 id="az-design-principles">AZ Design Principles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#az-design-principles" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>          Region: us-east-1
+ ┌─────────────────────────────────────────────┐
+ │                                             │
+ │   AZ-a (use1-az1)       AZ-b (use1-az2)    │
+ │   ┌─────────────┐       ┌─────────────┐    │
+ │   │ Data Center │       │ Data Center │    │
+ │   │  Cluster    │       │  Cluster    │    │
+ │   │             │       │             │    │
+ │   │ - Own power │       │ - Own power │    │
+ │   │ - Own UPS   │       │ - Own UPS   │    │
+ │   │ - Own HVAC  │       │ - Own HVAC  │    │
+ │   │ - Own net   │       │ - Own net   │    │
+ │   └──────┬──────┘       └──────┬──────┘    │
+ │          │    High-bandwidth   │            │
+ │          │◄── dark fiber ─────►│            │
+ │          │    &lt; 2ms RTT        │            │
+ │          │         ┌───────────┘            │
+ │          │         │                        │
+ │   ┌──────┴─────────┴──┐                    │
+ │   │  AZ-c (use1-az3)  │                    │
+ │   │  ┌─────────────┐  │                    │
+ │   │  │ Data Center │  │                    │
+ │   │  │  Cluster    │  │                    │
+ │   │  └─────────────┘  │                    │
+ │   └────────────────────┘                    │
+ └─────────────────────────────────────────────┘
+</code></pre>
+<p>Each AZ consists of one or more data centers. A single AZ might have three data
+centers, but they are treated as a single failure domain from the customer’s
+perspective. The inter-AZ links provide enough bandwidth for synchronous replication
+(EBS Multi-Attach, RDS Multi-AZ, etc.) without noticeable latency.</p>
+<h3 id="designing-for-az-failure">Designing for AZ Failure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#designing-for-az-failure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The standard high-availability pattern is to distribute resources across at least
+two AZs (three is preferred). For example:</p>
+<pre><code>Auto Scaling Group:
+  - min: 4 instances
+  - desired: 6 instances
+  - max: 12 instances
+  - AZs: us-east-1a, us-east-1b, us-east-1c
+  
+Distribution: 2 instances per AZ
+If AZ-a fails: ASG launches 2 new instances in AZ-b and AZ-c
+</code></pre>
+<p>Key services and their AZ behavior:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Service</th><th>AZ Behavior</th></tr></thead><tbody><tr><td>EC2</td><td>Runs in exactly one AZ; use ASG for multi-AZ</td></tr><tr><td>EBS</td><td>Lives in one AZ; snapshots are regional</td></tr><tr><td>RDS Multi-AZ</td><td>Primary in one AZ, synchronous standby in another</td></tr><tr><td>Aurora</td><td>Storage layer spans 3 AZs (6 copies of data)</td></tr><tr><td>ALB</td><td>Requires subnets in at least 2 AZs</td></tr><tr><td>S3</td><td>Automatically stores across >= 3 AZs</td></tr><tr><td>DynamoDB</td><td>Automatically replicates across 3 AZs</td></tr></tbody></table></div>
+<hr/>
+<h2 id="edge-locations-and-points-of-presence-pops">Edge Locations and Points of Presence (PoPs)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#edge-locations-and-points-of-presence-pops" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-are-edge-locations">What Are Edge Locations?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-are-edge-locations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Edge locations are small data centers distributed globally, far more numerous than
+regions. AWS has 400+ edge locations across 90+ cities in 40+ countries. They serve
+a single purpose: bringing content closer to end users.</p>
+<p>Edge locations host:</p>
+<ul>
+<li><strong>CloudFront</strong> (CDN): Caches static and dynamic content at the edge</li>
+<li><strong>Route 53</strong> (DNS): Resolves DNS queries from the nearest edge location</li>
+<li><strong>Lambda@Edge / CloudFront Functions</strong>: Runs lightweight compute at the edge</li>
+<li><strong>AWS WAF</strong>: Filters malicious traffic at the edge before it reaches your origin</li>
+<li><strong>AWS Shield</strong>: DDoS protection at the edge</li>
+</ul>
+<h3 id="how-cloudfront-uses-edge-locations">How CloudFront Uses Edge Locations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-cloudfront-uses-edge-locations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>User in Tokyo                     Origin in us-east-1
+     │                                    │
+     │  1. GET /image.jpg                 │
+     ▼                                    │
+  Edge Location (Tokyo)                   │
+     │                                    │
+     ├─ Cache HIT? ──► Return cached      │
+     │                 content (&lt; 5ms)    │
+     │                                    │
+     └─ Cache MISS? ──► Fetch from ───────┘
+                        origin, cache
+                        locally, return
+</code></pre>
+<p>Regional Edge Caches (RECs) sit between edge locations and origins. They have larger
+cache capacity and act as a mid-tier cache, reducing origin fetches for content that
+is popular enough to cache but not so popular that every edge location has it.</p>
+<pre><code>User ──► Edge Location ──► Regional Edge Cache ──► Origin
+              (PoP)              (REC)            (Region)
+</code></pre>
+<h3 id="cloudfront-configuration-example">CloudFront Configuration Example<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloudfront-configuration-example" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light github-dark"><code data-language="yaml" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># CloudFormation - CloudFront Distribution</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">Resources</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">  Distribution</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    Type</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">AWS::CloudFront::Distribution</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">    Properties</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">      DistributionConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">        Origins</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">          - </span><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">Id</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">S3Origin</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            DomainName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">!GetAtt</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Bucket.RegionalDomainName</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">            S3OriginConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">              OriginAccessIdentity</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">!Sub</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> origin-access-identity/cloudfront/${OAI}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">        DefaultCacheBehavior</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          TargetOriginId</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">S3Origin</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          ViewerProtocolPolicy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">redirect-to-https</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          CachePolicyId</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">658327ea-f89d-4fab-a63d-7e88639e58f6</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Managed-CachingOptimized</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">          Compress</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">        PriceClass</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">PriceClass_100</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # US, Canada, Europe only</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">        Enabled</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">true</span></span></code></pre></figure>
+<h3 id="points-of-presence-vs-edge-locations">Points of Presence vs Edge Locations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#points-of-presence-vs-edge-locations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>“Point of Presence” is the umbrella term. A PoP may contain edge locations plus
+Regional Edge Caches. In practice, the terms are often used interchangeably, but
+PoP is technically the broader concept (the physical facility housing one or more
+edge caches).</p>
+<hr/>
+<h2 id="local-zones">Local Zones<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#local-zones" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-are-local-zones">What Are Local Zones?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-are-local-zones" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Local Zones are extensions of a parent region placed in large metro areas that do
+not have a full region. They bring select AWS services (EC2, EBS, VPC, ELB) closer
+to end users in specific cities, providing single-digit-millisecond latency.</p>
+<p>Example: <code>us-east-1-chi-1a</code> is a Local Zone in Chicago, extending <code>us-east-1</code>.</p>
+<p>Use cases:</p>
+<ul>
+<li>Real-time gaming servers requiring &lt; 10 ms latency</li>
+<li>Media content creation and streaming</li>
+<li>AR/VR applications</li>
+<li>Financial trading where every millisecond matters</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Enable a Local Zone</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> modify-availability-zone-group</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --group-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> us-east-1-chi-1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --opt-in-status</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> opted-in</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Launch an instance in a Local Zone</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> run-instances</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --image-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ami-0abcdef1234567890</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --instance-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> c5.xlarge</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --subnet-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> subnet-local-zone-chi</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --placement</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> AvailabilityZone=us-east-1-chi-1a</span></span></code></pre></figure>
+<h3 id="local-zones-vs-regions">Local Zones vs Regions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#local-zones-vs-regions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Region</th><th>Local Zone</th></tr></thead><tbody><tr><td>Services</td><td>Full suite (200+)</td><td>Limited subset (~20 services)</td></tr><tr><td>AZs</td><td>3+</td><td>Typically 1</td></tr><tr><td>Redundancy</td><td>Multi-AZ built-in</td><td>Rely on parent region for HA</td></tr><tr><td>Pricing</td><td>Standard regional</td><td>May be slightly higher</td></tr><tr><td>Data persistence</td><td>Full (S3, RDS, etc.)</td><td>EBS only; no S3, no RDS</td></tr></tbody></table></div>
+<hr/>
+<h2 id="wavelength-zones">Wavelength Zones<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#wavelength-zones" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-are-wavelength-zones">What Are Wavelength Zones?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-are-wavelength-zones" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Wavelength Zones embed AWS compute and storage inside telecom providers’ 5G networks.
+Traffic from 5G devices reaches AWS infrastructure without leaving the carrier’s
+network, achieving ultra-low latency (under 10 ms).</p>
+<p>Supported carriers include Verizon (US), Vodafone (UK, Germany), KDDI (Japan),
+SK Telecom (South Korea), and Bell Canada.</p>
+<p>Use cases:</p>
+<ul>
+<li>Connected vehicles processing sensor data in real time</li>
+<li>Interactive live video streaming</li>
+<li>Cloud gaming on mobile devices</li>
+<li>IoT applications on 5G-connected sensors</li>
+</ul>
+<pre><code>5G Device ──► Cell Tower ──► Carrier Network ──► Wavelength Zone (AWS)
+                                                      │
+                                              ┌───────┴───────┐
+                                              │ EC2 instances │
+                                              │ in carrier DC │
+                                              └───────────────┘
+                                  (No traversal of public internet)
+</code></pre>
+<hr/>
+<h2 id="comparing-providers-aws-vs-azure-vs-gcp">Comparing Providers: AWS vs Azure vs GCP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#comparing-providers-aws-vs-azure-vs-gcp" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="geographic-organization">Geographic Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#geographic-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Concept</th><th>AWS</th><th>Azure</th><th>GCP</th></tr></thead><tbody><tr><td>Top-level grouping</td><td>Partition (aws, aws-cn, aws-us-gov)</td><td>Geography (US, Europe, Asia Pacific)</td><td>Multi-region (us, europe, asia)</td></tr><tr><td>Data center cluster</td><td>Region</td><td>Region</td><td>Region</td></tr><tr><td>Failure domain</td><td>Availability Zone</td><td>Availability Zone</td><td>Zone</td></tr><tr><td>Edge caching</td><td>Edge Location / PoP</td><td>Azure PoP</td><td>Edge PoP</td></tr><tr><td>Metro extension</td><td>Local Zone</td><td>(no exact analog)</td><td>(no exact analog)</td></tr><tr><td>5G edge</td><td>Wavelength Zone</td><td>Azure Edge Zones</td><td>Distributed Cloud Edge</td></tr><tr><td>Government isolated</td><td>GovCloud (separate)</td><td>Azure Government</td><td>Assured Workloads</td></tr></tbody></table></div>
+<h3 id="azure-specific-region-pairs">Azure-Specific: Region Pairs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#azure-specific-region-pairs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Azure explicitly pairs regions for DR. For example, <code>East US</code> is paired with
+<code>West US</code>. Data replication for certain services (GRS storage) follows these pairings.
+Platform updates roll out to one region in a pair at a time. AWS does not enforce
+pairing; you choose your own DR region.</p>
+<h3 id="gcp-specific-multi-regions">GCP-Specific: Multi-Regions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gcp-specific-multi-regions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>GCP offers multi-region resources (e.g., multi-region Cloud Storage buckets) that
+automatically replicate across multiple regions within a continent. The <code>us</code>
+multi-region stores data across at least two US regions. This is a higher-level
+abstraction than AWS provides natively (S3 cross-region replication must be
+configured explicitly).</p>
+<hr/>
+<h2 id="data-residency-and-sovereignty">Data Residency and Sovereignty<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-residency-and-sovereignty" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-regulatory-landscape">The Regulatory Landscape<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-regulatory-landscape" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Data sovereignty is the concept that data is subject to the laws of the country
+where it is stored. Cloud providers give you tools to control placement, but
+compliance is ultimately your responsibility.</p>
+<p>Key mechanisms in AWS:</p>
+<ol>
+<li><strong>Region selection</strong>: Store data only in regions within the required jurisdiction</li>
+<li><strong>S3 Object Lock and Bucket policies</strong>: Prevent cross-region copies</li>
+<li><strong>AWS Organizations SCPs</strong>: Deny API calls that would create resources outside
+approved regions</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light github-dark"><code data-language="json" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;Version&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;2012-10-17&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  &quot;Statement&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Sid&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;DenyNonEURegions&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Effect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Deny&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;*&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Resource&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;*&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">      &quot;Condition&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">        &quot;StringNotEquals&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">          &quot;aws:RequestedRegion&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">            &quot;eu-west-1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">            &quot;eu-west-2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">            &quot;eu-central-1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">            &quot;eu-north-1&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">          ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>AWS Control Tower</strong>: Guardrails that enforce regional restrictions</li>
+<li><strong>Data residency controls</strong>: AWS Dedicated Local Zones and Outposts for
+on-premises sovereignty</li>
+</ol>
+<h3 id="sovereign-cloud-offerings">Sovereign Cloud Offerings<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sovereign-cloud-offerings" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>All three major providers now offer sovereign cloud options:</p>
+<ul>
+<li><strong>AWS</strong>: Dedicated Local Zones, Outposts, and the European Sovereign Cloud
+(separate infrastructure operated by EU-based staff)</li>
+<li><strong>Azure</strong>: Azure Sovereign Regions (Government, China operated by 21Vianet)</li>
+<li><strong>GCP</strong>: Assured Workloads, T-Systems Sovereign Cloud (Germany)</li>
+</ul>
+<hr/>
+<h2 id="aws-outposts-and-hybrid-edge">AWS Outposts and Hybrid Edge<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-outposts-and-hybrid-edge" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="aws-outposts">AWS Outposts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-outposts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Outposts bring AWS infrastructure on-premises. AWS ships a rack (or smaller form
+factor) of hardware to your data center. It runs native AWS services (EC2, EBS,
+ECS, RDS, S3) managed by AWS, connected back to the parent region.</p>
+<pre><code>Your Data Center                         AWS Region
+┌──────────────────┐                ┌──────────────┐
+│  AWS Outpost     │                │              │
+│  ┌────────────┐  │   VPN / DX    │   Control    │
+│  │ EC2, EBS   │  │◄──────────────►│   Plane      │
+│  │ ECS, RDS   │  │  (encrypted)  │              │
+│  │ S3 on      │  │               │   Full AWS   │
+│  │ Outposts   │  │               │   Services   │
+│  └────────────┘  │               │              │
+└──────────────────┘                └──────────────┘
+</code></pre>
+<p>Use cases:</p>
+<ul>
+<li>Low-latency processing that must be on-premises</li>
+<li>Data residency requirements that prohibit cloud regions</li>
+<li>Migration bridge during cloud adoption</li>
+</ul>
+<hr/>
+<h2 id="practical-takeaways">Practical Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#practical-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="region-selection-checklist">Region Selection Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#region-selection-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>[ ] Identify where your users are geographically
+[ ] Check latency from target user locations to candidate regions
+[ ] Verify all required services are available in the region
+[ ] Review data residency / compliance requirements
+[ ] Compare pricing across candidate regions
+[ ] Plan DR: identify a secondary region
+[ ] Check if the region has enough AZs (3+ preferred)
+[ ] Evaluate edge location coverage for CDN use cases
+</code></pre>
+<h3 id="az-distribution-best-practices">AZ Distribution Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#az-distribution-best-practices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Always deploy across at least 2 AZs; prefer 3 for production workloads.</li>
+<li>Use AZ-aware services (ALB, ASG, Aurora) that handle distribution for you.</li>
+<li>Never hard-code AZ names; discover them programmatically.</li>
+<li>Remember that some resources are AZ-scoped (EBS, EC2) while others are regional
+(S3, DynamoDB, IAM) or global (Route 53, CloudFront, IAM).</li>
+</ol>
+<h3 id="resource-scope-reference">Resource Scope Reference<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#resource-scope-reference" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>GLOBAL               REGIONAL              AZ-SCOPED
+──────────────        ─────────────         ─────────────
+IAM                   S3                    EC2 Instance
+Route 53              DynamoDB              EBS Volume
+CloudFront            Lambda                Subnet
+WAF (global)          SQS / SNS             RDS Instance*
+                      VPC                   EFS Mount Target
+                      Auto Scaling Group    NAT Gateway
+                      ALB / NLB
+                      Aurora Cluster
+
+* RDS Multi-AZ has a standby in another AZ but the primary is AZ-scoped
+</code></pre>
+<h3 id="cost-optimization-tips">Cost Optimization Tips<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-optimization-tips" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Use CloudFront’s <code>PriceClass_100</code> to limit edge locations to cheaper regions
+(US, Canada, Europe) if you don’t need global coverage.</li>
+<li>Deploy non-latency-sensitive workloads (batch processing, analytics) in cheaper
+regions like <code>us-east-2</code> (Ohio) instead of <code>us-east-1</code> (Virginia).</li>
+<li>Use S3 Intelligent-Tiering in your primary region rather than replicating to
+multiple regions for cost savings on infrequently accessed data.</li>
+</ul>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="consistent-hashing--partition-to-az-data-distribution">Consistent Hashing — Partition-to-AZ Data Distribution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#consistent-hashing--partition-to-az-data-distribution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Consistent hashing is a technique that maps data to nodes on a virtual ring, so that adding or removing a node only redistributes a small fraction of keys rather than reshuffling everything. Cloud providers use consistent hashing internally to distribute objects across Availability Zones and storage nodes within a region. When S3 stores an object across a minimum of three AZs, the storage layer uses a hash of the object key to determine which set of physical storage nodes will hold replicas, ensuring even distribution without a central lookup table. If an AZ goes offline, only the portion of the ring assigned to that AZ’s nodes needs re-replication, rather than a full data reshuffle — this is why S3 achieves 11 nines of durability while remaining resilient to AZ-level failures.</p>
+<h3 id="quadtrees--geospatial-indexing-for-region-and-edge-location-selection">Quadtrees — Geospatial Indexing for Region and Edge Location Selection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quadtrees--geospatial-indexing-for-region-and-edge-location-selection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A quadtree is a tree data structure where each internal node has exactly four children, recursively subdividing a two-dimensional space into quadrants. Cloud providers and DNS services like Route 53 use geospatial indexing structures similar to quadtrees to determine which edge location or region is closest to a requesting user. When a user in Tokyo makes a DNS query, the resolution system must rapidly find the nearest edge location among 400+ candidates worldwide. A quadtree-like spatial index partitions the globe into progressively smaller regions, enabling O(log n) lookup of the nearest PoP instead of computing distances to every edge location. This is the mechanism behind latency-based routing and GeoDNS, which direct users to the closest CloudFront edge or regional endpoint.</p>
+<h3 id="graph-traversal-dijkstras-algorithm--cdn-routing-and-multi-region-traffic-paths">Graph Traversal (Dijkstra’s Algorithm) — CDN Routing and Multi-Region Traffic Paths<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#graph-traversal-dijkstras-algorithm--cdn-routing-and-multi-region-traffic-paths" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dijkstra’s algorithm finds the shortest path between nodes in a weighted graph, where edge weights represent costs such as latency or hop count. The AWS global backbone network that connects regions, edge locations, and Regional Edge Caches is fundamentally a weighted graph, where nodes are PoPs and edges are fiber links with latency as their weight. When CloudFront routes a cache miss from a Tokyo edge location through a Regional Edge Cache to an origin in us-east-1, the network layer runs shortest-path calculations to determine the optimal fiber route across the Pacific. This is also how Global Accelerator selects the best path through the AWS backbone — it continuously evaluates network conditions and applies shortest-path routing to steer traffic away from congested or degraded links, achieving lower and more consistent latency than the public internet’s default BGP routing.</p>
+<h2 id="summary">Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Cloud global infrastructure is a hierarchy of abstractions over physical data centers.
+Regions provide geographic isolation and data sovereignty. Availability Zones provide
+fault isolation within a region. Edge locations bring content and compute closer to
+users. Local Zones and Wavelength Zones extend regions into metro areas and 5G
+networks.</p>
+<p>The choices you make at this layer — which region, how many AZs, whether to leverage
+edge — form the foundation of every system you build on top. Get them right early,
+because changing them later means migrating data, re-architecting networking, and
+potentially facing downtime. Build for at least two AZs from day one, choose your
+region based on users and compliance rather than habit, and layer edge locations on
+top when latency to end users matters.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-17" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#cloud-global-infrastructure" data-for="cloud-global-infrastructure">Cloud Global Infrastructure</a></li><li class="depth-1"><a href="#introduction" data-for="introduction">Introduction</a></li><li class="depth-1"><a href="#the-infrastructure-hierarchy" data-for="the-infrastructure-hierarchy">The Infrastructure Hierarchy</a></li><li class="depth-1"><a href="#regions" data-for="regions">Regions</a></li><li class="depth-2"><a href="#what-is-a-region" data-for="what-is-a-region">What Is a Region?</a></li><li class="depth-2"><a href="#naming-conventions" data-for="naming-conventions">Naming Conventions</a></li><li class="depth-2"><a href="#region-selection-criteria" data-for="region-selection-criteria">Region Selection Criteria</a></li><li class="depth-2"><a href="#multi-region-architecture" data-for="multi-region-architecture">Multi-Region Architecture</a></li><li class="depth-1"><a href="#availability-zones-azs" data-for="availability-zones-azs">Availability Zones (AZs)</a></li><li class="depth-2"><a href="#what-is-an-availability-zone" data-for="what-is-an-availability-zone">What Is an Availability Zone?</a></li><li class="depth-2"><a href="#how-azs-are-identified" data-for="how-azs-are-identified">How AZs Are Identified</a></li><li class="depth-2"><a href="#az-design-principles" data-for="az-design-principles">AZ Design Principles</a></li><li class="depth-2"><a href="#designing-for-az-failure" data-for="designing-for-az-failure">Designing for AZ Failure</a></li><li class="depth-1"><a href="#edge-locations-and-points-of-presence-pops" data-for="edge-locations-and-points-of-presence-pops">Edge Locations and Points of Presence (PoPs)</a></li><li class="depth-2"><a href="#what-are-edge-locations" data-for="what-are-edge-locations">What Are Edge Locations?</a></li><li class="depth-2"><a href="#how-cloudfront-uses-edge-locations" data-for="how-cloudfront-uses-edge-locations">How CloudFront Uses Edge Locations</a></li><li class="depth-2"><a href="#cloudfront-configuration-example" data-for="cloudfront-configuration-example">CloudFront Configuration Example</a></li><li class="depth-2"><a href="#points-of-presence-vs-edge-locations" data-for="points-of-presence-vs-edge-locations">Points of Presence vs Edge Locations</a></li><li class="depth-1"><a href="#local-zones" data-for="local-zones">Local Zones</a></li><li class="depth-2"><a href="#what-are-local-zones" data-for="what-are-local-zones">What Are Local Zones?</a></li><li class="depth-2"><a href="#local-zones-vs-regions" data-for="local-zones-vs-regions">Local Zones vs Regions</a></li><li class="depth-1"><a href="#wavelength-zones" data-for="wavelength-zones">Wavelength Zones</a></li><li class="depth-2"><a href="#what-are-wavelength-zones" data-for="what-are-wavelength-zones">What Are Wavelength Zones?</a></li><li class="depth-1"><a href="#comparing-providers-aws-vs-azure-vs-gcp" data-for="comparing-providers-aws-vs-azure-vs-gcp">Comparing Providers: AWS vs Azure vs GCP</a></li><li class="depth-2"><a href="#geographic-organization" data-for="geographic-organization">Geographic Organization</a></li><li class="depth-2"><a href="#azure-specific-region-pairs" data-for="azure-specific-region-pairs">Azure-Specific: Region Pairs</a></li><li class="depth-2"><a href="#gcp-specific-multi-regions" data-for="gcp-specific-multi-regions">GCP-Specific: Multi-Regions</a></li><li class="depth-1"><a href="#data-residency-and-sovereignty" data-for="data-residency-and-sovereignty">Data Residency and Sovereignty</a></li><li class="depth-2"><a href="#the-regulatory-landscape" data-for="the-regulatory-landscape">The Regulatory Landscape</a></li><li class="depth-2"><a href="#sovereign-cloud-offerings" data-for="sovereign-cloud-offerings">Sovereign Cloud Offerings</a></li><li class="depth-1"><a href="#aws-outposts-and-hybrid-edge" data-for="aws-outposts-and-hybrid-edge">AWS Outposts and Hybrid Edge</a></li><li class="depth-2"><a href="#aws-outposts" data-for="aws-outposts">AWS Outposts</a></li><li class="depth-1"><a href="#practical-takeaways" data-for="practical-takeaways">Practical Takeaways</a></li><li class="depth-2"><a href="#region-selection-checklist" data-for="region-selection-checklist">Region Selection Checklist</a></li><li class="depth-2"><a href="#az-distribution-best-practices" data-for="az-distribution-best-practices">AZ Distribution Best Practices</a></li><li class="depth-2"><a href="#resource-scope-reference" data-for="resource-scope-reference">Resource Scope Reference</a></li><li class="depth-2"><a href="#cost-optimization-tips" data-for="cost-optimization-tips">Cost Optimization Tips</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#consistent-hashing--partition-to-az-data-distribution" data-for="consistent-hashing--partition-to-az-data-distribution">Consistent Hashing — Partition-to-AZ Data Distribution</a></li><li class="depth-2"><a href="#quadtrees--geospatial-indexing-for-region-and-edge-location-selection" data-for="quadtrees--geospatial-indexing-for-region-and-edge-location-selection">Quadtrees — Geospatial Indexing for Region and Edge Location Selection</a></li><li class="depth-2"><a href="#graph-traversal-dijkstras-algorithm--cdn-routing-and-multi-region-traffic-paths" data-for="graph-traversal-dijkstras-algorithm--cdn-routing-and-multi-region-traffic-paths">Graph Traversal (Dijkstra’s Algorithm) — CDN Routing and Multi-Region Traffic Paths</a></li><li class="depth-1"><a href="#summary" data-for="summary">Summary</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

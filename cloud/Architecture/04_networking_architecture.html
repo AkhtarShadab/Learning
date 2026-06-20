@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>04_networking_architecture</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Shadab · Learning Notes"/><meta property="og:title" content="04_networking_architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="04_networking_architecture"/><meta name="twitter:description" content="Cloud Networking Architecture Deep Dive Introduction Networking is the connective tissue of cloud architecture."/><meta property="og:description" content="Cloud Networking Architecture Deep Dive Introduction Networking is the connective tissue of cloud architecture."/><meta property="og:image:alt" content="Cloud Networking Architecture Deep Dive Introduction Networking is the connective tissue of cloud architecture."/><meta property="og:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:url" content="https://study.tpresearcher.online/static/og-image.png"/><meta name="twitter:image" content="https://study.tpresearcher.online/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="study.tpresearcher.online"/><meta property="og:url" content="https://study.tpresearcher.online/cloud/Architecture/04_networking_architecture"/><meta property="twitter:url" content="https://study.tpresearcher.online/cloud/Architecture/04_networking_architecture"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Cloud Networking Architecture Deep Dive Introduction Networking is the connective tissue of cloud architecture."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9xdWFydHovcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUlGO0VBQ0U7RUFDQTtFQUNBIiwic291cmNlc0NvbnRlbnQiOlsiLmV4cGFuZC1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsb2F0OiByaWdodDtcbiAgcGFkZGluZzogMC40cmVtO1xuICBtYXJnaW46IDAuM3JlbTtcbiAgcmlnaHQ6IDA7IC8vIE5PVEU6IHJpZ2h0IHdpbGwgYmUgc2V0IGluIG1lcm1haWQuaW5saW5lLnRzXG4gIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgYm9yZGVyLWNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICBib3JkZXI6IDFweCBzb2xpZDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBvcGFjaXR5OiAwO1xuICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICYgPiBzdmcge1xuICAgIGZpbGw6IHZhcigtLWxpZ2h0KTtcbiAgICBmaWx0ZXI6IGNvbnRyYXN0KDAuMyk7XG4gIH1cblxuICAmOmhvdmVyIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICB9XG5cbiAgJjpmb2N1cyB7XG4gICAgb3V0bGluZTogMDtcbiAgfVxufVxuXG5wcmUge1xuICAmOmhvdmVyID4gLmV4cGFuZC1idXR0b24ge1xuICAgIG9wYWNpdHk6IDE7XG4gICAgdHJhbnNpdGlvbjogMC4ycztcbiAgfVxufVxuXG4jbWVybWFpZC1jb250YWluZXIge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGNvbnRhaW46IGxheW91dDtcbiAgei1pbmRleDogOTk5O1xuICBsZWZ0OiAwO1xuICB0b3A6IDA7XG4gIHdpZHRoOiAxMDB2dztcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgZGlzcGxheTogbm9uZTtcbiAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC41KTtcblxuICAmLmFjdGl2ZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICB9XG5cbiAgJiA+ICNtZXJtYWlkLXNwYWNlIHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgcG9zaXRpb246IGZpeGVkO1xuICAgIHRvcDogNTAlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZSgtNTAlLCAtNTAlKTtcbiAgICBoZWlnaHQ6IDgwdmg7XG4gICAgd2lkdGg6IDgwdnc7XG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcblxuICAgICYgPiAubWVybWFpZC1jb250ZW50IHtcbiAgICAgIHBhZGRpbmc6IDJyZW07XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://study.tpresearcher.online/index.xml"/></head><body data-slug="cloud/Architecture/04_networking_architecture"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Shadab · Learning Notes</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-31"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-31" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/">cloud</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../cloud/Architecture/">Architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>04_networking_architecture</a></div></nav><h1 class="article-title">04_networking_architecture</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-20T02:46:36.358Z">Jun 20, 2026</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="cloud-networking-architecture-deep-dive">Cloud Networking Architecture Deep Dive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-networking-architecture-deep-dive" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="introduction">Introduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#introduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Networking is the connective tissue of cloud architecture. Every request from a user,
+every database query, every API call between microservices, every log shipped to a
+monitoring service — all of it flows over the network. Yet networking is often the
+least understood layer, treated as plumbing rather than architecture.</p>
+<p>In the cloud, networking is software-defined. You do not plug in cables or configure
+physical switches. Instead, you define virtual networks, subnets, routing tables,
+and access controls in code. This programmability is powerful but introduces
+complexity: misconfigure a route table and traffic black-holes silently; misconfigure
+a security group and you either block legitimate traffic or expose a database to
+the internet.</p>
+<p>This document covers cloud networking from first principles through advanced patterns,
+with a focus on AWS VPC. The concepts transfer to Azure VNets and GCP VPCs with
+different naming conventions but similar architectures.</p>
+<hr/>
+<h2 id="vpc-fundamentals">VPC Fundamentals<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vpc-fundamentals" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-is-a-vpc">What Is a VPC?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-a-vpc" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A Virtual Private Cloud is a logically isolated section of the cloud where you launch
+resources in a virtual network you define. You control the IP address range, subnets,
+route tables, and network gateways. A VPC spans all Availability Zones in a region
+but is confined to a single region.</p>
+<pre><code>Region: us-east-1
+┌──────────────────────────────────────────────────┐
+│                  VPC: 10.0.0.0/16                │
+│                  (65,536 addresses)              │
+│                                                  │
+│   AZ-a                 AZ-b              AZ-c    │
+│   ┌──────────┐        ┌──────────┐      ┌─────┐ │
+│   │ Subnet   │        │ Subnet   │      │ ... │ │
+│   │ 10.0.1.0 │        │ 10.0.2.0 │      │     │ │
+│   │ /24      │        │ /24      │      │     │ │
+│   └──────────┘        └──────────┘      └─────┘ │
+│                                                  │
+│   Route Tables    Security Groups    NACLs       │
+│   Internet GW     NAT GW            VPC Endpts   │
+└──────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="how-aws-implements-virtual-networking">How AWS Implements Virtual Networking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-aws-implements-virtual-networking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Under the hood, AWS VPC uses a combination of:</p>
+<ol>
+<li>
+<p><strong>Mapping Service</strong>: A distributed system that maps virtual IP addresses to
+physical host addresses. When instance A sends a packet to instance B’s private
+IP, the mapping service resolves which physical host B runs on.</p>
+</li>
+<li>
+<p><strong>Encapsulation</strong>: Packets between instances are encapsulated in an outer IP
+header for transit across the physical network. The guest OS never sees the
+physical addressing.</p>
+</li>
+<li>
+<p><strong>Blackfoot Edge Devices</strong>: Hardware at VPC boundaries that handle traffic
+entering/leaving the VPC (internet gateway, NAT gateway, VPN, Direct Connect).</p>
+</li>
+</ol>
+<p>This is why VPC networking “just works” regardless of the physical topology of the
+underlying data center.</p>
+<hr/>
+<h2 id="cidr-planning">CIDR Planning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cidr-planning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="cidr-basics">CIDR Basics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cidr-basics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>CIDR (Classless Inter-Domain Routing) notation defines IP address ranges:</p>
+<ul>
+<li><code>10.0.0.0/16</code> = 65,536 addresses (10.0.0.0 - 10.0.255.255)</li>
+<li><code>10.0.0.0/24</code> = 256 addresses (10.0.0.0 - 10.0.0.255)</li>
+<li><code>10.0.0.0/28</code> = 16 addresses (10.0.0.0 - 10.0.0.15)</li>
+</ul>
+<p>AWS reserves 5 addresses in each subnet:</p>
+<ul>
+<li><code>.0</code> = Network address</li>
+<li><code>.1</code> = VPC router</li>
+<li><code>.2</code> = DNS server</li>
+<li><code>.3</code> = Reserved for future use</li>
+<li><code>.255</code> = Broadcast (not supported in VPC but reserved)</li>
+</ul>
+<p>So a <code>/24</code> subnet gives you 251 usable addresses, not 256.</p>
+<h3 id="cidr-planning-for-large-organizations">CIDR Planning for Large Organizations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cidr-planning-for-large-organizations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The most common mistake in CIDR planning is choosing ranges that overlap with other
+VPCs, on-premises networks, or acquired company networks. Once you peer VPCs or
+establish VPN/Direct Connect, overlapping CIDRs cannot route.</p>
+<p><strong>Best practice</strong>: Allocate from RFC 1918 private ranges with a centralized IPAM
+(IP Address Management) strategy:</p>
+<pre><code>Corporate CIDR Allocation Plan
+═══════════════════════════════════════════
+10.0.0.0/8       ─── Reserved for cloud VPCs
+  10.0.0.0/12    ─── AWS accounts
+    10.0.0.0/16  ─── Production (us-east-1)
+    10.1.0.0/16  ─── Production (eu-west-1)
+    10.2.0.0/16  ─── Staging
+    10.3.0.0/16  ─── Development
+  10.16.0.0/12   ─── Azure subscriptions
+  10.32.0.0/12   ─── GCP projects
+
+172.16.0.0/12    ─── On-premises data centers
+  172.16.0.0/16  ─── DC-1 (New York)
+  172.17.0.0/16  ─── DC-2 (London)
+
+192.168.0.0/16   ─── Office/branch networks
+</code></pre>
+<p>AWS VPC IPAM (IP Address Management) automates this allocation and prevents overlap.</p>
+<hr/>
+<h2 id="subnet-design-patterns">Subnet Design Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#subnet-design-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-multi-tier-architecture">The Multi-Tier Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-multi-tier-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The standard enterprise pattern uses three tiers of subnets per AZ:</p>
+<pre><code>Internet
+    │
+    ▼
+┌──────────────────────────────────────────────────┐
+│  VPC: 10.0.0.0/16                                │
+│                                                  │
+│  PUBLIC SUBNETS (Internet-facing)                │
+│  ┌──────────────┐  ┌──────────────┐              │
+│  │ 10.0.1.0/24  │  │ 10.0.2.0/24  │   AZ-a, AZ-b│
+│  │ ALB, NAT GW  │  │ ALB, NAT GW  │              │
+│  │ Bastion Host │  │              │              │
+│  └──────┬───────┘  └──────┬───────┘              │
+│         │                 │                      │
+│  PRIVATE SUBNETS (Application tier)              │
+│  ┌──────┴───────┐  ┌──────┴───────┐              │
+│  │ 10.0.11.0/24 │  │ 10.0.12.0/24 │              │
+│  │ App servers  │  │ App servers  │              │
+│  │ (EC2/ECS)    │  │ (EC2/ECS)    │              │
+│  └──────┬───────┘  └──────┬───────┘              │
+│         │                 │                      │
+│  ISOLATED SUBNETS (Data tier)                    │
+│  ┌──────┴───────┐  ┌──────┴───────┐              │
+│  │ 10.0.21.0/24 │  │ 10.0.22.0/24 │              │
+│  │ RDS, ElastiC │  │ RDS, ElastiC │              │
+│  │ (no internet)│  │ (no internet)│              │
+│  └──────────────┘  └──────────────┘              │
+└──────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Public subnets</strong>: Have a route to an Internet Gateway (IGW). Resources here get
+public IP addresses and can be reached from the internet. Only place load balancers,
+NAT gateways, and bastion hosts here.</p>
+<p><strong>Private subnets</strong>: Have a route to a NAT Gateway (in the public subnet) for
+outbound internet access. No inbound access from the internet. Application servers,
+containers, and Lambda functions live here.</p>
+<p><strong>Isolated subnets</strong>: No route to the internet at all. Databases and caches that
+should never initiate or receive internet connections.</p>
+<hr/>
+<h2 id="route-tables">Route Tables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#route-tables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Every subnet is associated with exactly one route table. The route table controls
+where traffic is directed.</p>
+<pre><code>Route Table: Private-Subnet-RT
+═══════════════════════════════════════
+Destination        Target
+───────────────    ──────────────────
+10.0.0.0/16        local              (VPC-internal traffic)
+0.0.0.0/0          nat-gw-123abc      (internet via NAT)
+10.100.0.0/16      tgw-456def         (on-prem via Transit GW)
+pl-68a54001        vpce-s3-789ghi     (S3 via Gateway Endpoint)
+</code></pre>
+<p>Route evaluation: most specific route wins. A packet destined for <code>10.0.12.5</code> matches
+<code>10.0.0.0/16</code> (local). A packet for <code>8.8.8.8</code> matches <code>0.0.0.0/0</code> (NAT gateway).
+A packet for <code>10.100.5.10</code> matches <code>10.100.0.0/16</code> (Transit Gateway).</p>
+<hr/>
+<h2 id="nat-gateway">NAT Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nat-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="why-nat">Why NAT?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-nat" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Instances in private subnets need outbound internet access (downloading packages,
+calling external APIs, pushing to SaaS services) without being reachable from the
+internet. NAT (Network Address Translation) provides this by masquerading the
+private IP behind a public Elastic IP.</p>
+<h3 id="nat-gateway-ha-architecture">NAT Gateway HA Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nat-gateway-ha-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A single NAT Gateway operates in one AZ. If that AZ fails, all private subnets
+using it lose internet access. For high availability, deploy one NAT Gateway per AZ:</p>
+<pre><code>              Internet
+                │
+        ┌───────┴───────┐
+        │    IGW        │
+        └───────┬───────┘
+                │
+    ┌───────────┼───────────┐
+    │           │           │
+    ▼           ▼           ▼
+┌───────┐  ┌───────┐  ┌───────┐
+│NAT GW │  │NAT GW │  │NAT GW │  (one per AZ)
+│ AZ-a  │  │ AZ-b  │  │ AZ-c  │
+└───┬───┘  └───┬───┘  └───┬───┘
+    │          │          │
+    ▼          ▼          ▼
+┌───────┐  ┌───────┐  ┌───────┐
+│Private│  │Private│  │Private│
+│Sub AZa│  │Sub AZb│  │Sub AZc│
+└───────┘  └───────┘  └───────┘
+
+Each private subnet's route table points to its local AZ's NAT Gateway.
+Traffic stays within the AZ (no cross-AZ data transfer charges).
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="hcl" data-theme="github-light github-dark"><code data-language="hcl" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Terraform: NAT Gateway per AZ</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">resource</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;aws_nat_gateway&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;main&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  count</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">         =</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> length</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(var</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">availability_zones)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  allocation_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> aws_eip</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">nat[count</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">index]</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">id</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  subnet_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">     =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> aws_subnet</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">public[count</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">index]</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">id</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  tags</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    Name </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;nat-gw-</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">${</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">var</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">availability_zones</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">[</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">count</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">index</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">]</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">}</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">resource</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;aws_route&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;private_nat&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  count</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">                  =</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> length</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(var</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">availability_zones)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  route_table_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">         =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> aws_route_table</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">private[count</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">index]</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">id</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  destination_cidr_block</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;0.0.0.0/0&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  nat_gateway_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">         =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> aws_nat_gateway</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">main[count</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">index]</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">id</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<h3 id="nat-gateway-cost">NAT Gateway Cost<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nat-gateway-cost" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>NAT Gateway charges per hour (<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.045/</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">in</span><span class="mord mathnormal">u</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6984em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">e</span><span class="mord mathnormal">a</span><span class="mord mathnormal">s</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.01968em;">pl</span><span class="mord mathnormal">u</span><span class="mord mathnormal">s</span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.02778em;">er</span><span class="mord mathnormal">GBp</span><span class="mord mathnormal">rocesse</span><span class="mord mathnormal">d</span><span class="mopen">(</span></span></span></span>0.045/GB). For high-throughput workloads, this can be significant. Strategies
+to reduce cost:</p>
+<ul>
+<li>Use VPC endpoints for AWS service traffic (S3, DynamoDB, etc.) — free</li>
+<li>Use PrivateLink for third-party services</li>
+<li>Consider NAT instances (self-managed, cheaper but no HA) for dev/test</li>
+</ul>
+<hr/>
+<h2 id="vpc-endpoints">VPC Endpoints<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vpc-endpoints" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>VPC endpoints allow private connectivity to AWS services without traversing the
+internet or NAT gateway.</p>
+<h3 id="gateway-endpoints">Gateway Endpoints<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gateway-endpoints" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Free. Available only for S3 and DynamoDB. A route table entry directs traffic to
+the endpoint.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create S3 Gateway Endpoint</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-vpc-endpoint</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --vpc-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> vpc-123abc</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --service-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> com.amazonaws.us-east-1.s3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --route-table-ids</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> rtb-private-a</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> rtb-private-b</span></span></code></pre></figure>
+<h3 id="interface-endpoints-privatelink">Interface Endpoints (PrivateLink)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#interface-endpoints-privatelink" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Creates an ENI (Elastic Network Interface) in your subnet with a private IP. Works
+with 100+ AWS services (SQS, SNS, KMS, CloudWatch, ECR, etc.). Charges apply
+per endpoint per AZ per hour plus per GB.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create SQS Interface Endpoint</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-vpc-endpoint</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --vpc-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> vpc-123abc</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --vpc-endpoint-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Interface</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --service-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> com.amazonaws.us-east-1.sqs</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --subnet-ids</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> subnet-private-a</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> subnet-private-b</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --security-group-ids</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> sg-endpoint</span></span></code></pre></figure>
+<hr/>
+<h2 id="transit-gateway">Transit Gateway<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transit-gateway" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="the-hub-and-spoke-problem">The Hub-and-Spoke Problem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-hub-and-spoke-problem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>As organizations grow, they accumulate many VPCs (production, staging, dev, shared
+services, security). Connecting them with VPC Peering creates an O(n^2) mesh:</p>
+<pre><code>Without Transit Gateway (mesh):     With Transit Gateway (hub-and-spoke):
+
+VPC-A ──── VPC-B                     VPC-A ──┐
+  │  ╲    ╱  │                               │
+  │   ╲  ╱   │                     VPC-B ────┤
+  │    ╳╳    │                               │
+  │   ╱  ╲   │                     VPC-C ────┼──── Transit Gateway
+  │  ╱    ╲  │                               │
+VPC-C ──── VPC-D                   VPC-D ────┤
+                                             │
+6 peering connections               On-Prem──┘
+for 4 VPCs. 10 VPCs = 45.
+                                   5 attachments for 5 networks.
+                                   Each new network = 1 attachment.
+</code></pre>
+<h3 id="transit-gateway-architecture">Transit Gateway Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transit-gateway-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Transit Gateway is a regional network hub that connects VPCs, VPN, and Direct
+Connect through a single gateway. It supports route tables, enabling network
+segmentation (e.g., dev VPCs cannot route to production VPCs).</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="hcl" data-theme="github-light github-dark"><code data-language="hcl" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Terraform: Transit Gateway with route segmentation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">resource</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;aws_ec2_transit_gateway&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;main&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  description</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">                     =</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;Central hub&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  default_route_table_association</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;disable&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  default_route_table_propagation</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;disable&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  auto_accept_shared_attachments</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  =</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;enable&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">resource</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;aws_ec2_transit_gateway_route_table&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;production&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  transit_gateway_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> aws_ec2_transit_gateway</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">main</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">id</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  tags</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { Name </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;production-rt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">resource</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;aws_ec2_transit_gateway_route_table&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> &quot;development&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  transit_gateway_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> aws_ec2_transit_gateway</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">main</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">id</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  tags</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { Name </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;development-rt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="direct-connect">Direct Connect<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#direct-connect" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="what-is-direct-connect">What Is Direct Connect?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-is-direct-connect" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A dedicated physical connection from your data center to AWS, bypassing the public
+internet. Provides consistent latency, higher bandwidth (1 Gbps, 10 Gbps, 100 Gbps),
+and lower data transfer costs than VPN.</p>
+<pre><code>On-Premises DC            Direct Connect         AWS Region
+┌──────────┐              Location               ┌──────────┐
+│ Customer │              ┌──────────┐            │          │
+│ Router   │──Dark Fiber──│ AWS      │──AWS Net──│  VPC     │
+│          │              │ Router   │            │          │
+└──────────┘              └──────────┘            └──────────┘
+                          (Equinix, Coresite, etc.)
+</code></pre>
+<p>Direct Connect uses Virtual Interfaces (VIFs):</p>
+<ul>
+<li><strong>Private VIF</strong>: Access VPC resources via private IPs</li>
+<li><strong>Public VIF</strong>: Access AWS public services (S3, DynamoDB)</li>
+<li><strong>Transit VIF</strong>: Access Transit Gateway (connect to multiple VPCs)</li>
+</ul>
+<h3 id="direct-connect--vpn-encrypted">Direct Connect + VPN (Encrypted)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#direct-connect--vpn-encrypted" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Direct Connect alone does not encrypt traffic. For encryption over Direct Connect,
+layer a site-to-site VPN on top:</p>
+<pre><code>On-Prem ──► Direct Connect (high bandwidth) ──► VPN (encryption) ──► VPC
+</code></pre>
+<hr/>
+<h2 id="vpn-virtual-private-network">VPN (Virtual Private Network)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vpn-virtual-private-network" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="site-to-site-vpn">Site-to-Site VPN<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#site-to-site-vpn" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Connects your on-premises network to a VPC over an encrypted IPsec tunnel across
+the public internet. AWS creates two tunnels per connection for redundancy.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create a Virtual Private Gateway (VPC side)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-vpn-gateway</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> --type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ipsec.1</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create a Customer Gateway (your on-prem side)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-customer-gateway</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ipsec.1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --public-ip</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 203.0.113.12</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --bgp-asn</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 65000</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># Create the VPN connection</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-vpn-connection</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ipsec.1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --vpn-gateway-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> vgw-123abc</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --customer-gateway-id</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cgw-456def</span></span></code></pre></figure>
+<h3 id="client-vpn">Client VPN<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#client-vpn" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Managed OpenVPN service for individual users to connect to VPC resources from
+their laptops. Supports Active Directory authentication, certificate-based auth,
+and SAML-based SSO.</p>
+<hr/>
+<h2 id="enterprise-vpc-design">Enterprise VPC Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enterprise-vpc-design" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Here is a complete enterprise VPC architecture incorporating all concepts:</p>
+<pre><code>                            INTERNET
+                               │
+                         ┌─────┴─────┐
+                         │    IGW    │
+                         └─────┬─────┘
+                               │
+┌──────────────────────────────┼─────────────────────────────────┐
+│  VPC: 10.0.0.0/16           │                                  │
+│                              │                                  │
+│  PUBLIC TIER                 │                                  │
+│  ┌─────────────────┐   ┌────┴────────────┐                     │
+│  │ 10.0.1.0/24     │   │ 10.0.2.0/24     │                     │
+│  │ AZ-a            │   │ AZ-b            │                     │
+│  │ ┌─────┐ ┌─────┐ │   │ ┌─────┐ ┌─────┐ │                    │
+│  │ │ ALB │ │NAT  │ │   │ │ ALB │ │NAT  │ │                    │
+│  │ │ node│ │ GW  │ │   │ │ node│ │ GW  │ │                    │
+│  │ └──┬──┘ └──┬──┘ │   │ └──┬──┘ └──┬──┘ │                    │
+│  └────┼───────┼────┘   └────┼───────┼────┘                     │
+│       │       │             │       │                          │
+│  APP TIER     │             │       │                          │
+│  ┌────┼───────┼────┐   ┌────┼───────┼────┐                     │
+│  │ 10.0.11.0/24   │   │ 10.0.12.0/24   │                      │
+│  │ ┌──────────┐   │   │ ┌──────────┐   │                      │
+│  │ │ECS Tasks │   │   │ │ECS Tasks │   │                      │
+│  │ │(Fargate) │   │   │ │(Fargate) │   │                      │
+│  │ └────┬─────┘   │   │ └────┬─────┘   │                      │
+│  └──────┼─────────┘   └──────┼─────────┘                       │
+│         │                    │                                 │
+│  DATA TIER (isolated)        │                                 │
+│  ┌──────┼─────────┐   ┌─────┼──────────┐                      │
+│  │ 10.0.21.0/24   │   │ 10.0.22.0/24   │                      │
+│  │ ┌────┴───┐     │   │ ┌────┴───┐     │                      │
+│  │ │RDS     │     │   │ │RDS     │     │                      │
+│  │ │Primary │     │   │ │Standby │     │                      │
+│  │ └────────┘     │   │ └────────┘     │                      │
+│  │ ┌────────┐     │   │ ┌────────┐     │                      │
+│  │ │ElastiC │     │   │ │ElastiC │     │                      │
+│  │ │Redis   │     │   │ │Replica │     │                      │
+│  │ └────────┘     │   │ └────────┘     │                      │
+│  └────────────────┘   └────────────────┘                       │
+│                                                                │
+│  VPC ENDPOINTS                                                 │
+│  ┌──────────────────────────────────────┐                      │
+│  │ S3 (Gateway)  │ ECR (Interface)      │                      │
+│  │ DynamoDB (GW) │ CloudWatch (Interf.) │                      │
+│  │ SQS (Interf.) │ Secrets Mgr (Interf.)│                      │
+│  └──────────────────────────────────────┘                      │
+│                                                                │
+│  ┌──────────────────────────────┐                              │
+│  │  Transit Gateway Attachment  │──► TGW ──► Other VPCs / VPN  │
+│  └──────────────────────────────┘                              │
+└────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr/>
+<h2 id="elastic-network-interfaces-eni-and-ena">Elastic Network Interfaces (ENI) and ENA<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#elastic-network-interfaces-eni-and-ena" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="eni">ENI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#eni" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A virtual network card attached to an instance. Each instance has a primary ENI
+(eth0) and can have additional ENIs. ENIs have:</p>
+<ul>
+<li>Primary private IP address</li>
+<li>One or more secondary private IPs</li>
+<li>One Elastic IP per private IP (optional)</li>
+<li>One or more security groups</li>
+<li>A MAC address</li>
+<li>Source/destination check flag</li>
+</ul>
+<h3 id="elastic-network-adapter-ena">Elastic Network Adapter (ENA)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#elastic-network-adapter-ena" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>ENA is AWS’s custom network driver for Nitro instances, providing up to 100 Gbps
+bandwidth with enhanced networking features (higher packets per second, lower
+latency, lower jitter). ENA is required for all current-generation instances.</p>
+<hr/>
+<h2 id="global-accelerator">Global Accelerator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#global-accelerator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>AWS Global Accelerator provides static anycast IP addresses that route traffic
+through the AWS global network to the optimal regional endpoint. Unlike CloudFront
+(which caches content), Global Accelerator is for non-HTTP workloads and dynamic
+traffic that benefits from network path optimization.</p>
+<pre><code>User (Tokyo) ──► Anycast IP ──► AWS Edge ──► AWS Backbone ──► ALB (us-east-1)
+                                (Tokyo)       (fast, reliable)
+vs.
+User (Tokyo) ──► Public Internet (variable hops) ──► ALB (us-east-1)
+</code></pre>
+<hr/>
+<h2 id="practical-takeaways">Practical Takeaways<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#practical-takeaways" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Plan CIDR blocks before deploying.</strong> Changing VPC CIDR later is possible but
+painful. Allocate generously and use a central IPAM.</p>
+</li>
+<li>
+<p><strong>Use the three-tier subnet pattern</strong> (public, private, isolated) as your default.
+It provides defense in depth.</p>
+</li>
+<li>
+<p><strong>Deploy NAT Gateways per-AZ</strong> in production. The cross-AZ data transfer cost
+and single point of failure are not worth the savings.</p>
+</li>
+<li>
+<p><strong>Use VPC endpoints for all AWS service traffic.</strong> It is more secure (traffic
+stays on AWS network), faster, and cheaper than NAT gateway data processing.</p>
+</li>
+<li>
+<p><strong>Never put databases in public subnets.</strong> There is no legitimate reason for a
+database to have a public IP.</p>
+</li>
+<li>
+<p><strong>Use Transit Gateway</strong> once you have more than 3-4 VPCs. The management overhead
+of full-mesh peering becomes untenable.</p>
+</li>
+<li>
+<p><strong>Enable VPC Flow Logs</strong> on all VPCs. They are invaluable for debugging connectivity
+issues and security analysis.</p>
+</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light github-dark"><code data-language="bash" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">aws</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ec2</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> create-flow-logs</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --resource-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> VPC</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --resource-ids</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> vpc-123abc</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --traffic-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> ALL</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --log-destination-type</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> cloud-watch-logs</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">  --log-group-name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> /vpc/flow-logs</span></span></code></pre></figure>
+<ol start="8">
+<li><strong>Use security groups as the primary firewall.</strong> They are stateful, instance-level,
+and allow referencing other security groups (e.g., “allow traffic from the ALB
+security group”). NACLs are stateless and harder to manage; use them only for
+broad deny rules.</li>
+</ol>
+<hr/>
+<h2 id="dsa-connections">DSA Connections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dsa-connections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="graph-traversal-dijkstras-algorithm--route-table-evaluation-and-network-path-selection">Graph Traversal (Dijkstra’s Algorithm) — Route Table Evaluation and Network Path Selection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#graph-traversal-dijkstras-algorithm--route-table-evaluation-and-network-path-selection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Dijkstra’s algorithm finds the shortest path between nodes in a weighted graph in O((V + E) log V) time using a priority queue. VPC route tables implement a simplified form of graph-based routing: when a packet leaves an instance, the route table is consulted to determine the next hop. The “most specific route wins” rule (longest prefix match) is the routing equivalent of choosing the shortest weighted path — a packet destined for <code>10.100.5.10</code> matches <code>10.100.0.0/16</code> (Transit Gateway) over <code>0.0.0.0/0</code> (NAT Gateway) because the more specific prefix represents a more direct path. At the AWS backbone level, the Global Accelerator and Direct Connect services use actual shortest-path algorithms to route traffic across the physical network. When a packet traverses from a private subnet through a NAT Gateway to the internet, or across a Transit Gateway to another VPC, each hop is a node in the network graph, and the route table chain from source to destination is effectively the shortest-path result precomputed and cached as static routes.</p>
+<h3 id="spanning-trees--transit-gateway-hub-and-spoke-topology">Spanning Trees — Transit Gateway Hub-and-Spoke Topology<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spanning-trees--transit-gateway-hub-and-spoke-topology" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A spanning tree is a subgraph of a connected graph that includes all vertices with the minimum number of edges and no cycles. The Transit Gateway hub-and-spoke architecture directly solves the problem that VPC Peering’s full mesh creates: with N VPCs, peering requires O(N^2) connections (N*(N-1)/2 edges), while Transit Gateway reduces this to O(N) connections (one attachment per VPC). This mirrors the transformation from a complete graph to a star-topology spanning tree where the Transit Gateway is the root node. In physical networking, the Spanning Tree Protocol (STP) prevents broadcast loops by pruning a network graph into a tree; Transit Gateway achieves the analogous result in the virtual networking layer by centralizing routing decisions at a single hub. Each new VPC requires only one attachment to the Transit Gateway rather than N-1 peering connections, exactly as adding a node to a spanning tree requires only one edge to connect it to the existing tree.</p>
+<h3 id="trie-prefix-tree--cidr-matching-and-longest-prefix-match-routing">Trie (Prefix Tree) — CIDR Matching and Longest Prefix Match Routing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#trie-prefix-tree--cidr-matching-and-longest-prefix-match-routing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A trie is a tree data structure where each node represents a character (or bit) of a key, enabling O(k) lookup where k is the key length. IP routing fundamentally relies on a binary trie (also called a radix tree or Patricia trie) for longest prefix match: each bit of a destination IP address is a branch in the trie, and the deepest matching node determines the route. When a VPC route table contains entries like <code>10.0.0.0/16 -> local</code>, <code>10.100.0.0/16 -> tgw</code>, and <code>0.0.0.0/0 -> nat-gw</code>, the routing engine builds a binary trie of these prefixes. A packet to <code>10.0.12.5</code> traverses the trie bit by bit, matching <code>10.0.0.0/16</code> (the local route) at depth 16. A packet to <code>8.8.8.8</code> falls through to <code>0.0.0.0/0</code> (the default route) because no more specific prefix matches. This trie-based approach is how routers achieve wire-speed forwarding even with large routing tables — the lookup is bounded by the address length (32 bits for IPv4), not by the number of routes.</p>
+<h3 id="hash-tables--vpc-mapping-service-for-virtual-to-physical-address-resolution">Hash Tables — VPC Mapping Service for Virtual-to-Physical Address Resolution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hash-tables--vpc-mapping-service-for-virtual-to-physical-address-resolution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>A hash table provides O(1) average-case lookups by computing a hash of the key to index into an array of buckets. The AWS VPC Mapping Service, which resolves virtual private IP addresses to physical host addresses, operates as a massive distributed hash table. When instance A sends a packet to instance B’s private IP (say <code>10.0.11.47</code>), the Mapping Service hashes this virtual IP to locate the physical host and encapsulation metadata for B. This lookup must complete in microseconds for every packet, making a hash-table-based design essential. The system must also handle dynamic updates (instances launching, stopping, migrating) without disrupting in-flight lookups, which is why it uses consistent hashing with replication across multiple mapping nodes rather than a single central table — similar to how distributed key-value stores like DynamoDB distribute their partition maps.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-20" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#cloud-networking-architecture-deep-dive" data-for="cloud-networking-architecture-deep-dive">Cloud Networking Architecture Deep Dive</a></li><li class="depth-1"><a href="#introduction" data-for="introduction">Introduction</a></li><li class="depth-1"><a href="#vpc-fundamentals" data-for="vpc-fundamentals">VPC Fundamentals</a></li><li class="depth-2"><a href="#what-is-a-vpc" data-for="what-is-a-vpc">What Is a VPC?</a></li><li class="depth-2"><a href="#how-aws-implements-virtual-networking" data-for="how-aws-implements-virtual-networking">How AWS Implements Virtual Networking</a></li><li class="depth-1"><a href="#cidr-planning" data-for="cidr-planning">CIDR Planning</a></li><li class="depth-2"><a href="#cidr-basics" data-for="cidr-basics">CIDR Basics</a></li><li class="depth-2"><a href="#cidr-planning-for-large-organizations" data-for="cidr-planning-for-large-organizations">CIDR Planning for Large Organizations</a></li><li class="depth-1"><a href="#subnet-design-patterns" data-for="subnet-design-patterns">Subnet Design Patterns</a></li><li class="depth-2"><a href="#the-multi-tier-architecture" data-for="the-multi-tier-architecture">The Multi-Tier Architecture</a></li><li class="depth-1"><a href="#route-tables" data-for="route-tables">Route Tables</a></li><li class="depth-1"><a href="#nat-gateway" data-for="nat-gateway">NAT Gateway</a></li><li class="depth-2"><a href="#why-nat" data-for="why-nat">Why NAT?</a></li><li class="depth-2"><a href="#nat-gateway-ha-architecture" data-for="nat-gateway-ha-architecture">NAT Gateway HA Architecture</a></li><li class="depth-2"><a href="#nat-gateway-cost" data-for="nat-gateway-cost">NAT Gateway Cost</a></li><li class="depth-1"><a href="#vpc-endpoints" data-for="vpc-endpoints">VPC Endpoints</a></li><li class="depth-2"><a href="#gateway-endpoints" data-for="gateway-endpoints">Gateway Endpoints</a></li><li class="depth-2"><a href="#interface-endpoints-privatelink" data-for="interface-endpoints-privatelink">Interface Endpoints (PrivateLink)</a></li><li class="depth-1"><a href="#transit-gateway" data-for="transit-gateway">Transit Gateway</a></li><li class="depth-2"><a href="#the-hub-and-spoke-problem" data-for="the-hub-and-spoke-problem">The Hub-and-Spoke Problem</a></li><li class="depth-2"><a href="#transit-gateway-architecture" data-for="transit-gateway-architecture">Transit Gateway Architecture</a></li><li class="depth-1"><a href="#direct-connect" data-for="direct-connect">Direct Connect</a></li><li class="depth-2"><a href="#what-is-direct-connect" data-for="what-is-direct-connect">What Is Direct Connect?</a></li><li class="depth-2"><a href="#direct-connect--vpn-encrypted" data-for="direct-connect--vpn-encrypted">Direct Connect + VPN (Encrypted)</a></li><li class="depth-1"><a href="#vpn-virtual-private-network" data-for="vpn-virtual-private-network">VPN (Virtual Private Network)</a></li><li class="depth-2"><a href="#site-to-site-vpn" data-for="site-to-site-vpn">Site-to-Site VPN</a></li><li class="depth-2"><a href="#client-vpn" data-for="client-vpn">Client VPN</a></li><li class="depth-1"><a href="#enterprise-vpc-design" data-for="enterprise-vpc-design">Enterprise VPC Design</a></li><li class="depth-1"><a href="#elastic-network-interfaces-eni-and-ena" data-for="elastic-network-interfaces-eni-and-ena">Elastic Network Interfaces (ENI) and ENA</a></li><li class="depth-2"><a href="#eni" data-for="eni">ENI</a></li><li class="depth-2"><a href="#elastic-network-adapter-ena" data-for="elastic-network-adapter-ena">Elastic Network Adapter (ENA)</a></li><li class="depth-1"><a href="#global-accelerator" data-for="global-accelerator">Global Accelerator</a></li><li class="depth-1"><a href="#practical-takeaways" data-for="practical-takeaways">Practical Takeaways</a></li><li class="depth-1"><a href="#dsa-connections" data-for="dsa-connections">DSA Connections</a></li><li class="depth-2"><a href="#graph-traversal-dijkstras-algorithm--route-table-evaluation-and-network-path-selection" data-for="graph-traversal-dijkstras-algorithm--route-table-evaluation-and-network-path-selection">Graph Traversal (Dijkstra’s Algorithm) — Route Table Evaluation and Network Path Selection</a></li><li class="depth-2"><a href="#spanning-trees--transit-gateway-hub-and-spoke-topology" data-for="spanning-trees--transit-gateway-hub-and-spoke-topology">Spanning Trees — Transit Gateway Hub-and-Spoke Topology</a></li><li class="depth-2"><a href="#trie-prefix-tree--cidr-matching-and-longest-prefix-match-routing" data-for="trie-prefix-tree--cidr-matching-and-longest-prefix-match-routing">Trie (Prefix Tree) — CIDR Matching and Longest Prefix Match Routing</a></li><li class="depth-2"><a href="#hash-tables--vpc-mapping-service-for-virtual-to-physical-address-resolution" data-for="hash-tables--vpc-mapping-service-for-virtual-to-physical-address-resolution">Hash Tables — VPC Mapping Service for Virtual-to-Physical Address Resolution</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>
