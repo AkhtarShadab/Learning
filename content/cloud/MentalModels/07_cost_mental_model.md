@@ -9,30 +9,7 @@ transfer charges, API call fees, logging costs, NAT gateway fees,
 and a dozen other line items that can dwarf your compute spend if
 left unchecked.
 
-```
-  THE CLOUD COST ICEBERG
-  =======================
-
-        /\
-       /  \         VISIBLE COSTS (~40-60%)
-      / EC2 \       - Compute instances
-     / RDS   \      - Storage (S3, EBS)
-    / Lambda  \     - Managed databases
-   /___________\
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  WATERLINE
-   \           /
-    \ Data    /     HIDDEN COSTS (~40-60%)
-     \Transfer/     - Data transfer (cross-AZ, egress)
-      \NAT GW/      - NAT Gateway processing fees
-       \Logs /       - CloudWatch logs ingestion/storage
-        \API/        - API Gateway request charges
-         \/          - DNS query charges
-          |          - Load balancer hours + LCU charges
-          |          - EBS snapshots and lifecycle
-          |          - Elastic IPs (when unattached)
-          |          - KMS key operations
-          |          - Support plan fees
-```
+![THE CLOUD COST ICEBERG](assets/07_cost_mental_model-mm1.svg)
 
 ---
 
@@ -85,32 +62,7 @@ is asymmetric and complex:
 
 ### Cross-AZ Data Transfer: The Hidden Tax
 
-```
-  CROSS-AZ DATA TRANSFER
-  ========================
-
-  AZ-a                    AZ-b
-  +--------+              +--------+
-  | Web    | --request--> | App    |
-  | Server |              | Server |
-  |        | <--response- |        |
-  +--------+              +--------+
-
-  Each direction: $0.01/GB
-  Round trip: $0.02/GB
-
-  If your app does 1 TB of cross-AZ traffic per month:
-  Cost: 1,000 GB x $0.02 = $20/month
-
-  Seems small? At scale (100 services x 10 TB each):
-  Cost: 100 x 10,000 GB x $0.02 = $200,000/month
-
-  Mitigation:
-  - Keep chattiest services in the same AZ
-  - Use AZ-affinity for service mesh routing
-  - Compress payloads between services
-  - But: single-AZ = no fault tolerance, so balance cost vs risk
-```
+![CROSS-AZ DATA TRANSFER](assets/07_cost_mental_model-mm2.svg)
 
 ---
 
@@ -197,25 +149,7 @@ with 2 minutes notice.
 
 ### The Optimal Pricing Mix
 
-```
-  THE PRICING PYRAMID
-  ====================
-
-        /\
-       /  \       SPOT (10-20%)
-      / Burst\    Fault-tolerant batch, CI/CD, dev/test
-     /________\
-    /          \   ON-DEMAND (10-30%)
-   / Flexibility\  Unpredictable bursts, new workloads
-  /______________\
-  |              |  RESERVED / SAVINGS PLANS (50-70%)
-  | Steady-state |  Known baseline, 24/7 production workloads
-  |  baseline    |
-  |______________|
-
-  Aim: 50-70% committed spend, 10-30% on-demand, 10-20% spot.
-  This blend typically saves 40-60% vs all on-demand.
-```
+![THE PRICING PYRAMID](assets/07_cost_mental_model-mm3.svg)
 
 ---
 
@@ -269,38 +203,7 @@ by team, project, environment, or any other dimension.
 accountability to cloud spending. It is a cultural practice as much as
 a technical one.
 
-```
-  THE FINOPS LIFECYCLE
-  =====================
-
-  +----------+     +-----------+     +----------+
-  | INFORM   | --> | OPTIMIZE  | --> | OPERATE  |
-  | (Measure)|     | (Analyze) |     | (Act)    |
-  +----+-----+     +-----+-----+     +-----+----+
-       |                 |                  |
-       +--------<--------+--------<---------+
-                    (Continuous loop)
-
-  INFORM:
-  - Visibility into who is spending what
-  - Cost allocation by team, project, environment
-  - Dashboards showing trends and anomalies
-  - Shared cost model (how to split shared resources)
-
-  OPTIMIZE:
-  - Right-size instances (is that m5.4xlarge really needed?)
-  - Purchase commitments (RIs, Savings Plans)
-  - Spot instances for fault-tolerant workloads
-  - Storage tiering (S3 Standard -> Infrequent Access -> Glacier)
-  - Delete unused resources (zombie instances, old snapshots)
-
-  OPERATE:
-  - Budget alerts and guardrails
-  - Automated scaling policies
-  - Architecture decisions consider cost
-  - Teams own their cloud spend
-  - Regular cost reviews (weekly/monthly)
-```
+![THE FINOPS LIFECYCLE](assets/07_cost_mental_model-mm4.svg)
 
 ### FinOps Maturity Levels
 
@@ -406,43 +309,7 @@ Data transfer is consistently the most surprising line item for cloud
 newcomers. Here is a comprehensive view of where data transfer costs
 lurk.
 
-```
-  DATA TRANSFER COST MAP
-  =======================
-
-  +------------------+
-  | Internet         |
-  | (Users/APIs)     |
-  +--------+---------+
-           |
-           | Egress: $0.09/GB (expensive!)
-           | Ingress: FREE
-           |
-  +--------+---------+
-  |   CloudFront     |  Origin fetch: FREE from S3/EC2 to CF
-  |   (CDN Edge)     |  CF to Internet: $0.085/GB (slightly cheaper)
-  +--------+---------+
-           |
-  +--------+---------+
-  |   Load Balancer  |  Processing: $0.008/LCU-hour
-  +--------+---------+
-           |
-  +--------+---------+
-  | VPC              |
-  |  +------+------+ |
-  |  | AZ-a | AZ-b | |  Cross-AZ: $0.01/GB each way
-  |  +------+------+ |
-  +--------+---------+
-           |
-           | Cross-region: $0.02/GB
-           |
-  +--------+---------+
-  | Another Region   |
-  +------------------+
-
-  NAT Gateway: $0.045/GB processed (ON TOP of other charges!)
-  VPC Endpoint: $0.01/GB processed (cheaper than NAT for AWS services)
-```
+![DATA TRANSFER COST MAP](assets/07_cost_mental_model-mm5.svg)
 
 ### Cost Reduction Strategies for Data Transfer
 

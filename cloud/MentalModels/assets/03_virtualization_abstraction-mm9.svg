@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="584" height="400" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="584" height="400"></rect>
+    <rect x="44" y="168" width="88" height="96" class="solid nofill" rx="0"></rect>
+    <text x="58" y="188" >Nitro</text>
+    <text x="58" y="204" >Network</text>
+    <text x="58" y="220" >Card</text>
+    <path d="M 64,224 A 16,16 0,0,0 64,240" class="nofill"></path>
+    <text x="66" y="236" >ENA</text>
+    <text x="66" y="252" >EFA</text>
+    <rect x="148" y="168" width="88" height="96" class="solid nofill" rx="0"></rect>
+    <text x="162" y="188" >Nitro</text>
+    <text x="162" y="204" >Storage</text>
+    <text x="162" y="220" >Card</text>
+    <path d="M 168,224 A 16,16 0,0,0 168,240" class="nofill"></path>
+    <text x="170" y="236" >NVMe</text>
+    <text x="170" y="252" >EBS</text>
+    <path d="M 192,240 A 16,16 0,0,1 192,256" class="nofill"></path>
+    <text x="18" y="12" >AWS</text>
+    <text x="50" y="12" >NITRO</text>
+    <text x="98" y="12" >ARCHITECTURE</text>
+    <line x1="16" y1="22" x2="200" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="200" y2="26" class="solid"></line>
+    <text x="34" y="76" >Customer</text>
+    <text x="106" y="76" >VM</text>
+    <path d="M 136,64 A 16,16 0,0,0 136,80" class="nofill"></path>
+    <text x="138" y="76" >EC2</text>
+    <text x="170" y="76" >instance</text>
+    <path d="M 232,64 A 16,16 0,0,1 232,80" class="nofill"></path>
+    <line x1="372" y1="64" x2="372" y2="80" class="solid"></line>
+    <text x="34" y="92" >Gets</text>
+    <line x1="72" y1="88" x2="80" y2="88" class="broken"></line>
+    <text x="82" y="92" >100%</text>
+    <text x="122" y="92" >of</text>
+    <text x="146" y="92" >host</text>
+    <text x="186" y="92" >CPU,</text>
+    <text x="226" y="92" >memory</text>
+    <text x="42" y="124" >Minimal</text>
+    <text x="106" y="124" >hypervisor</text>
+    <path d="M 200,112 A 16,16 0,0,0 200,128" class="nofill"></path>
+    <text x="202" y="124" >lightweight</text>
+    <text x="298" y="124" >KVM</text>
+    <path d="M 320,112 A 16,16 0,0,1 320,128" class="nofill"></path>
+    <line x1="372" y1="112" x2="372" y2="128" class="solid"></line>
+    <text x="42" y="156" >Nitro</text>
+    <text x="90" y="156" >Cards</text>
+    <path d="M 144,144 A 16,16 0,0,0 144,160" class="nofill"></path>
+    <text x="146" y="156" >dedicated</text>
+    <text x="226" y="156" >hardware</text>
+    <path d="M 288,144 A 16,16 0,0,1 288,160" class="nofill"></path>
+    <line x1="380" y1="144" x2="380" y2="160" class="solid"></line>
+    <line x1="372" y1="160" x2="372" y2="272" class="solid"></line>
+    <text x="266" y="188" >Nitro</text>
+    <text x="266" y="204" >Security</text>
+    <text x="266" y="220" >Card</text>
+    <path d="M 272,224 A 16,16 0,0,0 272,240" class="nofill"></path>
+    <text x="274" y="236" >Nitro</text>
+    <text x="274" y="252" >Enclaves</text>
+    <line x1="348" y1="240" x2="348" y2="256" class="solid"></line>
+    <text x="42" y="300" >Physical</text>
+    <text x="114" y="300" >Server</text>
+    <text x="170" y="300" >Hardware</text>
+    <line x1="372" y1="288" x2="372" y2="304" class="solid"></line>
+    <text x="426" y="124" >Tiny</text>
+    <text x="466" y="124" >software</text>
+    <text x="538" y="124" >layer</text>
+    <text x="18" y="348" >Key</text>
+    <text x="50" y="348" >innovation:</text>
+    <text x="146" y="348" >Hypervisor</text>
+    <text x="234" y="348" >overhead</text>
+    <text x="306" y="348" >approaches</text>
+    <text x="394" y="348" >0%</text>
+    <text x="418" y="348" >because</text>
+    <text x="18" y="364" >I</text>
+    <line x1="32" y1="352" x2="24" y2="368" class="solid"></line>
+    <text x="34" y="364" >O,</text>
+    <text x="58" y="364" >security,</text>
+    <text x="138" y="364" >and</text>
+    <text x="170" y="364" >management</text>
+    <text x="258" y="364" >are</text>
+    <text x="290" y="364" >handled</text>
+    <text x="354" y="364" >by</text>
+    <text x="378" y="364" >custom</text>
+    <text x="434" y="364" >ASICs,</text>
+    <text x="18" y="380" >not</text>
+    <text x="50" y="380" >by</text>
+    <text x="74" y="380" >software</text>
+    <text x="146" y="380" >running</text>
+    <text x="210" y="380" >on</text>
+    <text x="234" y="380" >the</text>
+    <text x="266" y="380" >host</text>
+    <text x="306" y="380" >CPU.</text>
+    <g>
+        <line x1="20" y1="56" x2="364" y2="56" class="solid"></line>
+        <line x1="20" y1="56" x2="20" y2="312" class="solid"></line>
+        <line x1="20" y1="136" x2="364" y2="136" class="solid"></line>
+        <line x1="20" y1="280" x2="364" y2="280" class="solid"></line>
+        <line x1="20" y1="312" x2="364" y2="312" class="solid"></line>
+        <line x1="364" y1="80" x2="364" y2="104" class="solid"></line>
+        <line x1="20" y1="104" x2="364" y2="104" class="solid"></line>
+    </g>
+    <g>
+        <line x1="252" y1="168" x2="340" y2="168" class="solid"></line>
+        <line x1="252" y1="168" x2="252" y2="264" class="solid"></line>
+        <line x1="340" y1="168" x2="340" y2="240" class="solid"></line>
+        <path d="M 340,240 A 12,12 0,0,1 340,256" class="nofill"></path>
+        <line x1="252" y1="264" x2="340" y2="264" class="solid"></line>
+    </g>
+    <g>
+        <line x1="96" y1="224" x2="88" y2="240" class="solid"></line>
+        <path d="M 88,240 A 16,16 0,0,1 88,256" class="nofill"></path>
+    </g>
+    <g>
+        <polygon points="400,116 392,120 400,124" class="filled"></polygon>
+        <line x1="400" y1="120" x2="416" y2="120" class="solid"></line>
+    </g>
+</svg>

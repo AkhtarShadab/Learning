@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="544" height="192" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="544" height="192"></rect>
+    <text x="18" y="12" >VPC</text>
+    <text x="50" y="12" >PEERING</text>
+    <line x1="16" y1="22" x2="112" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="112" y2="26" class="solid"></line>
+    <text x="18" y="60" >VPC</text>
+    <text x="50" y="60" >A</text>
+    <path d="M 72,48 A 16,16 0,0,0 72,64" class="nofill"></path>
+    <text x="74" y="60" >10.0.0.0</text>
+    <line x1="144" y1="48" x2="136" y2="64" class="solid"></line>
+    <text x="146" y="60" >16</text>
+    <path d="M 160,48 A 16,16 0,0,1 160,64" class="nofill"></path>
+    <text x="218" y="60" >peering</text>
+    <text x="322" y="60" >VPC</text>
+    <text x="354" y="60" >B</text>
+    <path d="M 376,48 A 16,16 0,0,0 376,64" class="nofill"></path>
+    <text x="378" y="60" >10.1.0.0</text>
+    <line x1="448" y1="48" x2="440" y2="64" class="solid"></line>
+    <text x="450" y="60" >16</text>
+    <path d="M 464,48 A 16,16 0,0,1 464,64" class="nofill"></path>
+    <text x="18" y="92" >Limitations:</text>
+    <line x1="16" y1="104" x2="24" y2="104" class="solid"></line>
+    <text x="34" y="108" >NOT</text>
+    <text x="66" y="108" >transitive:</text>
+    <text x="162" y="108" >if</text>
+    <text x="186" y="108" >A</text>
+    <text x="202" y="108" >peers</text>
+    <text x="250" y="108" >with</text>
+    <text x="34" y="124" >A</text>
+    <text x="50" y="124" >CANNOT</text>
+    <text x="106" y="124" >reach</text>
+    <text x="154" y="124" >C</text>
+    <text x="170" y="124" >through</text>
+    <text x="234" y="124" >B.</text>
+    <text x="34" y="140" >One</text>
+    <line x1="56" y1="136" x2="64" y2="136" class="solid"></line>
+    <text x="66" y="140" >t</text>
+    <circle cx="76" cy="136" r="3" class="nofill"></circle>
+    <line x1="80" y1="136" x2="88" y2="136" class="solid"></line>
+    <circle cx="92" cy="136" r="3" class="nofill"></circle>
+    <text x="98" y="140" >ne:</text>
+    <text x="130" y="140" >each</text>
+    <text x="170" y="140" >pair</text>
+    <text x="210" y="140" >of</text>
+    <polygon points="240,132 232,136 236,128" class="filled"></polygon>
+    <text x="242" y="140" >PCs</text>
+    <text x="274" y="140" >needs</text>
+    <text x="322" y="140" >its</text>
+    <text x="354" y="140" >own</text>
+    <text x="386" y="140" >peering</text>
+    <text x="450" y="140" >connection.</text>
+    <text x="34" y="156" >With</text>
+    <text x="74" y="156" >N</text>
+    <text x="90" y="156" >VPCs,</text>
+    <text x="138" y="156" >you</text>
+    <text x="170" y="156" >need</text>
+    <text x="210" y="156" >N*</text>
+    <path d="M 232,144 A 16,16 0,0,0 232,160" class="nofill"></path>
+    <text x="234" y="156" >N</text>
+    <line x1="240" y1="152" x2="248" y2="152" class="solid"></line>
+    <text x="250" y="156" >1</text>
+    <path d="M 256,144 A 16,16 0,0,1 256,160" class="nofill"></path>
+    <line x1="272" y1="144" x2="264" y2="160" class="solid"></line>
+    <text x="274" y="156" >2</text>
+    <text x="290" y="156" >peering</text>
+    <text x="354" y="156" >connections.</text>
+    <text x="34" y="172" >10</text>
+    <text x="58" y="172" >VPCs</text>
+    <line x1="96" y1="166" x2="104" y2="166" class="solid"></line>
+    <line x1="96" y1="170" x2="104" y2="170" class="solid"></line>
+    <text x="114" y="172" >45</text>
+    <text x="138" y="172" >connections.</text>
+    <text x="242" y="172" >50</text>
+    <text x="266" y="172" >VPCs</text>
+    <line x1="304" y1="166" x2="312" y2="166" class="solid"></line>
+    <line x1="304" y1="170" x2="312" y2="170" class="solid"></line>
+    <text x="322" y="172" >1,225</text>
+    <text x="370" y="172" >connections.</text>
+    <text x="290" y="108" >B</text>
+    <text x="306" y="108" >and</text>
+    <text x="338" y="108" >B</text>
+    <text x="354" y="108" >peers</text>
+    <text x="402" y="108" >with</text>
+    <text x="442" y="108" >C,</text>
+    <line x1="16" y1="136" x2="24" y2="136" class="solid"></line>
+    <line x1="16" y1="152" x2="24" y2="152" class="solid"></line>
+    <g>
+        <polygon points="184,52 176,56 184,60" class="filled"></polygon>
+        <line x1="184" y1="56" x2="216" y2="56" class="solid"></line>
+    </g>
+    <g>
+        <line x1="272" y1="56" x2="304" y2="56" class="solid"></line>
+        <polygon points="304,52 312,56 304,60" class="filled"></polygon>
+    </g>
+</svg>

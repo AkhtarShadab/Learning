@@ -219,81 +219,23 @@ time.</p>
 <h3 id="serial-vs-parallel-systems">Serial vs Parallel Systems<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#serial-vs-parallel-systems" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p><strong>Serial (all must work):</strong> If any component fails, the system fails.
 The overall availability is the product of individual availabilities.</p>
-<pre><code>  SERIAL SYSTEM
-  ==============
-
-  Request --> [Web Server] --> [App Server] --> [Database]
-                 99.9%           99.9%           99.9%
-
-  System availability = 0.999 * 0.999 * 0.999 = 0.997 = 99.7%
-
-  Three nines per component yields less than three nines overall.
-  The more serial components, the lower the availability.
-</code></pre>
+<img src="assets/04_fault_tolerance-mm1.svg" alt="SERIAL SYSTEM" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <p><strong>Parallel (any one must work):</strong> If any copy works, the system works.
 The failure probability is the product of individual failure probabilities.</p>
-<pre><code>  PARALLEL SYSTEM
-  ================
-
-  Request --> [Load Balancer]
-                 /    |    \
-          [Server1] [Server2] [Server3]
-            99%       99%       99%
-
-  P(all fail) = 0.01 * 0.01 * 0.01 = 0.000001
-  P(at least one works) = 1 - 0.000001 = 99.9999%
-
-  Three servers at 99% each = six nines in parallel.
-</code></pre>
+<img src="assets/04_fault_tolerance-mm2.svg" alt="PARALLEL SYSTEM" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <h3 id="the-practical-formula">The Practical Formula<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-practical-formula" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p>Real systems combine serial and parallel paths:</p>
-<pre><code>  COMBINED AVAILABILITY
-  =====================
-
-  [LB] --> [Web (x3)] --> [App (x3)] --> [DB Primary + Standby]
-
-  Web tier:  1 - (0.01)^3 = 99.9999%
-  App tier:  1 - (0.01)^3 = 99.9999%
-  DB tier:   1 - (0.01)^2 = 99.99%
-  LB:        99.99% (managed service SLA)
-
-  Overall = 0.999999 * 0.999999 * 0.9999 * 0.9999
-          = 0.9998 = 99.98%
-
-  The weakest link (database with only 2x redundancy)
-  dominates the overall availability.
-</code></pre>
+<img src="assets/04_fault_tolerance-mm3.svg" alt="04 fault tolerance" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="redundancy-patterns">Redundancy Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#redundancy-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <h3 id="active-active">Active-Active<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#active-active" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p>All copies serve traffic simultaneously. If one fails, the others
 absorb its load. This is the most common pattern for stateless services.</p>
-<pre><code>  ACTIVE-ACTIVE
-  ==============
-
-  Traffic --> [Load Balancer]
-                /    |    \
-           [Srv A] [Srv B] [Srv C]
-            (active)(active)(active)
-
-  Normal: Traffic split 33/33/33
-  Failure of A: Traffic split 0/50/50
-  Requirement: Each server must handle 50% headroom for failover
-</code></pre>
+<img src="assets/04_fault_tolerance-mm4.svg" alt="ACTIVE-ACTIVE" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <h3 id="active-passive-hot-standby">Active-Passive (Hot Standby)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#active-passive-hot-standby" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p>The primary handles all traffic. The standby is running and ready but
 receives no traffic. On failure, traffic switches to the standby.</p>
-<pre><code>  ACTIVE-PASSIVE
-  ===============
-
-  Traffic --> [Primary]
-                  |
-              [Standby]  (idle, synchronized, ready)
-
-  Normal: Primary handles 100%
-  Failure: Standby takes over (failover time: seconds to minutes)
-  Cost: 2x resources but standby is &quot;wasted&quot; during normal operation
-</code></pre>
+<img src="assets/04_fault_tolerance-mm5.svg" alt="04 fault tolerance" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <h3 id="n1-redundancy">N+1 Redundancy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#n1-redundancy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p>If you need N components to handle the load, provision N+1. If any one
 fails, you still have N functioning components.</p>
@@ -354,27 +296,7 @@ separate (miles apart).</p>
 <p>A geographic collection of 2-6 AZs. Failure causes: regional natural
 disaster, widespread network outage. Impact: all AZs in the region go
 offline. Regions are fully independent.</p>
-<pre><code>  AWS FAILURE DOMAIN HIERARCHY
-  =============================
-
-  Region: us-east-1 (N. Virginia)
-  +----------------------------------------------------+
-  |  AZ: us-east-1a      AZ: us-east-1b     AZ: 1c    |
-  |  +---------------+  +---------------+  +---------+ |
-  |  | Rack 1  Rack 2|  | Rack 1  Rack 2|  | Rack 1  | |
-  |  | [S][S]  [S][S]|  | [S][S]  [S][S]|  | [S][S]  | |
-  |  | [S][S]  [S][S]|  | [S][S]  [S][S]|  | [S][S]  | |
-  |  +---------------+  +---------------+  +---------+ |
-  +----------------------------------------------------+
-        |&lt;---- ~2ms ---->|
-        |&lt;--- independent power, cooling, networking -->|
-
-  Region: eu-west-1 (Ireland) -- completely independent
-  +----------------------------------------------------+
-  |  AZ: eu-west-1a     AZ: eu-west-1b     AZ: 1c     |
-  |  ...                 ...                 ...        |
-  +----------------------------------------------------+
-</code></pre>
+<img src="assets/04_fault_tolerance-mm6.svg" alt="AWS FAILURE DOMAIN HIERARCHY" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <h3 id="design-for-each-failure-domain">Design for Each Failure Domain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#design-for-each-failure-domain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 
 
@@ -455,26 +377,7 @@ survive an instance death at 3 AM on a Saturday?</p>
 downstream service starts failing, the circuit breaker “trips” and
 immediately returns an error (or fallback) instead of waiting for
 timeouts.</p>
-<pre><code>  CIRCUIT BREAKER STATE MACHINE
-  ==============================
-
-         success
-    +------------------+
-    |                  |
-    v                  |
-  [CLOSED] ---failures exceed threshold---> [OPEN]
-    ^                                          |
-    |                                          |
-    +---success in half-open---[HALF-OPEN]&lt;----+
-                                    timeout expires
-
-  CLOSED:    Requests flow normally. Failures are counted.
-  OPEN:      Requests immediately fail (no downstream calls).
-             Prevents overloading a struggling service.
-  HALF-OPEN: After a timeout, allow a few test requests through.
-             If they succeed, return to CLOSED.
-             If they fail, return to OPEN.
-</code></pre>
+<img src="assets/04_fault_tolerance-mm7.svg" alt="CIRCUIT BREAKER STATE MACHINE" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <h3 id="code-example-pseudocode">Code Example (Pseudocode)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#code-example-pseudocode" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> CircuitBreaker</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
 <span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">    def</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> __init__</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(self, failure_threshold</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, reset_timeout</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">30</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">):</span></span>
@@ -573,31 +476,7 @@ trigger automatic recovery.</p>
      Failure action: remove from load balancer (don't restart)
 </code></pre>
 <h3 id="self-healing-pipeline">Self-Healing Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#self-healing-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<pre><code>  SELF-HEALING FLOW
-  ==================
-
-  Health Check Fails
-       |
-       v
-  Remove from Load Balancer (stop sending traffic)
-       |
-       v
-  Attempt In-Place Recovery (restart process)
-       |
-       +-- Success --> Re-add to Load Balancer
-       |
-       +-- Failure --> Terminate Instance
-                           |
-                           v
-                    Auto Scaling Group launches replacement
-                           |
-                           v
-                    New instance passes health check
-                           |
-                           v
-                    Added to Load Balancer
-                    (total time: 2-5 minutes)
-</code></pre>
+<img src="assets/04_fault_tolerance-mm8.svg" alt="SELF-HEALING FLOW" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="real-world-outage-examples-and-lessons">Real-World Outage Examples and Lessons<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-outage-examples-and-lessons" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <h3 id="aws-us-east-1-s3-outage-february-2017">AWS us-east-1 S3 Outage (February 2017)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-us-east-1-s3-outage-february-2017" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
@@ -698,18 +577,7 @@ term number and steps down immediately.</p>
 entry first, then tells followers to append the same entry. Once a majority
 have confirmed the append, the entry is <strong>committed</strong> — permanently part of
 the log, applied to the state machine.</p>
-<pre><code>Leader log:     [1: set x=1] [2: set y=2] [3: set x=5]  ← committed
-Follower 2 log: [1: set x=1] [2: set y=2] [3: set x=5]  ← in sync
-Follower 3 log: [1: set x=1] [2: set y=2]               ← lagging
-
-Leader gets new write: set z=9
-  → appends [4: set z=9] locally
-  → sends AppendEntries RPC to followers
-  → waits for majority ACK (at least 1 follower)
-  → commits entry 4
-  → applies to state machine
-  → responds to client: success
-</code></pre>
+<img src="assets/04_fault_tolerance-mm9.svg" alt="Leader log: [1: set x=1] [2: set y=2] [3: set x=5] ← committed" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <p>Entries are <strong>never deleted or reordered</strong> once committed. The log grows
 monotonically. If a follower crashes and restarts, it replays the log from
 the last snapshot and catches up.</p>
@@ -741,13 +609,7 @@ by construction.</p>
 <p>This is why <strong>odd cluster sizes</strong> are the standard: adding an even node
 gives no additional failure tolerance (n=4 still tolerates 1 failure like
 n=3), but increases write latency (must wait for 3 ACKs instead of 2).</p>
-<pre><code>Write latency in Raft:
-  Leader must wait for ⌊n/2⌋ follower ACKs before committing.
-
-  n=3: wait for 1 follower  → fast
-  n=5: wait for 2 followers → latency = max(slowest 2 of 4 followers)
-  n=7: wait for 3 followers → higher tail latency
-</code></pre>
+<img src="assets/04_fault_tolerance-mm10.svg" alt="Write latency in Raft:" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <p>The sweet spot for most systems is <strong>n=3</strong> (tolerates 1 failure, low write
 latency) or <strong>n=5</strong> (tolerates 2 failures, moderate latency).</p>
 <hr/>

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="528" height="304" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="528" height="304"></rect>
+    <rect x="20" y="72" width="224" height="64" class="solid nofill" rx="0"></rect>
+    <text x="34" y="92" >Application</text>
+    <text x="34" y="108" >Guest</text>
+    <text x="82" y="108" >Kernel</text>
+    <text x="34" y="124" >virti</text>
+    <circle cx="76" cy="120" r="3" class="nofill"></circle>
+    <line x1="80" y1="120" x2="88" y2="120" class="solid"></line>
+    <text x="90" y="124" >net</text>
+    <text x="122" y="124" >driver</text>
+    <text x="18" y="12" >VIRTIO</text>
+    <text x="74" y="12" >ARCHITECTURE</text>
+    <line x1="16" y1="22" x2="176" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="176" y2="26" class="solid"></line>
+    <text x="18" y="60" >Guest</text>
+    <text x="66" y="60" >VM:</text>
+    <line x1="68" y1="128" x2="68" y2="176" class="solid"></line>
+    <text x="82" y="156" >shared</text>
+    <text x="138" y="156" >memory</text>
+    <text x="194" y="156" >rings</text>
+    <text x="34" y="188" >Hypervisor</text>
+    <path d="M 128,176 A 16,16 0,0,0 128,192" class="nofill"></path>
+    <text x="130" y="188" >vhost</text>
+    <line x1="168" y1="184" x2="176" y2="184" class="solid"></line>
+    <text x="178" y="188" >net</text>
+    <path d="M 200,176 A 16,16 0,0,1 200,192" class="nofill"></path>
+    <text x="34" y="204" >Physical</text>
+    <text x="106" y="204" >NIC</text>
+    <text x="138" y="204" >driver</text>
+    <text x="34" y="236" >Physical</text>
+    <text x="106" y="236" >NIC</text>
+    <text x="298" y="124" >Paravirtual,</text>
+    <text x="402" y="124" >knows</text>
+    <text x="450" y="124" >it&#39;s</text>
+    <text x="490" y="124" >a</text>
+    <text x="506" y="124" >VM</text>
+    <text x="18" y="284" >Performance:</text>
+    <line x1="120" y1="280" x2="128" y2="280" class="broken"></line>
+    <text x="130" y="284" >90</text>
+    <line x1="144" y1="280" x2="152" y2="280" class="solid"></line>
+    <text x="154" y="284" >95%</text>
+    <text x="186" y="284" >of</text>
+    <text x="210" y="284" >bare</text>
+    <text x="250" y="284" >metal</text>
+    <g>
+        <line x1="20" y1="168" x2="244" y2="168" class="solid"></line>
+        <line x1="20" y1="168" x2="20" y2="248" class="solid"></line>
+        <line x1="244" y1="168" x2="244" y2="248" class="solid"></line>
+        <line x1="20" y1="216" x2="244" y2="216" class="solid"></line>
+        <line x1="20" y1="248" x2="244" y2="248" class="solid"></line>
+    </g>
+    <g>
+        <polygon points="272,116 264,120 272,124" class="filled"></polygon>
+        <line x1="272" y1="120" x2="288" y2="120" class="solid"></line>
+    </g>
+</svg>

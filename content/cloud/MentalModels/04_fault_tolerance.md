@@ -88,58 +88,18 @@ Availability is measured in "nines." Each additional nine represents a
 **Serial (all must work):** If any component fails, the system fails.
 The overall availability is the product of individual availabilities.
 
-```
-  SERIAL SYSTEM
-  ==============
-
-  Request --> [Web Server] --> [App Server] --> [Database]
-                 99.9%           99.9%           99.9%
-
-  System availability = 0.999 * 0.999 * 0.999 = 0.997 = 99.7%
-
-  Three nines per component yields less than three nines overall.
-  The more serial components, the lower the availability.
-```
+![SERIAL SYSTEM](assets/04_fault_tolerance-mm1.svg)
 
 **Parallel (any one must work):** If any copy works, the system works.
 The failure probability is the product of individual failure probabilities.
 
-```
-  PARALLEL SYSTEM
-  ================
-
-  Request --> [Load Balancer]
-                 /    |    \
-          [Server1] [Server2] [Server3]
-            99%       99%       99%
-
-  P(all fail) = 0.01 * 0.01 * 0.01 = 0.000001
-  P(at least one works) = 1 - 0.000001 = 99.9999%
-
-  Three servers at 99% each = six nines in parallel.
-```
+![PARALLEL SYSTEM](assets/04_fault_tolerance-mm2.svg)
 
 ### The Practical Formula
 
 Real systems combine serial and parallel paths:
 
-```
-  COMBINED AVAILABILITY
-  =====================
-
-  [LB] --> [Web (x3)] --> [App (x3)] --> [DB Primary + Standby]
-
-  Web tier:  1 - (0.01)^3 = 99.9999%
-  App tier:  1 - (0.01)^3 = 99.9999%
-  DB tier:   1 - (0.01)^2 = 99.99%
-  LB:        99.99% (managed service SLA)
-
-  Overall = 0.999999 * 0.999999 * 0.9999 * 0.9999
-          = 0.9998 = 99.98%
-
-  The weakest link (database with only 2x redundancy)
-  dominates the overall availability.
-```
+![COMBINED AVAILABILITY](assets/04_fault_tolerance-mm3.svg)
 
 ---
 
@@ -150,37 +110,14 @@ Real systems combine serial and parallel paths:
 All copies serve traffic simultaneously. If one fails, the others
 absorb its load. This is the most common pattern for stateless services.
 
-```
-  ACTIVE-ACTIVE
-  ==============
-
-  Traffic --> [Load Balancer]
-                /    |    \
-           [Srv A] [Srv B] [Srv C]
-            (active)(active)(active)
-
-  Normal: Traffic split 33/33/33
-  Failure of A: Traffic split 0/50/50
-  Requirement: Each server must handle 50% headroom for failover
-```
+![ACTIVE-ACTIVE](assets/04_fault_tolerance-mm4.svg)
 
 ### Active-Passive (Hot Standby)
 
 The primary handles all traffic. The standby is running and ready but
 receives no traffic. On failure, traffic switches to the standby.
 
-```
-  ACTIVE-PASSIVE
-  ===============
-
-  Traffic --> [Primary]
-                  |
-              [Standby]  (idle, synchronized, ready)
-
-  Normal: Primary handles 100%
-  Failure: Standby takes over (failover time: seconds to minutes)
-  Cost: 2x resources but standby is "wasted" during normal operation
-```
+![ACTIVE-PASSIVE](assets/04_fault_tolerance-mm5.svg)
 
 ### N+1 Redundancy
 
@@ -262,28 +199,7 @@ A geographic collection of 2-6 AZs. Failure causes: regional natural
 disaster, widespread network outage. Impact: all AZs in the region go
 offline. Regions are fully independent.
 
-```
-  AWS FAILURE DOMAIN HIERARCHY
-  =============================
-
-  Region: us-east-1 (N. Virginia)
-  +----------------------------------------------------+
-  |  AZ: us-east-1a      AZ: us-east-1b     AZ: 1c    |
-  |  +---------------+  +---------------+  +---------+ |
-  |  | Rack 1  Rack 2|  | Rack 1  Rack 2|  | Rack 1  | |
-  |  | [S][S]  [S][S]|  | [S][S]  [S][S]|  | [S][S]  | |
-  |  | [S][S]  [S][S]|  | [S][S]  [S][S]|  | [S][S]  | |
-  |  +---------------+  +---------------+  +---------+ |
-  +----------------------------------------------------+
-        |<---- ~2ms ---->|
-        |<--- independent power, cooling, networking -->|
-
-  Region: eu-west-1 (Ireland) -- completely independent
-  +----------------------------------------------------+
-  |  AZ: eu-west-1a     AZ: eu-west-1b     AZ: 1c     |
-  |  ...                 ...                 ...        |
-  +----------------------------------------------------+
-```
+![AWS FAILURE DOMAIN HIERARCHY](assets/04_fault_tolerance-mm6.svg)
 
 ### Design for Each Failure Domain
 
@@ -349,27 +265,7 @@ downstream service starts failing, the circuit breaker "trips" and
 immediately returns an error (or fallback) instead of waiting for
 timeouts.
 
-```
-  CIRCUIT BREAKER STATE MACHINE
-  ==============================
-
-         success
-    +------------------+
-    |                  |
-    v                  |
-  [CLOSED] ---failures exceed threshold---> [OPEN]
-    ^                                          |
-    |                                          |
-    +---success in half-open---[HALF-OPEN]<----+
-                                    timeout expires
-
-  CLOSED:    Requests flow normally. Failures are counted.
-  OPEN:      Requests immediately fail (no downstream calls).
-             Prevents overloading a struggling service.
-  HALF-OPEN: After a timeout, allow a few test requests through.
-             If they succeed, return to CLOSED.
-             If they fail, return to OPEN.
-```
+![CIRCUIT BREAKER STATE MACHINE](assets/04_fault_tolerance-mm7.svg)
 
 ### Code Example (Pseudocode)
 
@@ -489,32 +385,7 @@ trigger automatic recovery.
 
 ### Self-Healing Pipeline
 
-```
-  SELF-HEALING FLOW
-  ==================
-
-  Health Check Fails
-       |
-       v
-  Remove from Load Balancer (stop sending traffic)
-       |
-       v
-  Attempt In-Place Recovery (restart process)
-       |
-       +-- Success --> Re-add to Load Balancer
-       |
-       +-- Failure --> Terminate Instance
-                           |
-                           v
-                    Auto Scaling Group launches replacement
-                           |
-                           v
-                    New instance passes health check
-                           |
-                           v
-                    Added to Load Balancer
-                    (total time: 2-5 minutes)
-```
+![SELF-HEALING FLOW](assets/04_fault_tolerance-mm8.svg)
 
 ---
 
@@ -646,19 +517,7 @@ entry first, then tells followers to append the same entry. Once a majority
 have confirmed the append, the entry is **committed** — permanently part of
 the log, applied to the state machine.
 
-```
-Leader log:     [1: set x=1] [2: set y=2] [3: set x=5]  ← committed
-Follower 2 log: [1: set x=1] [2: set y=2] [3: set x=5]  ← in sync
-Follower 3 log: [1: set x=1] [2: set y=2]               ← lagging
-
-Leader gets new write: set z=9
-  → appends [4: set z=9] locally
-  → sends AppendEntries RPC to followers
-  → waits for majority ACK (at least 1 follower)
-  → commits entry 4
-  → applies to state machine
-  → responds to client: success
-```
+![Leader log: [1: set x=1] [2: set y=2] [3: set x=5] ← committed](assets/04_fault_tolerance-mm9.svg)
 
 Entries are **never deleted or reordered** once committed. The log grows
 monotonically. If a follower crashes and restarts, it replays the log from
@@ -710,14 +569,7 @@ This is why **odd cluster sizes** are the standard: adding an even node
 gives no additional failure tolerance (n=4 still tolerates 1 failure like
 n=3), but increases write latency (must wait for 3 ACKs instead of 2).
 
-```
-Write latency in Raft:
-  Leader must wait for ⌊n/2⌋ follower ACKs before committing.
-
-  n=3: wait for 1 follower  → fast
-  n=5: wait for 2 followers → latency = max(slowest 2 of 4 followers)
-  n=7: wait for 3 followers → higher tail latency
-```
+![Write latency in Raft:](assets/04_fault_tolerance-mm10.svg)
 
 The sweet spot for most systems is **n=3** (tolerates 1 failure, low write
 latency) or **n=5** (tolerates 2 failures, moderate latency).

@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="416" height="416" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="416" height="416"></rect>
+    <rect x="20" y="72" width="88" height="64" class="solid nofill" rx="0"></rect>
+    <text x="34" y="92" >Server</text>
+    <text x="90" y="92" >A</text>
+    <text x="42" y="108" >session</text>
+    <text x="50" y="124" >data</text>
+    <rect x="20" y="184" width="88" height="80" class="solid nofill" rx="0"></rect>
+    <text x="34" y="204" >Server</text>
+    <text x="90" y="204" >A</text>
+    <path d="M 48,208 A 16,16 0,0,0 48,224" class="nofill"></path>
+    <text x="50" y="220" >no</text>
+    <text x="42" y="236" >local</text>
+    <text x="42" y="252" >state</text>
+    <path d="M 80,240 A 16,16 0,0,1 80,256" class="nofill"></path>
+    <rect x="124" y="184" width="88" height="80" class="solid nofill" rx="0"></rect>
+    <text x="138" y="204" >Server</text>
+    <text x="194" y="204" >B</text>
+    <path d="M 152,208 A 16,16 0,0,0 152,224" class="nofill"></path>
+    <text x="154" y="220" >no</text>
+    <text x="146" y="236" >local</text>
+    <text x="146" y="252" >state</text>
+    <path d="M 184,240 A 16,16 0,0,1 184,256" class="nofill"></path>
+    <rect x="228" y="184" width="88" height="80" class="solid nofill" rx="0"></rect>
+    <text x="242" y="204" >Server</text>
+    <text x="298" y="204" >C</text>
+    <path d="M 256,208 A 16,16 0,0,0 256,224" class="nofill"></path>
+    <text x="258" y="220" >no</text>
+    <text x="250" y="236" >local</text>
+    <text x="250" y="252" >state</text>
+    <path d="M 288,240 A 16,16 0,0,1 288,256" class="nofill"></path>
+    <rect x="20" y="296" width="304" height="48" class="solid nofill" rx="0"></rect>
+    <text x="66" y="316" >External</text>
+    <text x="138" y="316" >Session</text>
+    <text x="202" y="316" >Store</text>
+    <path d="M 48,320 A 16,16 0,0,0 48,336" class="nofill"></path>
+    <text x="50" y="332" >Redis</text>
+    <line x1="104" y1="320" x2="96" y2="336" class="solid"></line>
+    <text x="114" y="332" >DynamoDB</text>
+    <line x1="192" y1="320" x2="184" y2="336" class="solid"></line>
+    <text x="202" y="332" >Memcached</text>
+    <path d="M 272,320 A 16,16 0,0,1 272,336" class="nofill"></path>
+    <text x="18" y="12" >STATEFUL</text>
+    <text x="90" y="12" >vs</text>
+    <text x="114" y="12" >STATELESS</text>
+    <line x1="16" y1="22" x2="192" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="192" y2="26" class="solid"></line>
+    <text x="18" y="60" >STATEFUL</text>
+    <path d="M 96,48 A 16,16 0,0,0 96,64" class="nofill"></path>
+    <text x="98" y="60" >Cannot</text>
+    <text x="154" y="60" >Scale</text>
+    <text x="202" y="60" >Horizontally</text>
+    <path d="M 296,48 A 16,16 0,0,1 296,64" class="nofill"></path>
+    <text x="306" y="60" >:</text>
+    <text x="130" y="92" >Session</text>
+    <text x="194" y="92" >data</text>
+    <text x="234" y="92" >stored</text>
+    <text x="290" y="92" >in</text>
+    <text x="314" y="92" >local</text>
+    <text x="362" y="92" >memory</text>
+    <text x="130" y="108" >User</text>
+    <text x="170" y="108" >must</text>
+    <text x="210" y="108" >always</text>
+    <text x="266" y="108" >go</text>
+    <text x="290" y="108" >to</text>
+    <text x="314" y="108" >Server</text>
+    <text x="370" y="108" >A</text>
+    <text x="130" y="124" >If</text>
+    <text x="154" y="124" >A</text>
+    <text x="170" y="124" >dies,</text>
+    <text x="218" y="124" >session</text>
+    <text x="282" y="124" >is</text>
+    <text x="306" y="124" >lost</text>
+    <text x="18" y="172" >STATELESS</text>
+    <path d="M 104,160 A 16,16 0,0,0 104,176" class="nofill"></path>
+    <text x="106" y="172" >Can</text>
+    <text x="138" y="172" >Scale</text>
+    <text x="186" y="172" >Horizontally</text>
+    <path d="M 280,160 A 16,16 0,0,1 280,176" class="nofill"></path>
+    <text x="290" y="172" >:</text>
+    <line x1="68" y1="272" x2="68" y2="288" class="solid"></line>
+    <line x1="164" y1="272" x2="164" y2="288" class="solid"></line>
+    <line x1="260" y1="272" x2="260" y2="288" class="solid"></line>
+    <text x="18" y="380" >Any</text>
+    <text x="50" y="380" >server</text>
+    <text x="106" y="380" >can</text>
+    <text x="138" y="380" >handle</text>
+    <text x="194" y="380" >any</text>
+    <text x="226" y="380" >request.</text>
+    <text x="18" y="396" >Servers</text>
+    <text x="82" y="396" >are</text>
+    <text x="114" y="396" >interchangeable</text>
+    <text x="242" y="396" >and</text>
+    <text x="274" y="396" >disposable.</text>
+</svg>

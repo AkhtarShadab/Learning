@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="584" height="512" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="584" height="512"></rect>
+    <rect x="20" y="264" width="88" height="48" class="solid nofill" rx="0"></rect>
+    <text x="34" y="284" >PENDING</text>
+    <rect x="156" y="264" width="96" height="48" class="solid nofill" rx="0"></rect>
+    <text x="170" y="284" >PENDING:</text>
+    <text x="170" y="300" >WAIT</text>
+    <rect x="300" y="264" width="104" height="48" class="solid nofill" rx="0"></rect>
+    <text x="314" y="284" >IN</text>
+    <line x1="328" y1="280" x2="336" y2="280" class="solid"></line>
+    <text x="338" y="284" >SERVICE</text>
+    <rect x="332" y="376" width="96" height="64" class="solid nofill" rx="0"></rect>
+    <text x="346" y="396" >TERMIN</text>
+    <line x1="392" y1="392" x2="400" y2="392" class="solid"></line>
+    <text x="346" y="412" >ATING:</text>
+    <text x="346" y="428" >WAIT</text>
+    <text x="18" y="12" >AUTO</text>
+    <text x="58" y="12" >SCALING</text>
+    <text x="122" y="12" >GROUP</text>
+    <text x="170" y="12" >LIFECYCLE</text>
+    <line x1="16" y1="22" x2="248" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="248" y2="26" class="solid"></line>
+    <text x="18" y="60" >1.</text>
+    <text x="42" y="60" >PENDING</text>
+    <text x="42" y="76" >Instance</text>
+    <text x="114" y="76" >is</text>
+    <text x="138" y="76" >launching</text>
+    <path d="M 224,64 A 16,16 0,0,0 224,80" class="nofill"></path>
+    <text x="226" y="76" >AMI</text>
+    <text x="258" y="76" >loading,</text>
+    <text x="330" y="76" >boot,</text>
+    <text x="378" y="76" >user</text>
+    <line x1="408" y1="72" x2="416" y2="72" class="solid"></line>
+    <text x="418" y="76" >data</text>
+    <text x="458" y="76" >scripts</text>
+    <path d="M 512,64 A 16,16 0,0,1 512,80" class="nofill"></path>
+    <text x="18" y="108" >2.</text>
+    <text x="42" y="108" >IN</text>
+    <line x1="56" y1="104" x2="64" y2="104" class="solid"></line>
+    <text x="66" y="108" >SERVICE</text>
+    <text x="42" y="124" >Instance</text>
+    <text x="114" y="124" >is</text>
+    <text x="138" y="124" >healthy,</text>
+    <text x="210" y="124" >registered</text>
+    <text x="298" y="124" >with</text>
+    <text x="338" y="124" >load</text>
+    <text x="378" y="124" >balancer,</text>
+    <text x="458" y="124" >serving</text>
+    <text x="522" y="124" >traffic</text>
+    <text x="18" y="156" >3.</text>
+    <text x="42" y="156" >TERMINATING</text>
+    <path d="M 144,144 A 16,16 0,0,0 144,160" class="nofill"></path>
+    <text x="146" y="156" >scale</text>
+    <line x1="184" y1="152" x2="192" y2="152" class="solid"></line>
+    <text x="194" y="156" >in</text>
+    <path d="M 208,144 A 16,16 0,0,1 208,160" class="nofill"></path>
+    <text x="42" y="172" >Connection</text>
+    <text x="130" y="172" >draining,</text>
+    <text x="210" y="172" >deregistering</text>
+    <text x="322" y="172" >from</text>
+    <text x="362" y="172" >LB,</text>
+    <text x="394" y="172" >shutting</text>
+    <text x="466" y="172" >down</text>
+    <text x="18" y="204" >4.</text>
+    <text x="42" y="204" >TERMINATED</text>
+    <text x="42" y="220" >Instance</text>
+    <text x="114" y="220" >is</text>
+    <text x="138" y="220" >gone</text>
+    <text x="18" y="252" >LIFECYCLE</text>
+    <text x="98" y="252" >HOOKS</text>
+    <path d="M 152,240 A 16,16 0,0,0 152,256" class="nofill"></path>
+    <text x="154" y="252" >optional</text>
+    <path d="M 216,240 A 16,16 0,0,1 216,256" class="nofill"></path>
+    <text x="226" y="252" >:</text>
+    <text x="154" y="332" >(run</text>
+    <text x="194" y="332" >custom</text>
+    <text x="162" y="348" >setup</text>
+    <text x="210" y="348" >scripts,</text>
+    <text x="162" y="364" >warm</text>
+    <text x="202" y="364" >cache,</text>
+    <text x="162" y="380" >register</text>
+    <text x="234" y="380" >with</text>
+    <text x="162" y="396" >service</text>
+    <text x="226" y="396" >mesh</text>
+    <path d="M 256,384 A 16,16 0,0,1 256,400" class="nofill"></path>
+    <line x1="372" y1="320" x2="372" y2="336" class="solid"></line>
+    <text x="362" y="348" >scale</text>
+    <line x1="400" y1="344" x2="408" y2="344" class="solid"></line>
+    <text x="410" y="348" >in</text>
+    <line x1="372" y1="352" x2="372" y2="368" class="solid"></line>
+    <text x="330" y="460" >(drain</text>
+    <text x="386" y="460" >conns,</text>
+    <text x="338" y="476" >save</text>
+    <text x="378" y="476" >logs,</text>
+    <text x="338" y="492" >deregister</text>
+    <path d="M 416,480 A 16,16 0,0,1 416,496" class="nofill"></path>
+    <g>
+        <line x1="120" y1="280" x2="136" y2="280" class="solid"></line>
+        <polygon points="136,276 144,280 136,284" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="264" y1="280" x2="280" y2="280" class="solid"></line>
+        <polygon points="280,276 288,280 280,284" class="filled"></polygon>
+    </g>
+</svg>

@@ -109,27 +109,7 @@ With cloud, costs are **mostly variable**. Process more, pay more. Process
 less, pay less. This transforms computing from a **capital expenditure
 (CapEx)** into an **operating expenditure (OpEx)**.
 
-```
-  COST STRUCTURE COMPARISON
-  -------------------------
-
-  On-Premises (Fixed-Cost Heavy)
-  +-------------------------------------------------+
-  |  Hardware purchase          ████████████████  70% |
-  |  Staff and operations       ██████            20% |
-  |  Electricity and cooling    ███               10% |
-  +-------------------------------------------------+
-  Cost stays flat regardless of usage.
-
-  Cloud (Variable-Cost Heavy)
-  +-------------------------------------------------+
-  |  Compute (usage-based)      ████████████████  55% |
-  |  Storage (usage-based)      ██████            20% |
-  |  Network (usage-based)      ████              15% |
-  |  Fixed (reserved, support)  ███               10% |
-  +-------------------------------------------------+
-  Cost scales with demand.
-```
+![COST STRUCTURE COMPARISON](assets/01_utility_model-mm1.svg)
 
 ---
 
@@ -162,26 +142,7 @@ can reclaim the instance with 2 minutes' notice when demand rises.
 
 **Best for:** Fault-tolerant, stateless, batch processing workloads.
 
-```
-  PRICING STRATEGY VISUALIZATION
-  --------------------------------
-
-  Demand
-  ^
-  |
-  |        ****                    <-- Spikes: On-Demand or Spot
-  |       *    *     ***
-  |      *      *   *   *
-  |  ----*-------*-*-----*----    <-- Predictable peaks: On-Demand
-  | /                      \
-  |/ ________________________\    <-- Steady baseline: Reserved
-  +-----------------------------> Time
-
-  Cost per hour:
-    Spot:      ~$0.01   (when available)
-    Reserved:  ~$0.03   (1-year commitment)
-    On-Demand: ~$0.05   (no commitment)
-```
+![PRICING STRATEGY VISUALIZATION](assets/01_utility_model-mm2.svg)
 
 ---
 
@@ -247,21 +208,7 @@ manages more.
 
 ### What You Manage at Each Layer
 
-```
-  +------------------+----------+----------+----------+
-  | Component        |  IaaS    |  PaaS    |  SaaS    |
-  +------------------+----------+----------+----------+
-  | Application      |  YOU     |  YOU     | Provider |
-  | Data             |  YOU     |  YOU     | Provider |
-  | Runtime          |  YOU     | Provider | Provider |
-  | Middleware        |  YOU     | Provider | Provider |
-  | Operating System |  YOU     | Provider | Provider |
-  | Virtualization   | Provider | Provider | Provider |
-  | Servers          | Provider | Provider | Provider |
-  | Storage          | Provider | Provider | Provider |
-  | Networking       | Provider | Provider | Provider |
-  +------------------+----------+----------+----------+
-```
+![Component IaaS PaaS SaaS](assets/01_utility_model-mm3.svg)
 
 ---
 
@@ -296,17 +243,7 @@ creates economic advantages that are nearly impossible to replicate.
 - **Analogy:** The power company run by the engineers who invented the
   turbine. Technically excellent, smaller customer base.
 
-```
-  MARKET SHARE (Approximate, 2025)
-  ================================
-
-  AWS     ████████████████████████████████  31%
-  Azure   █████████████████████████         25%
-  GCP     ███████████                       11%
-  Others  █████████████████████████████████  33%
-          |    |    |    |    |    |    |
-          0%   5%   10%  15%  20%  25%  35%
-```
+![MARKET SHARE (Approximate, 2025)](assets/01_utility_model-mm101.svg)
 
 ---
 

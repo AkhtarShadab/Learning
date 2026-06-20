@@ -124,29 +124,7 @@ only a fraction of the total bill. Below the waterline lie data
 transfer charges, API call fees, logging costs, NAT gateway fees,
 and a dozen other line items that can dwarf your compute spend if
 left unchecked.</p>
-<pre><code>  THE CLOUD COST ICEBERG
-  =======================
-
-        /\
-       /  \         VISIBLE COSTS (~40-60%)
-      / EC2 \       - Compute instances
-     / RDS   \      - Storage (S3, EBS)
-    / Lambda  \     - Managed databases
-   /___________\
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  WATERLINE
-   \           /
-    \ Data    /     HIDDEN COSTS (~40-60%)
-     \Transfer/     - Data transfer (cross-AZ, egress)
-      \NAT GW/      - NAT Gateway processing fees
-       \Logs /       - CloudWatch logs ingestion/storage
-        \API/        - API Gateway request charges
-         \/          - DNS query charges
-          |          - Load balancer hours + LCU charges
-          |          - EBS snapshots and lifecycle
-          |          - Elastic IPs (when unattached)
-          |          - KMS key operations
-          |          - Support plan fees
-</code></pre>
+<img src="assets/07_cost_mental_model-mm1.svg" alt="THE CLOUD COST ICEBERG" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="pricing-dimensions-how-you-get-charged">Pricing Dimensions: How You Get Charged<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pricing-dimensions-how-you-get-charged" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p>Cloud pricing is not one-dimensional. Every service meters usage across
@@ -218,31 +196,7 @@ is asymmetric and complex:</p>
   Data transfer can easily exceed compute costs.
 </code></pre>
 <h3 id="cross-az-data-transfer-the-hidden-tax">Cross-AZ Data Transfer: The Hidden Tax<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cross-az-data-transfer-the-hidden-tax" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<pre><code>  CROSS-AZ DATA TRANSFER
-  ========================
-
-  AZ-a                    AZ-b
-  +--------+              +--------+
-  | Web    | --request--> | App    |
-  | Server |              | Server |
-  |        | &lt;--response- |        |
-  +--------+              +--------+
-
-  Each direction: $0.01/GB
-  Round trip: $0.02/GB
-
-  If your app does 1 TB of cross-AZ traffic per month:
-  Cost: 1,000 GB x $0.02 = $20/month
-
-  Seems small? At scale (100 services x 10 TB each):
-  Cost: 100 x 10,000 GB x $0.02 = $200,000/month
-
-  Mitigation:
-  - Keep chattiest services in the same AZ
-  - Use AZ-affinity for service mesh routing
-  - Compress payloads between services
-  - But: single-AZ = no fault tolerance, so balance cost vs risk
-</code></pre>
+<img src="assets/07_cost_mental_model-mm2.svg" alt="CROSS-AZ DATA TRANSFER" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="pricing-models-reserved-on-demand-spot">Pricing Models: Reserved, On-Demand, Spot<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pricing-models-reserved-on-demand-spot" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p>Choosing the right pricing model is the single highest-impact cost
@@ -311,24 +265,7 @@ with 2 minutes notice.</p>
    - Using Spot Fleet with diversification across instance types/AZs
 </code></pre>
 <h3 id="the-optimal-pricing-mix">The Optimal Pricing Mix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#the-optimal-pricing-mix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<pre><code>  THE PRICING PYRAMID
-  ====================
-
-        /\
-       /  \       SPOT (10-20%)
-      / Burst\    Fault-tolerant batch, CI/CD, dev/test
-     /________\
-    /          \   ON-DEMAND (10-30%)
-   / Flexibility\  Unpredictable bursts, new workloads
-  /______________\
-  |              |  RESERVED / SAVINGS PLANS (50-70%)
-  | Steady-state |  Known baseline, 24/7 production workloads
-  |  baseline    |
-  |______________|
-
-  Aim: 50-70% committed spend, 10-30% on-demand, 10-20% spot.
-  This blend typically saves 40-60% vs all on-demand.
-</code></pre>
+<img src="assets/07_cost_mental_model-mm3.svg" alt="THE PRICING PYRAMID" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="cost-allocation-tags">Cost Allocation Tags<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-allocation-tags" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p>Tags are key-value pairs attached to resources that enable cost tracking
@@ -373,37 +310,7 @@ automatically.</li>
 <p><strong>FinOps</strong> (Financial Operations) is the practice of bringing financial
 accountability to cloud spending. It is a cultural practice as much as
 a technical one.</p>
-<pre><code>  THE FINOPS LIFECYCLE
-  =====================
-
-  +----------+     +-----------+     +----------+
-  | INFORM   | --> | OPTIMIZE  | --> | OPERATE  |
-  | (Measure)|     | (Analyze) |     | (Act)    |
-  +----+-----+     +-----+-----+     +-----+----+
-       |                 |                  |
-       +--------&lt;--------+--------&lt;---------+
-                    (Continuous loop)
-
-  INFORM:
-  - Visibility into who is spending what
-  - Cost allocation by team, project, environment
-  - Dashboards showing trends and anomalies
-  - Shared cost model (how to split shared resources)
-
-  OPTIMIZE:
-  - Right-size instances (is that m5.4xlarge really needed?)
-  - Purchase commitments (RIs, Savings Plans)
-  - Spot instances for fault-tolerant workloads
-  - Storage tiering (S3 Standard -> Infrequent Access -> Glacier)
-  - Delete unused resources (zombie instances, old snapshots)
-
-  OPERATE:
-  - Budget alerts and guardrails
-  - Automated scaling policies
-  - Architecture decisions consider cost
-  - Teams own their cloud spend
-  - Regular cost reviews (weekly/monthly)
-</code></pre>
+<img src="assets/07_cost_mental_model-mm4.svg" alt="07 cost mental model" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <h3 id="finops-maturity-levels">FinOps Maturity Levels<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#finops-maturity-levels" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 
 
@@ -510,42 +417,7 @@ than equivalent x86 instances for most workloads.</p>
 <p>Data transfer is consistently the most surprising line item for cloud
 newcomers. Here is a comprehensive view of where data transfer costs
 lurk.</p>
-<pre><code>  DATA TRANSFER COST MAP
-  =======================
-
-  +------------------+
-  | Internet         |
-  | (Users/APIs)     |
-  +--------+---------+
-           |
-           | Egress: $0.09/GB (expensive!)
-           | Ingress: FREE
-           |
-  +--------+---------+
-  |   CloudFront     |  Origin fetch: FREE from S3/EC2 to CF
-  |   (CDN Edge)     |  CF to Internet: $0.085/GB (slightly cheaper)
-  +--------+---------+
-           |
-  +--------+---------+
-  |   Load Balancer  |  Processing: $0.008/LCU-hour
-  +--------+---------+
-           |
-  +--------+---------+
-  | VPC              |
-  |  +------+------+ |
-  |  | AZ-a | AZ-b | |  Cross-AZ: $0.01/GB each way
-  |  +------+------+ |
-  +--------+---------+
-           |
-           | Cross-region: $0.02/GB
-           |
-  +--------+---------+
-  | Another Region   |
-  +------------------+
-
-  NAT Gateway: $0.045/GB processed (ON TOP of other charges!)
-  VPC Endpoint: $0.01/GB processed (cheaper than NAT for AWS services)
-</code></pre>
+<img src="assets/07_cost_mental_model-mm5.svg" alt="DATA TRANSFER COST MAP" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <h3 id="cost-reduction-strategies-for-data-transfer">Cost Reduction Strategies for Data Transfer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-reduction-strategies-for-data-transfer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 
 

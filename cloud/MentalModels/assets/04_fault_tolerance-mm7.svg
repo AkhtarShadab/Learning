@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="320" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="520" height="320"></rect>
+    <text x="18" y="12" >CIRCUIT</text>
+    <text x="82" y="12" >BREAKER</text>
+    <text x="146" y="12" >STATE</text>
+    <text x="194" y="12" >MACHINE</text>
+    <line x1="16" y1="22" x2="256" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="256" y2="26" class="solid"></line>
+    <text x="74" y="60" >success</text>
+    <text x="18" y="124" >[CLOSED]</text>
+    <text x="186" y="124" >exceed</text>
+    <text x="66" y="172" >success</text>
+    <line x1="88" y1="120" x2="112" y2="120" class="solid"></line>
+    <text x="114" y="124" >failures</text>
+    <text x="242" y="124" >threshold</text>
+    <text x="354" y="124" >[OPEN]</text>
+    <text x="154" y="172" >half</text>
+    <line x1="184" y1="168" x2="192" y2="168" class="solid"></line>
+    <circle cx="196" cy="168" r="3" class="nofill"></circle>
+    <text x="202" y="172" >pen</text>
+    <line x1="224" y1="168" x2="248" y2="168" class="solid"></line>
+    <text x="250" y="172" >[HALF</text>
+    <line x1="288" y1="168" x2="296" y2="168" class="solid"></line>
+    <circle cx="300" cy="168" r="4" class="nofill"></circle>
+    <text x="306" y="172" >PEN]</text>
+    <text x="290" y="188" >timeout</text>
+    <text x="354" y="188" >expires</text>
+    <text x="130" y="172" >in</text>
+    <text x="18" y="220" >CLOSED:</text>
+    <text x="18" y="236" >OPEN:</text>
+    <text x="106" y="220" >Requests</text>
+    <text x="178" y="220" >flow</text>
+    <text x="218" y="220" >normally.</text>
+    <text x="298" y="220" >Failures</text>
+    <text x="370" y="220" >are</text>
+    <text x="402" y="220" >counted.</text>
+    <text x="106" y="236" >Requests</text>
+    <text x="178" y="236" >immediately</text>
+    <text x="274" y="236" >fail</text>
+    <path d="M 320,224 A 16,16 0,0,0 320,240" class="nofill"></path>
+    <text x="322" y="236" >no</text>
+    <text x="346" y="236" >downstream</text>
+    <text x="434" y="236" >calls</text>
+    <path d="M 472,224 A 16,16 0,0,1 472,240" class="nofill"></path>
+    <text x="482" y="236" >.</text>
+    <text x="106" y="252" >Prevents</text>
+    <text x="178" y="252" >overloading</text>
+    <text x="274" y="252" >a</text>
+    <text x="290" y="252" >struggling</text>
+    <text x="378" y="252" >service.</text>
+    <text x="106" y="268" >After</text>
+    <text x="154" y="268" >a</text>
+    <text x="170" y="268" >timeout,</text>
+    <text x="242" y="268" >allow</text>
+    <text x="290" y="268" >a</text>
+    <text x="306" y="268" >few</text>
+    <text x="338" y="268" >test</text>
+    <text x="378" y="268" >requests</text>
+    <text x="106" y="284" >If</text>
+    <text x="130" y="284" >they</text>
+    <text x="170" y="284" >succeed,</text>
+    <text x="242" y="284" >return</text>
+    <text x="298" y="284" >to</text>
+    <text x="322" y="284" >CLOSED.</text>
+    <text x="106" y="300" >If</text>
+    <text x="130" y="300" >they</text>
+    <text x="170" y="300" >fail,</text>
+    <text x="218" y="300" >return</text>
+    <text x="274" y="300" >to</text>
+    <text x="298" y="300" >OPEN.</text>
+    <text x="18" y="268" >HALF</text>
+    <line x1="48" y1="264" x2="56" y2="264" class="solid"></line>
+    <circle cx="60" cy="264" r="4" class="nofill"></circle>
+    <text x="66" y="268" >PEN:</text>
+    <text x="450" y="268" >through.</text>
+    <g>
+        <line x1="36" y1="72" x2="188" y2="72" class="solid"></line>
+        <line x1="36" y1="72" x2="36" y2="100" class="solid"></line>
+        <line x1="188" y1="72" x2="188" y2="112" class="solid"></line>
+        <polygon points="32,100 40,100 36,112" class="filled"></polygon>
+    </g>
+    <g>
+        <polygon points="32,140 36,128 40,140" class="filled"></polygon>
+        <line x1="36" y1="140" x2="36" y2="168" class="solid"></line>
+        <line x1="36" y1="168" x2="64" y2="168" class="solid"></line>
+    </g>
+    <g>
+        <line x1="312" y1="120" x2="336" y2="120" class="solid"></line>
+        <polygon points="336,116 344,120 336,124" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="380" y1="128" x2="380" y2="168" class="solid"></line>
+        <polygon points="344,164 336,168 344,172" class="filled"></polygon>
+        <line x1="344" y1="168" x2="380" y2="168" class="solid"></line>
+    </g>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="616" height="48" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="616" height="48"></rect>
+    <text x="18" y="12" >Guest</text>
+    <text x="66" y="12" >Virtual</text>
+    <text x="18" y="28" >Managed</text>
+    <text x="82" y="28" >by:</text>
+    <text x="130" y="12" >Address</text>
+    <text x="226" y="12" >Guest</text>
+    <text x="274" y="12" >Physical</text>
+    <text x="346" y="12" >Address</text>
+    <text x="218" y="28" >Guest</text>
+    <text x="266" y="28" >OS</text>
+    <text x="290" y="28" >page</text>
+    <text x="330" y="28" >tables</text>
+    <text x="442" y="12" >Host</text>
+    <text x="482" y="12" >Physical</text>
+    <text x="554" y="12" >Address</text>
+    <text x="434" y="28" >Hypervisor</text>
+    <text x="522" y="28" >mapping</text>
+    <g>
+        <line x1="192" y1="8" x2="208" y2="8" class="solid"></line>
+        <polygon points="208,4 216,8 208,12" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="408" y1="8" x2="424" y2="8" class="solid"></line>
+        <polygon points="424,4 432,8 424,12" class="filled"></polygon>
+    </g>
+</svg>

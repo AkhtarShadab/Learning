@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="448" height="320" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="448" height="320"></rect>
+    <text x="18" y="12" >COST</text>
+    <text x="58" y="12" >STRUCTURE</text>
+    <text x="138" y="12" >COMPARISON</text>
+    <line x1="16" y1="24" x2="216" y2="24" class="solid"></line>
+    <text x="18" y="60" >On</text>
+    <line x1="32" y1="56" x2="40" y2="56" class="solid"></line>
+    <text x="42" y="60" >Premises</text>
+    <path d="M 120,48 A 16,16 0,0,0 120,64" class="nofill"></path>
+    <text x="122" y="60" >Fixed</text>
+    <line x1="160" y1="56" x2="168" y2="56" class="solid"></line>
+    <text x="170" y="60" >Cost</text>
+    <text x="210" y="60" >Heavy</text>
+    <path d="M 248,48 A 16,16 0,0,1 248,64" class="nofill"></path>
+    <text x="42" y="92" >Hardware</text>
+    <text x="114" y="92" >purchase</text>
+    <rect x="256" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="264" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="272" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="280" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="288" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="296" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="304" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="312" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="320" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="328" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="336" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="344" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="352" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="360" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="368" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="376" y="80" width="8" height="16" class="solid filled" rx="0"></rect>
+    <text x="402" y="92" >70%</text>
+    <text x="42" y="108" >Staff</text>
+    <text x="90" y="108" >and</text>
+    <text x="122" y="108" >operations</text>
+    <rect x="256" y="96" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="264" y="96" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="272" y="96" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="280" y="96" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="288" y="96" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="296" y="96" width="8" height="16" class="solid filled" rx="0"></rect>
+    <text x="402" y="108" >20%</text>
+    <text x="42" y="124" >Electricity</text>
+    <text x="138" y="124" >and</text>
+    <text x="170" y="124" >cooling</text>
+    <rect x="256" y="112" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="264" y="112" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="272" y="112" width="8" height="16" class="solid filled" rx="0"></rect>
+    <text x="402" y="124" >10%</text>
+    <text x="18" y="156" >Cost</text>
+    <text x="58" y="156" >stays</text>
+    <text x="106" y="156" >flat</text>
+    <text x="146" y="156" >regardless</text>
+    <text x="234" y="156" >of</text>
+    <text x="258" y="156" >usage.</text>
+    <line x1="436" y1="80" x2="436" y2="128" class="solid"></line>
+    <text x="18" y="188" >Cloud</text>
+    <path d="M 72,176 A 16,16 0,0,0 72,192" class="nofill"></path>
+    <text x="74" y="188" >Variable</text>
+    <line x1="136" y1="184" x2="144" y2="184" class="solid"></line>
+    <text x="146" y="188" >Cost</text>
+    <text x="186" y="188" >Heavy</text>
+    <path d="M 224,176 A 16,16 0,0,1 224,192" class="nofill"></path>
+    <text x="42" y="220" >Compute</text>
+    <text x="114" y="220" >usage</text>
+    <line x1="152" y1="216" x2="160" y2="216" class="solid"></line>
+    <text x="162" y="220" >based</text>
+    <rect x="256" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="264" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="272" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="280" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="288" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="296" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="304" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="312" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="320" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="328" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="336" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="344" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="352" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="360" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="368" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="376" y="208" width="8" height="16" class="solid filled" rx="0"></rect>
+    <text x="402" y="220" >55%</text>
+    <text x="42" y="236" >Storage</text>
+    <text x="114" y="236" >usage</text>
+    <line x1="152" y1="232" x2="160" y2="232" class="solid"></line>
+    <text x="162" y="236" >based</text>
+    <rect x="256" y="224" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="264" y="224" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="272" y="224" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="280" y="224" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="288" y="224" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="296" y="224" width="8" height="16" class="solid filled" rx="0"></rect>
+    <text x="402" y="236" >20%</text>
+    <text x="42" y="252" >Network</text>
+    <text x="114" y="252" >usage</text>
+    <line x1="152" y1="248" x2="160" y2="248" class="solid"></line>
+    <text x="162" y="252" >based</text>
+    <rect x="256" y="240" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="264" y="240" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="272" y="240" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="280" y="240" width="8" height="16" class="solid filled" rx="0"></rect>
+    <text x="402" y="252" >15%</text>
+    <text x="42" y="268" >Fixed</text>
+    <path d="M 96,256 A 16,16 0,0,0 96,272" class="nofill"></path>
+    <text x="98" y="268" >reserved,</text>
+    <text x="178" y="268" >support</text>
+    <path d="M 232,256 A 16,16 0,0,1 232,272" class="nofill"></path>
+    <rect x="256" y="256" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="264" y="256" width="8" height="16" class="solid filled" rx="0"></rect>
+    <rect x="272" y="256" width="8" height="16" class="solid filled" rx="0"></rect>
+    <text x="402" y="268" >10%</text>
+    <text x="18" y="300" >Cost</text>
+    <text x="58" y="300" >scales</text>
+    <text x="114" y="300" >with</text>
+    <text x="154" y="300" >demand.</text>
+    <line x1="436" y1="208" x2="436" y2="272" class="solid"></line>
+    <g>
+        <line x1="20" y1="72" x2="420" y2="72" class="solid"></line>
+        <line x1="20" y1="72" x2="20" y2="136" class="solid"></line>
+        <line x1="20" y1="136" x2="420" y2="136" class="solid"></line>
+    </g>
+    <g>
+        <line x1="20" y1="200" x2="420" y2="200" class="solid"></line>
+        <line x1="20" y1="200" x2="20" y2="280" class="solid"></line>
+        <line x1="20" y1="280" x2="420" y2="280" class="solid"></line>
+    </g>
+    <g>
+        <path d="M 112,208 A 16,16 0,0,0 112,224" class="nofill"></path>
+        <path d="M 112,224 A 16,16 0,0,0 112,240" class="nofill"></path>
+        <path d="M 112,240 A 16,16 0,0,0 112,256" class="nofill"></path>
+    </g>
+    <g>
+        <path d="M 200,208 A 16,16 0,0,1 200,224" class="nofill"></path>
+        <path d="M 200,224 A 16,16 0,0,1 200,240" class="nofill"></path>
+        <path d="M 200,240 A 16,16 0,0,1 200,256" class="nofill"></path>
+    </g>
+</svg>

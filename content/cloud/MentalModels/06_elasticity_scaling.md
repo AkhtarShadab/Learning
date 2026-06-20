@@ -14,33 +14,7 @@ exceeds capacity).
 Cloud elasticity closes this gap. Capacity can scale continuously to
 match demand -- up when traffic rises, down when it falls.
 
-```
-  TRADITIONAL vs ELASTIC CAPACITY
-  =================================
-
-  Traditional (Fixed Capacity):
-  Capacity ^
-           |          +-----------+
-           |          |           |  <-- Over-provisioned (waste)
-           |     +----+           |
-           |     |    demand curve|
-           |  +--+ ...           |
-           |  |       ***        |
-           |  |     **   **      |
-           +--+-*-*--------**----+---> Time
-              |  demand > capacity
-              |  = OUTAGE
-
-  Elastic (Auto Scaling):
-  Capacity ^
-           |         ****
-           |       **    **     <-- Capacity tracks demand
-           |     **        **
-           |   **            **
-           | **                **
-           +---------------------> Time
-              No waste, no outage (in theory)
-```
+![TRADITIONAL vs ELASTIC CAPACITY](assets/06_elasticity_scaling-mm1.svg)
 
 ---
 
@@ -53,59 +27,13 @@ There are two fundamental approaches to adding capacity.
 Replace a server with a bigger server: more CPU, more RAM, faster
 storage. Simple but limited.
 
-```
-  VERTICAL SCALING
-  ================
-
-  Before:                    After:
-  +------------+             +------------------+
-  | 4 vCPU     |     -->     | 16 vCPU          |
-  | 16 GB RAM  |             | 64 GB RAM        |
-  | t3.large   |             | m5.4xlarge       |
-  +------------+             +------------------+
-
-  Pros:
-  - Simple: no application changes needed
-  - Works for monoliths and databases
-  - No distributed systems complexity
-
-  Cons:
-  - Has a ceiling (largest instance: 448 vCPU, 24 TB RAM on u-24tb1)
-  - Requires downtime (usually) to resize
-  - Single point of failure (one big server)
-  - Not true elasticity (manual, slow process)
-```
+![VERTICAL SCALING](assets/06_elasticity_scaling-mm2.svg)
 
 ### Horizontal Scaling (Scale Out)
 
 Add more servers of the same size. More complex but virtually unlimited.
 
-```
-  HORIZONTAL SCALING
-  ==================
-
-  Before:                    After:
-  +--------+                 +--------+ +--------+ +--------+
-  | Server |        -->      | Server | | Server | | Server |
-  |   1    |                 |   1    | |   2    | |   3    |
-  +--------+                 +--------+ +--------+ +--------+
-                                    |       |       |
-                             +------+-------+-------+
-                             |  Load Balancer        |
-                             +-----------------------+
-
-  Pros:
-  - No ceiling (add as many servers as needed)
-  - No downtime to scale
-  - Fault tolerant (losing one server is not catastrophic)
-  - True elasticity (automated, fast)
-
-  Cons:
-  - Application must be stateless (session data externalized)
-  - Distributed systems complexity (consistency, coordination)
-  - Data layer is harder to scale horizontally
-  - Load balancer required
-```
+![HORIZONTAL SCALING](assets/06_elasticity_scaling-mm3.svg)
 
 ---
 
@@ -114,33 +42,7 @@ Add more servers of the same size. More complex but virtually unlimited.
 Horizontal scaling only works if each server can handle any request
 without depending on local state from a previous request. This means:
 
-```
-  STATEFUL vs STATELESS
-  ======================
-
-  STATEFUL (Cannot Scale Horizontally):
-  +----------+
-  | Server A |  Session data stored in local memory
-  |  session |  User must always go to Server A
-  |   data   |  If A dies, session is lost
-  +----------+
-
-  STATELESS (Can Scale Horizontally):
-  +----------+ +----------+ +----------+
-  | Server A | | Server B | | Server C |
-  |  (no     | |  (no     | |  (no     |
-  |  local   | |  local   | |  local   |
-  |  state)  | |  state)  | |  state)  |
-  +----------+ +----------+ +----------+
-        |           |           |
-  +------+-----------+-----------+------+
-  |     External Session Store          |
-  |  (Redis / DynamoDB / Memcached)     |
-  +-------------------------------------+
-
-  Any server can handle any request.
-  Servers are interchangeable and disposable.
-```
+![STATEFUL vs STATELESS](assets/06_elasticity_scaling-mm4.svg)
 
 ### What Must Be Externalized
 
@@ -175,20 +77,7 @@ capacity? The signal comes from **metrics**.
 
 ### Which Metric to Choose
 
-```
-  DECISION TREE FOR SCALING METRIC
-  ==================================
-
-  Is your workload compute-bound?
-    Yes --> CPU utilization (target: 60-70%)
-    No  --> Is it memory-bound?
-      Yes --> Memory utilization (target: 70-80%)
-      No  --> Is it queue-based?
-        Yes --> Queue depth / messages visible (target: 0-10)
-        No  --> Is latency the SLA?
-          Yes --> Response time (target: p99 < X ms)
-          No  --> Use request count or custom metric
-```
+![DECISION TREE FOR SCALING METRIC](assets/06_elasticity_scaling-mm5.svg)
 
 ---
 
@@ -241,22 +130,7 @@ levels.
 Uses machine learning to forecast demand based on historical patterns
 and scales proactively. Available in AWS Auto Scaling.
 
-```
-  PREDICTIVE SCALING
-  ===================
-
-  Historical data (last 14 days):
-  Day 1:  ___/\___/\___ (traffic peak at 9 AM and 2 PM)
-  Day 2:  ___/\___/\___
-  Day 3:  ___/\___/\___
-  ...
-
-  ML model predicts: tomorrow at 8:45 AM, demand will rise.
-  Pre-scales capacity at 8:30 AM, before the traffic arrives.
-
-  Advantage: no cold-start delay during predictable peaks.
-  Limitation: cannot predict unprecedented events (viral tweets).
-```
+![PREDICTIVE SCALING](assets/06_elasticity_scaling-mm101.svg)
 
 ---
 
@@ -373,45 +247,11 @@ maintain state and consistency guarantees.
 
 ### Read Replicas
 
-```
-  READ REPLICAS
-  ==============
-
-  Writes (5%)                    Reads (95%)
-     |                           /    |    \
-     v                          v     v     v
-  [Primary DB]  --replication--> [Read] [Read] [Read]
-  (read-write)                  Replica Replica Replica
-                                (read-only)
-
-  Use case: Read-heavy workloads (90%+ reads)
-  Lag: Async replication has seconds of lag (eventual consistency)
-  AWS RDS: Up to 15 read replicas per primary
-  Limitation: Does not help with write-heavy workloads
-```
+![READ REPLICAS](assets/06_elasticity_scaling-mm6.svg)
 
 ### Sharding (Horizontal Partitioning)
 
-```
-  SHARDING
-  =========
-
-  Data split by a shard key (e.g., user_id):
-
-  user_id 1-1M      user_id 1M-2M     user_id 2M-3M
-  +----------+       +----------+       +----------+
-  | Shard 1  |       | Shard 2  |       | Shard 3  |
-  | (Primary |       | (Primary |       | (Primary |
-  |  + Read  |       |  + Read  |       |  + Read  |
-  |  Replica)|       |  Replica)|       |  Replica)|
-  +----------+       +----------+       +----------+
-
-  Pros: Linear write scaling (add more shards)
-  Cons: Cross-shard queries are expensive
-        Shard rebalancing is complex
-        Application must be shard-aware
-        Hot shards (uneven distribution)
-```
+![SHARDING](assets/06_elasticity_scaling-mm7.svg)
 
 ### Connection Pooling
 
@@ -476,39 +316,7 @@ Capacity planning can be expressed as an optimization problem:
 
 Understanding the ASG lifecycle helps debug scaling issues.
 
-```
-  AUTO SCALING GROUP LIFECYCLE
-  =============================
-
-  1. PENDING
-     Instance is launching (AMI loading, boot, user-data scripts)
-
-  2. IN-SERVICE
-     Instance is healthy, registered with load balancer, serving traffic
-
-  3. TERMINATING (scale-in)
-     Connection draining, deregistering from LB, shutting down
-
-  4. TERMINATED
-     Instance is gone
-
-  LIFECYCLE HOOKS (optional):
-  +----------+     +-----------+     +------------+
-  | PENDING  | --> | PENDING:  | --> | IN-SERVICE |
-  |          |     | WAIT      |     |            |
-  +----------+     +-----------+     +------------+
-                   (run custom                |
-                    setup scripts,           scale-in
-                    warm cache,               |
-                    register with        +-----------+
-                    service mesh)        | TERMIN-   |
-                                         | ATING:    |
-                                         | WAIT      |
-                                         +-----------+
-                                         (drain conns,
-                                          save logs,
-                                          deregister)
-```
+![AUTO SCALING GROUP LIFECYCLE](assets/06_elasticity_scaling-mm8.svg)
 
 ---
 

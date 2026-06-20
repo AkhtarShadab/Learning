@@ -11,24 +11,7 @@ This is called **Software-Defined Networking (SDN)**, and it is what
 allows every cloud customer to have their own isolated, configurable
 network -- even though they all share the same physical infrastructure.
 
-```
-  PHYSICAL vs VIRTUAL NETWORKING
-  ===============================
-
-  Physical (Traditional Data Center):
-  +--------+     +--------+     +----------+
-  | Server |-----| Switch |-----| Firewall |-----> Internet
-  +--------+     +--------+     +----------+
-  Physical cables, physical devices, physical configuration.
-
-  Virtual (Cloud):
-  +--------+     +-----------+     +----------+
-  | EC2    |-----| Virtual   |-----| Internet |-----> Internet
-  |Instance|     | Switch    |     | Gateway  |
-  +--------+     +-----------+     +----------+
-  Software-defined. No physical cables. Configured via API.
-  Runs as an overlay on the provider's physical network fabric.
-```
+![PHYSICAL vs VIRTUAL NETWORKING](assets/05_networking_mental_model-mm1.svg)
 
 ---
 
@@ -125,36 +108,7 @@ important concepts in cloud networking.
 - Can reach the internet via a **NAT Gateway** (outbound only)
 - Used for: application servers, databases, internal services
 
-```
-  PUBLIC vs PRIVATE SUBNET TRAFFIC FLOW
-  ======================================
-
-                        Internet
-                           |
-                    +------+------+
-                    | Internet    |
-                    | Gateway     |
-                    +------+------+
-                           |
-              +------------+------------+
-              |                         |
-       +------+------+          +------+------+
-       | Public      |          | Public      |
-       | Subnet      |          | Subnet      |
-       | (Web/ALB)   |          | (NAT GW)    |
-       +------+------+          +------+------+
-              |                         |
-              +------------+------------+
-                           |
-                    +------+------+
-                    | Private     |
-                    | Subnet      |
-                    | (App/DB)    |
-                    +------+------+
-
-  Inbound: Internet -> IGW -> Public Subnet -> Private Subnet
-  Outbound: Private Subnet -> NAT GW -> IGW -> Internet
-```
+![PUBLIC vs PRIVATE SUBNET TRAFFIC FLOW](assets/05_networking_mental_model-mm2.svg)
 
 ---
 
@@ -181,29 +135,7 @@ purposes.
 - Use case: private instances need to download software updates,
   call external APIs
 
-```
-  INTERNET GATEWAY vs NAT GATEWAY
-  ================================
-
-  Internet Gateway:                NAT Gateway:
-  +-----------+                    +-----------+
-  | Internet  |                    | Internet  |
-  +-----+-----+                   +-----+-----+
-        |                               |
-  +-----+-----+                   +-----+-----+
-  | IGW       |                   | NAT GW    |  (in public subnet)
-  +-----+-----+                   +-----+-----+
-        |                               |
-  +-----+-----+                   +-----+-----+
-  | Public    |                   | Private   |
-  | Subnet    |                   | Subnet    |
-  | (has      |                   | (no       |
-  |  public IP)|                  |  public IP)|
-  +-----------+                   +-----------+
-
-  IGW: Two-way door.  Anyone can walk in or out.
-  NAT: One-way mirror. You can see out, but no one can see in.
-```
+![INTERNET GATEWAY vs NAT GATEWAY](assets/05_networking_mental_model-mm3.svg)
 
 ---
 
@@ -241,26 +173,7 @@ destination, go through this gateway."
 Routes are evaluated using **longest prefix match**. More specific
 routes (longer prefix) take priority over less specific routes.
 
-```
-  LONGEST PREFIX MATCH EXAMPLE
-  =============================
-
-  Route Table:
-  10.0.0.0/16   -> local
-  10.0.5.0/24   -> peering-connection
-  0.0.0.0/0     -> igw
-
-  Packet to 10.0.5.17:
-  - Matches 10.0.0.0/16 (16-bit prefix)
-  - Matches 10.0.5.0/24 (24-bit prefix)  <-- MORE SPECIFIC, wins
-  - Matches 0.0.0.0/0 (0-bit prefix)
-  Result: Routed via peering-connection
-
-  Packet to 10.0.9.100:
-  - Matches 10.0.0.0/16 (16-bit prefix)  <-- MOST SPECIFIC
-  - Matches 0.0.0.0/0 (0-bit prefix)
-  Result: Routed locally within VPC
-```
+![LONGEST PREFIX MATCH EXAMPLE](assets/05_networking_mental_model-mm4.svg)
 
 ---
 
@@ -341,47 +254,14 @@ approaches exist.
 Direct connection between two VPCs. Traffic stays on the provider's
 private backbone (never crosses the public internet).
 
-```
-  VPC PEERING
-  ============
-
-  VPC A (10.0.0.0/16) <----peering----> VPC B (10.1.0.0/16)
-
-  Limitations:
-  - NOT transitive: if A peers with B and B peers with C,
-    A CANNOT reach C through B.
-  - One-to-one: each pair of VPCs needs its own peering connection.
-  - With N VPCs, you need N*(N-1)/2 peering connections.
-    10 VPCs = 45 connections. 50 VPCs = 1,225 connections.
-```
+![VPC PEERING](assets/05_networking_mental_model-mm5.svg)
 
 ### Transit Gateway
 
 A centralized hub that connects multiple VPCs and on-premises networks.
 Think of it as a cloud router.
 
-```
-  TRANSIT GATEWAY
-  ================
-
-  On-Premises ----VPN/DX----+
-                             |
-  VPC A (10.0.0.0/16) ------+
-                             |
-  VPC B (10.1.0.0/16) ------+---- [Transit Gateway] ---- Hub
-                             |
-  VPC C (10.2.0.0/16) ------+
-                             |
-  VPC D (10.3.0.0/16) ------+
-
-  Benefits:
-  - Transitive routing: any VPC can reach any other VPC
-  - Centralized management: one hub instead of N^2 peerings
-  - Scales to thousands of VPCs
-  - Supports VPN and Direct Connect attachments
-
-  Cost: ~$0.05/hour + $0.02/GB processed
-```
+![TRANSIT GATEWAY](assets/05_networking_mental_model-mm6.svg)
 
 ---
 
@@ -428,27 +308,7 @@ cookies, query parameters. Can make routing decisions based on content.
 - **Features:** Host-based routing, path-based routing, header inspection,
   WebSocket support, sticky sessions
 
-```
-  L4 vs L7 LOAD BALANCER
-  ========================
-
-  L4 (NLB):
-  Client --> [NLB sees: TCP, src:1.2.3.4:54321, dst:5.6.7.8:443]
-             Routes based on IP/port only.
-             "I see a packet for port 443. Send it to target group."
-
-  L7 (ALB):
-  Client --> [ALB sees: GET /api/users HTTP/1.1, Host: myapp.com]
-             Routes based on content.
-             "I see a request for /api/users. Send it to the API service."
-             "I see a request for /static/logo.png. Send it to the CDN."
-
-  Routing rules (ALB):
-  /api/*        --> API target group (port 8080)
-  /admin/*      --> Admin target group (port 9090)
-  /static/*     --> S3 bucket (via redirect)
-  default       --> Web target group (port 80)
-```
+![L4 vs L7 LOAD BALANCER](assets/05_networking_mental_model-mm7.svg)
 
 ---
 
@@ -457,45 +317,7 @@ cookies, query parameters. Can make routing decisions based on content.
 Here is the complete journey of an HTTPS request from a user's browser
 to a database and back.
 
-```
-  THE PACKET JOURNEY
-  ===================
-
-  User's Browser (Sydney, Australia)
-       |
-       | DNS lookup: app.example.com
-       v
-  [Route 53] --> Returns CloudFront distribution CNAME
-       |
-       | HTTPS request to nearest edge location
-       v
-  [CloudFront Edge - Sydney PoP]
-       |
-       | Cache MISS (dynamic content)
-       | Forwards to origin via AWS backbone
-       v
-  [Application Load Balancer - us-east-1]
-       |
-       | TLS termination (decrypts HTTPS)
-       | Inspects HTTP headers
-       | Routes based on path: /api/users
-       v
-  [EC2 Instance - Private Subnet, us-east-1a]
-       |
-       | Security Group: allows traffic from ALB only
-       | Application processes request
-       | Needs data from database
-       v
-  [RDS Instance - Private Subnet, us-east-1a]
-       |
-       | Security Group: allows port 5432 from app subnet only
-       | Queries execute, results return
-       |
-       v  (Response travels back the same path in reverse)
-
-  Total latency: ~150-300ms (Sydney to US East and back)
-  With CloudFront caching (cache HIT): ~20-50ms (served from Sydney edge)
-```
+![THE PACKET JOURNEY](assets/05_networking_mental_model-mm8.svg)
 
 ### What Security Checks Happen Along the Way
 
@@ -522,23 +344,7 @@ close to users, reducing latency for static content (images, CSS, JS)
 and improving performance for dynamic content (via optimized backbone
 routing).
 
-```
-  CDN TOPOLOGY
-  =============
-
-  Without CDN:
-  User (Tokyo) --[public internet, 15+ hops]--> Origin (Virginia)
-  Latency: 200-400ms
-
-  With CDN:
-  User (Tokyo) --[1-2 hops]--> Edge (Tokyo) --[AWS backbone]--> Origin
-  Cache HIT:  20-50ms (served from edge, no origin contact)
-  Cache MISS: 120-200ms (fetched via optimized backbone, then cached)
-
-  AWS CloudFront: 600+ edge locations in 100+ cities
-  Azure CDN: 180+ PoPs globally
-  GCP Cloud CDN: 180+ edge locations
-```
+![CDN TOPOLOGY](assets/05_networking_mental_model-mm9.svg)
 
 ---
 

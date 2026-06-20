@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="592" height="608" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="592" height="608"></rect>
+    <text x="18" y="12" >THE</text>
+    <text x="50" y="12" >PACKET</text>
+    <text x="106" y="12" >JOURNEY</text>
+    <line x1="16" y1="22" x2="168" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="168" y2="26" class="solid"></line>
+    <text x="18" y="60" >User&#39;s</text>
+    <text x="18" y="124" >[Route</text>
+    <text x="18" y="188" >[CloudFront</text>
+    <text x="18" y="268" >[Application</text>
+    <text x="58" y="364" >Instance</text>
+    <text x="58" y="460" >Instance</text>
+    <text x="74" y="60" >Browser</text>
+    <path d="M 144,48 A 16,16 0,0,0 144,64" class="nofill"></path>
+    <text x="146" y="60" >Sydney,</text>
+    <text x="210" y="60" >Australia</text>
+    <path d="M 280,48 A 16,16 0,0,1 280,64" class="nofill"></path>
+    <text x="74" y="92" >DNS</text>
+    <text x="106" y="92" >lookup:</text>
+    <text x="170" y="92" >app.example.com</text>
+    <text x="74" y="124" >53]</text>
+    <text x="138" y="124" >Returns</text>
+    <text x="202" y="124" >CloudFront</text>
+    <text x="290" y="124" >distribution</text>
+    <text x="394" y="124" >CNAME</text>
+    <text x="74" y="156" >HTTPS</text>
+    <text x="122" y="156" >request</text>
+    <text x="186" y="156" >to</text>
+    <text x="210" y="156" >nearest</text>
+    <text x="274" y="156" >edge</text>
+    <text x="314" y="156" >location</text>
+    <text x="114" y="188" >Edge</text>
+    <line x1="152" y1="184" x2="160" y2="184" class="solid"></line>
+    <text x="170" y="188" >Sydney</text>
+    <text x="226" y="188" >PoP]</text>
+    <text x="74" y="220" >Cache</text>
+    <text x="122" y="220" >MISS</text>
+    <path d="M 168,208 A 16,16 0,0,0 168,224" class="nofill"></path>
+    <text x="170" y="220" >dynamic</text>
+    <text x="234" y="220" >content</text>
+    <path d="M 288,208 A 16,16 0,0,1 288,224" class="nofill"></path>
+    <text x="74" y="236" >Forwards</text>
+    <text x="146" y="236" >to</text>
+    <text x="170" y="236" >origin</text>
+    <text x="226" y="236" >via</text>
+    <text x="258" y="236" >AWS</text>
+    <text x="290" y="236" >backbone</text>
+    <text x="122" y="268" >Load</text>
+    <text x="162" y="268" >Balancer</text>
+    <line x1="232" y1="264" x2="240" y2="264" class="solid"></line>
+    <text x="250" y="268" >us</text>
+    <line x1="264" y1="264" x2="272" y2="264" class="solid"></line>
+    <text x="274" y="268" >east</text>
+    <line x1="304" y1="264" x2="312" y2="264" class="solid"></line>
+    <text x="314" y="268" >1]</text>
+    <text x="74" y="300" >TLS</text>
+    <text x="106" y="300" >termination</text>
+    <path d="M 208,288 A 16,16 0,0,0 208,304" class="nofill"></path>
+    <text x="210" y="300" >decrypts</text>
+    <text x="74" y="316" >Inspects</text>
+    <text x="146" y="316" >HTTP</text>
+    <text x="186" y="316" >headers</text>
+    <text x="74" y="332" >Routes</text>
+    <text x="130" y="332" >based</text>
+    <text x="178" y="332" >on</text>
+    <text x="202" y="332" >path:</text>
+    <text x="282" y="300" >HTTPS</text>
+    <path d="M 320,288 A 16,16 0,0,1 320,304" class="nofill"></path>
+    <line x1="256" y1="320" x2="248" y2="336" class="solid"></line>
+    <text x="258" y="332" >api</text>
+    <line x1="288" y1="320" x2="280" y2="336" class="solid"></line>
+    <text x="290" y="332" >users</text>
+    <text x="18" y="364" >[EC2</text>
+    <line x1="128" y1="360" x2="136" y2="360" class="solid"></line>
+    <text x="146" y="364" >Private</text>
+    <text x="210" y="364" >Subnet,</text>
+    <text x="274" y="364" >us</text>
+    <line x1="288" y1="360" x2="296" y2="360" class="solid"></line>
+    <text x="298" y="364" >east</text>
+    <line x1="328" y1="360" x2="336" y2="360" class="solid"></line>
+    <text x="338" y="364" >1a]</text>
+    <text x="74" y="396" >Security</text>
+    <text x="146" y="396" >Group:</text>
+    <text x="202" y="396" >allows</text>
+    <text x="258" y="396" >traffic</text>
+    <text x="74" y="412" >Application</text>
+    <text x="170" y="412" >pr</text>
+    <line x1="188" y1="400" x2="188" y2="404" class="solid"></line>
+    <circle cx="188" cy="408" r="3" class="nofill"></circle>
+    <text x="194" y="412" >cesses</text>
+    <text x="250" y="412" >request</text>
+    <text x="74" y="428" >Needs</text>
+    <text x="122" y="428" >data</text>
+    <text x="162" y="428" >from</text>
+    <text x="202" y="428" >database</text>
+    <text x="322" y="396" >from</text>
+    <text x="362" y="396" >ALB</text>
+    <text x="394" y="396" >only</text>
+    <text x="18" y="460" >[RDS</text>
+    <line x1="128" y1="456" x2="136" y2="456" class="solid"></line>
+    <text x="146" y="460" >Private</text>
+    <text x="210" y="460" >Subnet,</text>
+    <text x="274" y="460" >us</text>
+    <line x1="288" y1="456" x2="296" y2="456" class="solid"></line>
+    <text x="298" y="460" >east</text>
+    <line x1="328" y1="456" x2="336" y2="456" class="solid"></line>
+    <text x="338" y="460" >1a]</text>
+    <text x="74" y="492" >Security</text>
+    <text x="146" y="492" >Group:</text>
+    <text x="202" y="492" >allows</text>
+    <text x="258" y="492" >port</text>
+    <text x="298" y="492" >5432</text>
+    <text x="74" y="508" >Queries</text>
+    <text x="138" y="508" >execute,</text>
+    <text x="210" y="508" >results</text>
+    <text x="274" y="508" >return</text>
+    <text x="338" y="492" >from</text>
+    <text x="378" y="492" >app</text>
+    <text x="410" y="492" >subnet</text>
+    <text x="466" y="492" >only</text>
+    <path d="M 88,528 A 16,16 0,0,0 88,544" class="nofill"></path>
+    <text x="90" y="540" >Response</text>
+    <text x="162" y="540" >travels</text>
+    <text x="226" y="540" >back</text>
+    <text x="266" y="540" >the</text>
+    <text x="298" y="540" >same</text>
+    <text x="338" y="540" >path</text>
+    <text x="378" y="540" >in</text>
+    <text x="402" y="540" >reverse</text>
+    <path d="M 456,528 A 16,16 0,0,1 456,544" class="nofill"></path>
+    <text x="18" y="572" >Total</text>
+    <text x="66" y="572" >latency:</text>
+    <line x1="136" y1="568" x2="144" y2="568" class="broken"></line>
+    <text x="146" y="572" >150</text>
+    <line x1="168" y1="568" x2="176" y2="568" class="solid"></line>
+    <text x="178" y="572" >300ms</text>
+    <path d="M 232,560 A 16,16 0,0,0 232,576" class="nofill"></path>
+    <text x="234" y="572" >Sydney</text>
+    <text x="290" y="572" >t</text>
+    <circle cx="300" cy="568" r="3" class="nofill"></circle>
+    <line x1="300" y1="572" x2="300" y2="576" class="solid"></line>
+    <text x="18" y="588" >With</text>
+    <text x="58" y="588" >CloudFront</text>
+    <text x="146" y="588" >caching</text>
+    <path d="M 216,576 A 16,16 0,0,0 216,592" class="nofill"></path>
+    <text x="218" y="588" >cache</text>
+    <text x="266" y="588" >HIT</text>
+    <path d="M 288,576 A 16,16 0,0,1 288,592" class="nofill"></path>
+    <text x="298" y="588" >:</text>
+    <text x="314" y="572" >US</text>
+    <text x="338" y="572" >East</text>
+    <text x="378" y="572" >and</text>
+    <text x="410" y="572" >back</text>
+    <path d="M 440,560 A 16,16 0,0,1 440,576" class="nofill"></path>
+    <line x1="312" y1="584" x2="320" y2="584" class="broken"></line>
+    <text x="322" y="588" >20</text>
+    <line x1="336" y1="584" x2="344" y2="584" class="solid"></line>
+    <text x="346" y="588" >50ms</text>
+    <path d="M 392,576 A 16,16 0,0,0 392,592" class="nofill"></path>
+    <text x="394" y="588" >served</text>
+    <text x="450" y="588" >from</text>
+    <text x="490" y="588" >Sydney</text>
+    <text x="546" y="588" >edge</text>
+    <path d="M 576,576 A 16,16 0,0,1 576,592" class="nofill"></path>
+    <g>
+        <line x1="60" y1="64" x2="60" y2="100" class="solid"></line>
+        <polygon points="56,100 64,100 60,112" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="60" y1="128" x2="60" y2="164" class="solid"></line>
+        <polygon points="56,164 64,164 60,176" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="60" y1="192" x2="60" y2="244" class="solid"></line>
+        <polygon points="56,244 64,244 60,256" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="60" y1="272" x2="60" y2="340" class="solid"></line>
+        <polygon points="56,340 64,340 60,352" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="60" y1="368" x2="60" y2="436" class="solid"></line>
+        <polygon points="56,436 64,436 60,448" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="60" y1="464" x2="60" y2="532" class="solid"></line>
+        <polygon points="56,532 64,532 60,544" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="104" y1="120" x2="120" y2="120" class="solid"></line>
+        <polygon points="120,116 128,120 120,124" class="filled"></polygon>
+    </g>
+</svg>

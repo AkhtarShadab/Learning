@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="568" height="576" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="568" height="576"></rect>
+    <text x="18" y="12" >DATA</text>
+    <text x="58" y="12" >TRANSFER</text>
+    <text x="130" y="12" >COST</text>
+    <text x="170" y="12" >MAP</text>
+    <line x1="16" y1="22" x2="200" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="200" y2="26" class="solid"></line>
+    <text x="34" y="76" >Internet</text>
+    <path d="M 40,80 A 16,16 0,0,0 40,96" class="nofill"></path>
+    <text x="42" y="92" >Users</text>
+    <line x1="88" y1="80" x2="80" y2="96" class="solid"></line>
+    <text x="90" y="92" >APIs</text>
+    <path d="M 120,80 A 16,16 0,0,1 120,96" class="nofill"></path>
+    <text x="50" y="204" >CloudFront</text>
+    <path d="M 56,208 A 16,16 0,0,0 56,224" class="nofill"></path>
+    <text x="58" y="220" >CDN</text>
+    <text x="90" y="220" >Edge</text>
+    <path d="M 120,208 A 16,16 0,0,1 120,224" class="nofill"></path>
+    <text x="50" y="284" >Load</text>
+    <text x="90" y="284" >Balancer</text>
+    <text x="34" y="348" >VPC</text>
+    <text x="58" y="380" >AZ</text>
+    <line x1="72" y1="376" x2="80" y2="376" class="solid"></line>
+    <text x="82" y="380" >a</text>
+    <text x="114" y="380" >AZ</text>
+    <line x1="128" y1="376" x2="136" y2="376" class="solid"></line>
+    <text x="138" y="380" >b</text>
+    <text x="34" y="492" >Another</text>
+    <text x="98" y="492" >Region</text>
+    <text x="106" y="140" >Egress:</text>
+    <text x="170" y="140" >$0.09</text>
+    <line x1="216" y1="128" x2="208" y2="144" class="solid"></line>
+    <text x="218" y="140" >GB</text>
+    <text x="106" y="156" >Ingress:</text>
+    <text x="178" y="156" >FREE</text>
+    <path d="M 248,128 A 16,16 0,0,0 248,144" class="nofill"></path>
+    <text x="250" y="140" >expensive!</text>
+    <path d="M 328,128 A 16,16 0,0,1 328,144" class="nofill"></path>
+    <text x="194" y="204" >Origin</text>
+    <text x="250" y="204" >fetch:</text>
+    <text x="306" y="204" >FREE</text>
+    <text x="346" y="204" >from</text>
+    <text x="386" y="204" >S3</text>
+    <line x1="408" y1="192" x2="400" y2="208" class="solid"></line>
+    <text x="410" y="204" >EC2</text>
+    <text x="442" y="204" >to</text>
+    <text x="466" y="204" >CF</text>
+    <text x="194" y="220" >CF</text>
+    <text x="218" y="220" >to</text>
+    <text x="242" y="220" >Internet:</text>
+    <text x="322" y="220" >$0.085</text>
+    <line x1="376" y1="208" x2="368" y2="224" class="solid"></line>
+    <text x="378" y="220" >GB</text>
+    <path d="M 408,208 A 16,16 0,0,0 408,224" class="nofill"></path>
+    <text x="410" y="220" >slightly</text>
+    <text x="482" y="220" >cheaper</text>
+    <path d="M 536,208 A 16,16 0,0,1 536,224" class="nofill"></path>
+    <text x="194" y="284" >Processing:</text>
+    <text x="290" y="284" >$0.008</text>
+    <line x1="344" y1="272" x2="336" y2="288" class="solid"></line>
+    <text x="346" y="284" >LCU</text>
+    <line x1="368" y1="280" x2="376" y2="280" class="solid"></line>
+    <text x="378" y="284" >hour</text>
+    <text x="194" y="380" >Cross</text>
+    <line x1="232" y1="376" x2="240" y2="376" class="solid"></line>
+    <text x="242" y="380" >AZ:</text>
+    <text x="274" y="380" >$0.01</text>
+    <line x1="320" y1="368" x2="312" y2="384" class="solid"></line>
+    <text x="322" y="380" >GB</text>
+    <text x="346" y="380" >each</text>
+    <text x="386" y="380" >way</text>
+    <text x="106" y="444" >Cross</text>
+    <line x1="144" y1="440" x2="152" y2="440" class="solid"></line>
+    <text x="154" y="444" >region:</text>
+    <text x="218" y="444" >$0.02</text>
+    <line x1="264" y1="432" x2="256" y2="448" class="solid"></line>
+    <text x="266" y="444" >GB</text>
+    <text x="18" y="540" >NAT</text>
+    <text x="18" y="556" >VPC</text>
+    <text x="50" y="540" >Gateway:</text>
+    <text x="122" y="540" >$0.045</text>
+    <line x1="176" y1="528" x2="168" y2="544" class="solid"></line>
+    <text x="178" y="540" >GB</text>
+    <text x="50" y="556" >Endpoint:</text>
+    <text x="130" y="556" >$0.01</text>
+    <line x1="176" y1="544" x2="168" y2="560" class="solid"></line>
+    <text x="178" y="556" >GB</text>
+    <text x="202" y="540" >processed</text>
+    <text x="202" y="556" >processed</text>
+    <text x="290" y="540" >ON</text>
+    <text x="314" y="540" >TOP</text>
+    <text x="346" y="540" >of</text>
+    <text x="370" y="540" >other</text>
+    <text x="418" y="540" >charges!</text>
+    <path d="M 480,528 A 16,16 0,0,1 480,544" class="nofill"></path>
+    <text x="290" y="556" >cheaper</text>
+    <text x="354" y="556" >than</text>
+    <text x="394" y="556" >NAT</text>
+    <text x="426" y="556" >for</text>
+    <text x="458" y="556" >AWS</text>
+    <text x="490" y="556" >services</text>
+    <path d="M 552,544 A 16,16 0,0,1 552,560" class="nofill"></path>
+    <g>
+        <line x1="20" y1="56" x2="172" y2="56" class="solid"></line>
+        <line x1="20" y1="56" x2="20" y2="104" class="solid"></line>
+        <line x1="172" y1="56" x2="172" y2="104" class="solid"></line>
+        <line x1="20" y1="104" x2="172" y2="104" class="solid"></line>
+        <line x1="92" y1="104" x2="92" y2="184" class="solid"></line>
+        <line x1="20" y1="184" x2="172" y2="184" class="solid"></line>
+        <line x1="20" y1="184" x2="20" y2="232" class="solid"></line>
+        <line x1="172" y1="184" x2="172" y2="232" class="solid"></line>
+        <line x1="20" y1="232" x2="172" y2="232" class="solid"></line>
+        <line x1="92" y1="232" x2="92" y2="264" class="solid"></line>
+        <line x1="20" y1="264" x2="172" y2="264" class="solid"></line>
+        <line x1="20" y1="264" x2="20" y2="296" class="solid"></line>
+        <line x1="172" y1="264" x2="172" y2="296" class="solid"></line>
+        <line x1="20" y1="296" x2="172" y2="296" class="solid"></line>
+        <line x1="92" y1="296" x2="92" y2="328" class="solid"></line>
+        <line x1="20" y1="328" x2="172" y2="328" class="solid"></line>
+        <line x1="20" y1="328" x2="20" y2="408" class="solid"></line>
+        <line x1="172" y1="328" x2="172" y2="408" class="solid"></line>
+        <line x1="20" y1="408" x2="172" y2="408" class="solid"></line>
+        <line x1="92" y1="408" x2="92" y2="472" class="solid"></line>
+        <line x1="20" y1="472" x2="172" y2="472" class="solid"></line>
+        <line x1="20" y1="472" x2="20" y2="504" class="solid"></line>
+        <line x1="172" y1="472" x2="172" y2="504" class="solid"></line>
+        <line x1="20" y1="504" x2="172" y2="504" class="solid"></line>
+    </g>
+    <g>
+        <line x1="44" y1="360" x2="156" y2="360" class="solid"></line>
+        <line x1="44" y1="360" x2="44" y2="392" class="solid"></line>
+        <line x1="100" y1="360" x2="100" y2="392" class="solid"></line>
+        <line x1="156" y1="360" x2="156" y2="392" class="solid"></line>
+        <line x1="44" y1="392" x2="156" y2="392" class="solid"></line>
+    </g>
+    <g>
+        <path d="M 288,528 A 16,16 0,0,0 288,544" class="nofill"></path>
+        <path d="M 288,544 A 16,16 0,0,0 288,560" class="nofill"></path>
+    </g>
+</svg>

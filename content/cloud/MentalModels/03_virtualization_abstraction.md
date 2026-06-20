@@ -60,21 +60,7 @@ Run on top of a conventional operating system. The host OS manages
 hardware; the hypervisor runs as an application. Used for development
 and testing, not production cloud.
 
-```
-  TYPE-2 HYPERVISOR ARCHITECTURE
-  ===============================
-
-  +--------+  +--------+
-  | VM 1   |  | VM 2   |  <-- Guest VMs
-  +--------+  +--------+
-  |     HYPERVISOR       |  <-- Runs as an app on the host OS
-  |  (VirtualBox / VMware Workstation / Parallels)
-  +----------------------+
-  |     HOST OS          |  <-- Windows, macOS, Linux
-  +----------------------+
-  |  PHYSICAL HARDWARE   |
-  +----------------------+
-```
+![TYPE-2 HYPERVISOR ARCHITECTURE](assets/03_virtualization_abstraction-mm1.svg)
 
 ---
 
@@ -85,29 +71,7 @@ To understand how a hypervisor works, you need to understand CPU
 
 ### x86 Privilege Rings
 
-```
-  CPU PRIVILEGE RINGS (x86)
-  ==========================
-
-        +-------------------+
-        |   Ring 3 (User)   |  <-- Applications (least privilege)
-        +-------------------+
-        |  Ring 2 (unused)  |
-        +-------------------+
-        |  Ring 1 (unused)  |
-        +-------------------+
-        |  Ring 0 (Kernel)  |  <-- OS kernel (most privilege)
-        +-------------------+
-
-  In a non-virtualized system:
-  - Ring 0: Host OS kernel (full hardware access)
-  - Ring 3: User applications (restricted)
-
-  In a virtualized system:
-  - Ring 0: Hypervisor (controls hardware)
-  - Ring 0 (deprivileged) or Ring 1: Guest OS kernel
-  - Ring 3: Guest applications
-```
+![CPU PRIVILEGE RINGS (x86)](assets/03_virtualization_abstraction-mm2.svg)
 
 ### The Virtualization Challenge
 
@@ -135,24 +99,7 @@ VMX root mode; the guest OS runs in Ring 0 normally but is
 transparently trapped by the CPU when it executes privileged
 instructions.
 
-```
-  HARDWARE-ASSISTED VIRTUALIZATION
-  =================================
-
-  +-------------------+
-  |  Ring 3 (Guest App)     |
-  +-------------------+
-  |  Ring 0 (Guest Kernel)  |  <-- Guest thinks it has full control
-  +-------------------+
-  |  VMX root mode          |  <-- Hypervisor runs here
-  |  (Ring -1)              |     CPU automatically traps to here
-  +-------------------+            when guest does privileged ops
-  |  HARDWARE               |
-  +-------------------+
-
-  Intel VT-x (2005) / AMD-V (2006) made this possible.
-  All modern cloud hypervisors use hardware-assisted virtualization.
-```
+![HARDWARE-ASSISTED VIRTUALIZATION](assets/03_virtualization_abstraction-mm3.svg)
 
 ---
 
@@ -166,16 +113,10 @@ memory of the host.
 ### The Double Translation Problem
 
 Without virtualization:
-```
-  Virtual Address (process) --> Physical Address (RAM)
-  Managed by: OS page tables, MMU
-```
+![Virtual Address (process) --> Physical Address (RAM)](assets/03_virtualization_abstraction-mm4.svg)
 
 With virtualization:
-```
-  Guest Virtual Address --> Guest Physical Address --> Host Physical Address
-  Managed by:              Guest OS page tables       Hypervisor mapping
-```
+![Guest Virtual Address --> Guest Physical Address --> Host Physical Address](assets/03_virtualization_abstraction-mm5.svg)
 
 ### Approach 1: Shadow Page Tables
 
@@ -191,20 +132,7 @@ page tables, the hypervisor intercepts (traps) and updates the shadow.
 Intel EPT (and AMD NPT) add hardware support for a **second level of
 page tables**. The CPU walks both levels automatically.
 
-```
-  EXTENDED PAGE TABLES (EPT)
-  ===========================
-
-  Guest Virtual Addr --[Guest Page Table]--> Guest Physical Addr
-                                                    |
-                                            [EPT / NPT hardware]
-                                                    |
-                                              Host Physical Addr
-
-  The CPU handles both levels in hardware.
-  No traps needed for guest page table modifications.
-  ~5% overhead compared to native, vs ~30% for shadow page tables.
-```
+![EXTENDED PAGE TABLES (EPT)](assets/03_virtualization_abstraction-mm6.svg)
 
 ---
 
@@ -233,26 +161,7 @@ The guest installs a special **virtio driver** that communicates with the
 hypervisor via shared memory ring buffers instead of emulating a physical
 device. This skips the emulation overhead.
 
-```
-  VIRTIO ARCHITECTURE
-  ====================
-
-  Guest VM:
-  +---------------------------+
-  | Application               |
-  | Guest Kernel              |
-  | virtio-net driver         |  <-- Paravirtual, knows it's a VM
-  +-----|---------------------+
-        | shared memory rings
-  +-----|---------------------+
-  | Hypervisor (vhost-net)    |
-  | Physical NIC driver       |
-  +---------------------------+
-  | Physical NIC              |
-  +---------------------------+
-
-  Performance: ~90-95% of bare metal
-```
+![VIRTIO ARCHITECTURE](assets/03_virtualization_abstraction-mm7.svg)
 
 ### Approach 3: SR-IOV (Single Root I/O Virtualization)
 
@@ -260,24 +169,7 @@ The physical device itself presents **multiple virtual functions (VFs)**,
 each of which can be assigned directly to a VM. The VM talks to the
 hardware with no hypervisor in the data path.
 
-```
-  SR-IOV ARCHITECTURE
-  ====================
-
-  +--------+  +--------+  +--------+
-  | VM 1   |  | VM 2   |  | VM 3   |
-  | VF 1   |  | VF 2   |  | VF 3   |  <-- Direct hardware access
-  +---|----+  +---|----+  +---|----+
-      |           |           |
-  +---|-----------|-----------|----+
-  |  Physical NIC with SR-IOV     |
-  |  PF (Physical Function)       |
-  |  VF1    VF2    VF3            |  <-- Hardware-level isolation
-  +-------------------------------+
-
-  Performance: ~99% of bare metal
-  Used by: AWS Nitro (ENA), Azure Accelerated Networking
-```
+![SR-IOV ARCHITECTURE](assets/03_virtualization_abstraction-mm8.svg)
 
 ---
 
@@ -287,32 +179,7 @@ AWS Nitro is the best example of how modern cloud hypervisors work. It
 offloads virtualization functions to dedicated hardware, leaving almost
 all of the host CPU for customer workloads.
 
-```
-  AWS NITRO ARCHITECTURE
-  =======================
-
-  +------------------------------------------+
-  | Customer VM (EC2 instance)                |
-  | Gets ~100% of host CPU, memory           |
-  +------------------------------------------+
-  |  Minimal hypervisor (lightweight KVM)     |  <-- Tiny software layer
-  +------------------------------------------+
-  |  Nitro Cards (dedicated hardware)          |
-  |  +----------+ +----------+ +----------+   |
-  |  | Nitro    | | Nitro    | | Nitro    |   |
-  |  | Network  | | Storage  | | Security |   |
-  |  | Card     | | Card     | | Card     |   |
-  |  | (ENA/    | | (NVMe    | | (Nitro   |   |
-  |  |  EFA)    | |  EBS)    | |  Enclaves)|  |
-  |  +----------+ +----------+ +----------+   |
-  +------------------------------------------+
-  |  Physical Server Hardware                 |
-  +------------------------------------------+
-
-  Key innovation: Hypervisor overhead approaches 0% because
-  I/O, security, and management are handled by custom ASICs,
-  not by software running on the host CPU.
-```
+![AWS NITRO ARCHITECTURE](assets/03_virtualization_abstraction-mm9.svg)
 
 ---
 
@@ -324,26 +191,7 @@ virtualize the **operating system**.
 
 ### VMs vs Containers
 
-```
-  VIRTUAL MACHINES                    CONTAINERS
-  ================                    ==========
-
-  +-------+ +-------+ +-------+      +-------+ +-------+ +-------+
-  | App A | | App B | | App C |      | App A | | App B | | App C |
-  +-------+ +-------+ +-------+      +-------+ +-------+ +-------+
-  | Libs  | | Libs  | | Libs  |      | Libs  | | Libs  | | Libs  |
-  +-------+ +-------+ +-------+      +-------+ +-------+ +-------+
-  |Guest  | |Guest  | |Guest  |      |  Container Runtime (Docker, |
-  |  OS   | |  OS   | |  OS   |      |   containerd, CRI-O)       |
-  +-------+ +-------+ +-------+      +----------------------------+
-  |       Hypervisor          |      |      Host OS (Linux)        |
-  +---------------------------+      +----------------------------+
-  |    Physical Hardware      |      |    Physical Hardware        |
-  +---------------------------+      +----------------------------+
-
-  VM overhead:   Full OS per VM (~1-10 GB RAM, 30s-2min boot)
-  Container overhead: Shared kernel (~10-100 MB, <1s boot)
-```
+![VIRTUAL MACHINES CONTAINERS](assets/03_virtualization_abstraction-mm10.svg)
 
 ### Linux Kernel Primitives: How Containers Work
 
@@ -387,21 +235,7 @@ Overlay filesystems (OverlayFS) layer read-only image layers with a
 writable top layer. Multiple containers sharing the same base image
 share the read-only layers, saving disk space.
 
-```
-  OVERLAY FILESYSTEM
-  ==================
-
-  Container's view:     Actual layers:
-  /                     +---------------------------+
-  |-- bin/              | Writable layer (container) | <-- Changes go here
-  |-- etc/              +---------------------------+
-  |-- lib/              | App layer (read-only)      | <-- pip install
-  |-- app/              +---------------------------+
-  |-- usr/              | Python layer (read-only)   | <-- python:3.11
-                        +---------------------------+
-                        | Ubuntu layer (read-only)   | <-- ubuntu:22.04
-                        +---------------------------+
-```
+![OVERLAY FILESYSTEM](assets/03_virtualization_abstraction-mm11.svg)
 
 ---
 
@@ -419,34 +253,7 @@ container runtimes. It specifies:
 The reference implementation is **runc**, which is the low-level runtime
 that Docker, containerd, and CRI-O all use under the hood.
 
-```
-  CONTAINER RUNTIME STACK
-  ========================
-
-  kubectl / docker CLI
-       |
-  +----v-----------+
-  | Kubernetes      |  (orchestrator)
-  | kubelet         |
-  +----+------------+
-       |
-  +----v-----------+
-  | CRI (interface)|
-  +----+------------+
-       |
-  +----v-----------+
-  | containerd      |  (high-level runtime: image mgmt, networking)
-  | or CRI-O        |
-  +----+------------+
-       |
-  +----v-----------+
-  | runc            |  (low-level runtime: creates namespaces, cgroups)
-  +----+------------+
-       |
-  +----v-----------+
-  | Linux kernel    |  (namespaces, cgroups, seccomp, capabilities)
-  +----------------+
-```
+![CONTAINER RUNTIME STACK](assets/03_virtualization_abstraction-mm12.svg)
 
 ---
 
@@ -470,25 +277,7 @@ Each EC2 instance (a VM) runs Docker or Kubernetes (containers). The VM
 provides the hard security boundary between tenants; containers provide
 the lightweight isolation between application components.
 
-```
-  CLOUD REALITY: VMs + CONTAINERS
-  =================================
-
-  Physical Server
-  +--------------------------------------------------+
-  |  VM (Customer A)          VM (Customer B)         |
-  |  +--------------------+  +--------------------+  |
-  |  | Container | Cont.  |  | Container | Cont.  |  |
-  |  | (web app) | (API)  |  | (ML svc)  | (DB)   |  |
-  |  +--------------------+  +--------------------+  |
-  |  | Kubernetes / ECS    |  | Kubernetes / ECS    |  |
-  |  | Guest Linux         |  | Guest Linux         |  |
-  |  +--------------------+  +--------------------+  |
-  |               Hypervisor (Nitro / KVM)            |
-  +--------------------------------------------------+
-  |               Physical Hardware                    |
-  +--------------------------------------------------+
-```
+![CLOUD REALITY: VMs CONTAINERS](assets/03_virtualization_abstraction-mm13.svg)
 
 ---
 
@@ -502,26 +291,7 @@ that aims to combine the security of VMs with the speed of containers.
 - **Isolation:** Full VM-level isolation via KVM
 - **Use case:** Serverless (each Lambda invocation gets its own microVM)
 
-```
-  FIRECRACKER ARCHITECTURE
-  =========================
-
-  +--------+ +--------+ +--------+ +--------+
-  |Lambda  | |Lambda  | |Lambda  | |Lambda  |
-  |Func A  | |Func B  | |Func C  | |Func D  |
-  +--------+ +--------+ +--------+ +--------+
-  |microVM | |microVM | |microVM | |microVM |  <-- One per invocation
-  +--------+ +--------+ +--------+ +--------+
-  |  Firecracker VMM (minimal, ~50K LoC)     |
-  +------------------------------------------+
-  |  KVM (Linux kernel)                       |
-  +------------------------------------------+
-  |  Physical Hardware                        |
-  +------------------------------------------+
-
-  Each microVM boots in 125ms, uses 5MB overhead.
-  Compare: Traditional VM boots in 30-120s, uses 512MB+ overhead.
-```
+![FIRECRACKER ARCHITECTURE](assets/03_virtualization_abstraction-mm14.svg)
 
 ---
 
@@ -530,22 +300,7 @@ that aims to combine the security of VMs with the speed of containers.
 Every abstraction has a cost. The tower of abstraction comes with
 trade-offs:
 
-```
-  ABSTRACTION LEVEL vs CONTROL vs CONVENIENCE
-  =============================================
-
-                     Control    Convenience    Performance
-                     -------    -----------    -----------
-  Bare Metal         |#####|    |#    |        |#####|
-  VM (IaaS)          |#### |    |##   |        |#### |
-  Container (CaaS)   |###  |    |###  |        |#### |
-  PaaS               |##   |    |#### |        |###  |
-  Serverless (FaaS)  |#    |    |#####|        |##   |
-  SaaS               |     |    |#####|        |##   |
-
-  Moving up the stack: less control, more convenience.
-  Moving down the stack: more control, less convenience.
-```
+![ABSTRACTION LEVEL vs CONTROL vs CONVENIENCE](assets/03_virtualization_abstraction-mm15.svg)
 
 ### The Leaky Abstraction Problem
 

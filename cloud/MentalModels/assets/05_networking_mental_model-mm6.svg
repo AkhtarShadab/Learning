@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="488" height="336" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="488" height="336"></rect>
+    <text x="18" y="12" >TRANSIT</text>
+    <text x="82" y="12" >GATEWAY</text>
+    <line x1="16" y1="22" x2="144" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="144" y2="26" class="solid"></line>
+    <text x="18" y="60" >On</text>
+    <line x1="32" y1="56" x2="40" y2="56" class="solid"></line>
+    <text x="42" y="60" >Premises</text>
+    <line x1="112" y1="56" x2="144" y2="56" class="solid"></line>
+    <text x="146" y="60" >VPN</text>
+    <line x1="176" y1="48" x2="168" y2="64" class="solid"></line>
+    <text x="178" y="60" >D</text>
+    <line x1="188" y1="56" x2="228" y2="56" class="solid"></line>
+    <line x1="236" y1="64" x2="236" y2="80" class="solid"></line>
+    <line x1="176" y1="88" x2="228" y2="88" class="solid"></line>
+    <line x1="236" y1="96" x2="236" y2="112" class="solid"></line>
+    <line x1="176" y1="120" x2="264" y2="120" class="solid"></line>
+    <line x1="236" y1="128" x2="236" y2="144" class="solid"></line>
+    <line x1="176" y1="152" x2="228" y2="152" class="solid"></line>
+    <line x1="236" y1="160" x2="236" y2="176" class="solid"></line>
+    <line x1="176" y1="184" x2="228" y2="184" class="solid"></line>
+    <text x="18" y="92" >VPC</text>
+    <text x="50" y="92" >A</text>
+    <path d="M 72,80 A 16,16 0,0,0 72,96" class="nofill"></path>
+    <text x="74" y="92" >10.0.0.0</text>
+    <line x1="144" y1="80" x2="136" y2="96" class="solid"></line>
+    <text x="146" y="92" >16</text>
+    <path d="M 160,80 A 16,16 0,0,1 160,96" class="nofill"></path>
+    <text x="18" y="124" >VPC</text>
+    <text x="50" y="124" >B</text>
+    <path d="M 72,112 A 16,16 0,0,0 72,128" class="nofill"></path>
+    <text x="74" y="124" >10.1.0.0</text>
+    <line x1="144" y1="112" x2="136" y2="128" class="solid"></line>
+    <text x="146" y="124" >16</text>
+    <path d="M 160,112 A 16,16 0,0,1 160,128" class="nofill"></path>
+    <text x="274" y="124" >[Transit</text>
+    <text x="346" y="124" >Gateway]</text>
+    <line x1="416" y1="120" x2="448" y2="120" class="solid"></line>
+    <text x="458" y="124" >Hub</text>
+    <text x="18" y="156" >VPC</text>
+    <text x="50" y="156" >C</text>
+    <path d="M 72,144 A 16,16 0,0,0 72,160" class="nofill"></path>
+    <text x="74" y="156" >10.2.0.0</text>
+    <line x1="144" y1="144" x2="136" y2="160" class="solid"></line>
+    <text x="146" y="156" >16</text>
+    <path d="M 160,144 A 16,16 0,0,1 160,160" class="nofill"></path>
+    <text x="18" y="188" >VPC</text>
+    <text x="50" y="188" >D</text>
+    <path d="M 72,176 A 16,16 0,0,0 72,192" class="nofill"></path>
+    <text x="74" y="188" >10.3.0.0</text>
+    <line x1="144" y1="176" x2="136" y2="192" class="solid"></line>
+    <text x="146" y="188" >16</text>
+    <path d="M 160,176 A 16,16 0,0,1 160,192" class="nofill"></path>
+    <text x="18" y="220" >Benefits:</text>
+    <line x1="16" y1="232" x2="24" y2="232" class="solid"></line>
+    <text x="34" y="236" >Transitive</text>
+    <text x="122" y="236" >routing:</text>
+    <text x="194" y="236" >any</text>
+    <text x="226" y="236" >VPC</text>
+    <line x1="16" y1="248" x2="24" y2="248" class="solid"></line>
+    <text x="34" y="252" >Centralized</text>
+    <text x="130" y="252" >management:</text>
+    <text x="226" y="252" >one</text>
+    <line x1="16" y1="264" x2="24" y2="264" class="solid"></line>
+    <text x="34" y="268" >Scales</text>
+    <text x="90" y="268" >to</text>
+    <text x="114" y="268" >thousands</text>
+    <text x="194" y="268" >of</text>
+    <text x="218" y="268" >VPCs</text>
+    <line x1="16" y1="280" x2="24" y2="280" class="solid"></line>
+    <text x="34" y="284" >Supports</text>
+    <text x="106" y="284" >VPN</text>
+    <text x="138" y="284" >and</text>
+    <text x="170" y="284" >Direct</text>
+    <text x="226" y="284" >Connect</text>
+    <text x="258" y="236" >can</text>
+    <text x="258" y="252" >hub</text>
+    <text x="290" y="236" >reach</text>
+    <text x="338" y="236" >any</text>
+    <text x="370" y="236" >other</text>
+    <text x="418" y="236" >VPC</text>
+    <text x="290" y="252" >instead</text>
+    <text x="354" y="252" >of</text>
+    <text x="378" y="252" >N^2</text>
+    <text x="410" y="252" >peerings</text>
+    <text x="290" y="284" >attachments</text>
+    <text x="18" y="316" >Cost:</text>
+    <line x1="64" y1="312" x2="72" y2="312" class="broken"></line>
+    <text x="74" y="316" >$0.05</text>
+    <line x1="120" y1="304" x2="112" y2="320" class="solid"></line>
+    <text x="122" y="316" >hour</text>
+    <text x="162" y="316" >+</text>
+    <text x="178" y="316" >$0.02</text>
+    <line x1="224" y1="304" x2="216" y2="320" class="solid"></line>
+    <text x="226" y="316" >GB</text>
+    <text x="250" y="316" >processed</text>
+</svg>

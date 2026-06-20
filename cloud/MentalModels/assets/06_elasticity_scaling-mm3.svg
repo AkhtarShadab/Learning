@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="504" height="400" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="504" height="400"></rect>
+    <rect x="20" y="72" width="72" height="48" class="solid nofill" rx="0"></rect>
+    <text x="34" y="92" >Server</text>
+    <text x="50" y="108" >1</text>
+    <rect x="236" y="72" width="72" height="48" class="solid nofill" rx="0"></rect>
+    <text x="250" y="92" >Server</text>
+    <text x="266" y="108" >1</text>
+    <rect x="324" y="72" width="72" height="48" class="solid nofill" rx="0"></rect>
+    <text x="338" y="92" >Server</text>
+    <text x="354" y="108" >2</text>
+    <rect x="412" y="72" width="72" height="48" class="solid nofill" rx="0"></rect>
+    <text x="426" y="92" >Server</text>
+    <text x="442" y="108" >3</text>
+    <text x="18" y="12" >HORIZONTAL</text>
+    <text x="106" y="12" >SCALING</text>
+    <line x1="16" y1="22" x2="160" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="160" y2="26" class="solid"></line>
+    <text x="18" y="60" >Before:</text>
+    <text x="234" y="60" >After:</text>
+    <text x="258" y="172" >Load</text>
+    <text x="298" y="172" >Balancer</text>
+    <text x="18" y="220" >Pros:</text>
+    <line x1="16" y1="232" x2="24" y2="232" class="solid"></line>
+    <text x="34" y="236" >No</text>
+    <text x="58" y="236" >ceiling</text>
+    <path d="M 128,224 A 16,16 0,0,0 128,240" class="nofill"></path>
+    <text x="130" y="236" >add</text>
+    <text x="162" y="236" >as</text>
+    <text x="186" y="236" >many</text>
+    <line x1="16" y1="248" x2="24" y2="248" class="solid"></line>
+    <text x="34" y="252" >No</text>
+    <text x="58" y="252" >downtime</text>
+    <text x="130" y="252" >to</text>
+    <text x="154" y="252" >scale</text>
+    <line x1="16" y1="264" x2="24" y2="264" class="solid"></line>
+    <text x="34" y="268" >Fault</text>
+    <text x="82" y="268" >tolerant</text>
+    <path d="M 160,256 A 16,16 0,0,0 160,272" class="nofill"></path>
+    <text x="162" y="268" >losing</text>
+    <text x="218" y="268" >one</text>
+    <text x="250" y="268" >server</text>
+    <line x1="16" y1="280" x2="24" y2="280" class="solid"></line>
+    <text x="34" y="284" >True</text>
+    <text x="74" y="284" >elasticity</text>
+    <path d="M 168,272 A 16,16 0,0,0 168,288" class="nofill"></path>
+    <text x="170" y="284" >automated,</text>
+    <text x="258" y="284" >fast</text>
+    <path d="M 288,272 A 16,16 0,0,1 288,288" class="nofill"></path>
+    <text x="226" y="236" >servers</text>
+    <text x="290" y="236" >as</text>
+    <text x="314" y="236" >needed</text>
+    <path d="M 360,224 A 16,16 0,0,1 360,240" class="nofill"></path>
+    <text x="306" y="268" >is</text>
+    <text x="330" y="268" >not</text>
+    <text x="362" y="268" >catastrophic</text>
+    <path d="M 456,256 A 16,16 0,0,1 456,272" class="nofill"></path>
+    <text x="18" y="316" >Cons:</text>
+    <line x1="16" y1="328" x2="24" y2="328" class="solid"></line>
+    <text x="34" y="332" >Application</text>
+    <text x="130" y="332" >must</text>
+    <text x="170" y="332" >be</text>
+    <text x="194" y="332" >stateless</text>
+    <path d="M 280,320 A 16,16 0,0,0 280,336" class="nofill"></path>
+    <text x="282" y="332" >session</text>
+    <text x="346" y="332" >data</text>
+    <text x="386" y="332" >externalized</text>
+    <path d="M 480,320 A 16,16 0,0,1 480,336" class="nofill"></path>
+    <line x1="16" y1="344" x2="24" y2="344" class="solid"></line>
+    <text x="34" y="348" >Distributed</text>
+    <text x="130" y="348" >systems</text>
+    <text x="194" y="348" >complexity</text>
+    <path d="M 288,336 A 16,16 0,0,0 288,352" class="nofill"></path>
+    <text x="290" y="348" >consistency,</text>
+    <text x="394" y="348" >coordination</text>
+    <path d="M 488,336 A 16,16 0,0,1 488,352" class="nofill"></path>
+    <line x1="16" y1="360" x2="24" y2="360" class="solid"></line>
+    <text x="34" y="364" >Data</text>
+    <text x="74" y="364" >layer</text>
+    <text x="122" y="364" >is</text>
+    <text x="146" y="364" >harder</text>
+    <text x="202" y="364" >to</text>
+    <text x="226" y="364" >scale</text>
+    <text x="274" y="364" >horizontally</text>
+    <line x1="16" y1="376" x2="24" y2="376" class="solid"></line>
+    <text x="34" y="380" >Load</text>
+    <text x="74" y="380" >balancer</text>
+    <text x="146" y="380" >required</text>
+    <g>
+        <line x1="292" y1="128" x2="292" y2="152" class="solid"></line>
+        <line x1="420" y1="128" x2="420" y2="152" class="solid"></line>
+        <line x1="236" y1="152" x2="420" y2="152" class="solid"></line>
+        <line x1="236" y1="152" x2="236" y2="184" class="solid"></line>
+        <line x1="428" y1="160" x2="428" y2="184" class="solid"></line>
+        <line x1="236" y1="184" x2="428" y2="184" class="solid"></line>
+        <line x1="356" y1="128" x2="356" y2="152" class="solid"></line>
+    </g>
+    <g>
+        <line x1="160" y1="88" x2="176" y2="88" class="solid"></line>
+        <polygon points="176,84 184,88 176,92" class="filled"></polygon>
+    </g>
+</svg>

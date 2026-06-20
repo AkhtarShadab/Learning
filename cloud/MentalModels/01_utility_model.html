@@ -228,26 +228,7 @@ requests or 10 million requests, your costs barely change.</p>
 <p>With cloud, costs are <strong>mostly variable</strong>. Process more, pay more. Process
 less, pay less. This transforms computing from a <strong>capital expenditure
 (CapEx)</strong> into an <strong>operating expenditure (OpEx)</strong>.</p>
-<pre><code>  COST STRUCTURE COMPARISON
-  -------------------------
-
-  On-Premises (Fixed-Cost Heavy)
-  +-------------------------------------------------+
-  |  Hardware purchase          ████████████████  70% |
-  |  Staff and operations       ██████            20% |
-  |  Electricity and cooling    ███               10% |
-  +-------------------------------------------------+
-  Cost stays flat regardless of usage.
-
-  Cloud (Variable-Cost Heavy)
-  +-------------------------------------------------+
-  |  Compute (usage-based)      ████████████████  55% |
-  |  Storage (usage-based)      ██████            20% |
-  |  Network (usage-based)      ████              15% |
-  |  Fixed (reserved, support)  ███               10% |
-  +-------------------------------------------------+
-  Cost scales with demand.
-</code></pre>
+<img src="assets/01_utility_model-mm1.svg" alt="COST STRUCTURE COMPARISON" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="demand-curves-and-pricing-models">Demand Curves and Pricing Models<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#demand-curves-and-pricing-models" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p>Hyperscalers offer multiple pricing tiers because different workloads have
@@ -267,25 +248,7 @@ partial upfront, all upfront).</p>
 <p>Buy unused capacity at 60-90% discounts. The catch: the cloud provider
 can reclaim the instance with 2 minutes’ notice when demand rises.</p>
 <p><strong>Best for:</strong> Fault-tolerant, stateless, batch processing workloads.</p>
-<pre><code>  PRICING STRATEGY VISUALIZATION
-  --------------------------------
-
-  Demand
-  ^
-  |
-  |        ****                    &lt;-- Spikes: On-Demand or Spot
-  |       *    *     ***
-  |      *      *   *   *
-  |  ----*-------*-*-----*----    &lt;-- Predictable peaks: On-Demand
-  | /                      \
-  |/ ________________________\    &lt;-- Steady baseline: Reserved
-  +-----------------------------> Time
-
-  Cost per hour:
-    Spot:      ~$0.01   (when available)
-    Reserved:  ~$0.03   (1-year commitment)
-    On-Demand: ~$0.05   (no commitment)
-</code></pre>
+<img src="assets/01_utility_model-mm2.svg" alt="PRICING STRATEGY VISUALIZATION" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="total-cost-of-ownership-tco-the-full-picture">Total Cost of Ownership (TCO): The Full Picture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#total-cost-of-ownership-tco-the-full-picture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p>The utility model does not always win on raw unit cost. A reserved EC2
@@ -391,20 +354,7 @@ manages more.</p>
   SaaS (Gmail, Salesforce) = Provider manages everything
 </code></pre>
 <h3 id="what-you-manage-at-each-layer">What You Manage at Each Layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-you-manage-at-each-layer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
-<pre><code>  +------------------+----------+----------+----------+
-  | Component        |  IaaS    |  PaaS    |  SaaS    |
-  +------------------+----------+----------+----------+
-  | Application      |  YOU     |  YOU     | Provider |
-  | Data             |  YOU     |  YOU     | Provider |
-  | Runtime          |  YOU     | Provider | Provider |
-  | Middleware        |  YOU     | Provider | Provider |
-  | Operating System |  YOU     | Provider | Provider |
-  | Virtualization   | Provider | Provider | Provider |
-  | Servers          | Provider | Provider | Provider |
-  | Storage          | Provider | Provider | Provider |
-  | Networking       | Provider | Provider | Provider |
-  +------------------+----------+----------+----------+
-</code></pre>
+<img src="assets/01_utility_model-mm3.svg" alt="Component IaaS PaaS SaaS" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="hyperscalers-as-power-plants">Hyperscalers as Power Plants<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hyperscalers-as-power-plants" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p>AWS, Azure, and GCP are the “power plants” of the cloud era. Their scale
@@ -435,16 +385,7 @@ Kubernetes (GKE, since Google invented Kubernetes).</li>
 <li><strong>Analogy:</strong> The power company run by the engineers who invented the
 turbine. Technically excellent, smaller customer base.</li>
 </ul>
-<pre><code>  MARKET SHARE (Approximate, 2025)
-  ================================
-
-  AWS     ████████████████████████████████  31%
-  Azure   █████████████████████████         25%
-  GCP     ███████████                       11%
-  Others  █████████████████████████████████  33%
-          |    |    |    |    |    |    |
-          0%   5%   10%  15%  20%  25%  35%
-</code></pre>
+<img src="assets/01_utility_model-mm101.svg" alt="MARKET SHARE (Approximate, 2025)" style="max-width:100%;height:auto;border:1px solid #e5e5e5;border-radius:8px;margin:8px 0"/>
 <hr/>
 <h2 id="real-world-examples">Real-World Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <h3 id="netflix-on-aws">Netflix on AWS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#netflix-on-aws" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>

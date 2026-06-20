@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="536" height="208" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="536" height="208"></rect>
+    <text x="18" y="12" >EXTENDED</text>
+    <text x="90" y="12" >PAGE</text>
+    <text x="130" y="12" >TABLES</text>
+    <path d="M 192,0 A 16,16 0,0,0 192,16" class="nofill"></path>
+    <text x="194" y="12" >EPT</text>
+    <path d="M 216,0 A 16,16 0,0,1 216,16" class="nofill"></path>
+    <line x1="16" y1="22" x2="232" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="232" y2="26" class="solid"></line>
+    <text x="18" y="60" >Guest</text>
+    <text x="66" y="60" >Virtual</text>
+    <text x="130" y="60" >Addr</text>
+    <line x1="168" y1="56" x2="184" y2="56" class="solid"></line>
+    <text x="186" y="60" >[Guest</text>
+    <text x="242" y="60" >Page</text>
+    <text x="282" y="60" >Table]</text>
+    <text x="362" y="60" >Guest</text>
+    <text x="410" y="60" >Physical</text>
+    <line x1="420" y1="64" x2="420" y2="80" class="solid"></line>
+    <text x="410" y="92" >NPT</text>
+    <line x1="420" y1="96" x2="420" y2="112" class="solid"></line>
+    <text x="410" y="124" >Physical</text>
+    <text x="482" y="60" >Addr</text>
+    <text x="354" y="92" >[EPT</text>
+    <line x1="400" y1="80" x2="392" y2="96" class="solid"></line>
+    <text x="442" y="92" >hardware]</text>
+    <text x="370" y="124" >Host</text>
+    <text x="482" y="124" >Addr</text>
+    <text x="18" y="156" >The</text>
+    <text x="50" y="156" >CPU</text>
+    <text x="82" y="156" >handles</text>
+    <text x="146" y="156" >both</text>
+    <text x="186" y="156" >levels</text>
+    <text x="242" y="156" >in</text>
+    <text x="266" y="156" >hardware.</text>
+    <text x="18" y="172" >No</text>
+    <text x="42" y="172" >traps</text>
+    <text x="90" y="172" >needed</text>
+    <text x="146" y="172" >for</text>
+    <text x="178" y="172" >guest</text>
+    <text x="226" y="172" >page</text>
+    <text x="266" y="172" >table</text>
+    <text x="314" y="172" >modifications.</text>
+    <line x1="16" y1="184" x2="24" y2="184" class="broken"></line>
+    <text x="26" y="188" >5%</text>
+    <text x="50" y="188" >overhead</text>
+    <text x="122" y="188" >compared</text>
+    <text x="194" y="188" >to</text>
+    <text x="218" y="188" >native,</text>
+    <text x="282" y="188" >vs</text>
+    <line x1="304" y1="184" x2="312" y2="184" class="broken"></line>
+    <text x="314" y="188" >30%</text>
+    <text x="346" y="188" >for</text>
+    <text x="378" y="188" >shadow</text>
+    <text x="434" y="188" >page</text>
+    <text x="474" y="188" >tables.</text>
+    <g>
+        <line x1="328" y1="56" x2="344" y2="56" class="solid"></line>
+        <polygon points="344,52 352,56 344,60" class="filled"></polygon>
+    </g>
+</svg>

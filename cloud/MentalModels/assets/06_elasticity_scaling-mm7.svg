@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="424" height="304" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="424" height="304"></rect>
+    <rect x="20" y="104" width="88" height="80" class="solid nofill" rx="0"></rect>
+    <text x="34" y="124" >Shard</text>
+    <text x="82" y="124" >1</text>
+    <path d="M 40,128 A 16,16 0,0,0 40,144" class="nofill"></path>
+    <text x="42" y="140" >Primary</text>
+    <text x="42" y="156" >+</text>
+    <text x="58" y="156" >Read</text>
+    <text x="42" y="172" >Replica</text>
+    <path d="M 96,160 A 16,16 0,0,1 96,176" class="nofill"></path>
+    <rect x="172" y="104" width="88" height="80" class="solid nofill" rx="0"></rect>
+    <text x="186" y="124" >Shard</text>
+    <text x="234" y="124" >2</text>
+    <path d="M 192,128 A 16,16 0,0,0 192,144" class="nofill"></path>
+    <text x="194" y="140" >Primary</text>
+    <text x="194" y="156" >+</text>
+    <text x="210" y="156" >Read</text>
+    <text x="194" y="172" >Replica</text>
+    <path d="M 248,160 A 16,16 0,0,1 248,176" class="nofill"></path>
+    <rect x="324" y="104" width="88" height="80" class="solid nofill" rx="0"></rect>
+    <text x="338" y="124" >Shard</text>
+    <text x="386" y="124" >3</text>
+    <path d="M 344,128 A 16,16 0,0,0 344,144" class="nofill"></path>
+    <text x="346" y="140" >Primary</text>
+    <text x="346" y="156" >+</text>
+    <text x="362" y="156" >Read</text>
+    <text x="346" y="172" >Replica</text>
+    <path d="M 400,160 A 16,16 0,0,1 400,176" class="nofill"></path>
+    <text x="18" y="12" >SHARDING</text>
+    <line x1="16" y1="22" x2="88" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="88" y2="26" class="solid"></line>
+    <text x="18" y="60" >Data</text>
+    <text x="58" y="60" >split</text>
+    <text x="106" y="60" >by</text>
+    <text x="130" y="60" >a</text>
+    <text x="146" y="60" >shard</text>
+    <text x="194" y="60" >key</text>
+    <path d="M 232,48 A 16,16 0,0,0 232,64" class="nofill"></path>
+    <text x="234" y="60" >e.g.,</text>
+    <text x="282" y="60" >user</text>
+    <line x1="312" y1="64" x2="320" y2="64" class="solid"></line>
+    <text x="322" y="60" >id</text>
+    <path d="M 336,48 A 16,16 0,0,1 336,64" class="nofill"></path>
+    <text x="346" y="60" >:</text>
+    <text x="18" y="92" >user</text>
+    <line x1="48" y1="96" x2="56" y2="96" class="solid"></line>
+    <text x="58" y="92" >id</text>
+    <text x="82" y="92" >1</text>
+    <line x1="88" y1="88" x2="96" y2="88" class="solid"></line>
+    <text x="98" y="92" >1M</text>
+    <text x="162" y="92" >user</text>
+    <line x1="192" y1="96" x2="200" y2="96" class="solid"></line>
+    <text x="202" y="92" >id</text>
+    <text x="226" y="92" >1M</text>
+    <line x1="240" y1="88" x2="248" y2="88" class="solid"></line>
+    <text x="250" y="92" >2M</text>
+    <text x="306" y="92" >user</text>
+    <line x1="336" y1="96" x2="344" y2="96" class="solid"></line>
+    <text x="346" y="92" >id</text>
+    <text x="370" y="92" >2M</text>
+    <line x1="384" y1="88" x2="392" y2="88" class="solid"></line>
+    <text x="394" y="92" >3M</text>
+    <text x="18" y="220" >Pros</text>
+    <line x1="52" y1="208" x2="52" y2="240" class="broken"></line>
+    <text x="18" y="236" >Cons</text>
+    <text x="66" y="220" >Linear</text>
+    <text x="122" y="220" >write</text>
+    <text x="170" y="220" >scaling</text>
+    <path d="M 240,208 A 16,16 0,0,0 240,224" class="nofill"></path>
+    <text x="242" y="220" >add</text>
+    <text x="274" y="220" >more</text>
+    <text x="314" y="220" >shards</text>
+    <path d="M 360,208 A 16,16 0,0,1 360,224" class="nofill"></path>
+    <text x="66" y="236" >Cross</text>
+    <line x1="104" y1="232" x2="112" y2="232" class="solid"></line>
+    <text x="114" y="236" >shard</text>
+    <text x="162" y="236" >queries</text>
+    <text x="226" y="236" >are</text>
+    <text x="258" y="236" >expensive</text>
+    <text x="66" y="252" >Shard</text>
+    <text x="114" y="252" >rebalancing</text>
+    <text x="210" y="252" >is</text>
+    <text x="234" y="252" >complex</text>
+    <text x="66" y="268" >Application</text>
+    <text x="162" y="268" >must</text>
+    <text x="202" y="268" >be</text>
+    <text x="226" y="268" >shard</text>
+    <line x1="264" y1="264" x2="272" y2="264" class="solid"></line>
+    <text x="274" y="268" >aware</text>
+    <text x="66" y="284" >Hot</text>
+    <text x="98" y="284" >shards</text>
+    <path d="M 160,272 A 16,16 0,0,0 160,288" class="nofill"></path>
+    <text x="162" y="284" >uneven</text>
+    <text x="218" y="284" >distribution</text>
+    <path d="M 312,272 A 16,16 0,0,1 312,288" class="nofill"></path>
+</svg>

@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="496" height="208" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="496" height="208"></rect>
+    <text x="18" y="12" >DECISION</text>
+    <text x="90" y="12" >TREE</text>
+    <text x="130" y="12" >FOR</text>
+    <text x="162" y="12" >SCALING</text>
+    <text x="226" y="12" >METRIC</text>
+    <line x1="16" y1="22" x2="288" y2="22" class="solid"></line>
+    <line x1="16" y1="26" x2="288" y2="26" class="solid"></line>
+    <text x="18" y="60" >Is</text>
+    <text x="42" y="60" >your</text>
+    <text x="82" y="60" >workload</text>
+    <text x="154" y="60" >compute</text>
+    <line x1="208" y1="56" x2="216" y2="56" class="solid"></line>
+    <text x="218" y="60" >bound?</text>
+    <text x="34" y="76" >Yes</text>
+    <text x="98" y="76" >CPU</text>
+    <text x="130" y="76" >utilization</text>
+    <path d="M 232,64 A 16,16 0,0,0 232,80" class="nofill"></path>
+    <text x="234" y="76" >target:</text>
+    <text x="34" y="92" >No</text>
+    <text x="98" y="92" >Is</text>
+    <text x="122" y="92" >it</text>
+    <text x="146" y="92" >memory</text>
+    <line x1="192" y1="88" x2="200" y2="88" class="solid"></line>
+    <text x="202" y="92" >bound?</text>
+    <text x="50" y="108" >Yes</text>
+    <text x="114" y="108" >Memory</text>
+    <text x="170" y="108" >utilization</text>
+    <text x="50" y="124" >No</text>
+    <text x="114" y="124" >Is</text>
+    <text x="138" y="124" >it</text>
+    <text x="162" y="124" >queue</text>
+    <line x1="200" y1="120" x2="208" y2="120" class="solid"></line>
+    <text x="210" y="124" >based?</text>
+    <text x="66" y="140" >Yes</text>
+    <text x="130" y="140" >Queue</text>
+    <text x="178" y="140" >depth</text>
+    <line x1="232" y1="128" x2="224" y2="144" class="solid"></line>
+    <text x="242" y="140" >messages</text>
+    <text x="66" y="156" >No</text>
+    <text x="130" y="156" >Is</text>
+    <text x="154" y="156" >latency</text>
+    <text x="218" y="156" >the</text>
+    <text x="250" y="156" >SLA?</text>
+    <text x="82" y="172" >Yes</text>
+    <text x="146" y="172" >Response</text>
+    <text x="218" y="172" >time</text>
+    <path d="M 264,160 A 16,16 0,0,0 264,176" class="nofill"></path>
+    <text x="266" y="172" >target:</text>
+    <text x="330" y="172" >p99</text>
+    <text x="362" y="172" >&lt;</text>
+    <text x="378" y="172" >X</text>
+    <text x="394" y="172" >ms</text>
+    <path d="M 408,160 A 16,16 0,0,1 408,176" class="nofill"></path>
+    <text x="82" y="188" >No</text>
+    <text x="146" y="188" >Use</text>
+    <text x="178" y="188" >request</text>
+    <text x="242" y="188" >count</text>
+    <text x="290" y="188" >or</text>
+    <text x="314" y="188" >custom</text>
+    <text x="370" y="188" >metric</text>
+    <text x="298" y="76" >60</text>
+    <line x1="312" y1="72" x2="320" y2="72" class="solid"></line>
+    <text x="322" y="76" >70%</text>
+    <path d="M 344,64 A 16,16 0,0,1 344,80" class="nofill"></path>
+    <path d="M 272,96 A 16,16 0,0,0 272,112" class="nofill"></path>
+    <text x="274" y="108" >target:</text>
+    <text x="338" y="108" >70</text>
+    <line x1="352" y1="104" x2="360" y2="104" class="solid"></line>
+    <text x="362" y="108" >80%</text>
+    <path d="M 384,96 A 16,16 0,0,1 384,112" class="nofill"></path>
+    <text x="314" y="140" >visible</text>
+    <path d="M 384,128 A 16,16 0,0,0 384,144" class="nofill"></path>
+    <text x="386" y="140" >target:</text>
+    <text x="450" y="140" >0</text>
+    <line x1="456" y1="136" x2="464" y2="136" class="solid"></line>
+    <text x="466" y="140" >10</text>
+    <path d="M 480,128 A 16,16 0,0,1 480,144" class="nofill"></path>
+    <g>
+        <line x1="64" y1="72" x2="80" y2="72" class="solid"></line>
+        <polygon points="80,68 88,72 80,76" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="64" y1="88" x2="80" y2="88" class="solid"></line>
+        <polygon points="80,84 88,88 80,92" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="80" y1="104" x2="96" y2="104" class="solid"></line>
+        <polygon points="96,100 104,104 96,108" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="80" y1="120" x2="96" y2="120" class="solid"></line>
+        <polygon points="96,116 104,120 96,124" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="96" y1="136" x2="112" y2="136" class="solid"></line>
+        <polygon points="112,132 120,136 112,140" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="96" y1="152" x2="112" y2="152" class="solid"></line>
+        <polygon points="112,148 120,152 112,156" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="112" y1="168" x2="128" y2="168" class="solid"></line>
+        <polygon points="128,164 136,168 128,172" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="112" y1="184" x2="128" y2="184" class="solid"></line>
+        <polygon points="128,180 136,184 128,188" class="filled"></polygon>
+    </g>
+</svg>

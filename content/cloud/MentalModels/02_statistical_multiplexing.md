@@ -12,30 +12,7 @@ individual workload.
 This is called **statistical multiplexing**, and it is the hidden engine
 that makes cloud computing viable.
 
-```
-  INDIVIDUAL WORKLOADS (Spiky, Unpredictable)
-  ============================================
-
-  Customer A:     Customer B:     Customer C:
-  ^               ^               ^
-  |  *            |       *       |    *
-  | * *           |      * *      |   * *
-  |*   *    *     |  *  *   *     | **   **
-  |     * **      | * **     *    |*       *
-  +----------->   +----------->   +----------->
-
-  AGGREGATED POOL (Smooth, Predictable)
-  =======================================
-  ^
-  |     *****
-  |   **     **
-  |  *         *
-  | *           *
-  |*             *
-  +--------------------->
-
-  The sum of many spiky signals is a smooth signal.
-```
+![INDIVIDUAL WORKLOADS (Spiky, Unpredictable)](assets/02_statistical_multiplexing-mm1.svg)
 
 ---
 
@@ -262,34 +239,7 @@ Each VM has a resource profile: (vCPU, RAM, disk, network). Each
 physical server has a capacity profile. The goal is to maximize
 the number of VMs per server (density) while respecting constraints.
 
-```
-  BIN PACKING EXAMPLE
-  ====================
-
-  Physical Server: 64 vCPU, 256 GB RAM, 2 TB disk
-
-  VM requests:
-  A: (4 vCPU, 16 GB RAM, 100 GB disk)
-  B: (2 vCPU, 32 GB RAM, 200 GB disk)
-  C: (8 vCPU,  8 GB RAM,  50 GB disk)
-  D: (1 vCPU, 64 GB RAM, 500 GB disk)
-
-  Packing attempt:
-  +--------------------------------------------------+
-  |  Server (64 vCPU / 256 GB / 2000 GB)             |
-  |                                                    |
-  |  [A][A][A][A][A]  = 20 vCPU, 80 GB,  500 GB      |
-  |  [B][B][B]        =  6 vCPU, 96 GB,  600 GB      |
-  |  [C][C]           = 16 vCPU, 16 GB,  100 GB      |
-  |  [D]              =  1 vCPU, 64 GB,  500 GB      |
-  |  ------------------------------------------------ |
-  |  Total:            43 vCPU, 256 GB, 1700 GB       |
-  |  Remaining:        21 vCPU,   0 GB,  300 GB       |
-  +--------------------------------------------------+
-
-  RAM is the bottleneck here -- we hit the RAM ceiling before
-  exhausting CPU or disk. This is called "stranded resources."
-```
+![BIN PACKING EXAMPLE](assets/02_statistical_multiplexing-mm2.svg)
 
 ### Stranded Resources
 
