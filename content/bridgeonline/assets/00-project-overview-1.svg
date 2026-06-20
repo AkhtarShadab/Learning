@@ -1,0 +1,269 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="704" height="720" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="704" height="720"></rect>
+    <rect x="4" y="584" width="184" height="112" class="solid nofill" rx="0"></rect>
+    <text x="26" y="604" >PostgreSQL</text>
+    <path d="M 32,608 A 16,16 0,0,0 32,624" class="nofill"></path>
+    <text x="34" y="620" >permanent</text>
+    <line x1="24" y1="632" x2="32" y2="632" class="solid"></line>
+    <text x="42" y="636" >Users</text>
+    <line x1="24" y1="648" x2="32" y2="648" class="solid"></line>
+    <text x="42" y="652" >Game</text>
+    <text x="82" y="652" >rooms</text>
+    <line x1="24" y1="664" x2="32" y2="664" class="solid"></line>
+    <text x="42" y="668" >Players,</text>
+    <text x="114" y="668" >moves</text>
+    <line x1="24" y1="680" x2="32" y2="680" class="solid"></line>
+    <text x="42" y="684" >Game</text>
+    <text x="82" y="684" >results</text>
+    <text x="114" y="620" >storage</text>
+    <path d="M 168,608 A 16,16 0,0,1 168,624" class="nofill"></path>
+    <rect x="228" y="584" width="216" height="112" class="solid nofill" rx="0"></rect>
+    <text x="250" y="604" >Redis</text>
+    <path d="M 256,608 A 16,16 0,0,0 256,624" class="nofill"></path>
+    <text x="258" y="620" >fast</text>
+    <text x="298" y="620" >in</text>
+    <line x1="312" y1="616" x2="320" y2="616" class="solid"></line>
+    <text x="322" y="620" >memory</text>
+    <text x="378" y="620" >cache</text>
+    <path d="M 416,608 A 16,16 0,0,1 416,624" class="nofill"></path>
+    <line x1="248" y1="632" x2="256" y2="632" class="solid"></line>
+    <text x="266" y="636" >Session</text>
+    <text x="330" y="636" >tokens</text>
+    <line x1="248" y1="648" x2="256" y2="648" class="solid"></line>
+    <text x="266" y="652" >Live</text>
+    <text x="306" y="652" >game</text>
+    <text x="346" y="652" >state</text>
+    <line x1="248" y1="664" x2="256" y2="664" class="solid"></line>
+    <text x="266" y="668" >Reconnect</text>
+    <text x="346" y="668" >tokens</text>
+    <line x1="248" y1="680" x2="256" y2="680" class="solid"></line>
+    <text x="266" y="684" >Socket.io</text>
+    <text x="346" y="684" >pub</text>
+    <line x1="376" y1="672" x2="368" y2="688" class="solid"></line>
+    <text x="378" y="684" >sub</text>
+    <text x="26" y="28" >BROWSER</text>
+    <path d="M 96,16 A 16,16 0,0,0 96,32" class="nofill"></path>
+    <text x="98" y="28" >Player&#39;s</text>
+    <text x="170" y="28" >Machine</text>
+    <path d="M 224,16 A 16,16 0,0,1 224,32" class="nofill"></path>
+    <text x="50" y="76" >Next.js</text>
+    <text x="114" y="76" >React</text>
+    <text x="162" y="76" >App</text>
+    <line x1="48" y1="88" x2="56" y2="88" class="solid"></line>
+    <text x="66" y="92" >Pages:</text>
+    <text x="122" y="92" >Login,</text>
+    <text x="178" y="92" >Register,</text>
+    <text x="258" y="92" >Dashboard,</text>
+    <line x1="596" y1="80" x2="596" y2="96" class="solid"></line>
+    <line x1="620" y1="80" x2="620" y2="96" class="solid"></line>
+    <line x1="48" y1="104" x2="56" y2="104" class="solid"></line>
+    <text x="66" y="108" >Zustand</text>
+    <text x="130" y="108" >state</text>
+    <path d="M 184,96 A 16,16 0,0,0 184,112" class="nofill"></path>
+    <text x="186" y="108" >local</text>
+    <text x="234" y="108" >UI</text>
+    <text x="258" y="108" >state</text>
+    <path d="M 296,96 A 16,16 0,0,1 296,112" class="nofill"></path>
+    <line x1="604" y1="96" x2="604" y2="112" class="solid"></line>
+    <line x1="628" y1="96" x2="628" y2="112" class="solid"></line>
+    <line x1="48" y1="120" x2="56" y2="120" class="solid"></line>
+    <text x="66" y="124" >Socket.io</text>
+    <text x="146" y="124" >client</text>
+    <path d="M 208,112 A 16,16 0,0,0 208,128" class="nofill"></path>
+    <text x="210" y="124" >persistent</text>
+    <text x="298" y="124" >WebSocket</text>
+    <text x="378" y="124" >connection</text>
+    <path d="M 456,112 A 16,16 0,0,1 456,128" class="nofill"></path>
+    <line x1="596" y1="112" x2="596" y2="144" class="solid"></line>
+    <line x1="620" y1="112" x2="620" y2="144" class="solid"></line>
+    <line x1="48" y1="136" x2="56" y2="136" class="solid"></line>
+    <text x="66" y="140" >WebRTC</text>
+    <text x="122" y="140" >connections</text>
+    <path d="M 224,128 A 16,16 0,0,0 224,144" class="nofill"></path>
+    <text x="226" y="140" >direct</text>
+    <text x="282" y="140" >to</text>
+    <text x="306" y="140" >other</text>
+    <text x="354" y="140" >browsers,</text>
+    <text x="434" y="140" >for</text>
+    <text x="466" y="140" >voice</text>
+    <path d="M 504,128 A 16,16 0,0,1 504,144" class="nofill"></path>
+    <text x="130" y="220" >HTTP</text>
+    <path d="M 176,208 A 16,16 0,0,0 176,224" class="nofill"></path>
+    <text x="178" y="220" >API</text>
+    <text x="210" y="220" >requests</text>
+    <path d="M 272,208 A 16,16 0,0,1 272,224" class="nofill"></path>
+    <text x="322" y="220" >WebSocket</text>
+    <path d="M 408,208 A 16,16 0,0,0 408,224" class="nofill"></path>
+    <text x="410" y="220" >game</text>
+    <text x="450" y="220" >events</text>
+    <text x="26" y="268" >SERVER</text>
+    <path d="M 88,256 A 16,16 0,0,0 88,272" class="nofill"></path>
+    <text x="90" y="268" >Hostinger</text>
+    <text x="170" y="268" >VPS</text>
+    <line x1="208" y1="256" x2="200" y2="272" class="solid"></line>
+    <text x="218" y="268" >Vercel</text>
+    <path d="M 264,256 A 16,16 0,0,1 264,272" class="nofill"></path>
+    <line x1="620" y1="288" x2="620" y2="384" class="solid"></line>
+    <line x1="628" y1="384" x2="628" y2="400" class="solid"></line>
+    <line x1="620" y1="400" x2="620" y2="416" class="solid"></line>
+    <line x1="628" y1="416" x2="628" y2="448" class="solid"></line>
+    <line x1="620" y1="448" x2="620" y2="480" class="solid"></line>
+    <line x1="612" y1="480" x2="612" y2="496" class="solid"></line>
+    <line x1="620" y1="496" x2="620" y2="512" class="solid"></line>
+    <line x1="628" y1="512" x2="628" y2="528" class="solid"></line>
+    <text x="346" y="92" >Room</text>
+    <text x="386" y="92" >Lobby,</text>
+    <text x="442" y="92" >Game</text>
+    <text x="482" y="92" >Table</text>
+    <text x="522" y="220" >WebRTC</text>
+    <path d="M 584,208 A 16,16 0,0,0 584,224" class="nofill"></path>
+    <text x="586" y="220" >voice,</text>
+    <text x="642" y="220" >direct</text>
+    <path d="M 688,208 A 16,16 0,0,1 688,224" class="nofill"></path>
+    <text x="50" y="316" >Next.js</text>
+    <text x="114" y="316" >App</text>
+    <text x="146" y="316" >Server</text>
+    <line x1="48" y1="328" x2="56" y2="328" class="solid"></line>
+    <text x="66" y="332" >Auth</text>
+    <path d="M 112,320 A 16,16 0,0,0 112,336" class="nofill"></path>
+    <text x="114" y="332" >NextAuth</text>
+    <path d="M 176,320 A 16,16 0,0,1 176,336" class="nofill"></path>
+    <line x1="48" y1="344" x2="56" y2="344" class="solid"></line>
+    <text x="66" y="348" >API</text>
+    <text x="98" y="348" >routes</text>
+    <line x1="48" y1="360" x2="56" y2="360" class="solid"></line>
+    <text x="66" y="364" >Page</text>
+    <text x="106" y="364" >rendering</text>
+    <text x="50" y="476" >lib</text>
+    <line x1="80" y1="464" x2="72" y2="480" class="solid"></line>
+    <text x="82" y="476" >game</text>
+    <line x1="120" y1="464" x2="112" y2="480" class="solid"></line>
+    <line x1="136" y1="472" x2="144" y2="472" class="solid"></line>
+    <text x="154" y="476" >Pure</text>
+    <text x="194" y="476" >game</text>
+    <text x="234" y="476" >logic</text>
+    <path d="M 288,464 A 16,16 0,0,0 288,480" class="nofill"></path>
+    <text x="290" y="476" >no</text>
+    <text x="314" y="476" >I</text>
+    <line x1="328" y1="464" x2="320" y2="480" class="solid"></line>
+    <text x="330" y="476" >O</text>
+    <path d="M 336,464 A 16,16 0,0,1 336,480" class="nofill"></path>
+    <text x="66" y="492" >deck.ts</text>
+    <text x="130" y="492" >·bidding.ts</text>
+    <text x="234" y="492" >·playing.ts</text>
+    <text x="338" y="492" >·scoring.ts</text>
+    <text x="442" y="492" >·gameEngine.ts</text>
+    <line x1="580" y1="480" x2="580" y2="496" class="solid"></line>
+    <text x="266" y="316" >Socket.io</text>
+    <text x="346" y="316" >Server</text>
+    <line x1="264" y1="328" x2="272" y2="328" class="solid"></line>
+    <text x="282" y="332" >Room</text>
+    <text x="322" y="332" >management</text>
+    <path d="M 416,320 A 16,16 0,0,0 416,336" class="nofill"></path>
+    <text x="418" y="332" >join,</text>
+    <text x="466" y="332" >seat,</text>
+    <line x1="264" y1="344" x2="272" y2="344" class="solid"></line>
+    <text x="282" y="348" >Game</text>
+    <text x="322" y="348" >events</text>
+    <path d="M 384,336 A 16,16 0,0,0 384,352" class="nofill"></path>
+    <text x="386" y="348" >bid,</text>
+    <text x="426" y="348" >play</text>
+    <text x="466" y="348" >card</text>
+    <path d="M 496,336 A 16,16 0,0,1 496,352" class="nofill"></path>
+    <line x1="264" y1="360" x2="272" y2="360" class="solid"></line>
+    <text x="282" y="364" >Voice</text>
+    <text x="330" y="364" >signaling</text>
+    <text x="410" y="364" >relay</text>
+    <path d="M 464,352 A 16,16 0,0,0 464,368" class="nofill"></path>
+    <text x="466" y="364" >offer</text>
+    <line x1="512" y1="352" x2="504" y2="368" class="solid"></line>
+    <text x="514" y="364" >answer</text>
+    <path d="M 560,352 A 16,16 0,0,1 560,368" class="nofill"></path>
+    <line x1="396" y1="384" x2="396" y2="400" class="solid"></line>
+    <text x="514" y="332" >ready</text>
+    <path d="M 552,320 A 16,16 0,0,1 552,336" class="nofill"></path>
+    <g>
+        <line x1="4" y1="8" x2="628" y2="8" class="solid"></line>
+        <line x1="4" y1="8" x2="4" y2="168" class="solid"></line>
+        <line x1="628" y1="8" x2="628" y2="80" class="solid"></line>
+        <line x1="628" y1="144" x2="628" y2="168" class="solid"></line>
+        <line x1="4" y1="168" x2="628" y2="168" class="solid"></line>
+        <line x1="308" y1="168" x2="308" y2="228" class="solid"></line>
+        <polygon points="304,228 312,228 308,240" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="28" y1="56" x2="604" y2="56" class="solid"></line>
+        <line x1="28" y1="56" x2="28" y2="152" class="solid"></line>
+        <line x1="604" y1="56" x2="604" y2="80" class="solid"></line>
+        <line x1="28" y1="152" x2="604" y2="152" class="solid"></line>
+        <line x1="604" y1="144" x2="604" y2="152" class="solid"></line>
+    </g>
+    <g>
+        <line x1="116" y1="200" x2="500" y2="200" class="solid"></line>
+        <line x1="116" y1="200" x2="116" y2="228" class="solid"></line>
+        <line x1="500" y1="200" x2="500" y2="208" class="solid"></line>
+        <path d="M 500,208 A 12,12 0,0,1 500,224" class="nofill"></path>
+        <polygon points="112,228 120,228 116,240" class="filled"></polygon>
+        <line x1="500" y1="224" x2="500" y2="228" class="solid"></line>
+        <line x1="508" y1="208" x2="508" y2="224" class="solid"></line>
+        <polygon points="496,228 504,228 500,240" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="4" y1="248" x2="628" y2="248" class="solid"></line>
+        <line x1="4" y1="248" x2="4" y2="536" class="solid"></line>
+        <line x1="628" y1="248" x2="628" y2="288" class="solid"></line>
+        <line x1="4" y1="536" x2="620" y2="536" class="solid"></line>
+        <line x1="124" y1="536" x2="124" y2="564" class="solid"></line>
+        <line x1="340" y1="536" x2="340" y2="564" class="solid"></line>
+        <line x1="620" y1="528" x2="620" y2="536" class="solid"></line>
+        <polygon points="120,564 128,564 124,576" class="filled"></polygon>
+        <polygon points="336,564 344,564 340,576" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="28" y1="296" x2="212" y2="296" class="solid"></line>
+        <line x1="28" y1="296" x2="28" y2="376" class="solid"></line>
+        <line x1="212" y1="296" x2="212" y2="376" class="solid"></line>
+        <line x1="28" y1="376" x2="212" y2="376" class="solid"></line>
+        <line x1="116" y1="376" x2="116" y2="408" class="solid"></line>
+        <line x1="116" y1="408" x2="380" y2="408" class="solid"></line>
+        <line x1="212" y1="408" x2="212" y2="436" class="solid"></line>
+        <line x1="380" y1="400" x2="380" y2="408" class="solid"></line>
+        <polygon points="208,436 216,436 212,448" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="28" y1="456" x2="588" y2="456" class="solid"></line>
+        <line x1="28" y1="456" x2="28" y2="504" class="solid"></line>
+        <line x1="588" y1="456" x2="588" y2="480" class="solid"></line>
+        <line x1="28" y1="504" x2="588" y2="504" class="solid"></line>
+        <line x1="588" y1="496" x2="588" y2="504" class="solid"></line>
+    </g>
+    <g>
+        <line x1="244" y1="296" x2="588" y2="296" class="solid"></line>
+        <line x1="244" y1="296" x2="244" y2="376" class="solid"></line>
+        <line x1="588" y1="296" x2="588" y2="376" class="solid"></line>
+        <line x1="244" y1="376" x2="588" y2="376" class="solid"></line>
+        <line x1="388" y1="376" x2="388" y2="384" class="solid"></line>
+    </g>
+</svg>

@@ -1,0 +1,302 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="696" height="672" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="696" height="672"></rect>
+    <text x="2" y="12" >#</text>
+    <line x1="16" y1="8" x2="32" y2="8" class="solid"></line>
+    <text x="42" y="12" >LIFECYCLE</text>
+    <line x1="120" y1="8" x2="480" y2="8" class="solid"></line>
+    <text x="2" y="28" >docker</text>
+    <text x="58" y="28" >run</text>
+    <line x1="88" y1="24" x2="96" y2="24" class="solid"></line>
+    <text x="98" y="28" >d</text>
+    <line x1="112" y1="24" x2="128" y2="24" class="solid"></line>
+    <text x="130" y="28" >name</text>
+    <text x="170" y="28" >NAME</text>
+    <line x1="208" y1="24" x2="216" y2="24" class="solid"></line>
+    <text x="218" y="28" >p</text>
+    <text x="234" y="28" >HOST:CONTAINER</text>
+    <text x="354" y="28" >IMAGE</text>
+    <text x="426" y="28" >#</text>
+    <text x="442" y="28" >start</text>
+    <text x="2" y="44" >docker</text>
+    <text x="58" y="44" >stop</text>
+    <text x="98" y="44" >NAME</text>
+    <rect x="432" y="36" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="436" y1="44" x2="436" y2="52" class="solid"></line>
+    <text x="450" y="44" >graceful</text>
+    <text x="522" y="44" >stop</text>
+    <path d="M 568,32 A 16,16 0,0,0 568,48" class="nofill"></path>
+    <text x="570" y="44" >SIGTERM</text>
+    <path d="M 624,32 A 16,16 0,0,1 624,48" class="nofill"></path>
+    <text x="2" y="60" >docker</text>
+    <text x="58" y="60" >start</text>
+    <text x="106" y="60" >NAME</text>
+    <rect x="432" y="52" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="436" y1="60" x2="436" y2="68" class="solid"></line>
+    <text x="450" y="60" >restart</text>
+    <text x="514" y="60" >a</text>
+    <text x="530" y="60" >stopped</text>
+    <text x="594" y="60" >container</text>
+    <text x="2" y="76" >docker</text>
+    <text x="58" y="76" >rm</text>
+    <text x="82" y="76" >NAME</text>
+    <rect x="432" y="68" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="436" y1="76" x2="436" y2="84" class="solid"></line>
+    <text x="450" y="76" >remove</text>
+    <text x="506" y="76" >stopped</text>
+    <text x="570" y="76" >container</text>
+    <text x="2" y="92" >docker</text>
+    <text x="58" y="92" >rm</text>
+    <line x1="80" y1="88" x2="88" y2="88" class="solid"></line>
+    <text x="90" y="92" >f</text>
+    <text x="106" y="92" >NAME</text>
+    <rect x="432" y="84" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="450" y="92" >force</text>
+    <line x1="488" y1="88" x2="496" y2="88" class="solid"></line>
+    <text x="498" y="92" >remove</text>
+    <path d="M 560,80 A 16,16 0,0,0 560,96" class="nofill"></path>
+    <text x="562" y="92" >even</text>
+    <text x="602" y="92" >if</text>
+    <text x="626" y="92" >running</text>
+    <path d="M 680,80 A 16,16 0,0,1 680,96" class="nofill"></path>
+    <text x="2" y="124" >#</text>
+    <line x1="16" y1="120" x2="32" y2="120" class="solid"></line>
+    <text x="42" y="124" >INFORMATION</text>
+    <text x="2" y="140" >docker</text>
+    <text x="58" y="140" >ps</text>
+    <line x1="80" y1="136" x2="88" y2="136" class="solid"></line>
+    <text x="90" y="140" >a</text>
+    <text x="2" y="156" >docker</text>
+    <text x="58" y="156" >logs</text>
+    <line x1="96" y1="152" x2="104" y2="152" class="solid"></line>
+    <text x="106" y="156" >f</text>
+    <text x="2" y="172" >docker</text>
+    <text x="58" y="172" >inspect</text>
+    <text x="2" y="188" >docker</text>
+    <text x="58" y="188" >stats</text>
+    <text x="2" y="204" >docker</text>
+    <text x="58" y="204" >top</text>
+    <text x="90" y="204" >NAME</text>
+    <line x1="136" y1="120" x2="480" y2="120" class="solid"></line>
+    <rect x="304" y="132" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="140" x2="308" y2="148" class="solid"></line>
+    <text x="322" y="140" >list</text>
+    <text x="362" y="140" >all</text>
+    <text x="394" y="140" >containers</text>
+    <rect x="304" y="148" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="156" x2="308" y2="164" class="solid"></line>
+    <text x="322" y="156" >stream</text>
+    <text x="378" y="156" >logs</text>
+    <rect x="304" y="164" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="172" x2="308" y2="180" class="solid"></line>
+    <text x="322" y="172" >full</text>
+    <text x="362" y="172" >JSON</text>
+    <text x="402" y="172" >details</text>
+    <rect x="304" y="180" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="188" x2="308" y2="196" class="solid"></line>
+    <text x="322" y="188" >live</text>
+    <text x="362" y="188" >CPU</text>
+    <line x1="392" y1="176" x2="384" y2="192" class="solid"></line>
+    <text x="394" y="188" >mem</text>
+    <line x1="424" y1="176" x2="416" y2="192" class="solid"></line>
+    <text x="426" y="188" >IO</text>
+    <rect x="304" y="196" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="322" y="204" >processes</text>
+    <text x="402" y="204" >inside</text>
+    <text x="122" y="156" >NAME</text>
+    <text x="122" y="172" >NAME</text>
+    <text x="458" y="204" >container</text>
+    <text x="2" y="236" >#</text>
+    <line x1="16" y1="232" x2="32" y2="232" class="solid"></line>
+    <text x="42" y="236" >IMAGES</text>
+    <line x1="96" y1="232" x2="480" y2="232" class="solid"></line>
+    <text x="2" y="252" >docker</text>
+    <text x="58" y="252" >build</text>
+    <line x1="104" y1="248" x2="112" y2="248" class="solid"></line>
+    <text x="114" y="252" >t</text>
+    <text x="130" y="252" >NAME:TAG</text>
+    <text x="202" y="252" >.</text>
+    <rect x="304" y="244" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="252" x2="308" y2="260" class="solid"></line>
+    <text x="322" y="252" >build</text>
+    <text x="370" y="252" >from</text>
+    <text x="410" y="252" >Dockerfile</text>
+    <text x="2" y="268" >docker</text>
+    <text x="58" y="268" >pull</text>
+    <text x="98" y="268" >IMAGE</text>
+    <line x1="140" y1="256" x2="140" y2="288" class="broken"></line>
+    <text x="146" y="268" >TAG</text>
+    <rect x="304" y="260" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="268" x2="308" y2="276" class="solid"></line>
+    <text x="322" y="268" >download</text>
+    <text x="394" y="268" >from</text>
+    <text x="434" y="268" >registry</text>
+    <text x="2" y="284" >docker</text>
+    <text x="58" y="284" >push</text>
+    <text x="98" y="284" >IMAGE</text>
+    <text x="146" y="284" >TAG</text>
+    <rect x="304" y="276" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="284" x2="308" y2="292" class="solid"></line>
+    <text x="322" y="284" >upload</text>
+    <text x="378" y="284" >to</text>
+    <text x="402" y="284" >registry</text>
+    <text x="2" y="300" >docker</text>
+    <text x="58" y="300" >images</text>
+    <rect x="304" y="292" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="300" x2="308" y2="308" class="solid"></line>
+    <text x="322" y="300" >list</text>
+    <text x="362" y="300" >local</text>
+    <text x="410" y="300" >images</text>
+    <text x="2" y="316" >docker</text>
+    <text x="58" y="316" >rmi</text>
+    <text x="90" y="316" >IMAGE</text>
+    <rect x="304" y="308" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="322" y="316" >remove</text>
+    <text x="378" y="316" >image</text>
+    <text x="2" y="348" >#</text>
+    <line x1="16" y1="344" x2="32" y2="344" class="solid"></line>
+    <text x="42" y="348" >VOLUMES</text>
+    <line x1="104" y1="344" x2="480" y2="344" class="solid"></line>
+    <text x="2" y="364" >docker</text>
+    <text x="58" y="364" >volume</text>
+    <text x="114" y="364" >create</text>
+    <text x="170" y="364" >NAME</text>
+    <rect x="304" y="356" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="364" x2="308" y2="372" class="solid"></line>
+    <text x="322" y="364" >create</text>
+    <text x="2" y="380" >docker</text>
+    <text x="58" y="380" >volume</text>
+    <text x="114" y="380" >ls</text>
+    <rect x="304" y="372" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="380" x2="308" y2="388" class="solid"></line>
+    <text x="322" y="380" >list</text>
+    <text x="2" y="396" >docker</text>
+    <text x="58" y="396" >volume</text>
+    <text x="114" y="396" >rm</text>
+    <rect x="304" y="388" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="322" y="396" >remove</text>
+    <text x="138" y="396" >NAME</text>
+    <text x="2" y="428" >#</text>
+    <line x1="16" y1="424" x2="32" y2="424" class="solid"></line>
+    <text x="42" y="428" >NETWORKS</text>
+    <line x1="112" y1="424" x2="480" y2="424" class="solid"></line>
+    <text x="2" y="444" >docker</text>
+    <text x="58" y="444" >network</text>
+    <text x="122" y="444" >create</text>
+    <text x="178" y="444" >NAME</text>
+    <rect x="304" y="436" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="444" x2="308" y2="452" class="solid"></line>
+    <text x="322" y="444" >create</text>
+    <text x="378" y="444" >bridge</text>
+    <text x="434" y="444" >network</text>
+    <text x="2" y="460" >docker</text>
+    <text x="58" y="460" >network</text>
+    <text x="122" y="460" >ls</text>
+    <rect x="304" y="452" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="460" x2="308" y2="468" class="solid"></line>
+    <text x="322" y="460" >list</text>
+    <text x="2" y="476" >docker</text>
+    <text x="58" y="476" >network</text>
+    <text x="122" y="476" >rm</text>
+    <rect x="304" y="468" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="322" y="476" >remove</text>
+    <text x="146" y="476" >NAME</text>
+    <text x="2" y="508" >#</text>
+    <line x1="16" y1="504" x2="32" y2="504" class="solid"></line>
+    <text x="42" y="508" >COMPOSE</text>
+    <line x1="104" y1="504" x2="480" y2="504" class="solid"></line>
+    <text x="2" y="524" >docker</text>
+    <text x="58" y="524" >compose</text>
+    <text x="122" y="524" >up</text>
+    <line x1="144" y1="520" x2="152" y2="520" class="solid"></line>
+    <text x="154" y="524" >d</text>
+    <rect x="304" y="516" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="524" x2="308" y2="532" class="solid"></line>
+    <text x="322" y="524" >start</text>
+    <text x="370" y="524" >all</text>
+    <text x="402" y="524" >services</text>
+    <text x="2" y="540" >docker</text>
+    <text x="58" y="540" >compose</text>
+    <text x="122" y="540" >down</text>
+    <line x1="160" y1="536" x2="168" y2="536" class="solid"></line>
+    <text x="170" y="540" >v</text>
+    <rect x="304" y="532" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="540" x2="308" y2="548" class="solid"></line>
+    <text x="322" y="540" >stop</text>
+    <text x="362" y="540" >+</text>
+    <text x="378" y="540" >remove</text>
+    <text x="434" y="540" >+</text>
+    <text x="450" y="540" >delete</text>
+    <text x="2" y="556" >docker</text>
+    <text x="58" y="556" >compose</text>
+    <text x="122" y="556" >logs</text>
+    <line x1="160" y1="552" x2="168" y2="552" class="solid"></line>
+    <text x="170" y="556" >f</text>
+    <text x="186" y="556" >SERVICE</text>
+    <rect x="304" y="548" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="556" x2="308" y2="564" class="solid"></line>
+    <text x="322" y="556" >stream</text>
+    <text x="378" y="556" >service</text>
+    <text x="442" y="556" >logs</text>
+    <text x="2" y="572" >docker</text>
+    <text x="58" y="572" >compose</text>
+    <text x="122" y="572" >exec</text>
+    <text x="162" y="572" >SERVICE</text>
+    <text x="226" y="572" >sh</text>
+    <rect x="304" y="564" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="572" x2="308" y2="580" class="solid"></line>
+    <text x="322" y="572" >shell</text>
+    <text x="370" y="572" >into</text>
+    <text x="410" y="572" >service</text>
+    <text x="2" y="588" >docker</text>
+    <text x="58" y="588" >compose</text>
+    <text x="122" y="588" >ps</text>
+    <rect x="304" y="580" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="322" y="588" >list</text>
+    <text x="362" y="588" >services</text>
+    <text x="506" y="540" >volumes</text>
+    <text x="2" y="620" >#</text>
+    <line x1="16" y1="616" x2="32" y2="616" class="solid"></line>
+    <text x="42" y="620" >CLEANUP</text>
+    <line x1="104" y1="616" x2="480" y2="616" class="solid"></line>
+    <text x="2" y="636" >docker</text>
+    <text x="58" y="636" >system</text>
+    <text x="114" y="636" >prune</text>
+    <line x1="160" y1="632" x2="168" y2="632" class="solid"></line>
+    <text x="170" y="636" >a</text>
+    <line x1="184" y1="632" x2="200" y2="632" class="solid"></line>
+    <text x="202" y="636" >volumes</text>
+    <rect x="304" y="628" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="308" y1="636" x2="308" y2="644" class="solid"></line>
+    <text x="322" y="636" >remove</text>
+    <text x="378" y="636" >everything</text>
+    <text x="466" y="636" >unused</text>
+    <text x="2" y="652" >docker</text>
+    <text x="58" y="652" >system</text>
+    <text x="114" y="652" >df</text>
+    <rect x="304" y="644" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="322" y="652" >show</text>
+    <text x="362" y="652" >disk</text>
+    <text x="402" y="652" >usage</text>
+</svg>

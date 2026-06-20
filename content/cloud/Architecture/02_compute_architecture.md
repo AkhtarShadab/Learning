@@ -23,26 +23,7 @@ that offload virtualization functions from the host CPU to dedicated hardware.
 
 ### Nitro Components
 
-```
-┌─────────────────────────────────────────────┐
-│              EC2 Instance (Guest)            │
-│  ┌────────────────────────────────────────┐  │
-│  │           Customer Workload            │  │
-│  │       (all vCPUs dedicated to you)     │  │
-│  └────────────────────────────────────────┘  │
-├─────────────────────────────────────────────┤
-│              Nitro Hypervisor               │
-│  (Lightweight KVM-based, minimal overhead)  │
-├─────────────────────────────────────────────┤
-│  Nitro Cards (dedicated hardware)           │
-│  ┌──────────┐ ┌──────────┐ ┌────────────┐  │
-│  │ Nitro    │ │ Nitro    │ │ Nitro      │  │
-│  │ Card for │ │ Card for │ │ Security   │  │
-│  │ VPC/EBS  │ │ Storage  │ │ Chip       │  │
-│  │ Network  │ │ (NVMe)   │ │            │  │
-│  └──────────┘ └──────────┘ └────────────┘  │
-└─────────────────────────────────────────────┘
-```
+![02_compute_architecture diagram 1](assets/02_compute_architecture-1.svg)
 
 **Nitro Cards**: Handle VPC networking, EBS I/O, and instance storage as dedicated
 hardware, freeing all host CPU cores for customer workloads.
@@ -63,15 +44,7 @@ performance.
 
 ### The Naming Convention
 
-```
-  m  5  a  d  .  2xlarge
-  │  │  │  │     │
-  │  │  │  │     └── Size (vCPUs, memory)
-  │  │  │  └──────── Additional capability: d = NVMe instance store
-  │  │  └─────────── Processor: a = AMD, g = Graviton, i = Intel
-  │  └────────────── Generation number
-  └───────────────── Family (purpose)
-```
+![02_compute_architecture diagram 2](assets/02_compute_architecture-2.svg)
 
 ### Instance Family Reference
 
@@ -120,18 +93,7 @@ When to use Graviton:
 T instances (T3, T3a, T4g) have a baseline CPU performance level and earn CPU
 credits when idle. Credits are spent when the instance bursts above baseline.
 
-```
-CPU Utilization
-100% ─────────────────────── Burst ceiling
-      │       ╱╲
-      │      ╱  ╲     Spending credits
-      │     ╱    ╲
- 20% ─│────╱──────╲──────── Baseline (e.g., t3.medium = 20%)
-      │   ╱        ╲
-      │  ╱          ╲  Earning credits
-      │ ╱            ╲
-  0% ─└──────────────────── Time
-```
+![02_compute_architecture diagram 3](assets/02_compute_architecture-3.svg)
 
 **Key mechanics:**
 - Each vCPU earns credits at a rate determined by the instance size
@@ -164,24 +126,7 @@ with spiky, unpredictable CPU patterns -- not sustained compute.
 
 ## Instance Lifecycle
 
-```
-       ┌──────────────────────────────────────────────┐
-       │                                              │
-       ▼                                              │
-  ┌─────────┐    ┌─────────┐    ┌──────────┐    ┌────┴────┐
-  │ Pending │───►│ Running │───►│ Stopping │───►│ Stopped │
-  └─────────┘    └────┬────┘    └──────────┘    └─────────┘
-                      │                               │
-                      │         ┌──────────────┐      │
-                      └────────►│ Shutting-down │      │
-                                └──────┬───────┘      │
-                                       │              │
-                                       ▼              │
-                                ┌──────────────┐      │
-                                │  Terminated  │◄─────┘
-                                └──────────────┘
-                                (cannot restart)
-```
+![02_compute_architecture diagram 4](assets/02_compute_architecture-4.svg)
 
 **Important distinctions:**
 - **Stopped**: Instance is not running; you are not charged for compute (only EBS
@@ -218,24 +163,7 @@ needed to launch an instance. AMIs include:
 
 ### AMI Lifecycle
 
-```
-Base AMI (Amazon Linux, Ubuntu, etc.)
-    │
-    ▼
-Launch instance from base AMI
-    │
-    ▼
-Install software, configure, harden
-    │
-    ▼
-Create custom AMI (snapshot taken automatically)
-    │
-    ▼
-Use custom AMI in Launch Templates / ASGs
-    │
-    ▼
-Copy AMI to other regions (for multi-region deployment)
-```
+![02_compute_architecture diagram 5](assets/02_compute_architecture-5.svg)
 
 ```bash
 # Create an AMI from a running instance
@@ -268,47 +196,21 @@ Placement groups control how instances are physically positioned on underlying h
 All instances placed on the same rack (or nearby racks) within a single AZ.
 Provides the lowest latency and highest throughput between instances.
 
-```
-    Rack 1              Rack 2
-  ┌────────┐         ┌────────┐
-  │ i-aaa  │◄───────►│ i-ccc  │   10 Gbps+ between instances
-  │ i-bbb  │ low lat │ i-ddd  │   < 1ms latency
-  └────────┘         └────────┘
-  
-  Use: HPC, distributed ML training, financial simulations
-  Risk: Single rack failure takes out the group
-```
+![02_compute_architecture diagram 6](assets/02_compute_architecture-6.svg)
 
 ### Spread Placement Group
 
 Each instance is placed on distinct hardware (different racks). Maximum 7 instances
 per AZ per spread group. Minimizes correlated failure.
 
-```
-  Rack 1        Rack 2        Rack 3        Rack 4
-  ┌──────┐    ┌──────┐     ┌──────┐     ┌──────┐
-  │ i-aa │    │ i-bb │     │ i-cc │     │ i-dd │
-  └──────┘    └──────┘     └──────┘     └──────┘
-  
-  Use: Critical instances (primary DB nodes, ZooKeeper quorum)
-  Limit: 7 instances per AZ
-```
+![02_compute_architecture diagram 7](assets/02_compute_architecture-7.svg)
 
 ### Partition Placement Group
 
 Instances are divided into logical partitions, each on separate racks. Partitions
 can contain multiple instances but share no hardware across partitions.
 
-```
-  Partition 1      Partition 2      Partition 3
-  (Rack A)         (Rack B)         (Rack C)
-  ┌──────────┐    ┌──────────┐    ┌──────────┐
-  │ i-1  i-2 │    │ i-5  i-6 │    │ i-9  i-10│
-  │ i-3  i-4 │    │ i-7  i-8 │    │ i-11 i-12│
-  └──────────┘    └──────────┘    └──────────┘
-  
-  Use: HDFS, Cassandra, Kafka (topology-aware distributed systems)
-```
+![02_compute_architecture diagram 8](assets/02_compute_architecture-8.svg)
 
 ---
 
@@ -339,15 +241,7 @@ i3en instances) but data is lost when the instance stops or terminates.
 Network-attached storage that persists independently of the instance. Slower than
 instance store but durable.
 
-```
-Instance Store:                    EBS:
-┌─────────┐                       ┌─────────┐         ┌──────────┐
-│  EC2    │                       │  EC2    │◄───────►│  EBS     │
-│ Instance│  ← NVMe local disk    │ Instance│ network │  Volume  │
-│         │  ← Lost on stop/term  │         │         │  (persist│
-└─────────┘                       └─────────┘         │  on stop)│
-                                                      └──────────┘
-```
+![02_compute_architecture diagram 9](assets/02_compute_architecture-9.svg)
 
 | Aspect        | Instance Store       | EBS                      |
 |---------------|----------------------|--------------------------|
@@ -466,33 +360,7 @@ For more complex initialization, use **cfn-init** (AWS-specific) or **cloud-init
 
 ## Instance Selection Decision Tree
 
-```
-START: What kind of workload?
-│
-├── Web server / App server (balanced CPU + memory)
-│   ├── Steady traffic ──► M-family (m7i, m7g, m7a)
-│   └── Variable/spikey traffic ──► T-family (t3, t4g) if CPU < 30% avg
-│
-├── CPU-intensive (video encoding, batch compute, scientific)
-│   └── C-family (c7i, c7g, c7a)
-│
-├── Memory-intensive (in-memory DB, real-time analytics)
-│   ├── Up to 512 GB ──► R-family (r7i, r7g)
-│   └── > 512 GB (SAP HANA) ──► X-family (x2idn) or High Memory (u-)
-│
-├── Storage-intensive (NoSQL, data warehouse)
-│   ├── High random IOPS ──► I-family (i4i) with NVMe instance store
-│   └── High sequential throughput ──► D-family (d3en) with HDD
-│
-├── Machine Learning
-│   ├── Training ──► P-family (p5, p4d) or Trn1
-│   └── Inference ──► G-family (g6, g5) or Inf2
-│
-└── Cost-optimized?
-    ├── Use Graviton (g suffix) for 40% better price/performance
-    ├── Use AMD (a suffix) for 10% lower price
-    └── Use Spot Instances for up to 90% savings on fault-tolerant work
-```
+![02_compute_architecture diagram 10](assets/02_compute_architecture-10.svg)
 
 ---
 

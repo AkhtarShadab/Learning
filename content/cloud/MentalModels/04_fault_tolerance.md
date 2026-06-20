@@ -614,16 +614,7 @@ No two competing groups can both get a majority at the same time — by
 definition, two majorities would overlap on at least one member, and that
 member cannot vote for both sides simultaneously.
 
-```
-5-member parliament: majority = 3
-
-  Group A (3 votes) ── passes ✓
-  Group B (3 votes) ── passes ✓   ← impossible: A∩B ≥ 1 member
-
-In a 5-node Raft cluster (majority = 3):
-  Two candidates cannot both win an election simultaneously.
-  The overlap node will only vote for one.
-```
+![04_fault_tolerance diagram 1](assets/04_fault_tolerance-1.svg)
 
 This is why Raft is safe: **quorum intersection** guarantees that no two
 leaders can be elected in the same term.
@@ -636,17 +627,7 @@ At any moment, Raft ensures **exactly one leader**. The leader is the only
 node that accepts writes. It decides the order of operations and replicates
 decisions to all followers.
 
-```
-          ┌────────────┐
-          │   LEADER   │  ← accepts all writes
-          │   (Node 1) │  ← sends heartbeats every 150ms
-          └─────┬──────┘
-         ┌──────┴──────┐
-    ┌────┴───┐     ┌───┴────┐
-    │Follower│     │Follower│  ← replicate log entries from leader
-    │(Node 2)│     │(Node 3)│  ← respond to reads (or redirect to leader)
-    └────────┘     └────────┘
-```
+![04_fault_tolerance diagram 2](assets/04_fault_tolerance-2.svg)
 
 If the captain (leader) goes overboard (crashes or becomes unreachable),
 followers notice the absence of heartbeats, start an election, and elect
@@ -691,20 +672,7 @@ the last snapshot and catches up.
 
 When a follower stops receiving heartbeats, it starts an election:
 
-```
-Election timeout fires (randomized: 150–300ms)
-  │
-  ├─ Follower becomes Candidate
-  ├─ Increments its term number  (e.g., term 3 → term 4)
-  ├─ Votes for itself
-  ├─ Sends RequestVote RPC to all other nodes
-  │
-  └─ Each node votes YES if:
-       (a) It hasn't voted in this term yet
-       (b) Candidate's log is at least as up-to-date as its own
-       
-  Candidate wins if it gets votes from a majority (⌊n/2⌋ + 1)
-```
+![04_fault_tolerance diagram 3](assets/04_fault_tolerance-3.svg)
 
 **Randomized timeouts** prevent perpetual split votes. If two candidates
 start simultaneously, one almost always fires its next election timeout first
@@ -712,18 +680,7 @@ and wins before the other can split the vote again.
 
 #### 2. Log Replication
 
-```
-Client write → Leader
-  │
-  ├─ Leader appends entry to its log (uncommitted)
-  ├─ Sends AppendEntries RPCs to all followers (in parallel)
-  ├─ Waits for majority ACK
-  ├─ Marks entry as committed, applies to state machine
-  └─ Returns success to client
-
-  On next heartbeat → notifies followers entry is committed
-  Followers apply committed entries to their state machines
-```
+![04_fault_tolerance diagram 4](assets/04_fault_tolerance-4.svg)
 
 Followers that are slow or partitioned will catch up when reconnected.
 The leader tracks a `nextIndex` per follower and retries indefinitely.
@@ -747,18 +704,7 @@ by construction.
 
 ### The Quorum Math
 
-```
-Cluster size (n)  │  Majority needed  │  Failures tolerated
-──────────────────┼───────────────────┼────────────────────
-        1         │        1          │         0
-        2         │        2          │         0  ← no benefit
-        3         │        2          │         1
-        4         │        3          │         1  ← same as n=3, write is slower
-        5         │        3          │         2
-        7         │        4          │         3
-
-Formula: tolerates ⌊(n-1)/2⌋ failures
-```
+![04_fault_tolerance diagram 5](assets/04_fault_tolerance-5.svg)
 
 This is why **odd cluster sizes** are the standard: adding an even node
 gives no additional failure tolerance (n=4 still tolerates 1 failure like

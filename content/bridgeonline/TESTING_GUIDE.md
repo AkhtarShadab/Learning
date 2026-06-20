@@ -238,13 +238,7 @@ npm run build
 
 **Expected output (last few lines):**
 
-```
-Route (app)                              Size     First Load JS
-┌ ○ /                                    ...
-...
-✓ Compiled successfully
-   Generating static pages (23/23)
-```
+![TESTING_GUIDE diagram 1](assets/TESTING_GUIDE-1.svg)
 
 All 23 pages must compile without errors or warnings. Any TypeScript error will cause a non-zero exit code.
 

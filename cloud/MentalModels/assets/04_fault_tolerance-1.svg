@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="504" height="144" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="504" height="144"></rect>
+    <text x="2" y="12" >5</text>
+    <line x1="8" y1="8" x2="16" y2="8" class="solid"></line>
+    <text x="18" y="12" >member</text>
+    <text x="74" y="12" >parliament:</text>
+    <text x="170" y="12" >majority</text>
+    <line x1="240" y1="6" x2="248" y2="6" class="solid"></line>
+    <line x1="240" y1="10" x2="248" y2="10" class="solid"></line>
+    <text x="258" y="12" >3</text>
+    <text x="18" y="44" >Group</text>
+    <text x="18" y="60" >Group</text>
+    <text x="66" y="44" >A</text>
+    <text x="66" y="60" >B</text>
+    <text x="90" y="44" >3</text>
+    <text x="90" y="60" >3</text>
+    <text x="106" y="44" >votes</text>
+    <text x="106" y="60" >votes</text>
+    <line x1="160" y1="40" x2="176" y2="40" class="solid"></line>
+    <line x1="160" y1="56" x2="176" y2="56" class="solid"></line>
+    <text x="186" y="44" >passes</text>
+    <text x="186" y="60" >passes</text>
+    <text x="242" y="44" >✓</text>
+    <text x="242" y="60" >✓</text>
+    <text x="274" y="60" >←</text>
+    <text x="290" y="60" >impossible:</text>
+    <text x="418" y="60" >≥</text>
+    <text x="434" y="60" >1</text>
+    <text x="450" y="60" >member</text>
+    <text x="2" y="92" >In</text>
+    <text x="26" y="92" >a</text>
+    <text x="42" y="92" >5</text>
+    <line x1="48" y1="88" x2="56" y2="88" class="solid"></line>
+    <text x="58" y="92" >node</text>
+    <text x="98" y="92" >Raft</text>
+    <text x="138" y="92" >cluster</text>
+    <path d="M 208,80 A 16,16 0,0,0 208,96" class="nofill"></path>
+    <text x="210" y="92" >majority</text>
+    <line x1="280" y1="86" x2="288" y2="86" class="solid"></line>
+    <line x1="280" y1="90" x2="288" y2="90" class="solid"></line>
+    <text x="298" y="92" >3</text>
+    <path d="M 304,80 A 16,16 0,0,1 304,96" class="nofill"></path>
+    <text x="314" y="92" >:</text>
+    <text x="18" y="108" >Two</text>
+    <text x="50" y="108" >candidates</text>
+    <text x="138" y="108" >cannot</text>
+    <text x="194" y="108" >both</text>
+    <text x="234" y="108" >win</text>
+    <text x="266" y="108" >an</text>
+    <text x="290" y="108" >election</text>
+    <text x="18" y="124" >The</text>
+    <text x="50" y="124" >overlap</text>
+    <text x="114" y="124" >node</text>
+    <text x="154" y="124" >will</text>
+    <text x="194" y="124" >only</text>
+    <text x="234" y="124" >vote</text>
+    <text x="274" y="124" >for</text>
+    <text x="306" y="124" >one.</text>
+    <text x="362" y="108" >simultaneously.</text>
+    <g>
+        <path d="M 88,32 A 16,16 0,0,0 88,48" class="nofill"></path>
+        <path d="M 88,48 A 16,16 0,0,0 88,64" class="nofill"></path>
+    </g>
+    <g>
+        <path d="M 144,32 A 16,16 0,0,1 144,48" class="nofill"></path>
+        <path d="M 144,48 A 16,16 0,0,1 144,64" class="nofill"></path>
+    </g>
+    <g>
+        <text x="386" y="60">A∩</text>
+        <text x="402" y="60">B</text>
+    </g>
+</svg>

@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="496" height="240" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="496" height="240"></rect>
+    <text x="18" y="12" >Inode</text>
+    <text x="66" y="12" >hash</text>
+    <text x="106" y="12" >table:</text>
+    <text x="34" y="44" >Key</text>
+    <text x="186" y="44" >Inode</text>
+    <text x="234" y="44" >Structure</text>
+    <path d="M 40,48 A 16,16 0,0,0 40,64" class="nofill"></path>
+    <text x="42" y="60" >dev,</text>
+    <text x="82" y="60" >ino</text>
+    <path d="M 104,48 A 16,16 0,0,1 104,64" class="nofill"></path>
+    <path d="M 40,80 A 16,16 0,0,0 40,96" class="nofill"></path>
+    <text x="42" y="92" >sda1,</text>
+    <text x="90" y="92" >2</text>
+    <path d="M 96,80 A 16,16 0,0,1 96,96" class="nofill"></path>
+    <text x="186" y="92" >type</text>
+    <line x1="216" y1="86" x2="224" y2="86" class="solid"></line>
+    <line x1="216" y1="90" x2="224" y2="90" class="solid"></line>
+    <text x="226" y="92" >dir,</text>
+    <text x="266" y="92" >perms</text>
+    <line x1="304" y1="86" x2="312" y2="86" class="solid"></line>
+    <line x1="304" y1="90" x2="312" y2="90" class="solid"></line>
+    <text x="314" y="92" >755,</text>
+    <text x="354" y="92" >size</text>
+    <line x1="384" y1="86" x2="392" y2="86" class="solid"></line>
+    <line x1="384" y1="90" x2="392" y2="90" class="solid"></line>
+    <text x="394" y="92" >4096,</text>
+    <line x1="476" y1="80" x2="476" y2="112" class="solid"></line>
+    <text x="186" y="108" >uid</text>
+    <line x1="208" y1="102" x2="216" y2="102" class="solid"></line>
+    <line x1="208" y1="106" x2="216" y2="106" class="solid"></line>
+    <text x="218" y="108" >0,</text>
+    <text x="242" y="108" >gid</text>
+    <line x1="264" y1="102" x2="272" y2="102" class="solid"></line>
+    <line x1="264" y1="106" x2="272" y2="106" class="solid"></line>
+    <text x="274" y="108" >0,</text>
+    <text x="298" y="108" >blocks</text>
+    <line x1="344" y1="102" x2="352" y2="102" class="solid"></line>
+    <line x1="344" y1="106" x2="352" y2="106" class="solid"></line>
+    <text x="354" y="108" >[...],</text>
+    <text x="410" y="108" >links</text>
+    <line x1="448" y1="102" x2="456" y2="102" class="solid"></line>
+    <line x1="448" y1="106" x2="456" y2="106" class="solid"></line>
+    <text x="458" y="108" >23</text>
+    <path d="M 40,128 A 16,16 0,0,0 40,144" class="nofill"></path>
+    <text x="42" y="140" >sda1,</text>
+    <text x="90" y="140" >2047</text>
+    <path d="M 120,128 A 16,16 0,0,1 120,144" class="nofill"></path>
+    <text x="186" y="140" >type</text>
+    <line x1="216" y1="134" x2="224" y2="134" class="solid"></line>
+    <line x1="216" y1="138" x2="224" y2="138" class="solid"></line>
+    <text x="226" y="140" >file,</text>
+    <text x="274" y="140" >perms</text>
+    <line x1="312" y1="134" x2="320" y2="134" class="solid"></line>
+    <line x1="312" y1="138" x2="320" y2="138" class="solid"></line>
+    <text x="322" y="140" >644,</text>
+    <text x="362" y="140" >size</text>
+    <line x1="392" y1="134" x2="400" y2="134" class="solid"></line>
+    <line x1="392" y1="138" x2="400" y2="138" class="solid"></line>
+    <text x="402" y="140" >1048576,</text>
+    <line x1="476" y1="128" x2="476" y2="144" class="solid"></line>
+    <text x="186" y="156" >uid</text>
+    <line x1="208" y1="150" x2="216" y2="150" class="solid"></line>
+    <line x1="208" y1="154" x2="216" y2="154" class="solid"></line>
+    <text x="218" y="156" >33,</text>
+    <text x="250" y="156" >gid</text>
+    <line x1="272" y1="150" x2="280" y2="150" class="solid"></line>
+    <line x1="272" y1="154" x2="280" y2="154" class="solid"></line>
+    <text x="282" y="156" >33,</text>
+    <text x="314" y="156" >blocks</text>
+    <line x1="360" y1="150" x2="368" y2="150" class="solid"></line>
+    <line x1="360" y1="154" x2="368" y2="154" class="solid"></line>
+    <text x="370" y="156" >[...],</text>
+    <text x="426" y="156" >links</text>
+    <line x1="464" y1="150" x2="472" y2="150" class="solid"></line>
+    <line x1="464" y1="154" x2="472" y2="154" class="solid"></line>
+    <text x="474" y="156" >1</text>
+    <path d="M 40,176 A 16,16 0,0,0 40,192" class="nofill"></path>
+    <text x="42" y="188" >sda2,</text>
+    <text x="90" y="188" >100</text>
+    <path d="M 112,176 A 16,16 0,0,1 112,192" class="nofill"></path>
+    <text x="186" y="188" >type</text>
+    <line x1="216" y1="182" x2="224" y2="182" class="solid"></line>
+    <line x1="216" y1="186" x2="224" y2="186" class="solid"></line>
+    <text x="226" y="188" >file,</text>
+    <text x="274" y="188" >perms</text>
+    <line x1="312" y1="182" x2="320" y2="182" class="solid"></line>
+    <line x1="312" y1="186" x2="320" y2="186" class="solid"></line>
+    <text x="322" y="188" >600,</text>
+    <text x="362" y="188" >size</text>
+    <line x1="392" y1="182" x2="400" y2="182" class="solid"></line>
+    <line x1="392" y1="186" x2="400" y2="186" class="solid"></line>
+    <text x="402" y="188" >256,</text>
+    <line x1="476" y1="176" x2="476" y2="208" class="solid"></line>
+    <text x="186" y="204" >uid</text>
+    <line x1="208" y1="198" x2="216" y2="198" class="solid"></line>
+    <line x1="208" y1="202" x2="216" y2="202" class="solid"></line>
+    <text x="218" y="204" >0,</text>
+    <text x="242" y="204" >gid</text>
+    <line x1="264" y1="198" x2="272" y2="198" class="solid"></line>
+    <line x1="264" y1="202" x2="272" y2="202" class="solid"></line>
+    <text x="274" y="204" >0,</text>
+    <text x="298" y="204" >blocks</text>
+    <line x1="344" y1="198" x2="352" y2="198" class="solid"></line>
+    <line x1="344" y1="202" x2="352" y2="202" class="solid"></line>
+    <text x="354" y="204" >[...],</text>
+    <text x="410" y="204" >links</text>
+    <line x1="448" y1="198" x2="456" y2="198" class="solid"></line>
+    <line x1="448" y1="202" x2="456" y2="202" class="solid"></line>
+    <text x="458" y="204" >1</text>
+    <g>
+        <line x1="20" y1="24" x2="484" y2="24" class="solid"></line>
+        <line x1="20" y1="24" x2="20" y2="216" class="solid"></line>
+        <line x1="172" y1="24" x2="172" y2="216" class="solid"></line>
+        <line x1="484" y1="24" x2="484" y2="80" class="solid"></line>
+        <line x1="20" y1="72" x2="484" y2="72" class="solid"></line>
+        <line x1="20" y1="120" x2="484" y2="120" class="solid"></line>
+        <line x1="484" y1="112" x2="484" y2="128" class="solid"></line>
+        <line x1="20" y1="216" x2="484" y2="216" class="solid"></line>
+        <line x1="484" y1="208" x2="484" y2="216" class="solid"></line>
+        <line x1="484" y1="144" x2="484" y2="176" class="solid"></line>
+        <line x1="20" y1="168" x2="484" y2="168" class="solid"></line>
+    </g>
+</svg>

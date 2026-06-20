@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="144" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="512" height="144"></rect>
+    <text x="2" y="12" >Route</text>
+    <text x="50" y="12" >Table:</text>
+    <text x="106" y="12" >Private</text>
+    <line x1="160" y1="8" x2="168" y2="8" class="solid"></line>
+    <text x="170" y="12" >Subnet</text>
+    <line x1="216" y1="8" x2="224" y2="8" class="solid"></line>
+    <text x="226" y="12" >RT</text>
+    <line x1="0" y1="24" x2="312" y2="24" class="solid"></line>
+    <line x1="0" y1="28" x2="312" y2="28" class="solid"></line>
+    <text x="2" y="44" >Destination</text>
+    <text x="154" y="44" >Target</text>
+    <line x1="0" y1="56" x2="120" y2="56" class="solid"></line>
+    <line x1="152" y1="56" x2="296" y2="56" class="solid"></line>
+    <text x="2" y="76" >10.0.0.0</text>
+    <line x1="72" y1="64" x2="56" y2="96" class="solid"></line>
+    <text x="66" y="92" >0</text>
+    <text x="74" y="76" >16</text>
+    <text x="154" y="76" >local</text>
+    <text x="2" y="92" >0.0.0.0</text>
+    <text x="154" y="92" >nat</text>
+    <line x1="176" y1="88" x2="184" y2="88" class="solid"></line>
+    <text x="186" y="92" >gw</text>
+    <line x1="200" y1="88" x2="208" y2="88" class="solid"></line>
+    <text x="210" y="92" >123abc</text>
+    <text x="2" y="108" >10.100.0.0</text>
+    <line x1="88" y1="96" x2="80" y2="112" class="solid"></line>
+    <text x="90" y="108" >16</text>
+    <text x="154" y="108" >tgw</text>
+    <line x1="176" y1="104" x2="184" y2="104" class="solid"></line>
+    <text x="186" y="108" >456def</text>
+    <text x="2" y="124" >pl</text>
+    <line x1="16" y1="120" x2="24" y2="120" class="solid"></line>
+    <text x="26" y="124" >68a54001</text>
+    <text x="154" y="124" >vpce</text>
+    <line x1="184" y1="120" x2="192" y2="120" class="solid"></line>
+    <text x="194" y="124" >s3</text>
+    <line x1="208" y1="120" x2="216" y2="120" class="solid"></line>
+    <text x="218" y="124" >789ghi</text>
+    <text x="314" y="76" >VPC</text>
+    <line x1="336" y1="72" x2="344" y2="72" class="solid"></line>
+    <text x="346" y="76" >internal</text>
+    <text x="418" y="76" >traffic</text>
+    <path d="M 472,64 A 16,16 0,0,1 472,80" class="nofill"></path>
+    <text x="314" y="92" >internet</text>
+    <text x="386" y="92" >via</text>
+    <text x="418" y="92" >NAT</text>
+    <path d="M 440,80 A 16,16 0,0,1 440,96" class="nofill"></path>
+    <text x="314" y="108" >on</text>
+    <line x1="328" y1="104" x2="336" y2="104" class="solid"></line>
+    <text x="338" y="108" >prem</text>
+    <text x="378" y="108" >via</text>
+    <text x="410" y="108" >Transit</text>
+    <text x="474" y="108" >GW</text>
+    <path d="M 488,96 A 16,16 0,0,1 488,112" class="nofill"></path>
+    <text x="314" y="124" >S3</text>
+    <text x="338" y="124" >via</text>
+    <text x="370" y="124" >Gateway</text>
+    <text x="434" y="124" >Endpoint</text>
+    <path d="M 496,112 A 16,16 0,0,1 496,128" class="nofill"></path>
+    <g>
+        <path d="M 312,64 A 16,16 0,0,0 312,80" class="nofill"></path>
+        <path d="M 312,80 A 16,16 0,0,0 312,96" class="nofill"></path>
+        <path d="M 312,96 A 16,16 0,0,0 312,112" class="nofill"></path>
+        <path d="M 312,112 A 16,16 0,0,0 312,128" class="nofill"></path>
+    </g>
+</svg>

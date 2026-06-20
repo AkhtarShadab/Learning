@@ -39,7 +39,7 @@ const PROTECTED = new Set([
   "quartz.config.ts", "quartz.layout.ts", "tsconfig.json", "package.json",
   "package-lock.json", "globals.d.ts", "index.d.ts", "README.md", "PROJECT.md",
   ".gitignore", ".gitattributes", ".npmrc", ".prettierrc", ".prettierignore",
-  ".node-version", ".generated-manifest.json",
+  ".node-version", ".generated-manifest.json", ".htaccess",
 ])
 
 console.log("▶ Building Quartz site ...")

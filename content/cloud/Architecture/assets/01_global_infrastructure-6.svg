@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="576" height="208" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="576" height="208"></rect>
+    <text x="2" y="12" >GLOBAL</text>
+    <line x1="0" y1="24" x2="112" y2="24" class="solid"></line>
+    <text x="2" y="44" >IAM</text>
+    <text x="2" y="60" >Route</text>
+    <text x="50" y="60" >53</text>
+    <text x="2" y="76" >CloudFront</text>
+    <text x="2" y="92" >WAF</text>
+    <path d="M 40,80 A 16,16 0,0,0 40,96" class="nofill"></path>
+    <text x="42" y="92" >global</text>
+    <path d="M 88,80 A 16,16 0,0,1 88,96" class="nofill"></path>
+    <text x="170" y="12" >REGIONAL</text>
+    <line x1="176" y1="24" x2="280" y2="24" class="solid"></line>
+    <text x="178" y="44" >S3</text>
+    <text x="178" y="60" >DynamoDB</text>
+    <text x="178" y="76" >Lambda</text>
+    <text x="178" y="92" >SQS</text>
+    <line x1="216" y1="80" x2="208" y2="96" class="solid"></line>
+    <text x="226" y="92" >SNS</text>
+    <text x="178" y="108" >VPC</text>
+    <text x="178" y="124" >Auto</text>
+    <text x="218" y="124" >Scaling</text>
+    <text x="178" y="140" >ALB</text>
+    <line x1="216" y1="128" x2="206" y2="148" class="solid"></line>
+    <text x="226" y="140" >NLB</text>
+    <text x="178" y="156" >Aur</text>
+    <circle cx="204" cy="152" r="3" class="nofill"></circle>
+    <text x="210" y="156" >ra</text>
+    <text x="234" y="156" >Cluster</text>
+    <text x="346" y="12" >AZ</text>
+    <line x1="360" y1="8" x2="368" y2="8" class="solid"></line>
+    <text x="370" y="12" >SCOPED</text>
+    <line x1="352" y1="24" x2="456" y2="24" class="solid"></line>
+    <text x="354" y="44" >EC2</text>
+    <text x="386" y="44" >Instance</text>
+    <text x="354" y="60" >EBS</text>
+    <text x="386" y="60" >Volume</text>
+    <text x="354" y="76" >Subnet</text>
+    <text x="354" y="92" >RDS</text>
+    <text x="386" y="92" >Instance*</text>
+    <text x="354" y="108" >EFS</text>
+    <text x="386" y="108" >Mount</text>
+    <text x="434" y="108" >Target</text>
+    <text x="354" y="124" >NAT</text>
+    <text x="386" y="124" >Gateway</text>
+    <text x="282" y="124" >Group</text>
+    <text x="2" y="188" >*</text>
+    <text x="18" y="188" >RDS</text>
+    <text x="50" y="188" >Multi</text>
+    <line x1="88" y1="184" x2="96" y2="184" class="solid"></line>
+    <text x="98" y="188" >AZ</text>
+    <text x="122" y="188" >has</text>
+    <text x="154" y="188" >a</text>
+    <text x="170" y="188" >standby</text>
+    <text x="234" y="188" >in</text>
+    <text x="258" y="188" >another</text>
+    <text x="322" y="188" >AZ</text>
+    <text x="346" y="188" >but</text>
+    <text x="378" y="188" >the</text>
+    <text x="410" y="188" >primary</text>
+    <text x="474" y="188" >is</text>
+    <text x="498" y="188" >AZ</text>
+    <line x1="512" y1="184" x2="520" y2="184" class="solid"></line>
+    <text x="522" y="188" >scoped</text>
+</svg>

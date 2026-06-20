@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="448" height="256" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="448" height="256"></rect>
+    <rect x="164" y="8" width="120" height="48" class="solid nofill" rx="0"></rect>
+    <text x="194" y="28" >PRIMARY</text>
+    <path d="M 184,32 A 16,16 0,0,0 184,48" class="nofill"></path>
+    <text x="186" y="44" >read</text>
+    <line x1="224" y1="32" x2="216" y2="48" class="solid"></line>
+    <text x="226" y="44" >write</text>
+    <path d="M 264,32 A 16,16 0,0,1 264,48" class="nofill"></path>
+    <rect x="4" y="104" width="120" height="64" class="solid nofill" rx="0"></rect>
+    <text x="18" y="124" >READ</text>
+    <text x="58" y="124" >REPLICA</text>
+    <path d="M 32,128 A 16,16 0,0,0 32,144" class="nofill"></path>
+    <text x="34" y="140" >read</text>
+    <text x="74" y="140" >only</text>
+    <path d="M 104,128 A 16,16 0,0,1 104,144" class="nofill"></path>
+    <text x="26" y="156" >Same</text>
+    <text x="66" y="156" >Region</text>
+    <rect x="308" y="104" width="120" height="64" class="solid nofill" rx="0"></rect>
+    <text x="322" y="124" >READ</text>
+    <text x="362" y="124" >REPLICA</text>
+    <path d="M 336,128 A 16,16 0,0,0 336,144" class="nofill"></path>
+    <text x="338" y="140" >read</text>
+    <text x="378" y="140" >only</text>
+    <path d="M 408,128 A 16,16 0,0,1 408,144" class="nofill"></path>
+    <text x="330" y="156" >Diff</text>
+    <text x="370" y="156" >Region</text>
+    <rect x="156" y="184" width="120" height="48" class="solid nofill" rx="0"></rect>
+    <text x="170" y="204" >READ</text>
+    <text x="210" y="204" >REPLICA</text>
+    <path d="M 184,208 A 16,16 0,0,0 184,224" class="nofill"></path>
+    <text x="186" y="220" >read</text>
+    <text x="226" y="220" >only</text>
+    <path d="M 256,208 A 16,16 0,0,1 256,224" class="nofill"></path>
+    <text x="82" y="60" >async</text>
+    <text x="314" y="60" >async</text>
+    <text x="82" y="76" >repl.</text>
+    <text x="314" y="76" >repl.</text>
+    <text x="170" y="140" >async</text>
+    <text x="234" y="140" >repl.</text>
+    <path d="M 312,192 A 16,16 0,0,0 312,208" class="nofill"></path>
+    <text x="314" y="204" >Cross</text>
+    <line x1="352" y1="200" x2="360" y2="200" class="solid"></line>
+    <text x="362" y="204" >region</text>
+    <text x="418" y="204" >for</text>
+    <text x="314" y="220" >DR</text>
+    <text x="338" y="220" >and</text>
+    <text x="370" y="220" >latency</text>
+    <path d="M 424,208 A 16,16 0,0,1 424,224" class="nofill"></path>
+    <g>
+        <line x1="68" y1="40" x2="160" y2="40" class="solid"></line>
+        <line x1="68" y1="40" x2="68" y2="84" class="solid"></line>
+        <polygon points="64,84 72,84 68,96" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="288" y1="40" x2="380" y2="40" class="solid"></line>
+        <line x1="380" y1="40" x2="380" y2="84" class="solid"></line>
+        <polygon points="376,84 384,84 380,96" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="220" y1="64" x2="220" y2="164" class="solid"></line>
+        <polygon points="216,164 224,164 220,176" class="filled"></polygon>
+    </g>
+</svg>

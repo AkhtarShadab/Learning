@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="240" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="480" height="240"></rect>
+    <rect x="4" y="24" width="168" height="192" class="solid nofill" rx="0"></rect>
+    <rect x="28" y="56" width="120" height="32" class="solid nofill" rx="0"></rect>
+    <text x="50" y="76" >Container</text>
+    <text x="26" y="44" >Task</text>
+    <text x="26" y="172" >No</text>
+    <text x="50" y="172" >EC2</text>
+    <text x="82" y="172" >to</text>
+    <text x="106" y="172" >manage</text>
+    <text x="26" y="188" >Pay</text>
+    <text x="58" y="188" >per</text>
+    <text x="90" y="188" >task</text>
+    <text x="26" y="204" >resources</text>
+    <text x="26" y="124" >AWS</text>
+    <text x="58" y="124" >manages</text>
+    <text x="122" y="124" >the</text>
+    <text x="26" y="140" >underlying</text>
+    <text x="114" y="140" >host</text>
+    <rect x="300" y="24" width="168" height="192" class="solid nofill" rx="0"></rect>
+    <text x="322" y="44" >EC2</text>
+    <text x="354" y="44" >Instance</text>
+    <text x="346" y="76" >ECS</text>
+    <text x="378" y="76" >Agent</text>
+    <text x="346" y="108" >Task</text>
+    <text x="386" y="108" >1</text>
+    <text x="346" y="124" >Task</text>
+    <text x="386" y="124" >2</text>
+    <text x="346" y="140" >Task</text>
+    <text x="386" y="140" >3</text>
+    <text x="322" y="188" >You</text>
+    <text x="354" y="188" >manage</text>
+    <text x="410" y="188" >EC2s</text>
+    <text x="322" y="204" >Pay</text>
+    <text x="354" y="204" >per</text>
+    <text x="386" y="204" >instance</text>
+    <text x="2" y="12" >ECS</text>
+    <text x="34" y="12" >on</text>
+    <text x="58" y="12" >Fargate:</text>
+    <text x="298" y="12" >ECS</text>
+    <text x="330" y="12" >on</text>
+    <text x="354" y="12" >EC2:</text>
+    <g>
+        <line x1="324" y1="56" x2="444" y2="56" class="solid"></line>
+        <line x1="324" y1="56" x2="324" y2="152" class="solid"></line>
+        <line x1="444" y1="56" x2="444" y2="152" class="solid"></line>
+        <line x1="324" y1="88" x2="444" y2="88" class="solid"></line>
+        <line x1="324" y1="152" x2="444" y2="152" class="solid"></line>
+    </g>
+</svg>

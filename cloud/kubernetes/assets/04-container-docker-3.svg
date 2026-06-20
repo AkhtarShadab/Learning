@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="656" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="560" height="656"></rect>
+    <text x="10" y="12" >DOCKER</text>
+    <text x="66" y="12" >ARCHITECTURE</text>
+    <line x1="8" y1="24" x2="160" y2="24" class="solid"></line>
+    <line x1="8" y1="28" x2="160" y2="28" class="solid"></line>
+    <text x="34" y="76" >Docker</text>
+    <text x="90" y="76" >CLI</text>
+    <line x1="132" y1="64" x2="132" y2="96" class="solid"></line>
+    <path d="M 40,80 A 16,16 0,0,0 40,96" class="nofill"></path>
+    <text x="42" y="92" >docker</text>
+    <path d="M 88,80 A 16,16 0,0,1 88,96" class="nofill"></path>
+    <text x="194" y="60" >REST</text>
+    <text x="234" y="60" >API</text>
+    <line x1="168" y1="80" x2="160" y2="96" class="solid"></line>
+    <text x="170" y="92" >var</text>
+    <line x1="200" y1="80" x2="192" y2="96" class="solid"></line>
+    <text x="202" y="92" >run</text>
+    <line x1="232" y1="80" x2="224" y2="96" class="solid"></line>
+    <text x="234" y="92" >docker.sock</text>
+    <text x="394" y="76" >dockerd</text>
+    <line x1="532" y1="64" x2="532" y2="80" class="solid"></line>
+    <line x1="348" y1="80" x2="348" y2="96" class="solid"></line>
+    <path d="M 376,80 A 16,16 0,0,0 376,96" class="nofill"></path>
+    <text x="378" y="92" >Docker</text>
+    <text x="434" y="92" >daemon</text>
+    <path d="M 480,80 A 16,16 0,0,1 480,96" class="nofill"></path>
+    <text x="426" y="124" >images</text>
+    <text x="434" y="140" >networks</text>
+    <text x="434" y="156" >volumes</text>
+    <text x="418" y="172" >API</text>
+    <text x="450" y="172" >server</text>
+    <text x="442" y="204" >gRPC</text>
+    <text x="386" y="236" >containerd</text>
+    <line x1="548" y1="224" x2="548" y2="240" class="solid"></line>
+    <line x1="416" y1="256" x2="408" y2="272" class="solid"></line>
+    <text x="418" y="268" >push</text>
+    <text x="458" y="268" >images</text>
+    <text x="434" y="284" >snapshots</text>
+    <text x="458" y="300" >lifecycle</text>
+    <text x="410" y="316" >plugin</text>
+    <path d="M 472,304 A 16,16 0,0,0 472,320" class="nofill"></path>
+    <text x="474" y="316" >for</text>
+    <text x="506" y="316" >K8s</text>
+    <path d="M 528,304 A 16,16 0,0,1 528,320" class="nofill"></path>
+    <text x="442" y="348" >exec</text>
+    <text x="386" y="380" >containerd</text>
+    <line x1="464" y1="376" x2="472" y2="376" class="solid"></line>
+    <text x="474" y="380" >shim</text>
+    <line x1="548" y1="368" x2="548" y2="384" class="solid"></line>
+    <text x="378" y="412" >Keeps</text>
+    <text x="426" y="412" >container</text>
+    <text x="378" y="428" >running</text>
+    <text x="442" y="428" >even</text>
+    <text x="482" y="428" >if</text>
+    <text x="378" y="444" >containerd</text>
+    <text x="466" y="444" >restarts</text>
+    <text x="450" y="460" >exit</text>
+    <text x="490" y="460" >code</text>
+    <text x="442" y="492" >fork</text>
+    <line x1="480" y1="480" x2="472" y2="496" class="solid"></line>
+    <text x="482" y="492" >exec</text>
+    <text x="402" y="524" >runc</text>
+    <line x1="548" y1="512" x2="548" y2="528" class="solid"></line>
+    <text x="442" y="556" >namespaces</text>
+    <text x="418" y="572" >up</text>
+    <text x="442" y="572" >cgroups</text>
+    <line x1="416" y1="592" x2="424" y2="592" class="solid"></line>
+    <text x="426" y="588" >root</text>
+    <text x="450" y="604" >process</text>
+    <text x="426" y="620" >after</text>
+    <text x="474" y="620" >setup</text>
+    <text x="362" y="412" >•</text>
+    <g>
+        <line x1="12" y1="56" x2="124" y2="56" class="solid"></line>
+        <line x1="12" y1="56" x2="12" y2="104" class="solid"></line>
+        <line x1="124" y1="56" x2="124" y2="64" class="solid"></line>
+        <line x1="12" y1="104" x2="124" y2="104" class="solid"></line>
+        <line x1="124" y1="96" x2="124" y2="104" class="solid"></line>
+    </g>
+    <g>
+        <line x1="144" y1="72" x2="304" y2="72" class="solid"></line>
+        <polygon points="304,68 312,72 304,76" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="340" y1="56" x2="524" y2="56" class="solid"></line>
+        <line x1="340" y1="56" x2="340" y2="80" class="solid"></line>
+        <line x1="524" y1="56" x2="524" y2="64" class="solid"></line>
+    </g>
+    <g>
+        <line x1="540" y1="80" x2="540" y2="184" class="solid"></line>
+        <line x1="340" y1="96" x2="340" y2="184" class="solid"></line>
+        <line x1="340" y1="184" x2="540" y2="184" class="solid"></line>
+        <line x1="428" y1="184" x2="428" y2="212" class="solid"></line>
+        <polygon points="424,212 432,212 428,224" class="filled"></polygon>
+    </g>
+    <g>
+        <text x="362" y="124">•</text>
+        <text x="378" y="124">Build</text>
+    </g>
+    <g>
+        <text x="362" y="140">•</text>
+        <text x="378" y="140">Manage</text>
+    </g>
+    <g>
+        <text x="362" y="156">•</text>
+        <text x="378" y="156">Manage</text>
+    </g>
+    <g>
+        <text x="362" y="172">•</text>
+        <text x="378" y="172">REST</text>
+    </g>
+    <g>
+        <line x1="340" y1="216" x2="424" y2="216" class="solid"></line>
+        <line x1="340" y1="216" x2="340" y2="328" class="solid"></line>
+        <line x1="540" y1="240" x2="540" y2="328" class="solid"></line>
+        <line x1="340" y1="328" x2="540" y2="328" class="solid"></line>
+        <line x1="428" y1="328" x2="428" y2="356" class="solid"></line>
+        <polygon points="424,356 432,356 428,368" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="432" y1="216" x2="540" y2="216" class="solid"></line>
+        <line x1="540" y1="216" x2="540" y2="224" class="solid"></line>
+    </g>
+    <g>
+        <text x="362" y="268">•</text>
+        <text x="378" y="268">Pull</text>
+    </g>
+    <g>
+        <text x="362" y="284">•</text>
+        <text x="378" y="284">Manage</text>
+    </g>
+    <g>
+        <text x="362" y="300">•</text>
+        <text x="378" y="300">Container</text>
+    </g>
+    <g>
+        <text x="362" y="316">•</text>
+        <text x="378" y="316">CRI</text>
+    </g>
+    <g>
+        <line x1="340" y1="360" x2="424" y2="360" class="solid"></line>
+        <line x1="340" y1="360" x2="340" y2="472" class="solid"></line>
+        <line x1="540" y1="384" x2="540" y2="472" class="solid"></line>
+        <line x1="340" y1="472" x2="540" y2="472" class="solid"></line>
+        <line x1="428" y1="472" x2="428" y2="500" class="solid"></line>
+        <polygon points="424,500 432,500 428,512" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="432" y1="360" x2="540" y2="360" class="solid"></line>
+        <line x1="540" y1="360" x2="540" y2="368" class="solid"></line>
+    </g>
+    <g>
+        <text x="362" y="460">•</text>
+        <text x="378" y="460">Collects</text>
+    </g>
+    <g>
+        <line x1="340" y1="504" x2="424" y2="504" class="solid"></line>
+        <line x1="340" y1="504" x2="340" y2="632" class="solid"></line>
+        <line x1="540" y1="528" x2="540" y2="632" class="solid"></line>
+        <line x1="340" y1="632" x2="540" y2="632" class="solid"></line>
+    </g>
+    <g>
+        <line x1="432" y1="504" x2="540" y2="504" class="solid"></line>
+        <line x1="540" y1="504" x2="540" y2="512" class="solid"></line>
+    </g>
+    <g>
+        <text x="362" y="556">•</text>
+        <text x="378" y="556">Creates</text>
+    </g>
+    <g>
+        <text x="362" y="572">•</text>
+        <text x="378" y="572">Sets</text>
+    </g>
+    <g>
+        <text x="362" y="588">•</text>
+        <text x="378" y="588">pivot</text>
+    </g>
+    <g>
+        <text x="362" y="604">•</text>
+        <text x="378" y="604">Executes</text>
+    </g>
+    <g>
+        <text x="362" y="620">•</text>
+        <text x="378" y="620">Exits</text>
+    </g>
+</svg>

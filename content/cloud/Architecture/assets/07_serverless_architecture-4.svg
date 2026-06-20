@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="208" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="360" height="208"></rect>
+    <text x="2" y="12" >Function</text>
+    <text x="74" y="12" >Code</text>
+    <path d="M 120,0 A 16,16 0,0,0 120,16" class="nofill"></path>
+    <text x="122" y="12" >small,</text>
+    <text x="34" y="28" >handler.py</text>
+    <text x="2" y="60" >Layer</text>
+    <text x="50" y="60" >1:</text>
+    <text x="74" y="60" >C</text>
+    <circle cx="84" cy="56" r="3" class="nofill"></circle>
+    <line x1="82" y1="60" x2="72" y2="80" class="solid"></line>
+    <text x="90" y="60" >mmon</text>
+    <text x="34" y="76" >utils</text>
+    <text x="66" y="92" >auth.py</text>
+    <text x="66" y="108" >validators.py</text>
+    <text x="2" y="140" >Layer</text>
+    <text x="50" y="140" >2:</text>
+    <text x="74" y="140" >Heavy</text>
+    <text x="34" y="156" >numpy</text>
+    <line x1="80" y1="144" x2="72" y2="160" class="solid"></line>
+    <text x="34" y="172" >pandas</text>
+    <line x1="88" y1="160" x2="72" y2="192" class="solid"></line>
+    <text x="34" y="188" >scipy</text>
+    <text x="178" y="12" >changes</text>
+    <text x="242" y="12" >often</text>
+    <path d="M 280,0 A 16,16 0,0,1 280,16" class="nofill"></path>
+    <text x="130" y="60" >utilities</text>
+    <path d="M 216,48 A 16,16 0,0,0 216,64" class="nofill"></path>
+    <text x="218" y="60" >changes</text>
+    <text x="282" y="60" >rarely</text>
+    <path d="M 328,48 A 16,16 0,0,1 328,64" class="nofill"></path>
+    <text x="122" y="140" >dependencies</text>
+    <path d="M 232,128 A 16,16 0,0,0 232,144" class="nofill"></path>
+    <text x="234" y="140" >changes</text>
+    <text x="298" y="140" >rarely</text>
+    <path d="M 344,128 A 16,16 0,0,1 344,144" class="nofill"></path>
+    <g>
+        <line x1="4" y1="16" x2="4" y2="48" class="solid"></line>
+        <line x1="4" y1="24" x2="24" y2="24" class="solid"></line>
+    </g>
+    <g>
+        <line x1="4" y1="64" x2="4" y2="128" class="solid"></line>
+        <line x1="4" y1="72" x2="24" y2="72" class="solid"></line>
+    </g>
+    <g>
+        <line x1="36" y1="80" x2="36" y2="104" class="solid"></line>
+        <line x1="36" y1="88" x2="56" y2="88" class="solid"></line>
+        <line x1="36" y1="104" x2="56" y2="104" class="solid"></line>
+    </g>
+    <g>
+        <line x1="4" y1="144" x2="4" y2="184" class="solid"></line>
+        <line x1="4" y1="152" x2="24" y2="152" class="solid"></line>
+        <line x1="4" y1="168" x2="24" y2="168" class="solid"></line>
+        <line x1="4" y1="184" x2="24" y2="184" class="solid"></line>
+    </g>
+</svg>

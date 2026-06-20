@@ -1,0 +1,249 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="712" height="480" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="712" height="480"></rect>
+    <rect x="0" y="4" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="12" x2="4" y2="20" class="solid"></line>
+    <line x1="16" y1="8" x2="32" y2="8" class="solid"></line>
+    <text x="42" y="12" >LOGIN</text>
+    <line x1="88" y1="8" x2="480" y2="8" class="solid"></line>
+    <rect x="0" y="20" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="28" >Log</text>
+    <text x="50" y="28" >in</text>
+    <text x="74" y="28" >to</text>
+    <text x="98" y="28" >Docker</text>
+    <text x="154" y="28" >Hub</text>
+    <path d="M 192,16 A 16,16 0,0,0 192,32" class="nofill"></path>
+    <text x="194" y="28" >or</text>
+    <text x="218" y="28" >any</text>
+    <text x="250" y="28" >registry</text>
+    <path d="M 312,16 A 16,16 0,0,1 312,32" class="nofill"></path>
+    <text x="322" y="28" >:</text>
+    <text x="2" y="44" >docker</text>
+    <text x="58" y="44" >login</text>
+    <text x="2" y="76" >#</text>
+    <text x="18" y="76" >Log</text>
+    <text x="50" y="76" >in</text>
+    <text x="74" y="76" >to</text>
+    <text x="98" y="76" >GitHub</text>
+    <text x="2" y="92" >echo</text>
+    <text x="42" y="92" >$GITHUB</text>
+    <line x1="96" y1="96" x2="104" y2="96" class="solid"></line>
+    <text x="106" y="92" >TOKEN</text>
+    <text x="154" y="76" >Container</text>
+    <text x="234" y="76" >Registry</text>
+    <text x="306" y="76" >using</text>
+    <text x="354" y="76" >a</text>
+    <text x="370" y="76" >Personal</text>
+    <text x="442" y="76" >Access</text>
+    <text x="498" y="76" >Token:</text>
+    <line x1="156" y1="80" x2="156" y2="96" class="solid"></line>
+    <text x="170" y="92" >docker</text>
+    <text x="226" y="92" >login</text>
+    <text x="274" y="92" >ghcr.io</text>
+    <line x1="336" y1="88" x2="344" y2="88" class="solid"></line>
+    <text x="346" y="92" >u</text>
+    <text x="362" y="92" >USERNAME</text>
+    <line x1="432" y1="88" x2="448" y2="88" class="solid"></line>
+    <text x="450" y="92" >password</text>
+    <line x1="512" y1="88" x2="520" y2="88" class="solid"></line>
+    <text x="522" y="92" >stdin</text>
+    <text x="2" y="124" >#</text>
+    <text x="18" y="124" >Log</text>
+    <text x="50" y="124" >in</text>
+    <text x="74" y="124" >to</text>
+    <text x="98" y="124" >Amazon</text>
+    <text x="154" y="124" >ECR</text>
+    <path d="M 192,112 A 16,16 0,0,0 192,128" class="nofill"></path>
+    <text x="194" y="124" >requires</text>
+    <text x="266" y="124" >AWS</text>
+    <text x="298" y="124" >CLI</text>
+    <text x="330" y="124" >configured</text>
+    <path d="M 408,112 A 16,16 0,0,1 408,128" class="nofill"></path>
+    <text x="418" y="124" >:</text>
+    <text x="2" y="140" >aws</text>
+    <text x="34" y="140" >ecr</text>
+    <text x="66" y="140" >get</text>
+    <line x1="88" y1="136" x2="96" y2="136" class="solid"></line>
+    <text x="98" y="140" >login</text>
+    <line x1="136" y1="136" x2="144" y2="136" class="solid"></line>
+    <text x="146" y="140" >password</text>
+    <line x1="216" y1="136" x2="232" y2="136" class="solid"></line>
+    <text x="234" y="140" >region</text>
+    <text x="290" y="140" >us</text>
+    <line x1="304" y1="136" x2="312" y2="136" class="solid"></line>
+    <text x="314" y="140" >east</text>
+    <line x1="344" y1="136" x2="352" y2="136" class="solid"></line>
+    <text x="354" y="140" >1</text>
+    <line x1="372" y1="128" x2="372" y2="144" class="solid"></line>
+    <line x1="384" y1="128" x2="392" y2="144" class="solid"></line>
+    <text x="18" y="156" >docker</text>
+    <text x="74" y="156" >login</text>
+    <line x1="120" y1="152" x2="136" y2="152" class="solid"></line>
+    <text x="138" y="156" >username</text>
+    <text x="210" y="156" >AWS</text>
+    <line x1="240" y1="152" x2="256" y2="152" class="solid"></line>
+    <text x="258" y="156" >password</text>
+    <line x1="320" y1="152" x2="328" y2="152" class="solid"></line>
+    <text x="330" y="156" >stdin</text>
+    <text x="378" y="156" >123456789.dkr.ecr.us</text>
+    <line x1="536" y1="152" x2="544" y2="152" class="solid"></line>
+    <text x="546" y="156" >east</text>
+    <line x1="576" y1="152" x2="584" y2="152" class="solid"></line>
+    <text x="586" y="156" >1.amazonaws.com</text>
+    <rect x="0" y="180" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="188" x2="4" y2="196" class="solid"></line>
+    <line x1="16" y1="184" x2="32" y2="184" class="solid"></line>
+    <text x="42" y="188" >TAG</text>
+    <line x1="72" y1="184" x2="480" y2="184" class="solid"></line>
+    <rect x="0" y="196" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="204" x2="4" y2="212" class="solid"></line>
+    <text x="18" y="204" >Tag</text>
+    <text x="50" y="204" >an</text>
+    <text x="74" y="204" >image</text>
+    <text x="122" y="204" >for</text>
+    <text x="154" y="204" >a</text>
+    <text x="170" y="204" >specific</text>
+    <text x="242" y="204" >registry.</text>
+    <rect x="0" y="212" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="220" >An</text>
+    <text x="42" y="220" >image</text>
+    <text x="90" y="220" >can</text>
+    <text x="122" y="220" >have</text>
+    <text x="162" y="220" >multiple</text>
+    <text x="234" y="220" >tags</text>
+    <text x="274" y="220" >pointing</text>
+    <text x="346" y="220" >to</text>
+    <text x="370" y="220" >the</text>
+    <text x="2" y="236" >docker</text>
+    <text x="58" y="236" >tag</text>
+    <text x="90" y="236" >myapp</text>
+    <line x1="132" y1="224" x2="132" y2="256" class="broken"></line>
+    <text x="138" y="236" >1.0</text>
+    <text x="170" y="236" >ghcr.io</text>
+    <line x1="232" y1="224" x2="222" y2="244" class="solid"></line>
+    <text x="234" y="236" >username</text>
+    <line x1="304" y1="224" x2="296" y2="240" class="solid"></line>
+    <text x="306" y="236" >myapp</text>
+    <line x1="348" y1="224" x2="348" y2="256" class="broken"></line>
+    <text x="354" y="236" >1.0</text>
+    <text x="2" y="252" >docker</text>
+    <text x="58" y="252" >tag</text>
+    <text x="90" y="252" >myapp</text>
+    <text x="138" y="252" >1.0</text>
+    <text x="170" y="252" >ghcr.i</text>
+    <circle cx="220" cy="248" r="3" class="nofill"></circle>
+    <line x1="232" y1="240" x2="224" y2="256" class="solid"></line>
+    <text x="234" y="252" >username</text>
+    <line x1="304" y1="240" x2="296" y2="256" class="solid"></line>
+    <text x="306" y="252" >myapp</text>
+    <text x="354" y="252" >latest</text>
+    <text x="402" y="220" >same</text>
+    <text x="442" y="220" >underlying</text>
+    <text x="530" y="220" >layers.</text>
+    <rect x="0" y="276" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="284" x2="4" y2="292" class="solid"></line>
+    <line x1="16" y1="280" x2="32" y2="280" class="solid"></line>
+    <text x="42" y="284" >PUSH</text>
+    <line x1="80" y1="280" x2="480" y2="280" class="solid"></line>
+    <rect x="0" y="292" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="300" x2="4" y2="308" class="solid"></line>
+    <text x="18" y="300" >Push</text>
+    <text x="58" y="300" >the</text>
+    <text x="90" y="300" >image</text>
+    <text x="138" y="300" >to</text>
+    <text x="162" y="300" >the</text>
+    <text x="194" y="300" >registry.</text>
+    <rect x="0" y="308" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="316" >Only</text>
+    <text x="58" y="316" >layers</text>
+    <text x="114" y="316" >that</text>
+    <text x="154" y="316" >the</text>
+    <text x="186" y="316" >registry</text>
+    <text x="258" y="316" >doesn&#39;t</text>
+    <text x="2" y="332" >docker</text>
+    <text x="58" y="332" >push</text>
+    <text x="98" y="332" >ghcr.io</text>
+    <line x1="160" y1="320" x2="150" y2="340" class="solid"></line>
+    <text x="162" y="332" >username</text>
+    <line x1="232" y1="320" x2="224" y2="336" class="solid"></line>
+    <text x="234" y="332" >myapp</text>
+    <line x1="276" y1="320" x2="276" y2="352" class="broken"></line>
+    <text x="282" y="332" >1.0</text>
+    <text x="2" y="348" >docker</text>
+    <text x="58" y="348" >push</text>
+    <text x="98" y="348" >ghcr.i</text>
+    <circle cx="148" cy="344" r="3" class="nofill"></circle>
+    <line x1="160" y1="336" x2="152" y2="352" class="solid"></line>
+    <text x="162" y="348" >username</text>
+    <line x1="232" y1="336" x2="224" y2="352" class="solid"></line>
+    <text x="234" y="348" >myapp</text>
+    <text x="282" y="348" >latest</text>
+    <text x="322" y="316" >already</text>
+    <text x="386" y="316" >have</text>
+    <text x="426" y="316" >are</text>
+    <text x="458" y="316" >uploaded</text>
+    <path d="M 536,304 A 16,16 0,0,0 536,320" class="nofill"></path>
+    <text x="538" y="316" >deduplication</text>
+    <path d="M 640,304 A 16,16 0,0,1 640,320" class="nofill"></path>
+    <text x="650" y="316" >.</text>
+    <rect x="0" y="372" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="380" x2="4" y2="388" class="solid"></line>
+    <line x1="16" y1="376" x2="32" y2="376" class="solid"></line>
+    <text x="42" y="380" >PULL</text>
+    <line x1="80" y1="376" x2="480" y2="376" class="solid"></line>
+    <rect x="0" y="388" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="396" >Pull</text>
+    <text x="58" y="396" >an</text>
+    <text x="82" y="396" >image</text>
+    <text x="130" y="396" >from</text>
+    <text x="170" y="396" >a</text>
+    <text x="186" y="396" >specific</text>
+    <text x="258" y="396" >registry:</text>
+    <text x="2" y="412" >docker</text>
+    <text x="58" y="412" >pull</text>
+    <text x="98" y="412" >ghcr.io</text>
+    <line x1="160" y1="400" x2="152" y2="416" class="solid"></line>
+    <text x="162" y="412" >username</text>
+    <line x1="232" y1="400" x2="224" y2="416" class="solid"></line>
+    <text x="234" y="412" >myapp:1.0</text>
+    <text x="2" y="444" >#</text>
+    <text x="18" y="444" >Pull</text>
+    <text x="2" y="460" >docker</text>
+    <text x="58" y="444" >by</text>
+    <text x="82" y="444" >digest</text>
+    <path d="M 144,432 A 16,16 0,0,0 144,448" class="nofill"></path>
+    <text x="146" y="444" >immutable</text>
+    <line x1="224" y1="440" x2="232" y2="440" class="solid"></line>
+    <text x="242" y="444" >guarantees</text>
+    <text x="330" y="444" >exact</text>
+    <text x="378" y="444" >image</text>
+    <path d="M 416,432 A 16,16 0,0,1 416,448" class="nofill"></path>
+    <text x="426" y="444" >:</text>
+    <text x="58" y="460" >pull</text>
+    <text x="98" y="460" >ghcr.io</text>
+    <line x1="160" y1="448" x2="152" y2="464" class="solid"></line>
+    <text x="162" y="460" >username</text>
+    <line x1="232" y1="448" x2="224" y2="464" class="solid"></line>
+    <text x="234" y="460" >myapp@sha256:abc123def456...</text>
+</svg>

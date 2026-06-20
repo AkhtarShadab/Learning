@@ -29,23 +29,7 @@ resources in a virtual network you define. You control the IP address range, sub
 route tables, and network gateways. A VPC spans all Availability Zones in a region
 but is confined to a single region.
 
-```
-Region: us-east-1
-┌──────────────────────────────────────────────────┐
-│                  VPC: 10.0.0.0/16                │
-│                  (65,536 addresses)              │
-│                                                  │
-│   AZ-a                 AZ-b              AZ-c    │
-│   ┌──────────┐        ┌──────────┐      ┌─────┐ │
-│   │ Subnet   │        │ Subnet   │      │ ... │ │
-│   │ 10.0.1.0 │        │ 10.0.2.0 │      │     │ │
-│   │ /24      │        │ /24      │      │     │ │
-│   └──────────┘        └──────────┘      └─────┘ │
-│                                                  │
-│   Route Tables    Security Groups    NACLs       │
-│   Internet GW     NAT GW            VPC Endpts   │
-└──────────────────────────────────────────────────┘
-```
+![04_networking_architecture diagram 1](assets/04_networking_architecture-1.svg)
 
 ### How AWS Implements Virtual Networking
 
@@ -94,24 +78,7 @@ establish VPN/Direct Connect, overlapping CIDRs cannot route.
 **Best practice**: Allocate from RFC 1918 private ranges with a centralized IPAM
 (IP Address Management) strategy:
 
-```
-Corporate CIDR Allocation Plan
-═══════════════════════════════════════════
-10.0.0.0/8       ─── Reserved for cloud VPCs
-  10.0.0.0/12    ─── AWS accounts
-    10.0.0.0/16  ─── Production (us-east-1)
-    10.1.0.0/16  ─── Production (eu-west-1)
-    10.2.0.0/16  ─── Staging
-    10.3.0.0/16  ─── Development
-  10.16.0.0/12   ─── Azure subscriptions
-  10.32.0.0/12   ─── GCP projects
-
-172.16.0.0/12    ─── On-premises data centers
-  172.16.0.0/16  ─── DC-1 (New York)
-  172.17.0.0/16  ─── DC-2 (London)
-
-192.168.0.0/16   ─── Office/branch networks
-```
+![04_networking_architecture diagram 2](assets/04_networking_architecture-2.svg)
 
 AWS VPC IPAM (IP Address Management) automates this allocation and prevents overlap.
 
@@ -123,35 +90,7 @@ AWS VPC IPAM (IP Address Management) automates this allocation and prevents over
 
 The standard enterprise pattern uses three tiers of subnets per AZ:
 
-```
-Internet
-    │
-    ▼
-┌──────────────────────────────────────────────────┐
-│  VPC: 10.0.0.0/16                                │
-│                                                  │
-│  PUBLIC SUBNETS (Internet-facing)                │
-│  ┌──────────────┐  ┌──────────────┐              │
-│  │ 10.0.1.0/24  │  │ 10.0.2.0/24  │   AZ-a, AZ-b│
-│  │ ALB, NAT GW  │  │ ALB, NAT GW  │              │
-│  │ Bastion Host │  │              │              │
-│  └──────┬───────┘  └──────┬───────┘              │
-│         │                 │                      │
-│  PRIVATE SUBNETS (Application tier)              │
-│  ┌──────┴───────┐  ┌──────┴───────┐              │
-│  │ 10.0.11.0/24 │  │ 10.0.12.0/24 │              │
-│  │ App servers  │  │ App servers  │              │
-│  │ (EC2/ECS)    │  │ (EC2/ECS)    │              │
-│  └──────┬───────┘  └──────┬───────┘              │
-│         │                 │                      │
-│  ISOLATED SUBNETS (Data tier)                    │
-│  ┌──────┴───────┐  ┌──────┴───────┐              │
-│  │ 10.0.21.0/24 │  │ 10.0.22.0/24 │              │
-│  │ RDS, ElastiC │  │ RDS, ElastiC │              │
-│  │ (no internet)│  │ (no internet)│              │
-│  └──────────────┘  └──────────────┘              │
-└──────────────────────────────────────────────────┘
-```
+![04_networking_architecture diagram 3](assets/04_networking_architecture-3.svg)
 
 **Public subnets**: Have a route to an Internet Gateway (IGW). Resources here get
 public IP addresses and can be reached from the internet. Only place load balancers,
@@ -171,16 +110,7 @@ should never initiate or receive internet connections.
 Every subnet is associated with exactly one route table. The route table controls
 where traffic is directed.
 
-```
-Route Table: Private-Subnet-RT
-═══════════════════════════════════════
-Destination        Target
-───────────────    ──────────────────
-10.0.0.0/16        local              (VPC-internal traffic)
-0.0.0.0/0          nat-gw-123abc      (internet via NAT)
-10.100.0.0/16      tgw-456def         (on-prem via Transit GW)
-pl-68a54001        vpce-s3-789ghi     (S3 via Gateway Endpoint)
-```
+![04_networking_architecture diagram 4](assets/04_networking_architecture-4.svg)
 
 Route evaluation: most specific route wins. A packet destined for `10.0.12.5` matches
 `10.0.0.0/16` (local). A packet for `8.8.8.8` matches `0.0.0.0/0` (NAT gateway).
@@ -202,30 +132,7 @@ private IP behind a public Elastic IP.
 A single NAT Gateway operates in one AZ. If that AZ fails, all private subnets
 using it lose internet access. For high availability, deploy one NAT Gateway per AZ:
 
-```
-              Internet
-                │
-        ┌───────┴───────┐
-        │    IGW        │
-        └───────┬───────┘
-                │
-    ┌───────────┼───────────┐
-    │           │           │
-    ▼           ▼           ▼
-┌───────┐  ┌───────┐  ┌───────┐
-│NAT GW │  │NAT GW │  │NAT GW │  (one per AZ)
-│ AZ-a  │  │ AZ-b  │  │ AZ-c  │
-└───┬───┘  └───┬───┘  └───┬───┘
-    │          │          │
-    ▼          ▼          ▼
-┌───────┐  ┌───────┐  ┌───────┐
-│Private│  │Private│  │Private│
-│Sub AZa│  │Sub AZb│  │Sub AZc│
-└───────┘  └───────┘  └───────┘
-
-Each private subnet's route table points to its local AZ's NAT Gateway.
-Traffic stays within the AZ (no cross-AZ data transfer charges).
-```
+![04_networking_architecture diagram 5](assets/04_networking_architecture-5.svg)
 
 ```hcl
 # Terraform: NAT Gateway per AZ
@@ -302,22 +209,7 @@ aws ec2 create-vpc-endpoint \
 As organizations grow, they accumulate many VPCs (production, staging, dev, shared
 services, security). Connecting them with VPC Peering creates an O(n^2) mesh:
 
-```
-Without Transit Gateway (mesh):     With Transit Gateway (hub-and-spoke):
-
-VPC-A ──── VPC-B                     VPC-A ──┐
-  │  ╲    ╱  │                               │
-  │   ╲  ╱   │                     VPC-B ────┤
-  │    ╳╳    │                               │
-  │   ╱  ╲   │                     VPC-C ────┼──── Transit Gateway
-  │  ╱    ╲  │                               │
-VPC-C ──── VPC-D                   VPC-D ────┤
-                                             │
-6 peering connections               On-Prem──┘
-for 4 VPCs. 10 VPCs = 45.
-                                   5 attachments for 5 networks.
-                                   Each new network = 1 attachment.
-```
+![04_networking_architecture diagram 6](assets/04_networking_architecture-6.svg)
 
 ### Transit Gateway Architecture
 
@@ -355,15 +247,7 @@ A dedicated physical connection from your data center to AWS, bypassing the publ
 internet. Provides consistent latency, higher bandwidth (1 Gbps, 10 Gbps, 100 Gbps),
 and lower data transfer costs than VPN.
 
-```
-On-Premises DC            Direct Connect         AWS Region
-┌──────────┐              Location               ┌──────────┐
-│ Customer │              ┌──────────┐            │          │
-│ Router   │──Dark Fiber──│ AWS      │──AWS Net──│  VPC     │
-│          │              │ Router   │            │          │
-└──────────┘              └──────────┘            └──────────┘
-                          (Equinix, Coresite, etc.)
-```
+![04_networking_architecture diagram 7](assets/04_networking_architecture-7.svg)
 
 Direct Connect uses Virtual Interfaces (VIFs):
 - **Private VIF**: Access VPC resources via private IPs
@@ -375,9 +259,7 @@ Direct Connect uses Virtual Interfaces (VIFs):
 Direct Connect alone does not encrypt traffic. For encryption over Direct Connect,
 layer a site-to-site VPN on top:
 
-```
-On-Prem ──► Direct Connect (high bandwidth) ──► VPN (encryption) ──► VPC
-```
+![04_networking_architecture diagram 8](assets/04_networking_architecture-8.svg)
 
 ---
 
@@ -417,60 +299,7 @@ and SAML-based SSO.
 
 Here is a complete enterprise VPC architecture incorporating all concepts:
 
-```
-                            INTERNET
-                               │
-                         ┌─────┴─────┐
-                         │    IGW    │
-                         └─────┬─────┘
-                               │
-┌──────────────────────────────┼─────────────────────────────────┐
-│  VPC: 10.0.0.0/16           │                                  │
-│                              │                                  │
-│  PUBLIC TIER                 │                                  │
-│  ┌─────────────────┐   ┌────┴────────────┐                     │
-│  │ 10.0.1.0/24     │   │ 10.0.2.0/24     │                     │
-│  │ AZ-a            │   │ AZ-b            │                     │
-│  │ ┌─────┐ ┌─────┐ │   │ ┌─────┐ ┌─────┐ │                    │
-│  │ │ ALB │ │NAT  │ │   │ │ ALB │ │NAT  │ │                    │
-│  │ │ node│ │ GW  │ │   │ │ node│ │ GW  │ │                    │
-│  │ └──┬──┘ └──┬──┘ │   │ └──┬──┘ └──┬──┘ │                    │
-│  └────┼───────┼────┘   └────┼───────┼────┘                     │
-│       │       │             │       │                          │
-│  APP TIER     │             │       │                          │
-│  ┌────┼───────┼────┐   ┌────┼───────┼────┐                     │
-│  │ 10.0.11.0/24   │   │ 10.0.12.0/24   │                      │
-│  │ ┌──────────┐   │   │ ┌──────────┐   │                      │
-│  │ │ECS Tasks │   │   │ │ECS Tasks │   │                      │
-│  │ │(Fargate) │   │   │ │(Fargate) │   │                      │
-│  │ └────┬─────┘   │   │ └────┬─────┘   │                      │
-│  └──────┼─────────┘   └──────┼─────────┘                       │
-│         │                    │                                 │
-│  DATA TIER (isolated)        │                                 │
-│  ┌──────┼─────────┐   ┌─────┼──────────┐                      │
-│  │ 10.0.21.0/24   │   │ 10.0.22.0/24   │                      │
-│  │ ┌────┴───┐     │   │ ┌────┴───┐     │                      │
-│  │ │RDS     │     │   │ │RDS     │     │                      │
-│  │ │Primary │     │   │ │Standby │     │                      │
-│  │ └────────┘     │   │ └────────┘     │                      │
-│  │ ┌────────┐     │   │ ┌────────┐     │                      │
-│  │ │ElastiC │     │   │ │ElastiC │     │                      │
-│  │ │Redis   │     │   │ │Replica │     │                      │
-│  │ └────────┘     │   │ └────────┘     │                      │
-│  └────────────────┘   └────────────────┘                       │
-│                                                                │
-│  VPC ENDPOINTS                                                 │
-│  ┌──────────────────────────────────────┐                      │
-│  │ S3 (Gateway)  │ ECR (Interface)      │                      │
-│  │ DynamoDB (GW) │ CloudWatch (Interf.) │                      │
-│  │ SQS (Interf.) │ Secrets Mgr (Interf.)│                      │
-│  └──────────────────────────────────────┘                      │
-│                                                                │
-│  ┌──────────────────────────────┐                              │
-│  │  Transit Gateway Attachment  │──► TGW ──► Other VPCs / VPN  │
-│  └──────────────────────────────┘                              │
-└────────────────────────────────────────────────────────────────┘
-```
+![04_networking_architecture diagram 9](assets/04_networking_architecture-9.svg)
 
 ---
 
@@ -502,12 +331,7 @@ through the AWS global network to the optimal regional endpoint. Unlike CloudFro
 (which caches content), Global Accelerator is for non-HTTP workloads and dynamic
 traffic that benefits from network path optimization.
 
-```
-User (Tokyo) ──► Anycast IP ──► AWS Edge ──► AWS Backbone ──► ALB (us-east-1)
-                                (Tokyo)       (fast, reliable)
-vs.
-User (Tokyo) ──► Public Internet (variable hops) ──► ALB (us-east-1)
-```
+![04_networking_architecture diagram 10](assets/04_networking_architecture-10.svg)
 
 ---
 

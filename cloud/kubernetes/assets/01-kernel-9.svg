@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="488" height="192" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="488" height="192"></rect>
+    <text x="10" y="12" >Time</text>
+    <text x="10" y="44" >Period</text>
+    <text x="66" y="44" >1</text>
+    <path d="M 88,32 A 16,16 0,0,0 88,48" class="nofill"></path>
+    <text x="90" y="44" >0</text>
+    <line x1="96" y1="40" x2="104" y2="40" class="solid"></line>
+    <text x="106" y="44" >100ms</text>
+    <path d="M 144,32 A 16,16 0,0,1 144,48" class="nofill"></path>
+    <text x="26" y="76" >APP</text>
+    <text x="58" y="76" >RUNS</text>
+    <text x="114" y="76" >THROTTLED</text>
+    <text x="34" y="92" >50ms</text>
+    <text x="130" y="92" >50ms</text>
+    <text x="234" y="44" >Period</text>
+    <text x="290" y="44" >2</text>
+    <path d="M 312,32 A 16,16 0,0,0 312,48" class="nofill"></path>
+    <text x="314" y="44" >100</text>
+    <line x1="336" y1="40" x2="344" y2="40" class="solid"></line>
+    <text x="346" y="44" >200ms</text>
+    <path d="M 384,32 A 16,16 0,0,1 384,48" class="nofill"></path>
+    <text x="242" y="76" >APP</text>
+    <text x="274" y="76" >RUNS</text>
+    <text x="330" y="76" >THROTTLED</text>
+    <text x="250" y="92" >50ms</text>
+    <text x="346" y="92" >50ms</text>
+    <text x="10" y="140" >The</text>
+    <text x="42" y="140" >app</text>
+    <text x="74" y="140" >needs</text>
+    <text x="122" y="140" >60ms</text>
+    <text x="162" y="140" >but</text>
+    <text x="194" y="140" >only</text>
+    <text x="234" y="140" >gets</text>
+    <text x="274" y="140" >50ms</text>
+    <text x="314" y="140" >per</text>
+    <text x="346" y="140" >period.</text>
+    <text x="10" y="156" >The</text>
+    <text x="42" y="156" >remaining</text>
+    <text x="122" y="156" >10ms</text>
+    <text x="162" y="156" >is</text>
+    <text x="186" y="156" >served</text>
+    <text x="242" y="156" >in</text>
+    <text x="266" y="156" >period</text>
+    <text x="322" y="156" >2</text>
+    <text x="338" y="156" >after</text>
+    <text x="386" y="156" >a</text>
+    <text x="402" y="156" >50ms</text>
+    <text x="10" y="172" >Result:</text>
+    <text x="74" y="172" >a</text>
+    <text x="90" y="172" >request</text>
+    <text x="154" y="172" >that</text>
+    <text x="194" y="172" >should</text>
+    <text x="250" y="172" >take</text>
+    <text x="290" y="172" >60ms</text>
+    <text x="330" y="172" >takes</text>
+    <text x="378" y="172" >110ms.</text>
+    <text x="442" y="156" >wait.</text>
+    <g>
+        <line x1="48" y1="8" x2="448" y2="8" class="solid"></line>
+        <polygon points="448,4 456,8 448,12" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="12" y1="56" x2="204" y2="56" class="solid"></line>
+        <line x1="12" y1="56" x2="12" y2="104" class="solid"></line>
+        <line x1="100" y1="56" x2="100" y2="104" class="solid"></line>
+        <line x1="204" y1="56" x2="204" y2="104" class="solid"></line>
+        <line x1="12" y1="104" x2="204" y2="104" class="solid"></line>
+    </g>
+    <g>
+        <line x1="228" y1="56" x2="420" y2="56" class="solid"></line>
+        <line x1="228" y1="56" x2="228" y2="104" class="solid"></line>
+        <line x1="316" y1="56" x2="316" y2="104" class="solid"></line>
+        <line x1="420" y1="56" x2="420" y2="104" class="solid"></line>
+        <line x1="228" y1="104" x2="420" y2="104" class="solid"></line>
+    </g>
+</svg>

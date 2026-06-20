@@ -26,27 +26,13 @@ The priority labels reflect this:
 
 Socket.io "rooms" work fine when there's one server. But what happens when you run two servers?
 
-```
-Server 1                  Server 2
-├── Alice (room: abc)     ├── Bob (room: abc)
-└── Carol (room: xyz)     └── Dave (room: abc)
-
-When Alice plays a card:
-  io.to('abc').emit('card_played', ...)
-  → reaches Bob ✓ (on Server 1)
-  → does NOT reach Bob and Dave on Server 2 ✗
-```
+![07-scalability diagram 1](assets/07-scalability-1.svg)
 
 The `io.to(room)` broadcast only knows about sockets connected to **that server**. It has no way to reach sockets on other servers.
 
 ### The Fix — Redis Pub/Sub
 
-```
-Server 1 ──▶ Redis Channel "room:abc" ◀── Server 2
-                      ↓
-                Both servers subscribe to Redis
-                Both forward the broadcast to their local sockets
-```
+![07-scalability diagram 2](assets/07-scalability-2.svg)
 
 The Redis adapter intercepts `io.to(room).emit(...)` and publishes it to a Redis channel. All servers subscribe to all channels and forward messages to their local sockets.
 
@@ -206,12 +192,7 @@ If a CPU-intensive game operation (dealing 52 cards, computing scores) blocks th
 
 ### The Fix — Separate Services
 
-```
-Nginx
-  ├──▶ Next.js server (port 3000) — HTTP only
-  ├──▶ Socket.io server (port 3001) — WebSocket only
-  └──▶ Game Worker (port 3002) — CPU-heavy processing
-```
+![07-scalability diagram 3](assets/07-scalability-3.svg)
 
 Each service scales independently:
 - High traffic: scale out Next.js instances

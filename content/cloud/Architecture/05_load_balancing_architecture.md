@@ -23,24 +23,7 @@ production deployments.
 
 ### The Single Server Problem
 
-```
-Without Load Balancer:              With Load Balancer:
-
-    1000 req/s                          1000 req/s
-        │                                   │
-        ▼                                   ▼
-   ┌─────────┐                        ┌─────────┐
-   │ Server  │  ← 500 req/s max       │  Load   │
-   │         │  ← 50% dropped         │ Balancer│
-   │ (DYING) │                        └────┬────┘
-   └─────────┘                       ┌─────┼─────┐
-                                     ▼     ▼     ▼
-                                  ┌────┐ ┌────┐ ┌────┐
-                                  │ S1 │ │ S2 │ │ S3 │
-                                  │333 │ │333 │ │334 │
-                                  │r/s │ │r/s │ │r/s │
-                                  └────┘ └────┘ └────┘
-```
+![05_load_balancing_architecture diagram 1](assets/05_load_balancing_architecture-1.svg)
 
 Load balancers provide:
 
@@ -89,27 +72,7 @@ cookies, and even request bodies. This enables sophisticated routing: send
 
 ### When to Choose Which
 
-```
-Decision: L4 or L7?
-│
-├── Need to route by URL path, host header, or HTTP method?
-│   └── YES ──► L7 (ALB)
-│
-├── Non-HTTP protocol (MQTT, gRPC raw, custom TCP, gaming)?
-│   └── YES ──► L4 (NLB)
-│
-├── Need ultra-low latency (< 100 microseconds added)?
-│   └── YES ──► L4 (NLB)
-│
-├── Need static/Elastic IP for the load balancer?
-│   └── YES ──► L4 (NLB) — ALB uses DNS names, not static IPs
-│
-├── Need millions of requests per second?
-│   └── YES ──► L4 (NLB) — scales to millions RPS instantly
-│
-└── Standard web application with HTTP/HTTPS?
-    └── L7 (ALB) — most common choice
-```
+![05_load_balancing_architecture diagram 2](assets/05_load_balancing_architecture-2.svg)
 
 ---
 
@@ -117,23 +80,7 @@ Decision: L4 or L7?
 
 ### Architecture
 
-```
-                   Internet
-                      │
-                ┌─────┴─────┐
-                │    ALB    │
-                │ (Layer 7) │
-                └─────┬─────┘
-                      │
-              ┌───────┴───────┐
-              │   Listener    │   (Port 443, HTTPS)
-              │               │
-              │   Rules:      │
-              │   1. /api/*  ─┼──► Target Group: api-servers
-              │   2. /ws/*   ─┼──► Target Group: websocket-servers
-              │   3. default ─┼──► Target Group: web-servers
-              └───────────────┘
-```
+![05_load_balancing_architecture diagram 3](assets/05_load_balancing_architecture-3.svg)
 
 ### Core Concepts
 
@@ -197,28 +144,7 @@ Resources:
 ALB sends periodic health check requests to targets. Unhealthy targets are
 removed from rotation; they are re-added when they pass consecutive health checks.
 
-```
-Health Check Configuration:
-═══════════════════════════════════
-Protocol:            HTTP
-Path:                /health
-Port:                8080 (traffic port or override)
-Healthy threshold:   3 consecutive successes
-Unhealthy threshold: 2 consecutive failures
-Timeout:             5 seconds
-Interval:            15 seconds
-Success codes:       200-299
-
-Timeline:
-  t=0s   CHECK → 200 OK (healthy)
-  t=15s  CHECK → 200 OK (healthy)
-  t=30s  CHECK → 500    (failure 1)
-  t=45s  CHECK → 500    (failure 2) → MARKED UNHEALTHY, removed
-  ...
-  t=120s CHECK → 200 OK (pass 1)
-  t=135s CHECK → 200 OK (pass 2)
-  t=150s CHECK → 200 OK (pass 3) → MARKED HEALTHY, re-added
-```
+![05_load_balancing_architecture diagram 4](assets/05_load_balancing_architecture-4.svg)
 
 A good health check endpoint should:
 - Test downstream dependencies (database connectivity, cache reachability)
@@ -289,28 +215,7 @@ Common NLB use cases:
 GLB is designed for deploying third-party virtual network appliances (firewalls,
 intrusion detection, deep packet inspection) transparently in the traffic path.
 
-```
-                    Internet
-                       │
-                 ┌─────┴─────┐
-                 │    IGW    │
-                 └─────┬─────┘
-                       │
-                 ┌─────┴─────┐
-                 │    GLB    │  ← Transparently inserts appliances
-                 └─────┬─────┘
-                  ┌────┤────┐
-                  ▼    ▼    ▼
-               ┌────┐┌────┐┌────┐
-               │ FW ││ FW ││ FW │  ← Firewall appliances
-               └──┬─┘└──┬─┘└──┬─┘
-                  └───┬──┘────┘
-                      │
-                 ┌────┴────┐
-                 │   App   │
-                 │ Servers │
-                 └─────────┘
-```
+![05_load_balancing_architecture diagram 5](assets/05_load_balancing_architecture-5.svg)
 
 GLB uses the GENEVE protocol (UDP port 6081) to encapsulate traffic to/from
 appliances, preserving original packet headers.
@@ -357,14 +262,7 @@ When a target is being removed (scaling in, deployment, health check failure),
 connection draining allows in-flight requests to complete before the target is
 deregistered.
 
-```
-t=0    Target marked for deregistration
-       ├── New requests: sent to other targets
-       ├── In-flight requests: continue on this target
-       │
-t=300s Deregistration delay expires (default: 300s)
-       └── All remaining connections forcibly closed
-```
+![05_load_balancing_architecture diagram 6](assets/05_load_balancing_architecture-6.svg)
 
 For microservices with short requests, reduce the delay to 30-60 seconds. For
 WebSocket applications, you may need the full 300 seconds or more.
@@ -398,11 +296,7 @@ Each AZ-b target: 6.25% total      of how many targets per AZ
 
 ### Where to Terminate TLS
 
-```
-Option 1: Terminate at LB                Option 2: End-to-End (passthrough)
-Client ──HTTPS──► ALB ──HTTP──► Server    Client ──TLS──► NLB ──TLS──► Server
-                  └── Decrypts here              └── No decryption at LB
-```
+![05_load_balancing_architecture diagram 7](assets/05_load_balancing_architecture-7.svg)
 
 **Terminate at ALB (most common)**:
 - ALB handles the CPU-intensive TLS handshake
@@ -439,15 +333,7 @@ Choose TLS policies based on your security requirements:
 AWS WAF can be attached directly to an ALB to inspect and filter requests before
 they reach your application:
 
-```
-Internet ──► ALB + WAF ──► Application
-              │
-              ├── Block SQL injection
-              ├── Block XSS attempts
-              ├── Rate limit by IP
-              ├── Geo-block countries
-              └── Block known bad IPs (threat intelligence)
-```
+![05_load_balancing_architecture diagram 8](assets/05_load_balancing_architecture-8.svg)
 
 ```bash
 # Associate WAF web ACL with ALB
@@ -548,36 +434,7 @@ Phase 4: Blue=0%,   Green=100%  (fully shifted)
 
 ## Request Flow: End to End
 
-```
-1. Client resolves ALB DNS name
-   └── DNS returns ALB IP addresses (multiple for HA)
-
-2. Client sends HTTPS request to ALB IP
-   └── TCP connection established with ALB
-
-3. ALB terminates TLS
-   └── Decrypts using certificate from ACM
-
-4. ALB evaluates listener rules (priority order)
-   └── Matches path "/api/v2/users" → API target group
-
-5. ALB selects target from target group
-   └── Algorithm: least outstanding requests
-   └── Target: 10.0.11.47:8080 (healthy, 2 in-flight)
-
-6. ALB sends HTTP request to target
-   └── Adds X-Forwarded-For, X-Forwarded-Proto headers
-
-7. Target processes request, returns response
-   └── HTTP 200, body: {"user": {...}}
-
-8. ALB forwards response to client
-   └── Re-encrypts for HTTPS
-
-9. ALB logs the request
-   └── Access log to S3: timestamp, client IP, target IP,
-       response code, processing time, request URL
-```
+![05_load_balancing_architecture diagram 9](assets/05_load_balancing_architecture-9.svg)
 
 ---
 

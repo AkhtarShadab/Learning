@@ -1,0 +1,289 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="584" height="704" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="584" height="704"></rect>
+    <rect x="76" y="472" width="72" height="48" class="solid nofill" rx="0"></rect>
+    <text x="82" y="492" >kubelet</text>
+    <path d="M 88,496 A 16,16 0,0,0 88,512" class="nofill"></path>
+    <text x="90" y="508" >agent</text>
+    <path d="M 128,496 A 16,16 0,0,1 128,512" class="nofill"></path>
+    <rect x="164" y="472" width="104" height="48" class="solid nofill" rx="0"></rect>
+    <text x="170" y="492" >kube</text>
+    <line x1="200" y1="488" x2="208" y2="488" class="solid"></line>
+    <text x="210" y="492" >proxy</text>
+    <path d="M 176,496 A 16,16 0,0,0 176,512" class="nofill"></path>
+    <text x="178" y="508" >networking</text>
+    <path d="M 256,496 A 16,16 0,0,1 256,512" class="nofill"></path>
+    <rect x="340" y="472" width="72" height="48" class="solid nofill" rx="0"></rect>
+    <text x="346" y="492" >kubelet</text>
+    <path d="M 352,496 A 16,16 0,0,0 352,512" class="nofill"></path>
+    <text x="354" y="508" >agent</text>
+    <path d="M 392,496 A 16,16 0,0,1 392,512" class="nofill"></path>
+    <rect x="76" y="536" width="200" height="48" class="solid nofill" rx="0"></rect>
+    <text x="98" y="556" >Container</text>
+    <text x="178" y="556" >Runtime</text>
+    <path d="M 104,560 A 16,16 0,0,0 104,576" class="nofill"></path>
+    <text x="106" y="572" >containerd</text>
+    <line x1="200" y1="560" x2="192" y2="576" class="solid"></line>
+    <text x="210" y="572" >CRI</text>
+    <line x1="232" y1="568" x2="240" y2="568" class="solid"></line>
+    <circle cx="244" cy="568" r="4" class="nofill"></circle>
+    <path d="M 248,560 A 16,16 0,0,1 248,576" class="nofill"></path>
+    <rect x="340" y="536" width="184" height="48" class="solid nofill" rx="0"></rect>
+    <text x="354" y="556" >Container</text>
+    <text x="434" y="556" >Runtime</text>
+    <path d="M 360,560 A 16,16 0,0,0 360,576" class="nofill"></path>
+    <text x="362" y="572" >containerd</text>
+    <line x1="456" y1="560" x2="448" y2="576" class="solid"></line>
+    <text x="466" y="572" >CRI</text>
+    <line x1="488" y1="568" x2="496" y2="568" class="solid"></line>
+    <circle cx="500" cy="568" r="4" class="nofill"></circle>
+    <path d="M 504,560 A 16,16 0,0,1 504,576" class="nofill"></path>
+    <rect x="76" y="600" width="56" height="32" class="solid nofill" rx="0"></rect>
+    <text x="82" y="620" >Pod</text>
+    <text x="114" y="620" >A</text>
+    <rect x="148" y="600" width="56" height="32" class="solid nofill" rx="0"></rect>
+    <text x="154" y="620" >Pod</text>
+    <text x="186" y="620" >B</text>
+    <rect x="220" y="600" width="48" height="32" class="solid nofill" rx="0"></rect>
+    <text x="226" y="620" >Pod</text>
+    <text x="258" y="620" >C</text>
+    <rect x="332" y="600" width="56" height="32" class="solid nofill" rx="0"></rect>
+    <text x="338" y="620" >Pod</text>
+    <text x="370" y="620" >D</text>
+    <rect x="404" y="600" width="56" height="32" class="solid nofill" rx="0"></rect>
+    <text x="410" y="620" >Pod</text>
+    <text x="442" y="620" >E</text>
+    <text x="202" y="28" >KUBERNETES</text>
+    <text x="290" y="28" >CLUSTER</text>
+    <line x1="564" y1="16" x2="564" y2="48" class="solid"></line>
+    <line x1="572" y1="48" x2="572" y2="96" class="solid"></line>
+    <line x1="564" y1="96" x2="564" y2="112" class="solid"></line>
+    <line x1="572" y1="112" x2="572" y2="192" class="solid"></line>
+    <line x1="564" y1="192" x2="564" y2="224" class="solid"></line>
+    <line x1="572" y1="224" x2="572" y2="240" class="solid"></line>
+    <line x1="564" y1="240" x2="564" y2="256" class="solid"></line>
+    <line x1="572" y1="256" x2="572" y2="368" class="solid"></line>
+    <line x1="564" y1="368" x2="564" y2="384" class="solid"></line>
+    <line x1="572" y1="384" x2="572" y2="432" class="solid"></line>
+    <text x="194" y="412" >WORKER</text>
+    <text x="250" y="412" >NODES</text>
+    <line x1="540" y1="432" x2="540" y2="464" class="solid"></line>
+    <line x1="564" y1="432" x2="564" y2="464" class="solid"></line>
+    <text x="122" y="460" >Worker</text>
+    <text x="178" y="460" >Node</text>
+    <text x="218" y="460" >1</text>
+    <text x="378" y="460" >Worker</text>
+    <text x="434" y="460" >Node</text>
+    <text x="474" y="460" >2</text>
+    <line x1="524" y1="464" x2="524" y2="480" class="solid"></line>
+    <line x1="556" y1="464" x2="556" y2="480" class="solid"></line>
+    <text x="434" y="492" >kube</text>
+    <line x1="464" y1="488" x2="472" y2="488" class="solid"></line>
+    <text x="474" y="492" >proxy</text>
+    <line x1="516" y1="480" x2="516" y2="512" class="solid"></line>
+    <line x1="540" y1="480" x2="540" y2="512" class="solid"></line>
+    <line x1="564" y1="480" x2="564" y2="512" class="solid"></line>
+    <path d="M 440,496 A 16,16 0,0,0 440,512" class="nofill"></path>
+    <text x="442" y="508" >network</text>
+    <path d="M 496,496 A 16,16 0,0,1 496,512" class="nofill"></path>
+    <line x1="524" y1="512" x2="524" y2="528" class="solid"></line>
+    <line x1="556" y1="512" x2="556" y2="528" class="solid"></line>
+    <line x1="540" y1="528" x2="540" y2="592" class="solid"></line>
+    <line x1="564" y1="528" x2="564" y2="592" class="solid"></line>
+    <line x1="284" y1="592" x2="284" y2="640" class="solid"></line>
+    <line x1="308" y1="592" x2="308" y2="640" class="solid"></line>
+    <line x1="516" y1="592" x2="516" y2="640" class="solid"></line>
+    <line x1="524" y1="592" x2="524" y2="640" class="solid"></line>
+    <line x1="548" y1="592" x2="548" y2="640" class="solid"></line>
+    <line x1="540" y1="640" x2="540" y2="656" class="solid"></line>
+    <line x1="564" y1="640" x2="564" y2="656" class="solid"></line>
+    <text x="194" y="76" >CONTROL</text>
+    <text x="258" y="76" >PLANE</text>
+    <path d="M 312,64 A 16,16 0,0,0 312,80" class="nofill"></path>
+    <text x="314" y="76" >Master</text>
+    <path d="M 360,64 A 16,16 0,0,1 360,80" class="nofill"></path>
+    <line x1="540" y1="96" x2="540" y2="112" class="solid"></line>
+    <text x="74" y="124" >API</text>
+    <text x="106" y="124" >Server</text>
+    <line x1="180" y1="112" x2="180" y2="192" class="solid"></line>
+    <line x1="548" y1="112" x2="548" y2="192" class="solid"></line>
+    <path d="M 80,128 A 16,16 0,0,0 80,144" class="nofill"></path>
+    <text x="82" y="140" >kube</text>
+    <line x1="112" y1="136" x2="120" y2="136" class="solid"></line>
+    <text x="122" y="140" >api</text>
+    <path d="M 144,128 A 16,16 0,0,1 144,144" class="nofill"></path>
+    <text x="74" y="156" >REST</text>
+    <text x="114" y="156" >gateway</text>
+    <text x="74" y="172" >to</text>
+    <text x="98" y="172" >cluster</text>
+    <text x="74" y="188" >state</text>
+    <line x1="540" y1="192" x2="540" y2="224" class="solid"></line>
+    <line x1="548" y1="224" x2="548" y2="240" class="solid"></line>
+    <line x1="540" y1="240" x2="540" y2="256" class="solid"></line>
+    <text x="90" y="268" >etcd</text>
+    <line x1="180" y1="256" x2="180" y2="336" class="solid"></line>
+    <text x="74" y="284" >Distributed</text>
+    <text x="74" y="300" >KV</text>
+    <text x="98" y="300" >store</text>
+    <path d="M 80,304 A 16,16 0,0,0 80,320" class="nofill"></path>
+    <text x="82" y="316" >cluster</text>
+    <text x="82" y="332" >brain</text>
+    <path d="M 120,320 A 16,16 0,0,1 120,336" class="nofill"></path>
+    <line x1="204" y1="112" x2="204" y2="192" class="solid"></line>
+    <text x="234" y="124" >Scheduler</text>
+    <line x1="324" y1="112" x2="324" y2="192" class="solid"></line>
+    <text x="226" y="156" >Assigns</text>
+    <text x="290" y="156" >pods</text>
+    <text x="226" y="172" >to</text>
+    <text x="250" y="172" >nodes</text>
+    <text x="226" y="188" >based</text>
+    <text x="274" y="188" >on</text>
+    <text x="218" y="204" >resources</text>
+    <line x1="348" y1="112" x2="348" y2="192" class="solid"></line>
+    <text x="362" y="124" >Controller</text>
+    <text x="450" y="124" >Manager</text>
+    <line x1="516" y1="112" x2="516" y2="192" class="solid"></line>
+    <text x="370" y="156" >Runs</text>
+    <text x="410" y="156" >reconcile</text>
+    <text x="370" y="172" >loops</text>
+    <text x="418" y="172" >for</text>
+    <text x="450" y="172" >all</text>
+    <text x="370" y="188" >built</text>
+    <line x1="408" y1="184" x2="416" y2="184" class="solid"></line>
+    <text x="418" y="188" >in</text>
+    <text x="362" y="204" >controllers</text>
+    <text x="226" y="268" >cloud</text>
+    <line x1="264" y1="264" x2="272" y2="264" class="solid"></line>
+    <text x="274" y="268" >controller</text>
+    <line x1="352" y1="264" x2="360" y2="264" class="solid"></line>
+    <text x="362" y="268" >manager</text>
+    <path d="M 432,256 A 16,16 0,0,0 432,272" class="nofill"></path>
+    <text x="434" y="268" >optional</text>
+    <path d="M 496,256 A 16,16 0,0,1 496,272" class="nofill"></path>
+    <text x="226" y="284" >Integrates</text>
+    <text x="314" y="284" >with</text>
+    <text x="354" y="284" >cloud</text>
+    <text x="402" y="284" >provider</text>
+    <text x="474" y="284" >APIs</text>
+    <path d="M 232,288 A 16,16 0,0,0 232,304" class="nofill"></path>
+    <text x="234" y="300" >load</text>
+    <text x="274" y="300" >balancers,</text>
+    <text x="362" y="300" >routes,</text>
+    <text x="426" y="300" >instances</text>
+    <path d="M 496,288 A 16,16 0,0,1 496,304" class="nofill"></path>
+    <g>
+        <line x1="4" y1="8" x2="572" y2="8" class="solid"></line>
+        <line x1="4" y1="8" x2="4" y2="680" class="solid"></line>
+        <line x1="572" y1="8" x2="572" y2="16" class="solid"></line>
+        <line x1="572" y1="656" x2="572" y2="680" class="solid"></line>
+        <line x1="4" y1="680" x2="572" y2="680" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="392" x2="548" y2="392" class="solid"></line>
+        <line x1="28" y1="392" x2="28" y2="664" class="solid"></line>
+        <line x1="548" y1="392" x2="548" y2="432" class="solid"></line>
+        <line x1="28" y1="664" x2="548" y2="664" class="solid"></line>
+        <line x1="548" y1="656" x2="548" y2="664" class="solid"></line>
+    </g>
+    <g>
+        <line x1="52" y1="440" x2="292" y2="440" class="solid"></line>
+        <line x1="52" y1="440" x2="52" y2="648" class="solid"></line>
+        <line x1="292" y1="440" x2="292" y2="592" class="solid"></line>
+        <line x1="52" y1="648" x2="292" y2="648" class="solid"></line>
+        <line x1="292" y1="640" x2="292" y2="648" class="solid"></line>
+    </g>
+    <g>
+        <line x1="316" y1="440" x2="532" y2="440" class="solid"></line>
+        <line x1="316" y1="440" x2="316" y2="592" class="solid"></line>
+        <line x1="532" y1="440" x2="532" y2="592" class="solid"></line>
+    </g>
+    <g>
+        <line x1="428" y1="472" x2="508" y2="472" class="solid"></line>
+        <line x1="428" y1="472" x2="428" y2="520" class="solid"></line>
+        <line x1="508" y1="472" x2="508" y2="480" class="solid"></line>
+        <line x1="428" y1="520" x2="508" y2="520" class="solid"></line>
+        <line x1="508" y1="512" x2="508" y2="520" class="solid"></line>
+    </g>
+    <g>
+        <line x1="316" y1="640" x2="316" y2="648" class="solid"></line>
+        <line x1="316" y1="648" x2="532" y2="648" class="solid"></line>
+        <line x1="532" y1="640" x2="532" y2="648" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="56" x2="548" y2="56" class="solid"></line>
+        <line x1="28" y1="56" x2="28" y2="360" class="solid"></line>
+        <line x1="548" y1="56" x2="548" y2="96" class="solid"></line>
+        <line x1="548" y1="256" x2="548" y2="360" class="solid"></line>
+        <line x1="28" y1="360" x2="548" y2="360" class="solid"></line>
+    </g>
+    <g>
+        <line x1="52" y1="104" x2="172" y2="104" class="solid"></line>
+        <line x1="52" y1="104" x2="52" y2="216" class="solid"></line>
+        <line x1="172" y1="104" x2="172" y2="112" class="solid"></line>
+        <line x1="172" y1="192" x2="172" y2="216" class="solid"></line>
+        <line x1="52" y1="216" x2="172" y2="216" class="solid"></line>
+        <line x1="108" y1="216" x2="108" y2="244" class="solid"></line>
+        <polygon points="104,244 112,244 108,256" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="52" y1="248" x2="104" y2="248" class="solid"></line>
+        <line x1="52" y1="248" x2="52" y2="344" class="solid"></line>
+        <line x1="52" y1="344" x2="172" y2="344" class="solid"></line>
+        <line x1="172" y1="336" x2="172" y2="344" class="solid"></line>
+    </g>
+    <g>
+        <line x1="112" y1="248" x2="172" y2="248" class="solid"></line>
+        <line x1="172" y1="248" x2="172" y2="256" class="solid"></line>
+    </g>
+    <g>
+        <line x1="196" y1="104" x2="316" y2="104" class="solid"></line>
+        <line x1="196" y1="104" x2="196" y2="112" class="solid"></line>
+        <line x1="316" y1="104" x2="316" y2="112" class="solid"></line>
+    </g>
+    <g>
+        <line x1="196" y1="192" x2="196" y2="216" class="solid"></line>
+        <line x1="316" y1="192" x2="316" y2="216" class="solid"></line>
+        <line x1="196" y1="216" x2="316" y2="216" class="solid"></line>
+    </g>
+    <g>
+        <line x1="340" y1="104" x2="508" y2="104" class="solid"></line>
+        <line x1="340" y1="104" x2="340" y2="112" class="solid"></line>
+        <line x1="508" y1="104" x2="508" y2="112" class="solid"></line>
+    </g>
+    <g>
+        <line x1="340" y1="192" x2="340" y2="216" class="solid"></line>
+        <line x1="508" y1="192" x2="508" y2="216" class="solid"></line>
+        <line x1="340" y1="216" x2="508" y2="216" class="solid"></line>
+    </g>
+    <g>
+        <line x1="196" y1="248" x2="508" y2="248" class="solid"></line>
+        <line x1="196" y1="248" x2="196" y2="256" class="solid"></line>
+        <line x1="508" y1="248" x2="508" y2="256" class="solid"></line>
+    </g>
+    <g>
+        <line x1="204" y1="256" x2="204" y2="312" class="solid"></line>
+        <line x1="516" y1="256" x2="516" y2="312" class="solid"></line>
+        <line x1="204" y1="312" x2="516" y2="312" class="solid"></line>
+    </g>
+</svg>

@@ -170,34 +170,7 @@ aws ec2 describe-availability-zones \
 
 ### AZ Design Principles
 
-```
-          Region: us-east-1
- ┌─────────────────────────────────────────────┐
- │                                             │
- │   AZ-a (use1-az1)       AZ-b (use1-az2)    │
- │   ┌─────────────┐       ┌─────────────┐    │
- │   │ Data Center │       │ Data Center │    │
- │   │  Cluster    │       │  Cluster    │    │
- │   │             │       │             │    │
- │   │ - Own power │       │ - Own power │    │
- │   │ - Own UPS   │       │ - Own UPS   │    │
- │   │ - Own HVAC  │       │ - Own HVAC  │    │
- │   │ - Own net   │       │ - Own net   │    │
- │   └──────┬──────┘       └──────┬──────┘    │
- │          │    High-bandwidth   │            │
- │          │◄── dark fiber ─────►│            │
- │          │    < 2ms RTT        │            │
- │          │         ┌───────────┘            │
- │          │         │                        │
- │   ┌──────┴─────────┴──┐                    │
- │   │  AZ-c (use1-az3)  │                    │
- │   │  ┌─────────────┐  │                    │
- │   │  │ Data Center │  │                    │
- │   │  │  Cluster    │  │                    │
- │   │  └─────────────┘  │                    │
- │   └────────────────────┘                    │
- └─────────────────────────────────────────────┘
-```
+![01_global_infrastructure diagram 1](assets/01_global_infrastructure-1.svg)
 
 Each AZ consists of one or more data centers. A single AZ might have three data
 centers, but they are treated as a single failure domain from the customer's
@@ -252,29 +225,13 @@ Edge locations host:
 
 ### How CloudFront Uses Edge Locations
 
-```
-User in Tokyo                     Origin in us-east-1
-     │                                    │
-     │  1. GET /image.jpg                 │
-     ▼                                    │
-  Edge Location (Tokyo)                   │
-     │                                    │
-     ├─ Cache HIT? ──► Return cached      │
-     │                 content (< 5ms)    │
-     │                                    │
-     └─ Cache MISS? ──► Fetch from ───────┘
-                        origin, cache
-                        locally, return
-```
+![01_global_infrastructure diagram 2](assets/01_global_infrastructure-2.svg)
 
 Regional Edge Caches (RECs) sit between edge locations and origins. They have larger
 cache capacity and act as a mid-tier cache, reducing origin fetches for content that
 is popular enough to cache but not so popular that every edge location has it.
 
-```
-User ──► Edge Location ──► Regional Edge Cache ──► Origin
-              (PoP)              (REC)            (Region)
-```
+![01_global_infrastructure diagram 3](assets/01_global_infrastructure-3.svg)
 
 ### CloudFront Configuration Example
 
@@ -367,15 +324,7 @@ Use cases:
 - Cloud gaming on mobile devices
 - IoT applications on 5G-connected sensors
 
-```
-5G Device ──► Cell Tower ──► Carrier Network ──► Wavelength Zone (AWS)
-                                                      │
-                                              ┌───────┴───────┐
-                                              │ EC2 instances │
-                                              │ in carrier DC │
-                                              └───────────────┘
-                                  (No traversal of public internet)
-```
+![01_global_infrastructure diagram 4](assets/01_global_infrastructure-4.svg)
 
 ---
 
@@ -472,18 +421,7 @@ Outposts bring AWS infrastructure on-premises. AWS ships a rack (or smaller form
 factor) of hardware to your data center. It runs native AWS services (EC2, EBS,
 ECS, RDS, S3) managed by AWS, connected back to the parent region.
 
-```
-Your Data Center                         AWS Region
-┌──────────────────┐                ┌──────────────┐
-│  AWS Outpost     │                │              │
-│  ┌────────────┐  │   VPN / DX    │   Control    │
-│  │ EC2, EBS   │  │◄──────────────►│   Plane      │
-│  │ ECS, RDS   │  │  (encrypted)  │              │
-│  │ S3 on      │  │               │   Full AWS   │
-│  │ Outposts   │  │               │   Services   │
-│  └────────────┘  │               │              │
-└──────────────────┘                └──────────────┘
-```
+![01_global_infrastructure diagram 5](assets/01_global_infrastructure-5.svg)
 
 Use cases:
 - Low-latency processing that must be on-premises
@@ -517,20 +455,7 @@ Use cases:
 
 ### Resource Scope Reference
 
-```
-GLOBAL               REGIONAL              AZ-SCOPED
-──────────────        ─────────────         ─────────────
-IAM                   S3                    EC2 Instance
-Route 53              DynamoDB              EBS Volume
-CloudFront            Lambda                Subnet
-WAF (global)          SQS / SNS             RDS Instance*
-                      VPC                   EFS Mount Target
-                      Auto Scaling Group    NAT Gateway
-                      ALB / NLB
-                      Aurora Cluster
-
-* RDS Multi-AZ has a standby in another AZ but the primary is AZ-scoped
-```
+![01_global_infrastructure diagram 6](assets/01_global_infrastructure-6.svg)
 
 ### Cost Optimization Tips
 

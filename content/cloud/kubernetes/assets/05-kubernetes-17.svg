@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="688" height="416" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="688" height="416"></rect>
+    <text x="2" y="12" >#</text>
+    <line x1="16" y1="8" x2="32" y2="8" class="solid"></line>
+    <text x="42" y="12" >Install</text>
+    <text x="106" y="12" >ArgoCD</text>
+    <line x1="160" y1="8" x2="544" y2="8" class="solid"></line>
+    <text x="2" y="28" >kubectl</text>
+    <text x="66" y="28" >create</text>
+    <text x="122" y="28" >namespace</text>
+    <text x="202" y="28" >argocd</text>
+    <text x="2" y="44" >kubectl</text>
+    <text x="66" y="44" >apply</text>
+    <line x1="112" y1="40" x2="120" y2="40" class="solid"></line>
+    <text x="122" y="44" >n</text>
+    <text x="138" y="44" >argocd</text>
+    <line x1="192" y1="32" x2="200" y2="48" class="solid"></line>
+    <line x1="16" y1="56" x2="24" y2="56" class="solid"></line>
+    <text x="26" y="60" >f</text>
+    <text x="42" y="60" >https:</text>
+    <line x1="96" y1="48" x2="88" y2="64" class="solid"></line>
+    <line x1="104" y1="48" x2="96" y2="64" class="solid"></line>
+    <text x="106" y="60" >raw.githubusercontent.com</text>
+    <line x1="312" y1="48" x2="304" y2="64" class="solid"></line>
+    <text x="314" y="60" >argoproj</text>
+    <line x1="384" y1="48" x2="376" y2="64" class="solid"></line>
+    <text x="386" y="60" >arg</text>
+    <circle cx="412" cy="56" r="3" class="nofill"></circle>
+    <line x1="416" y1="56" x2="424" y2="56" class="solid"></line>
+    <text x="426" y="60" >cd</text>
+    <line x1="448" y1="48" x2="440" y2="64" class="solid"></line>
+    <text x="450" y="60" >stable</text>
+    <line x1="504" y1="48" x2="496" y2="64" class="solid"></line>
+    <text x="506" y="60" >manifests</text>
+    <line x1="584" y1="48" x2="576" y2="64" class="solid"></line>
+    <text x="586" y="60" >install.yaml</text>
+    <text x="2" y="92" >#</text>
+    <text x="18" y="92" >Wait</text>
+    <text x="58" y="92" >for</text>
+    <text x="90" y="92" >ArgoCD</text>
+    <text x="146" y="92" >to</text>
+    <text x="170" y="92" >be</text>
+    <text x="194" y="92" >ready</text>
+    <text x="2" y="108" >kubectl</text>
+    <text x="66" y="108" >wait</text>
+    <line x1="104" y1="104" x2="120" y2="104" class="solid"></line>
+    <text x="122" y="108" >for</text>
+    <line x1="144" y1="102" x2="152" y2="102" class="solid"></line>
+    <line x1="144" y1="106" x2="152" y2="106" class="solid"></line>
+    <text x="154" y="108" >condition</text>
+    <line x1="224" y1="102" x2="232" y2="102" class="solid"></line>
+    <line x1="224" y1="106" x2="232" y2="106" class="solid"></line>
+    <text x="234" y="108" >available</text>
+    <line x1="16" y1="120" x2="24" y2="120" class="solid"></line>
+    <text x="26" y="124" >n</text>
+    <text x="42" y="124" >argocd</text>
+    <line x1="96" y1="120" x2="112" y2="120" class="solid"></line>
+    <text x="114" y="124" >timeout</text>
+    <line x1="168" y1="118" x2="176" y2="118" class="solid"></line>
+    <line x1="168" y1="122" x2="176" y2="122" class="solid"></line>
+    <text x="178" y="124" >300s</text>
+    <text x="314" y="108" >deployment</text>
+    <line x1="400" y1="96" x2="392" y2="112" class="solid"></line>
+    <text x="402" y="108" >argocd</text>
+    <line x1="448" y1="104" x2="456" y2="104" class="solid"></line>
+    <text x="458" y="108" >server</text>
+    <line x1="512" y1="96" x2="520" y2="112" class="solid"></line>
+    <rect x="0" y="148" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="156" x2="4" y2="164" class="solid"></line>
+    <line x1="16" y1="152" x2="32" y2="152" class="solid"></line>
+    <text x="42" y="156" >Access</text>
+    <text x="98" y="156" >the</text>
+    <text x="130" y="156" >ArgoCD</text>
+    <text x="186" y="156" >UI</text>
+    <line x1="208" y1="152" x2="536" y2="152" class="solid"></line>
+    <rect x="0" y="164" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="172" >Get</text>
+    <text x="50" y="172" >the</text>
+    <text x="82" y="172" >initial</text>
+    <text x="146" y="172" >admin</text>
+    <text x="194" y="172" >password</text>
+    <text x="2" y="188" >kubectl</text>
+    <line x1="64" y1="184" x2="72" y2="184" class="solid"></line>
+    <text x="74" y="188" >n</text>
+    <text x="90" y="188" >argocd</text>
+    <text x="146" y="188" >get</text>
+    <text x="178" y="188" >secret</text>
+    <text x="234" y="188" >argocd</text>
+    <line x1="280" y1="184" x2="288" y2="184" class="solid"></line>
+    <text x="290" y="188" >initial</text>
+    <line x1="344" y1="184" x2="352" y2="184" class="solid"></line>
+    <text x="354" y="188" >admin</text>
+    <line x1="392" y1="184" x2="400" y2="184" class="solid"></line>
+    <text x="402" y="188" >secret</text>
+    <line x1="16" y1="200" x2="24" y2="200" class="solid"></line>
+    <circle cx="28" cy="200" r="3" class="nofill"></circle>
+    <text x="42" y="204" >jsonpath</text>
+    <line x1="104" y1="198" x2="112" y2="198" class="solid"></line>
+    <line x1="104" y1="202" x2="112" y2="202" class="solid"></line>
+    <text x="114" y="204" >&#39;{.data.password}&#39;</text>
+    <line x1="268" y1="192" x2="268" y2="208" class="solid"></line>
+    <text x="282" y="204" >base64</text>
+    <line x1="336" y1="200" x2="344" y2="200" class="solid"></line>
+    <text x="346" y="204" >d</text>
+    <text x="18" y="220" >Output:</text>
+    <path d="M 88,208 A 16,16 0,0,0 88,224" class="nofill"></path>
+    <text x="90" y="220" >a</text>
+    <text x="106" y="220" >random</text>
+    <text x="162" y="220" >password</text>
+    <text x="234" y="220" >like</text>
+    <line x1="456" y1="176" x2="464" y2="192" class="solid"></line>
+    <text x="2" y="220" >#</text>
+    <path d="M 360,208 A 16,16 0,0,1 360,224" class="nofill"></path>
+    <text x="2" y="252" >#</text>
+    <text x="18" y="252" >Port</text>
+    <line x1="48" y1="248" x2="56" y2="248" class="solid"></line>
+    <text x="58" y="252" >forward</text>
+    <text x="122" y="252" >to</text>
+    <text x="146" y="252" >access</text>
+    <text x="202" y="252" >the</text>
+    <text x="234" y="252" >UI</text>
+    <text x="2" y="268" >kubectl</text>
+    <text x="66" y="268" >port</text>
+    <line x1="96" y1="264" x2="104" y2="264" class="solid"></line>
+    <text x="106" y="268" >forward</text>
+    <text x="170" y="268" >svc</text>
+    <line x1="200" y1="256" x2="192" y2="272" class="solid"></line>
+    <text x="202" y="268" >argocd</text>
+    <line x1="248" y1="264" x2="256" y2="264" class="solid"></line>
+    <text x="258" y="268" >server</text>
+    <text x="2" y="284" >#</text>
+    <text x="18" y="284" >Visit</text>
+    <text x="66" y="284" >https:</text>
+    <line x1="120" y1="272" x2="112" y2="288" class="solid"></line>
+    <line x1="128" y1="272" x2="120" y2="288" class="solid"></line>
+    <text x="130" y="284" >localhost:8443,</text>
+    <text x="258" y="284" >login:</text>
+    <line x1="312" y1="264" x2="320" y2="264" class="solid"></line>
+    <text x="322" y="268" >n</text>
+    <text x="338" y="268" >argocd</text>
+    <text x="394" y="268" >8443:443</text>
+    <text x="314" y="284" >admin</text>
+    <line x1="368" y1="272" x2="360" y2="288" class="solid"></line>
+    <text x="378" y="284" >&lt;passw</text>
+    <line x1="428" y1="272" x2="428" y2="276" class="solid"></line>
+    <circle cx="428" cy="280" r="3" class="nofill"></circle>
+    <text x="434" y="284" >rd</text>
+    <text x="458" y="284" >from</text>
+    <text x="498" y="284" >above&gt;</text>
+    <text x="2" y="316" >#</text>
+    <line x1="16" y1="312" x2="32" y2="312" class="solid"></line>
+    <text x="2" y="332" >brew</text>
+    <text x="2" y="348" >#</text>
+    <text x="18" y="348" >OR</text>
+    <text x="42" y="316" >Install</text>
+    <text x="106" y="316" >the</text>
+    <text x="138" y="316" >ArgoCD</text>
+    <line x1="224" y1="312" x2="536" y2="312" class="solid"></line>
+    <text x="42" y="332" >install</text>
+    <text x="106" y="332" >argocd</text>
+    <text x="330" y="332" >#</text>
+    <text x="346" y="332" >macOS</text>
+    <text x="42" y="348" >download</text>
+    <text x="114" y="348" >from</text>
+    <text x="154" y="348" >https:</text>
+    <line x1="208" y1="336" x2="200" y2="352" class="solid"></line>
+    <line x1="216" y1="336" x2="208" y2="352" class="solid"></line>
+    <text x="218" y="348" >github.com</text>
+    <line x1="304" y1="336" x2="296" y2="352" class="solid"></line>
+    <text x="306" y="348" >argoproj</text>
+    <line x1="376" y1="336" x2="368" y2="352" class="solid"></line>
+    <text x="378" y="348" >arg</text>
+    <circle cx="404" cy="344" r="3" class="nofill"></circle>
+    <line x1="408" y1="344" x2="416" y2="344" class="solid"></line>
+    <text x="418" y="348" >cd</text>
+    <line x1="440" y1="336" x2="432" y2="352" class="solid"></line>
+    <text x="442" y="348" >releases</text>
+    <text x="194" y="316" >CLI</text>
+    <text x="2" y="380" >#</text>
+    <text x="18" y="380" >Login</text>
+    <text x="66" y="380" >via</text>
+    <text x="98" y="380" >CLI</text>
+    <text x="2" y="396" >argocd</text>
+    <text x="58" y="396" >login</text>
+    <text x="106" y="396" >localhost:8443</text>
+    <line x1="224" y1="392" x2="240" y2="392" class="solid"></line>
+    <text x="242" y="396" >insecure</text>
+    <text x="330" y="396" >#</text>
+    <line x1="344" y1="392" x2="360" y2="392" class="solid"></line>
+    <text x="362" y="396" >insecure</text>
+    <text x="434" y="396" >for</text>
+    <text x="466" y="396" >self</text>
+    <line x1="496" y1="392" x2="504" y2="392" class="solid"></line>
+    <text x="506" y="396" >signed</text>
+    <text x="562" y="396" >cert</text>
+    <text x="274" y="220" >abc123XYZ</text>
+</svg>

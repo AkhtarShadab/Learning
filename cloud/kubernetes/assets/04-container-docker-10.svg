@@ -1,0 +1,584 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1488" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="768" height="1488"></rect>
+    <rect x="0" y="4" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="12" x2="4" y2="20" class="solid"></line>
+    <rect x="0" y="20" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="12" >docker</text>
+    <line x1="64" y1="8" x2="72" y2="8" class="solid"></line>
+    <text x="74" y="12" >compose.yml</text>
+    <text x="18" y="28" >Defines</text>
+    <text x="82" y="28" >a</text>
+    <text x="98" y="28" >full</text>
+    <text x="138" y="28" >application</text>
+    <text x="234" y="28" >stack:</text>
+    <text x="290" y="28" >API</text>
+    <text x="322" y="28" >server</text>
+    <text x="378" y="28" >+</text>
+    <text x="394" y="28" >PostgreSQL</text>
+    <text x="482" y="28" >database</text>
+    <text x="554" y="28" >+</text>
+    <text x="570" y="28" >Redis</text>
+    <text x="618" y="28" >cache</text>
+    <text x="2" y="60" >#</text>
+    <text x="18" y="60" >version</text>
+    <text x="82" y="60" >key</text>
+    <text x="114" y="60" >is</text>
+    <text x="138" y="60" >optional</text>
+    <text x="210" y="60" >in</text>
+    <text x="234" y="60" >modern</text>
+    <text x="290" y="60" >Docker</text>
+    <text x="346" y="60" >Compose</text>
+    <path d="M 416,48 A 16,16 0,0,0 416,64" class="nofill"></path>
+    <text x="418" y="60" >v2+</text>
+    <path d="M 440,48 A 16,16 0,0,1 440,64" class="nofill"></path>
+    <text x="2" y="92" >services:</text>
+    <text x="18" y="108" >#</text>
+    <line x1="32" y1="104" x2="48" y2="104" class="solid"></line>
+    <text x="58" y="108" >API</text>
+    <text x="18" y="124" >api:</text>
+    <text x="34" y="140" >build:</text>
+    <text x="50" y="156" >context:</text>
+    <text x="122" y="156" >.</text>
+    <text x="50" y="172" >dockerfile:</text>
+    <text x="50" y="188" >args:</text>
+    <text x="66" y="204" >N</text>
+    <circle cx="76" cy="200" r="4" class="nofill"></circle>
+    <line x1="76" y1="204" x2="76" y2="208" class="solid"></line>
+    <text x="82" y="204" >DE</text>
+    <line x1="96" y1="208" x2="104" y2="208" class="solid"></line>
+    <text x="106" y="204" >ENV</text>
+    <line x1="132" y1="192" x2="132" y2="224" class="broken"></line>
+    <text x="146" y="204" >production</text>
+    <text x="34" y="220" >image:</text>
+    <text x="90" y="220" >myapp</text>
+    <text x="138" y="220" >1</text>
+    <line x1="148" y1="220" x2="148" y2="224" class="solid"></line>
+    <text x="154" y="220" >0</text>
+    <text x="34" y="236" >container</text>
+    <line x1="104" y1="240" x2="112" y2="240" class="solid"></line>
+    <text x="114" y="236" >name:</text>
+    <text x="162" y="236" >myapp</text>
+    <line x1="200" y1="232" x2="208" y2="232" class="solid"></line>
+    <text x="210" y="236" >api</text>
+    <text x="34" y="252" >ports:</text>
+    <line x1="48" y1="264" x2="56" y2="264" class="solid"></line>
+    <text x="34" y="284" >environment:</text>
+    <text x="50" y="300" >DATABASE</text>
+    <line x1="112" y1="304" x2="120" y2="304" class="solid"></line>
+    <text x="122" y="300" >URL:</text>
+    <text x="162" y="300" >postgres:</text>
+    <line x1="240" y1="288" x2="232" y2="304" class="solid"></line>
+    <text x="250" y="300" >postgres:secret@db:5432</text>
+    <line x1="440" y1="288" x2="432" y2="304" class="solid"></line>
+    <text x="442" y="300" >myapp</text>
+    <text x="50" y="316" >REDIS</text>
+    <line x1="88" y1="320" x2="96" y2="320" class="solid"></line>
+    <text x="98" y="316" >URL:</text>
+    <text x="138" y="316" >redis:</text>
+    <line x1="192" y1="304" x2="184" y2="320" class="solid"></line>
+    <line x1="200" y1="304" x2="192" y2="320" class="solid"></line>
+    <text x="202" y="316" >cache:6379</text>
+    <text x="50" y="332" >NODE</text>
+    <line x1="80" y1="336" x2="88" y2="336" class="solid"></line>
+    <text x="90" y="332" >ENV:</text>
+    <text x="130" y="332" >production</text>
+    <text x="34" y="348" >env</text>
+    <line x1="56" y1="352" x2="64" y2="352" class="solid"></line>
+    <text x="66" y="348" >file:</text>
+    <line x1="48" y1="360" x2="56" y2="360" class="solid"></line>
+    <text x="66" y="364" >.env</text>
+    <text x="34" y="380" >depends</text>
+    <line x1="88" y1="384" x2="96" y2="384" class="solid"></line>
+    <text x="98" y="380" >on:</text>
+    <text x="50" y="396" >db:</text>
+    <text x="66" y="412" >condition:</text>
+    <text x="50" y="428" >cache:</text>
+    <text x="66" y="444" >condition:</text>
+    <text x="34" y="460" >networks:</text>
+    <line x1="48" y1="472" x2="56" y2="472" class="solid"></line>
+    <text x="66" y="476" >backend</text>
+    <text x="34" y="492" >restart:</text>
+    <text x="106" y="492" >unless</text>
+    <line x1="152" y1="488" x2="160" y2="488" class="solid"></line>
+    <text x="162" y="492" >stopped</text>
+    <text x="34" y="508" >healthcheck:</text>
+    <text x="50" y="524" >test:</text>
+    <text x="98" y="524" >[</text>
+    <text x="146" y="524" >,</text>
+    <text x="50" y="540" >interval:</text>
+    <text x="130" y="540" >30s</text>
+    <text x="50" y="556" >timeout</text>
+    <line x1="108" y1="544" x2="108" y2="576" class="broken"></line>
+    <text x="122" y="556" >10s</text>
+    <text x="50" y="572" >retries</text>
+    <text x="122" y="572" >3</text>
+    <text x="50" y="588" >start</text>
+    <line x1="88" y1="592" x2="96" y2="592" class="solid"></line>
+    <text x="98" y="588" >period:</text>
+    <text x="34" y="604" >deploy:</text>
+    <text x="50" y="620" >resources:</text>
+    <text x="66" y="636" >limits</text>
+    <line x1="116" y1="624" x2="116" y2="656" class="broken"></line>
+    <text x="82" y="652" >cpus</text>
+    <text x="82" y="668" >memory:</text>
+    <text x="146" y="668" >512M</text>
+    <text x="66" y="684" >reservations:</text>
+    <text x="82" y="700" >cpus:</text>
+    <text x="82" y="716" >memory:</text>
+    <text x="90" y="108" >SERVICE</text>
+    <line x1="152" y1="104" x2="480" y2="104" class="solid"></line>
+    <rect x="288" y="148" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="156" x2="292" y2="164" class="solid"></line>
+    <rect x="288" y="164" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="306" y="156" >Build</text>
+    <text x="354" y="156" >context</text>
+    <text x="418" y="156" >is</text>
+    <text x="442" y="156" >the</text>
+    <text x="474" y="156" >current</text>
+    <text x="306" y="172" >Path</text>
+    <text x="346" y="172" >to</text>
+    <text x="370" y="172" >the</text>
+    <text x="402" y="172" >Dockerfile</text>
+    <text x="538" y="156" >directory</text>
+    <text x="146" y="172" >Dockerfile</text>
+    <rect x="288" y="196" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="204" x2="292" y2="212" class="solid"></line>
+    <rect x="288" y="212" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="220" x2="292" y2="228" class="solid"></line>
+    <rect x="288" y="228" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="306" y="204" >Build</text>
+    <text x="354" y="204" >argument</text>
+    <text x="426" y="204" >passed</text>
+    <text x="482" y="204" >to</text>
+    <text x="506" y="204" >the</text>
+    <text x="538" y="204" >Dockerfile</text>
+    <text x="306" y="220" >Tag</text>
+    <text x="338" y="220" >the</text>
+    <text x="370" y="220" >built</text>
+    <text x="418" y="220" >image</text>
+    <text x="466" y="220" >as</text>
+    <text x="490" y="220" >myapp:1.0</text>
+    <text x="306" y="236" >Explicit</text>
+    <text x="378" y="236" >container</text>
+    <text x="458" y="236" >name</text>
+    <path d="M 504,224 A 16,16 0,0,0 504,240" class="nofill"></path>
+    <text x="506" y="236" >optional</text>
+    <path d="M 568,224 A 16,16 0,0,1 568,240" class="nofill"></path>
+    <text x="290" y="268" >#</text>
+    <text x="306" y="268" >Map</text>
+    <text x="338" y="268" >host:container</text>
+    <text x="458" y="268" >ports</text>
+    <text x="498" y="300" >#</text>
+    <text x="514" y="300" >&#39;db&#39;</text>
+    <text x="554" y="300" >resolves</text>
+    <text x="626" y="300" >via</text>
+    <text x="658" y="300" >DNS</text>
+    <text x="290" y="364" >#</text>
+    <text x="306" y="364" >Load</text>
+    <text x="346" y="364" >additional</text>
+    <text x="434" y="364" >env</text>
+    <text x="466" y="364" >vars</text>
+    <text x="506" y="364" >from</text>
+    <text x="546" y="364" >file</text>
+    <text x="154" y="412" >service</text>
+    <line x1="208" y1="416" x2="216" y2="416" class="solid"></line>
+    <text x="218" y="412" >healthy</text>
+    <text x="290" y="412" >#</text>
+    <text x="306" y="412" >Wait</text>
+    <text x="346" y="412" >for</text>
+    <text x="378" y="412" >db</text>
+    <text x="402" y="412" >to</text>
+    <text x="426" y="412" >be</text>
+    <text x="450" y="412" >healthy</text>
+    <text x="514" y="412" >before</text>
+    <text x="570" y="412" >starting</text>
+    <text x="154" y="444" >service</text>
+    <line x1="208" y1="448" x2="216" y2="448" class="solid"></line>
+    <text x="218" y="444" >started</text>
+    <text x="290" y="444" >#</text>
+    <text x="306" y="444" >Just</text>
+    <text x="346" y="444" >wait</text>
+    <text x="386" y="444" >for</text>
+    <text x="418" y="444" >cache</text>
+    <text x="466" y="444" >to</text>
+    <text x="490" y="444" >start</text>
+    <rect x="288" y="468" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="476" x2="292" y2="484" class="solid"></line>
+    <rect x="288" y="484" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="306" y="476" >Attach</text>
+    <text x="362" y="476" >to</text>
+    <text x="386" y="476" >the</text>
+    <text x="418" y="476" >backend</text>
+    <text x="482" y="476" >network</text>
+    <text x="306" y="492" >Restart</text>
+    <text x="370" y="492" >on</text>
+    <text x="394" y="492" >failure,</text>
+    <text x="466" y="492" >but</text>
+    <text x="498" y="492" >not</text>
+    <text x="530" y="492" >if</text>
+    <text x="554" y="492" >manually</text>
+    <text x="626" y="492" >stopped</text>
+    <text x="210" y="524" >,</text>
+    <text x="306" y="524" >,</text>
+    <text x="354" y="524" >,</text>
+    <text x="306" y="540" >Check</text>
+    <text x="354" y="540" >every</text>
+    <text x="402" y="540" >30</text>
+    <text x="426" y="540" >seconds</text>
+    <text x="306" y="556" >Timeout</text>
+    <text x="370" y="556" >per</text>
+    <text x="402" y="556" >check</text>
+    <text x="306" y="572" >Mark</text>
+    <text x="346" y="572" >unhealthy</text>
+    <text x="426" y="572" >after</text>
+    <text x="474" y="572" >3</text>
+    <text x="490" y="572" >consecutive</text>
+    <text x="306" y="588" >Grace</text>
+    <text x="354" y="588" >period</text>
+    <text x="410" y="588" >before</text>
+    <text x="466" y="588" >checks</text>
+    <text x="522" y="588" >begin</text>
+    <text x="610" y="524" >]</text>
+    <rect x="288" y="532" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="540" x2="292" y2="548" class="solid"></line>
+    <rect x="288" y="548" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="556" x2="292" y2="564" class="solid"></line>
+    <rect x="288" y="564" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="572" x2="292" y2="580" class="solid"></line>
+    <rect x="288" y="580" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="586" y="572" >failures</text>
+    <text x="162" y="588" >40s</text>
+    <rect x="280" y="644" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="284" y1="652" x2="284" y2="660" class="solid"></line>
+    <rect x="280" y="660" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="298" y="652" >Maximum</text>
+    <text x="298" y="668" >Maximum</text>
+    <text x="362" y="652" >1</text>
+    <text x="378" y="652" >CPU</text>
+    <text x="410" y="652" >core</text>
+    <text x="362" y="668" >512</text>
+    <text x="394" y="668" >MB</text>
+    <text x="418" y="668" >RAM</text>
+    <rect x="280" y="692" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="284" y1="700" x2="284" y2="708" class="solid"></line>
+    <rect x="280" y="708" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="298" y="700" >Guaranteed</text>
+    <text x="298" y="716" >Guaranteed</text>
+    <text x="386" y="700" >minimum</text>
+    <text x="386" y="716" >minimum</text>
+    <text x="450" y="700" >CPU</text>
+    <text x="450" y="716" >RAM</text>
+    <text x="146" y="716" >128M</text>
+    <text x="18" y="748" >#</text>
+    <line x1="32" y1="744" x2="48" y2="744" class="solid"></line>
+    <text x="18" y="764" >db:</text>
+    <text x="34" y="780" >image:</text>
+    <text x="90" y="780" >postgres:16</text>
+    <line x1="176" y1="776" x2="184" y2="776" class="solid"></line>
+    <text x="186" y="780" >alpine</text>
+    <text x="34" y="796" >container</text>
+    <line x1="104" y1="800" x2="112" y2="800" class="solid"></line>
+    <text x="114" y="796" >name:</text>
+    <text x="162" y="796" >myapp</text>
+    <line x1="200" y1="792" x2="208" y2="792" class="solid"></line>
+    <text x="210" y="796" >db</text>
+    <text x="34" y="812" >environment:</text>
+    <text x="50" y="828" >POSTGRES</text>
+    <line x1="112" y1="832" x2="120" y2="832" class="solid"></line>
+    <text x="122" y="828" >DB:</text>
+    <text x="154" y="828" >myapp</text>
+    <text x="50" y="844" >POSTGRES</text>
+    <line x1="112" y1="848" x2="120" y2="848" class="solid"></line>
+    <text x="122" y="844" >USER:</text>
+    <text x="170" y="844" >postgres</text>
+    <text x="50" y="860" >POSTGRES</text>
+    <line x1="112" y1="864" x2="120" y2="864" class="solid"></line>
+    <text x="122" y="860" >PASSWORD:</text>
+    <text x="202" y="860" >secret</text>
+    <text x="34" y="876" >volumes:</text>
+    <line x1="48" y1="888" x2="56" y2="888" class="solid"></line>
+    <text x="66" y="892" >pgdata:</text>
+    <line x1="128" y1="880" x2="120" y2="896" class="solid"></line>
+    <text x="130" y="892" >var</text>
+    <line x1="160" y1="880" x2="152" y2="896" class="solid"></line>
+    <text x="162" y="892" >lib</text>
+    <line x1="192" y1="880" x2="184" y2="896" class="solid"></line>
+    <text x="194" y="892" >postgresql</text>
+    <line x1="280" y1="880" x2="270" y2="900" class="solid"></line>
+    <text x="282" y="892" >data</text>
+    <text x="338" y="892" >#</text>
+    <text x="354" y="892" >Persist</text>
+    <text x="418" y="892" >database</text>
+    <text x="490" y="892" >files</text>
+    <text x="538" y="892" >in</text>
+    <text x="562" y="892" >a</text>
+    <text x="578" y="892" >named</text>
+    <line x1="48" y1="904" x2="56" y2="904" class="solid"></line>
+    <text x="66" y="908" >.</text>
+    <text x="82" y="908" >init.sql:</text>
+    <line x1="160" y1="896" x2="152" y2="912" class="solid"></line>
+    <text x="162" y="908" >docker</text>
+    <line x1="208" y1="904" x2="216" y2="904" class="solid"></line>
+    <text x="218" y="908" >entryp</text>
+    <circle cx="268" cy="904" r="3" class="nofill"></circle>
+    <text x="274" y="908" >int</text>
+    <line x1="296" y1="904" x2="304" y2="904" class="solid"></line>
+    <text x="306" y="908" >initdb.d</text>
+    <line x1="376" y1="896" x2="368" y2="912" class="solid"></line>
+    <text x="378" y="908" >init.sql:ro</text>
+    <text x="482" y="908" >#</text>
+    <text x="498" y="908" >Run</text>
+    <text x="530" y="908" >init</text>
+    <text x="570" y="908" >script</text>
+    <text x="34" y="924" >ports:</text>
+    <line x1="48" y1="936" x2="56" y2="936" class="solid"></line>
+    <text x="34" y="956" >networks:</text>
+    <line x1="48" y1="968" x2="56" y2="968" class="solid"></line>
+    <text x="66" y="972" >backend</text>
+    <text x="34" y="988" >healthcheck:</text>
+    <text x="50" y="1004" >test:</text>
+    <text x="98" y="1004" >[</text>
+    <text x="50" y="1020" >interval:</text>
+    <text x="130" y="1020" >10s</text>
+    <text x="50" y="1036" >timeout</text>
+    <line x1="108" y1="1024" x2="108" y2="1056" class="broken"></line>
+    <text x="122" y="1036" >5s</text>
+    <text x="50" y="1052" >retries</text>
+    <text x="122" y="1052" >5</text>
+    <text x="34" y="1068" >restart:</text>
+    <text x="106" y="1068" >unless</text>
+    <line x1="152" y1="1064" x2="160" y2="1064" class="solid"></line>
+    <text x="162" y="1068" >stopped</text>
+    <text x="58" y="748" >DATABASE</text>
+    <text x="130" y="748" >SERVICE</text>
+    <line x1="192" y1="744" x2="480" y2="744" class="solid"></line>
+    <text x="290" y="780" >#</text>
+    <text x="306" y="780" >Use</text>
+    <text x="338" y="780" >the</text>
+    <text x="370" y="780" >official</text>
+    <text x="442" y="780" >PostgreSQL</text>
+    <text x="530" y="780" >Alpine</text>
+    <text x="586" y="780" >image</text>
+    <rect x="288" y="820" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="828" x2="292" y2="836" class="solid"></line>
+    <rect x="288" y="836" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="844" x2="292" y2="852" class="solid"></line>
+    <rect x="288" y="852" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="306" y="828" >Create</text>
+    <text x="362" y="828" >this</text>
+    <text x="402" y="828" >database</text>
+    <text x="306" y="844" >Superuser</text>
+    <text x="386" y="844" >name</text>
+    <text x="306" y="860" >Superuser</text>
+    <text x="386" y="860" >password</text>
+    <text x="474" y="828" >on</text>
+    <text x="498" y="828" >first</text>
+    <text x="546" y="828" >start</text>
+    <path d="M 464,848 A 16,16 0,0,0 464,864" class="nofill"></path>
+    <text x="466" y="860" >use</text>
+    <text x="498" y="860" >secrets</text>
+    <text x="562" y="860" >in</text>
+    <text x="586" y="860" >production</text>
+    <path d="M 664,848 A 16,16 0,0,1 664,864" class="nofill"></path>
+    <text x="626" y="892" >volume</text>
+    <text x="626" y="908" >on</text>
+    <text x="650" y="908" >first</text>
+    <text x="698" y="908" >start</text>
+    <text x="290" y="940" >#</text>
+    <text x="306" y="940" >Expose</text>
+    <text x="362" y="940" >for</text>
+    <text x="394" y="940" >local</text>
+    <text x="442" y="940" >development</text>
+    <text x="538" y="940" >tools</text>
+    <path d="M 592,928 A 16,16 0,0,0 592,944" class="nofill"></path>
+    <text x="594" y="940" >remove</text>
+    <text x="650" y="940" >in</text>
+    <text x="674" y="940" >production</text>
+    <path d="M 752,928 A 16,16 0,0,1 752,944" class="nofill"></path>
+    <text x="194" y="1004" >,</text>
+    <text x="402" y="1004" >]</text>
+    <text x="18" y="1100" >#</text>
+    <line x1="32" y1="1096" x2="48" y2="1096" class="solid"></line>
+    <text x="58" y="1100" >CACHE</text>
+    <text x="18" y="1116" >cache:</text>
+    <text x="34" y="1132" >image:</text>
+    <text x="90" y="1132" >redis:7</text>
+    <line x1="144" y1="1128" x2="152" y2="1128" class="solid"></line>
+    <text x="154" y="1132" >alpine</text>
+    <text x="34" y="1148" >container</text>
+    <line x1="104" y1="1152" x2="112" y2="1152" class="solid"></line>
+    <text x="114" y="1148" >name:</text>
+    <text x="162" y="1148" >myapp</text>
+    <line x1="200" y1="1144" x2="208" y2="1144" class="solid"></line>
+    <text x="210" y="1148" >cache</text>
+    <text x="34" y="1164" >command:</text>
+    <text x="106" y="1164" >redis</text>
+    <line x1="144" y1="1160" x2="152" y2="1160" class="solid"></line>
+    <text x="154" y="1164" >server</text>
+    <line x1="208" y1="1160" x2="224" y2="1160" class="solid"></line>
+    <text x="226" y="1164" >maxmemory</text>
+    <text x="34" y="1180" >ports:</text>
+    <line x1="48" y1="1192" x2="56" y2="1192" class="solid"></line>
+    <text x="34" y="1212" >volumes:</text>
+    <line x1="48" y1="1224" x2="56" y2="1224" class="solid"></line>
+    <text x="66" y="1228" >redisdata:</text>
+    <line x1="152" y1="1216" x2="144" y2="1232" class="solid"></line>
+    <text x="154" y="1228" >data</text>
+    <text x="34" y="1244" >networks:</text>
+    <line x1="48" y1="1256" x2="56" y2="1256" class="solid"></line>
+    <text x="66" y="1260" >backend</text>
+    <text x="34" y="1276" >restart:</text>
+    <text x="106" y="1276" >unless</text>
+    <line x1="152" y1="1272" x2="160" y2="1272" class="solid"></line>
+    <text x="162" y="1276" >stopped</text>
+    <text x="106" y="1100" >SERVICE</text>
+    <line x1="168" y1="1096" x2="480" y2="1096" class="solid"></line>
+    <text x="290" y="1132" >#</text>
+    <text x="306" y="1132" >Lightweight</text>
+    <text x="402" y="1132" >Redis</text>
+    <text x="450" y="1132" >image</text>
+    <text x="306" y="1164" >128mb</text>
+    <line x1="352" y1="1160" x2="368" y2="1160" class="solid"></line>
+    <text x="370" y="1164" >maxmemory</text>
+    <line x1="440" y1="1160" x2="448" y2="1160" class="solid"></line>
+    <text x="450" y="1164" >policy</text>
+    <text x="506" y="1164" >allkeys</text>
+    <line x1="560" y1="1160" x2="568" y2="1160" class="solid"></line>
+    <text x="570" y="1164" >lru</text>
+    <text x="290" y="1196" >#</text>
+    <text x="306" y="1196" >Expose</text>
+    <text x="362" y="1196" >for</text>
+    <text x="394" y="1196" >local</text>
+    <text x="442" y="1196" >development</text>
+    <path d="M 544,1184 A 16,16 0,0,0 544,1200" class="nofill"></path>
+    <text x="546" y="1196" >remove</text>
+    <text x="602" y="1196" >in</text>
+    <text x="626" y="1196" >production</text>
+    <path d="M 704,1184 A 16,16 0,0,1 704,1200" class="nofill"></path>
+    <text x="290" y="1228" >#</text>
+    <text x="306" y="1228" >Persist</text>
+    <text x="370" y="1228" >Redis</text>
+    <text x="418" y="1228" >data</text>
+    <path d="M 464,1216 A 16,16 0,0,0 464,1232" class="nofill"></path>
+    <text x="466" y="1228" >if</text>
+    <text x="490" y="1228" >using</text>
+    <text x="538" y="1228" >RDB</text>
+    <line x1="568" y1="1216" x2="560" y2="1232" class="solid"></line>
+    <text x="570" y="1228" >AOF</text>
+    <path d="M 592,1216 A 16,16 0,0,1 592,1232" class="nofill"></path>
+    <text x="2" y="1308" >#</text>
+    <line x1="16" y1="1304" x2="32" y2="1304" class="solid"></line>
+    <text x="42" y="1308" >VOLUMES</text>
+    <text x="10" y="1324" >olumes:</text>
+    <text x="18" y="1340" >pgdata:</text>
+    <text x="34" y="1356" >driver:</text>
+    <text x="98" y="1356" >local</text>
+    <text x="18" y="1372" >redisdata:</text>
+    <text x="34" y="1388" >driver:</text>
+    <text x="98" y="1388" >local</text>
+    <line x1="104" y1="1304" x2="496" y2="1304" class="solid"></line>
+    <rect x="288" y="1332" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="1340" x2="292" y2="1348" class="solid"></line>
+    <rect x="288" y="1348" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="1356" x2="292" y2="1364" class="solid"></line>
+    <rect x="288" y="1364" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="306" y="1340" >Named</text>
+    <text x="354" y="1340" >volume</text>
+    <text x="410" y="1340" >for</text>
+    <text x="442" y="1340" >PostgreSQL</text>
+    <text x="530" y="1340" >data</text>
+    <text x="306" y="1356" >Default</text>
+    <text x="370" y="1356" >local</text>
+    <text x="418" y="1356" >driver</text>
+    <path d="M 480,1344 A 16,16 0,0,0 480,1360" class="nofill"></path>
+    <text x="482" y="1356" >stores</text>
+    <text x="538" y="1356" >in</text>
+    <line x1="568" y1="1344" x2="560" y2="1360" class="solid"></line>
+    <text x="570" y="1356" >var</text>
+    <line x1="600" y1="1344" x2="592" y2="1360" class="solid"></line>
+    <text x="602" y="1356" >lib</text>
+    <line x1="632" y1="1344" x2="624" y2="1360" class="solid"></line>
+    <text x="634" y="1356" >docker</text>
+    <line x1="688" y1="1344" x2="680" y2="1360" class="solid"></line>
+    <text x="690" y="1356" >volumes</text>
+    <text x="306" y="1372" >Named</text>
+    <text x="354" y="1372" >volume</text>
+    <text x="410" y="1372" >for</text>
+    <text x="442" y="1372" >Redis</text>
+    <text x="490" y="1372" >data</text>
+    <text x="2" y="1420" >#</text>
+    <line x1="16" y1="1416" x2="32" y2="1416" class="solid"></line>
+    <text x="42" y="1420" >NETWORKS</text>
+    <text x="2" y="1436" >networks:</text>
+    <text x="18" y="1452" >backend:</text>
+    <text x="34" y="1468" >driver:</text>
+    <line x1="112" y1="1416" x2="496" y2="1416" class="solid"></line>
+    <rect x="288" y="1444" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="292" y1="1452" x2="292" y2="1460" class="solid"></line>
+    <rect x="288" y="1460" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="306" y="1452" >User</text>
+    <line x1="336" y1="1448" x2="344" y2="1448" class="solid"></line>
+    <text x="346" y="1452" >defined</text>
+    <text x="306" y="1468" >All</text>
+    <text x="338" y="1468" >services</text>
+    <text x="410" y="1452" >bridge</text>
+    <text x="466" y="1452" >network</text>
+    <text x="410" y="1468" >on</text>
+    <text x="434" y="1468" >this</text>
+    <text x="474" y="1468" >network</text>
+    <text x="98" y="1468" >bridge</text>
+    <text x="538" y="1468" >can</text>
+    <text x="570" y="1468" >communicate</text>
+    <text x="666" y="1468" >by</text>
+    <text x="690" y="1468" >name</text>
+    <text x="66" y="268" >3000:3000</text>
+    <text x="106" y="524" >CMD</text>
+    <text x="162" y="524" >wget</text>
+    <text x="226" y="524" >--spider</text>
+    <text x="322" y="524" >-q</text>
+    <text x="370" y="524" >http://localhost:3000/health</text>
+    <text x="130" y="652" >1.0</text>
+    <text x="130" y="700" >0.25</text>
+    <text x="66" y="940" >5432:5432</text>
+    <text x="106" y="1004" >CMD-SHELL</text>
+    <text x="210" y="1004" >pg_isready -U postgres</text>
+    <text x="66" y="1196" >6379:6379</text>
+    <g>
+        <line x1="248" y1="288" x2="244" y2="296" class="solid"></line>
+        <line x1="244" y1="296" x2="244" y2="304" class="solid"></line>
+    </g>
+    <g>
+        <line x1="80" y1="896" x2="76" y2="904" class="solid"></line>
+        <line x1="76" y1="904" x2="76" y2="912" class="solid"></line>
+    </g>
+    <g>
+        <line x1="4" y1="1312" x2="4" y2="1316" class="solid"></line>
+        <polygon points="0,1316 8,1316 4,1328" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="752" y1="1344" x2="744" y2="1360" class="solid"></line>
+        <path d="M 752,1344 A 16,16 0,0,1 752,1360" class="nofill"></path>
+    </g>
+</svg>

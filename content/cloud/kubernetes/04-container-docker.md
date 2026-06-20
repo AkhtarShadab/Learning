@@ -190,20 +190,7 @@ The OCI standards mean you are never locked into Docker. You can build images wi
 
 The container runtime landscape has a clear layered structure:
 
-```
-                    HIGH-LEVEL RUNTIME
-                    ┌───────────────────┐
- Docker CLI ───►   │    containerd      │   Manages lifecycle:
-                    │  (or CRI-O)       │   pull, create, start,
-                    └────────┬──────────┘   stop, delete
-                             │
-                    LOW-LEVEL RUNTIME
-                    ┌────────▼──────────┐
-                    │   runc (or crun)   │   Actually creates
-                    │                    │   the container:
-                    │   clone() + exec   │   namespaces, cgroups,
-                    └───────────────────┘   pivot_root
-```
+![04-container-docker diagram 1](assets/04-container-docker-1.svg)
 
 **`runc`** — The reference OCI runtime, written in Go. It takes an OCI bundle (a root filesystem directory plus a `config.json`) and creates a container by calling `clone()` with the appropriate namespace flags, setting up cgroups, pivoting the root filesystem, and executing the specified process. `runc` does one thing and does it well: it creates a single container and exits.
 
@@ -221,43 +208,7 @@ This is one of the most elegant pieces of container technology, and understandin
 
 **OverlayFS** merges two directory trees — called the **lowerdir** (read-only) and the **upperdir** (read-write) — into a single **merged** view. There is also a **workdir** used internally by the kernel for atomic operations.
 
-```
- OVERLAY FILESYSTEM LAYER STRUCTURE
- ═══════════════════════════════════
-
- ┌─────────────────────────────────────────────────┐
- │              merged (unified view)               │  ◄── What the container sees
- │  /bin  /etc  /usr  /app  /var  /tmp              │      as its root filesystem
- └─────────────────────────┬───────────────────────┘
-                           │
-         ┌─────────────────┼─────────────────┐
-         │                 │                 │
- ┌───────▼───────┐ ┌──────▼──────┐  ┌───────▼───────┐
- │   upperdir    │ │  lowerdir   │  │   workdir     │
- │  (writable)   │ │ (read-only) │  │  (internal)   │
- │               │ │             │  │               │
- │ Container's   │ │ Image       │  │ Atomic ops    │
- │ changes go    │ │ layers      │  │ staging area  │
- │ here          │ │ stacked     │  │               │
- └───────────────┘ └──────┬──────┘  └───────────────┘
-                          │
-              ┌───────────┼───────────┐
-              │           │           │
-        ┌─────▼─────┐ ┌──▼───┐ ┌────▼────┐
-        │  Layer 3   │ │ L 2  │ │ Layer 1 │
-        │ COPY . .   │ │ RUN  │ │  FROM   │
-        │ (app code) │ │ npm  │ │ alpine  │
-        └───────────┘ └──────┘ └─────────┘
-
- Read path:  merged checks upperdir first, then lowerdir top-to-bottom.
-             First match wins (upper layers shadow lower ones).
-
- Write path: File is copied from lowerdir → upperdir (copy-on-write),
-             then modified in upperdir. Lower layers never change.
-
- Delete:     A "whiteout" file is created in upperdir to hide the
-             lower layer's file from the merged view.
-```
+![04-container-docker diagram 2](assets/04-container-docker-2.svg)
 
 #### Copy-on-Write in Detail
 
@@ -302,48 +253,7 @@ Each line represents a layer. Lines with `0B` size are metadata-only changes (no
 
 Docker's architecture is a layered stack of components, each with a well-defined responsibility:
 
-```
- DOCKER ARCHITECTURE
- ═══════════════════
-
- ┌─────────────┐        REST API          ┌──────────────────────┐
- │  Docker CLI  │ ────────────────────►   │      dockerd          │
- │  (docker)    │   /var/run/docker.sock   │  (Docker daemon)      │
- └─────────────┘                          │                        │
-                                          │  • Build images        │
-                                          │  • Manage networks     │
-                                          │  • Manage volumes      │
-                                          │  • REST API server     │
-                                          └──────────┬─────────────┘
-                                                     │ gRPC
-                                          ┌──────────▼─────────────┐
-                                          │     containerd          │
-                                          │                        │
-                                          │  • Pull/push images    │
-                                          │  • Manage snapshots    │
-                                          │  • Container lifecycle │
-                                          │  • CRI plugin (for K8s)│
-                                          └──────────┬─────────────┘
-                                                     │ exec
-                                          ┌──────────▼─────────────┐
-                                          │     containerd-shim     │
-                                          │                        │
-                                          │  • Keeps container     │
-                                          │    running even if     │
-                                          │    containerd restarts │
-                                          │  • Collects exit code  │
-                                          └──────────┬─────────────┘
-                                                     │ fork/exec
-                                          ┌──────────▼─────────────┐
-                                          │       runc              │
-                                          │                        │
-                                          │  • Creates namespaces  │
-                                          │  • Sets up cgroups     │
-                                          │  • pivot_root          │
-                                          │  • Executes process    │
-                                          │  • Exits after setup   │
-                                          └────────────────────────┘
-```
+![04-container-docker diagram 3](assets/04-container-docker-3.svg)
 
 **Step-by-step: what happens when you run `docker run nginx`:**
 
@@ -391,37 +301,7 @@ Docker supports multiple **network drivers**, each implementing a different netw
 
 #### Bridge Network (Default)
 
-```
- BRIDGE NETWORK
- ══════════════
-
- Host Machine
- ┌──────────────────────────────────────────────────────────┐
- │                                                          │
- │   ┌──────────┐      ┌──────────┐      ┌──────────┐     │
- │   │Container │      │Container │      │Container │     │
- │   │  "api"   │      │  "web"   │      │  "db"    │     │
- │   │          │      │          │      │          │     │
- │   │ eth0     │      │ eth0     │      │ eth0     │     │
- │   │172.17.0.2│      │172.17.0.3│      │172.17.0.4│     │
- │   └────┬─────┘      └────┬─────┘      └────┬─────┘     │
- │        │  veth pair       │  veth pair       │  veth     │
- │   ┌────▼──────────────────▼──────────────────▼─────┐    │
- │   │            docker0 bridge                       │    │
- │   │            172.17.0.1                           │    │
- │   └───────────────────────┬─────────────────────────┘    │
- │                           │                              │
- │                    ┌──────▼──────┐                       │
- │                    │  iptables   │  NAT / port mapping   │
- │                    │  DNAT + SNAT│                       │
- │                    └──────┬──────┘                       │
- │                           │                              │
- │                    ┌──────▼──────┐                       │
- │                    │   eth0      │  Host NIC             │
- │                    │ 192.168.1.5 │                       │
- │                    └─────────────┘                       │
- └──────────────────────────────────────────────────────────┘
-```
+![04-container-docker diagram 4](assets/04-container-docker-4.svg)
 
 The **bridge** driver is the default. Docker creates a Linux bridge (`docker0` for the default network, or a custom-named bridge for user-defined networks). Each container gets a veth pair: one end becomes `eth0` inside the container, the other is plugged into the bridge.
 
@@ -496,122 +376,11 @@ docker info             # shows storage driver, runtime, and system details
 
 ### 2. Working with Images
 
-```bash
-# ── PULL ──────────────────────────────────────────────────
-# Download the nginx image with the 'alpine' tag from Docker Hub.
-# 'alpine' images use Alpine Linux as the base — they are ~5 MB vs ~140 MB for Debian-based images.
-docker pull nginx:alpine
-
-# ── LIST ──────────────────────────────────────────────────
-# List all images stored locally. Shows repository, tag, image ID, creation date, and size.
-docker images
-# Output:
-# REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
-# nginx        alpine    a8758716bb6a   2 weeks ago   43.2MB
-
-# ── INSPECT ───────────────────────────────────────────────
-# Show full JSON metadata for an image: architecture, OS, layers, config, environment variables.
-# Useful for debugging "why does this image behave differently on my machine?"
-docker image inspect nginx:alpine
-
-# View just the environment variables:
-docker image inspect nginx:alpine --format '{{json .Config.Env}}' | python3 -m json.tool
-
-# ── HISTORY ───────────────────────────────────────────────
-# Show the layer-by-layer build history of an image.
-# Each row corresponds to a Dockerfile instruction. The SIZE column shows the filesystem diff.
-docker image history nginx:alpine
-
-# ── REMOVE ────────────────────────────────────────────────
-# Remove an image from local storage. Fails if any container (running or stopped) uses it.
-docker rmi nginx:alpine
-
-# Force-remove an image even if containers reference it (use with caution):
-docker rmi -f nginx:alpine
-
-# Remove all unused images (images not referenced by any container):
-docker image prune -a
-```
+![04-container-docker diagram 5](assets/04-container-docker-5.svg)
 
 ### 3. Running and Managing Containers
 
-```bash
-# ── RUN (DETACHED) ────────────────────────────────────────
-# Start an nginx container in the background (-d = detached mode).
-# --name web: give it a human-readable name instead of a random one.
-# -p 8080:80: map host port 8080 to container port 80.
-# nginx:alpine: the image to use.
-docker run -d --name web -p 8080:80 nginx:alpine
-
-# ── RUN (INTERACTIVE) ────────────────────────────────────
-# Start an Ubuntu container and drop into a bash shell.
-# -i: keep STDIN open (interactive).
-# -t: allocate a pseudo-TTY (terminal).
-# The container exits when the bash shell exits.
-docker run -it ubuntu:22.04 bash
-
-# ── LIST CONTAINERS ──────────────────────────────────────
-# List all containers, including stopped ones (-a = all).
-# Without -a, only running containers are shown.
-docker ps -a
-# Output:
-# CONTAINER ID   IMAGE          COMMAND                  STATUS          PORTS                  NAMES
-# 3f7a2b1c9d8e   nginx:alpine   "/docker-entrypoint.…"   Up 5 minutes    0.0.0.0:8080->80/tcp   web
-
-# ── LOGS ──────────────────────────────────────────────────
-# View container logs (stdout + stderr).
-# -f: follow the log stream in real-time (like 'tail -f').
-# --tail 100: show only the last 100 lines (useful for large logs).
-# --since 5m: show logs from the last 5 minutes.
-docker logs web -f
-docker logs web --tail 100 --since 5m
-
-# ── EXEC ──────────────────────────────────────────────────
-# Run a command inside a running container.
-# -it: interactive + TTY (for shell sessions).
-# Useful for debugging: inspect files, check processes, test connectivity.
-docker exec -it web sh
-# Inside the container, you can run:
-#   ls /etc/nginx/
-#   cat /etc/nginx/nginx.conf
-#   wget -qO- http://localhost:80
-
-# Run a one-off command without entering the shell:
-docker exec web cat /etc/nginx/nginx.conf
-
-# ── STATS ─────────────────────────────────────────────────
-# Show live resource usage for all running containers.
-# Displays CPU %, memory usage/limit, network I/O, and block I/O.
-docker stats
-# Output:
-# CONTAINER ID   NAME   CPU %   MEM USAGE / LIMIT     MEM %   NET I/O          BLOCK I/O
-# 3f7a2b1c9d8e   web    0.00%   3.891MiB / 15.58GiB   0.02%   1.09kB / 0B      0B / 0B
-
-# ── INSPECT ───────────────────────────────────────────────
-# Show full JSON configuration of a running container.
-# Includes: network settings, mounts, environment variables, health status, cgroup config.
-docker inspect web
-
-# Extract specific fields using Go template syntax:
-docker inspect web --format '{{.NetworkSettings.IPAddress}}'
-# Output: 172.17.0.2
-
-# ── STOP & REMOVE ────────────────────────────────────────
-# Stop a running container (sends SIGTERM, waits 10s, then SIGKILL).
-docker stop web
-
-# Remove a stopped container. This deletes the writable layer.
-docker rm web
-
-# Shorthand: stop and remove in one command chain.
-docker stop web && docker rm web
-
-# Force-remove a running container (sends SIGKILL immediately):
-docker rm -f web
-
-# Remove all stopped containers:
-docker container prune
-```
+![04-container-docker diagram 6](assets/04-container-docker-6.svg)
 
 ### 4. Writing Dockerfiles
 
@@ -638,59 +407,7 @@ A **Dockerfile** is a text file containing instructions for building a Docker im
 
 **Multi-stage builds** use multiple `FROM` instructions in a single Dockerfile. Each `FROM` starts a new build stage. You can copy artifacts from one stage to another, leaving behind build tools and intermediate files. This is the primary technique for creating small, production-ready images.
 
-```dockerfile
-# ── Stage 1: Builder ─────────────────────────────────────
-# Use the full Node.js Alpine image to install dependencies.
-# We name this stage "builder" so we can reference it later.
-FROM node:20-alpine AS builder
-
-# Set the working directory inside the container.
-# All subsequent COPY, RUN, CMD instructions use this path.
-WORKDIR /app
-
-# Copy only package.json and package-lock.json first.
-# This exploits Docker's layer cache: if these files haven't changed,
-# the 'npm ci' layer is reused from cache (fast rebuilds).
-COPY package*.json ./
-
-# Install production dependencies only.
-# 'npm ci' is preferred over 'npm install' for reproducible builds —
-# it installs exactly what's in package-lock.json.
-RUN npm ci --only=production
-
-
-# ── Stage 2: Production ─────────────────────────────────
-# Start a fresh stage from the same base image.
-# This stage will NOT contain npm, build tools, or dev dependencies.
-FROM node:20-alpine
-
-# Create a non-root user for security.
-# Running as root inside a container is a security risk —
-# if an attacker escapes the container, they're root on the host.
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-WORKDIR /app
-
-# Copy only the production node_modules from the builder stage.
-# This is the key to multi-stage builds: we get the installed
-# dependencies without the build toolchain that created them.
-COPY --from=builder /app/node_modules ./node_modules
-
-# Copy the application source code.
-COPY . .
-
-# Document that this container listens on port 3000.
-# This is metadata for humans and tooling — it doesn't publish the port.
-EXPOSE 3000
-
-# Switch to the non-root user before running the application.
-USER appuser
-
-# Define the command to run when the container starts.
-# Use exec form (JSON array) so the process receives signals correctly.
-# Shell form (CMD node server.js) wraps in /bin/sh, which may swallow SIGTERM.
-CMD ["node", "server.js"]
-```
+![04-container-docker diagram 7](assets/04-container-docker-7.svg)
 
 #### Building Images
 
@@ -731,126 +448,11 @@ coverage              # Test coverage reports
 
 ### 5. Working with Volumes
 
-```bash
-# ── CREATE ────────────────────────────────────────────────
-# Create a named volume. Docker stores it at /var/lib/docker/volumes/pgdata/_data.
-# Named volumes are managed by Docker and persist across container restarts and removals.
-docker volume create pgdata
-
-# ── USE ───────────────────────────────────────────────────
-# Run a PostgreSQL container with the named volume mounted at the database data directory.
-# When the container is removed and recreated, the data persists in the volume.
-docker run -d \
-  --name pg \
-  -e POSTGRES_PASSWORD=secret \
-  -v pgdata:/var/lib/postgresql/data \
-  postgres:16
-
-# ── LIST ──────────────────────────────────────────────────
-# List all volumes on the system.
-docker volume ls
-# Output:
-# DRIVER    VOLUME NAME
-# local     pgdata
-
-# ── INSPECT ───────────────────────────────────────────────
-# Show metadata about a volume: where it lives on disk, when it was created.
-docker volume inspect pgdata
-# Output:
-# [
-#     {
-#         "CreatedAt": "2025-01-15T10:30:00Z",
-#         "Driver": "local",
-#         "Labels": {},
-#         "Mountpoint": "/var/lib/docker/volumes/pgdata/_data",
-#         "Name": "pgdata",
-#         "Options": {},
-#         "Scope": "local"
-#     }
-# ]
-
-# ── BIND MOUNT ────────────────────────────────────────────
-# Mount the current directory into the container (for local development).
-# Changes on the host are immediately visible inside the container and vice versa.
-docker run -d \
-  --name dev \
-  -v "$(pwd)":/app \
-  -w /app \
-  node:20-alpine \
-  npm run dev
-
-# ── TMPFS MOUNT ───────────────────────────────────────────
-# Mount a tmpfs (RAM-backed) filesystem. Data is never written to disk.
-# Useful for secrets or temporary scratch space.
-docker run -d \
-  --name secure \
-  --tmpfs /run/secrets:rw,noexec,nosuid,size=64m \
-  myapp:1.0
-
-# ── CLEANUP ───────────────────────────────────────────────
-# Remove all unused volumes (volumes not mounted by any container).
-# WARNING: This permanently deletes data. Use with caution.
-docker volume prune
-
-# Remove a specific volume (must not be in use by any container):
-docker volume rm pgdata
-```
+![04-container-docker diagram 8](assets/04-container-docker-8.svg)
 
 ### 6. Docker Networking in Practice
 
-```bash
-# ── CREATE A NETWORK ──────────────────────────────────────
-# Create a user-defined bridge network.
-# User-defined bridges provide DNS-based service discovery —
-# containers can reach each other by name, not just IP.
-docker network create --driver bridge mynet
-
-# Create a network with a specific subnet (useful for avoiding conflicts):
-docker network create --driver bridge --subnet 10.0.0.0/24 mynet
-
-# ── RUN CONTAINERS ON THE NETWORK ────────────────────────
-# Run an API container attached to 'mynet'.
-# Other containers on 'mynet' can reach it at hostname 'api'.
-docker run -d --name api --network mynet -p 3000:3000 myapp:1.0
-
-# Run a database container on the same network.
-# The API can connect to it at hostname 'db' (e.g., postgres://db:5432).
-docker run -d --name db --network mynet \
-  -e POSTGRES_PASSWORD=secret \
-  postgres:16
-
-# ── INSPECT ───────────────────────────────────────────────
-# Show full details of a network: subnet, gateway, connected containers with their IPs.
-docker network inspect mynet
-# Key output:
-# "Containers": {
-#     "abc123": {
-#         "Name": "api",
-#         "IPv4Address": "172.18.0.2/16"
-#     },
-#     "def456": {
-#         "Name": "db",
-#         "IPv4Address": "172.18.0.3/16"
-#     }
-# }
-
-# ── TEST CONNECTIVITY ────────────────────────────────────
-# From inside one container, you can reach the other by name:
-docker exec api ping -c 2 db
-# Output: PING db (172.18.0.3): 56 data bytes ...
-
-# ── CONNECT / DISCONNECT ─────────────────────────────────
-# Connect a running container to an additional network:
-docker network connect mynet existing-container
-
-# Disconnect a container from a network:
-docker network disconnect mynet existing-container
-
-# ── LIST & CLEANUP ────────────────────────────────────────
-docker network ls                    # list all networks
-docker network prune                 # remove unused networks
-docker network rm mynet              # remove a specific network
-```
+![04-container-docker diagram 9](assets/04-container-docker-9.svg)
 
 ### 7. Docker Compose
 
@@ -858,253 +460,19 @@ docker network rm mynet              # remove a specific network
 
 #### Full docker-compose.yml Example
 
-```yaml
-# docker-compose.yml
-# Defines a full application stack: API server + PostgreSQL database + Redis cache
-
-# version key is optional in modern Docker Compose (v2+)
-
-services:
-  # ── API SERVICE ─────────────────────────────────────────
-  api:
-    build:
-      context: .                    # Build context is the current directory
-      dockerfile: Dockerfile        # Path to the Dockerfile
-      args:
-        NODE_ENV: production        # Build argument passed to the Dockerfile
-    image: myapp:1.0                # Tag the built image as myapp:1.0
-    container_name: myapp-api       # Explicit container name (optional)
-    ports:
-      - "3000:3000"                 # Map host:container ports
-    environment:
-      DATABASE_URL: postgres://postgres:secret@db:5432/myapp  # 'db' resolves via DNS
-      REDIS_URL: redis://cache:6379
-      NODE_ENV: production
-    env_file:
-      - .env                        # Load additional env vars from file
-    depends_on:
-      db:
-        condition: service_healthy  # Wait for db to be healthy before starting
-      cache:
-        condition: service_started  # Just wait for cache to start
-    networks:
-      - backend                     # Attach to the backend network
-    restart: unless-stopped         # Restart on failure, but not if manually stopped
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/health"]
-      interval: 30s                 # Check every 30 seconds
-      timeout: 10s                  # Timeout per check
-      retries: 3                    # Mark unhealthy after 3 consecutive failures
-      start_period: 40s             # Grace period before checks begin
-    deploy:
-      resources:
-        limits:
-          cpus: "1.0"              # Maximum 1 CPU core
-          memory: 512M             # Maximum 512 MB RAM
-        reservations:
-          cpus: "0.25"             # Guaranteed minimum CPU
-          memory: 128M             # Guaranteed minimum RAM
-
-  # ── DATABASE SERVICE ────────────────────────────────────
-  db:
-    image: postgres:16-alpine       # Use the official PostgreSQL Alpine image
-    container_name: myapp-db
-    environment:
-      POSTGRES_DB: myapp            # Create this database on first start
-      POSTGRES_USER: postgres       # Superuser name
-      POSTGRES_PASSWORD: secret     # Superuser password (use secrets in production)
-    volumes:
-      - pgdata:/var/lib/postgresql/data   # Persist database files in a named volume
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro  # Run init script on first start
-    ports:
-      - "5432:5432"                 # Expose for local development tools (remove in production)
-    networks:
-      - backend
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  # ── CACHE SERVICE ───────────────────────────────────────
-  cache:
-    image: redis:7-alpine           # Lightweight Redis image
-    container_name: myapp-cache
-    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
-    ports:
-      - "6379:6379"                 # Expose for local development (remove in production)
-    volumes:
-      - redisdata:/data             # Persist Redis data (if using RDB/AOF)
-    networks:
-      - backend
-    restart: unless-stopped
-
-# ── VOLUMES ─────────────────────────────────────────────────
-volumes:
-  pgdata:                           # Named volume for PostgreSQL data
-    driver: local                   # Default local driver (stores in /var/lib/docker/volumes/)
-  redisdata:                        # Named volume for Redis data
-    driver: local
-
-# ── NETWORKS ────────────────────────────────────────────────
-networks:
-  backend:                          # User-defined bridge network
-    driver: bridge                  # All services on this network can communicate by name
-```
+![04-container-docker diagram 10](assets/04-container-docker-10.svg)
 
 #### Docker Compose Commands
 
-```bash
-# ── START ─────────────────────────────────────────────────
-# Build images (if needed) and start all services in detached mode.
-# Docker Compose reads docker-compose.yml (or compose.yml) from the current directory.
-docker compose up -d
-
-# Build images without using cache (force a fresh build):
-docker compose build --no-cache
-
-# Start only specific services:
-docker compose up -d api db
-
-# ── LOGS ──────────────────────────────────────────────────
-# Follow logs from a specific service:
-docker compose logs -f api
-
-# Follow logs from all services, with timestamps:
-docker compose logs -f --timestamps
-
-# ── STATUS ────────────────────────────────────────────────
-# List running services and their status:
-docker compose ps
-
-# ── EXEC ──────────────────────────────────────────────────
-# Open a shell in the running API container:
-docker compose exec api sh
-
-# Run a one-off command (e.g., database migration):
-docker compose exec api npm run migrate
-
-# Run a one-off container that exits after the command:
-docker compose run --rm api npm test
-
-# ── SCALE ─────────────────────────────────────────────────
-# Run 3 instances of the API service (requires removing 'container_name'):
-docker compose up -d --scale api=3
-
-# ── STOP & CLEANUP ───────────────────────────────────────
-# Stop and remove all containers, networks created by Compose.
-# -v flag also removes named volumes (WARNING: deletes data).
-docker compose down
-
-# Stop and remove everything including volumes:
-docker compose down -v
-
-# Stop without removing (containers can be restarted later):
-docker compose stop
-
-# Restart all services:
-docker compose restart
-```
+![04-container-docker diagram 11](assets/04-container-docker-11.svg)
 
 ### 8. Working with Registries
 
-```bash
-# ── LOGIN ─────────────────────────────────────────────────
-# Log in to Docker Hub (or any registry):
-docker login
-
-# Log in to GitHub Container Registry using a Personal Access Token:
-echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
-
-# Log in to Amazon ECR (requires AWS CLI configured):
-aws ecr get-login-password --region us-east-1 | \
-  docker login --username AWS --password-stdin 123456789.dkr.ecr.us-east-1.amazonaws.com
-
-# ── TAG ───────────────────────────────────────────────────
-# Tag an image for a specific registry.
-# An image can have multiple tags pointing to the same underlying layers.
-docker tag myapp:1.0 ghcr.io/username/myapp:1.0
-docker tag myapp:1.0 ghcr.io/username/myapp:latest
-
-# ── PUSH ──────────────────────────────────────────────────
-# Push the image to the registry.
-# Only layers that the registry doesn't already have are uploaded (deduplication).
-docker push ghcr.io/username/myapp:1.0
-docker push ghcr.io/username/myapp:latest
-
-# ── PULL ──────────────────────────────────────────────────
-# Pull an image from a specific registry:
-docker pull ghcr.io/username/myapp:1.0
-
-# Pull by digest (immutable — guarantees exact image):
-docker pull ghcr.io/username/myapp@sha256:abc123def456...
-```
+![04-container-docker diagram 12](assets/04-container-docker-12.svg)
 
 ### 9. Debugging Containers
 
-```bash
-# ── DEBUG SIDECAR ─────────────────────────────────────────
-# Run a debugging container that shares the PID and network namespace
-# of a running container. 'netshoot' includes curl, dig, nmap, tcpdump, etc.
-# --rm: automatically remove the debug container when it exits.
-# --pid=container:web: share PID namespace (see the target's processes).
-# --net=container:web: share network namespace (same IP, same ports).
-docker run --rm -it \
-  --pid=container:web \
-  --net=container:web \
-  nicolaka/netshoot
-
-# Inside netshoot, you can:
-#   ps aux                  → see processes in the target container
-#   curl localhost:80       → test the target's exposed service
-#   tcpdump -i eth0         → capture network traffic
-#   dig api                 → test DNS resolution
-#   ss -tlnp                → see listening ports
-
-# ── COPY FILES ────────────────────────────────────────────
-# Copy a file from a container to the host (useful for inspecting config files):
-docker cp web:/etc/nginx/nginx.conf ./nginx.conf
-
-# Copy a file from the host into a running container:
-docker cp ./custom.conf web:/etc/nginx/conf.d/custom.conf
-
-# ── FILESYSTEM CHANGES ───────────────────────────────────
-# Show what files have been added, changed, or deleted in the container's writable layer.
-# A = added, C = changed, D = deleted.
-docker diff web
-# Output:
-# C /var
-# C /var/cache
-# C /var/cache/nginx
-# A /var/cache/nginx/client_temp
-# C /run
-# A /run/nginx.pid
-
-# ── RESOURCE INVESTIGATION ────────────────────────────────
-# See why a container exited:
-docker inspect web --format '{{.State.ExitCode}} {{.State.Error}}'
-
-# Check the last 50 log lines of a crashed container:
-docker logs --tail 50 web
-
-# View real-time events (container start, stop, die, etc.):
-docker events --filter container=web
-
-# ── SYSTEM CLEANUP ────────────────────────────────────────
-# The nuclear option: remove ALL stopped containers, unused networks,
-# dangling images, and build cache. Reclaim disk space.
-docker system prune -a --volumes
-
-# See disk usage breakdown:
-docker system df
-# Output:
-# TYPE            TOTAL   ACTIVE  SIZE      RECLAIMABLE
-# Images          15      3       4.2GB     3.1GB (73%)
-# Containers      5       2       102.3MB   98.1MB (95%)
-# Local Volumes   8       2       1.5GB     1.2GB (80%)
-# Build Cache     23      0       890MB     890MB (100%)
-```
+![04-container-docker diagram 13](assets/04-container-docker-13.svg)
 
 ---
 
@@ -1225,29 +593,7 @@ docker inspect web --format '{{.State.Health.Status}}'
 
 Without resource limits, a single misbehaving container can consume all of the host's CPU and memory, starving other containers. Always set limits in production.
 
-```bash
-# ── MEMORY LIMITS ─────────────────────────────────────────
-# Set a hard memory limit of 512 MB.
-# If the container exceeds this, the OOM killer terminates it (exit code 137).
-docker run -d --name api --memory=512m myapp:1.0
-
-# Set memory + swap limit (total, not additional):
-docker run -d --name api --memory=512m --memory-swap=1g myapp:1.0
-
-# ── CPU LIMITS ────────────────────────────────────────────
-# Limit to 1.5 CPU cores:
-docker run -d --name api --cpus=1.5 myapp:1.0
-
-# Pin to specific CPU cores (0 and 1):
-docker run -d --name api --cpuset-cpus="0,1" myapp:1.0
-
-# ── PID LIMITS ────────────────────────────────────────────
-# Limit the number of processes (prevents fork bombs):
-docker run -d --name api --pids-limit=100 myapp:1.0
-
-# ── IN DOCKER COMPOSE ────────────────────────────────────
-# See the 'deploy.resources' section in the Compose example above.
-```
+![04-container-docker diagram 14](assets/04-container-docker-14.svg)
 
 ---
 
@@ -1333,49 +679,7 @@ They don't. Every `docker build` that changes a layer creates a new image and le
 
 ## Quick Reference Cheat Sheet
 
-```bash
-# ── LIFECYCLE ─────────────────────────────────────────────
-docker run -d --name NAME -p HOST:CONTAINER IMAGE    # start
-docker stop NAME                                      # graceful stop (SIGTERM)
-docker start NAME                                     # restart a stopped container
-docker rm NAME                                        # remove stopped container
-docker rm -f NAME                                     # force-remove (even if running)
-
-# ── INFORMATION ───────────────────────────────────────────
-docker ps -a                          # list all containers
-docker logs -f NAME                   # stream logs
-docker inspect NAME                   # full JSON details
-docker stats                          # live CPU/mem/IO
-docker top NAME                       # processes inside container
-
-# ── IMAGES ────────────────────────────────────────────────
-docker build -t NAME:TAG .            # build from Dockerfile
-docker pull IMAGE:TAG                 # download from registry
-docker push IMAGE:TAG                 # upload to registry
-docker images                         # list local images
-docker rmi IMAGE                      # remove image
-
-# ── VOLUMES ───────────────────────────────────────────────
-docker volume create NAME             # create
-docker volume ls                      # list
-docker volume rm NAME                 # remove
-
-# ── NETWORKS ──────────────────────────────────────────────
-docker network create NAME            # create bridge network
-docker network ls                     # list
-docker network rm NAME                # remove
-
-# ── COMPOSE ───────────────────────────────────────────────
-docker compose up -d                  # start all services
-docker compose down -v                # stop + remove + delete volumes
-docker compose logs -f SERVICE        # stream service logs
-docker compose exec SERVICE sh        # shell into service
-docker compose ps                     # list services
-
-# ── CLEANUP ───────────────────────────────────────────────
-docker system prune -a --volumes      # remove everything unused
-docker system df                      # show disk usage
-```
+![04-container-docker diagram 15](assets/04-container-docker-15.svg)
 
 ---
 
@@ -1387,12 +691,7 @@ Understanding containers becomes richer when you recognize the data structures a
 
 Each image layer represents a diff (set of filesystem changes) from the previous layer. The layers form a **singly linked list**: each layer points to its parent. When the container reads a file, the runtime traverses the list from the top (most recent layer) downward until it finds the file — exactly like traversing a linked list searching for a value. Whiteout files act as "tombstone" markers, equivalent to a soft-delete node that short-circuits the search.
 
-```
- HEAD (writable layer)
-  │
-  ▼
- Layer N (COPY . .)  →  Layer N-1 (RUN npm ci)  →  Layer N-2 (FROM node:alpine)  →  NULL
-```
+![04-container-docker diagram 16](assets/04-container-docker-16.svg)
 
 Time complexity for file lookup: O(L) where L is the number of layers (in practice, OverlayFS optimizes this with directory caches).
 
@@ -1411,13 +710,7 @@ When Docker maps a port (`-p 8080:80`), it inserts a DNAT (Destination NAT) rule
 
 A Docker bridge network is a **graph data structure**. Each container is a **node**, each veth pair connecting a container to the bridge is an **edge**, and the bridge itself is a central node (forming a star topology). The bridge's MAC address table is a hash map (`MAC_address -> port`) used to forward frames to the correct container.
 
-```
- Container A ──veth── Bridge ──veth── Container B
-                        │
-                       veth
-                        │
-                    Container C
-```
+![04-container-docker diagram 17](assets/04-container-docker-17.svg)
 
 This is a star graph where the bridge is the hub. Adding or removing containers is O(1) — just create/destroy a veth pair and update the bridge's forwarding table.
 

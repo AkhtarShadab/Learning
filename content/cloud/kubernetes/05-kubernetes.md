@@ -72,17 +72,7 @@ Kubernetes does the same thing, but for a *cluster* of machines. It manages a po
 compute resources and provides abstractions (Pods, Services, Volumes) so applications
 do not have to know which machine they are running on.
 
-```
-Single Machine                    Cluster
-─────────────                    ───────
-Linux Kernel          ←→         Kubernetes Control Plane
-Process               ←→         Pod
-systemd (init)        ←→         kubelet
-iptables              ←→         kube-proxy
-/etc/ config files    ←→         ConfigMaps / Secrets
-mount points          ←→         PersistentVolumes
-cron                  ←→         CronJob
-```
+![05-kubernetes diagram 1](assets/05-kubernetes-1.svg)
 
 When you think "how would Linux handle this for one machine?", the Kubernetes analogy
 is usually the right answer for a cluster.
@@ -125,15 +115,7 @@ A **Service** is a stable abstraction that gives a set of Pods a permanent DNS n
 and IP address. Think of it as a phone number that never changes, even though the
 person answering the phone (the Pod) might be different each time you call.
 
-```
-App → calls "api-service:8080" → Service (stable IP/DNS)
-                                    │
-                          ┌─────────┼─────────┐
-                          ▼         ▼         ▼
-                       Pod-A     Pod-B     Pod-C
-                     (10.0.1.5) (10.0.1.6) (10.0.1.7)
-                     (may change at any time)
-```
+![05-kubernetes diagram 2](assets/05-kubernetes-2.svg)
 
 ### Mental Model 5: etcd as the Cluster's Brain
 
@@ -212,51 +194,7 @@ makes infrastructure reproducible, auditable, and reviewable through pull reques
 
 ### Kubernetes Architecture
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                        KUBERNETES CLUSTER                           │
-│                                                                     │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │                    CONTROL PLANE (Master)                      │  │
-│  │                                                                │  │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐   │  │
-│  │  │  API Server   │  │   Scheduler  │  │ Controller Manager │   │  │
-│  │  │  (kube-api)   │  │              │  │                    │   │  │
-│  │  │  REST gateway │  │  Assigns pods│  │  Runs reconcile    │   │  │
-│  │  │  to cluster   │  │  to nodes    │  │  loops for all     │   │  │
-│  │  │  state        │  │  based on    │  │  built-in          │   │  │
-│  │  │              │  │  resources   │  │  controllers       │   │  │
-│  │  └──────┬───────┘  └──────────────┘  └────────────────────┘   │  │
-│  │         │                                                      │  │
-│  │  ┌──────▼───────┐  ┌──────────────────────────────────────┐   │  │
-│  │  │    etcd       │  │  cloud-controller-manager (optional) │   │  │
-│  │  │  Distributed  │  │  Integrates with cloud provider APIs │   │  │
-│  │  │  KV store     │  │  (load balancers, routes, instances) │   │  │
-│  │  │  (cluster     │  └──────────────────────────────────────┘   │  │
-│  │  │   brain)      │                                             │  │
-│  │  └──────────────┘                                              │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │                    WORKER NODES                                │  │
-│  │                                                                │  │
-│  │  ┌─────────────────────────────┐  ┌──────────────────────────┐│  │
-│  │  │        Worker Node 1        │  │       Worker Node 2      ││  │
-│  │  │  ┌────────┐ ┌────────────┐  │  │  ┌────────┐ ┌─────────┐ ││  │
-│  │  │  │kubelet │ │kube-proxy  │  │  │  │kubelet │ │kube-proxy│ ││  │
-│  │  │  │(agent) │ │(networking)│  │  │  │(agent) │ │(network) │ ││  │
-│  │  │  └────────┘ └────────────┘  │  │  └────────┘ └─────────┘ ││  │
-│  │  │  ┌────────────────────────┐ │  │  ┌──────────────────────┐││  │
-│  │  │  │  Container Runtime     │ │  │  │ Container Runtime    │││  │
-│  │  │  │  (containerd / CRI-O)  │ │  │  │ (containerd / CRI-O) │││  │
-│  │  │  └────────────────────────┘ │  │  └──────────────────────┘││  │
-│  │  │  ┌──────┐ ┌──────┐ ┌─────┐ │  │  ┌──────┐ ┌──────┐      ││  │
-│  │  │  │Pod A │ │Pod B │ │Pod C│ │  │  │Pod D │ │Pod E │      ││  │
-│  │  │  └──────┘ └──────┘ └─────┘ │  │  └──────┘ └──────┘      ││  │
-│  │  └─────────────────────────────┘  └──────────────────────────┘│  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
-```
+![05-kubernetes diagram 3](assets/05-kubernetes-3.svg)
 
 ### Control Plane Components
 
@@ -366,44 +304,7 @@ a local cluster (minikube or kind), and optionally `helm` (package manager) and
 
 ### Installing the Tools
 
-```bash
-# ── macOS (Homebrew) ──────────────────────────────────────────────
-brew install kubectl       # Kubernetes CLI — talks to the API server
-brew install helm          # Package manager for K8s (like apt for Debian)
-brew install k9s           # Terminal UI for navigating cluster resources
-brew install minikube      # Runs a single-node K8s cluster in a VM or container
-brew install kind          # "Kubernetes IN Docker" — multi-node clusters in containers
-
-# ── Linux (x86_64) ───────────────────────────────────────────────
-# kubectl
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-chmod +x kubectl           # Make the binary executable
-sudo mv kubectl /usr/local/bin/  # Move to a directory in PATH
-
-# minikube
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-chmod +x minikube-linux-amd64
-sudo mv minikube-linux-amd64 /usr/local/bin/minikube
-
-# helm
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-
-# kind
-go install sigs.k8s.io/kind@latest  # Requires Go installed
-# OR download binary directly:
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
-chmod +x kind && sudo mv kind /usr/local/bin/
-
-# k9s
-curl -sS https://webi.sh/k9s | sh  # One-liner install
-
-# ── Windows (Chocolatey) ─────────────────────────────────────────
-choco install kubernetes-cli   # kubectl
-choco install minikube         # Local cluster
-choco install kubernetes-helm  # Helm
-choco install kind             # kind
-# k9s: download from https://github.com/derailed/k9s/releases
-```
+![05-kubernetes diagram 4](assets/05-kubernetes-4.svg)
 
 ### Option A: minikube — The Standard Local Cluster
 
@@ -869,104 +770,23 @@ every command you will use regularly, organized by workflow.
 
 ### Context and Cluster Management
 
-```bash
-# ── Contexts ──────────────────────────────────────────────────────
-kubectl config get-contexts              # List all configured clusters and current context
-kubectl config current-context           # Print the active context name
-kubectl config use-context my-cluster    # Switch to a different cluster
-kubectl config set-context --current --namespace=production  # Set default namespace
-
-# ── Cluster info ──────────────────────────────────────────────────
-kubectl cluster-info                     # Show control plane and CoreDNS URLs
-kubectl get nodes                        # List all nodes with status and version
-kubectl get nodes -o wide                # Add extra columns: IP, OS, container runtime
-kubectl top nodes                        # CPU and memory usage per node (requires metrics-server)
-```
+![05-kubernetes diagram 5](assets/05-kubernetes-5.svg)
 
 ### Applying Manifests
 
-```bash
-# ── Apply (declarative — preferred) ──────────────────────────────
-kubectl apply -f deployment.yaml         # Create or update resources from a file
-kubectl apply -f ./manifests/            # Apply all YAML files in a directory
-kubectl apply -f https://example.com/manifest.yaml  # Apply from a URL
-kubectl apply -k ./overlays/production/  # Apply a Kustomize overlay
-
-# ── Delete ────────────────────────────────────────────────────────
-kubectl delete -f deployment.yaml        # Delete resources defined in a file
-kubectl delete pod nginx-pod             # Delete a specific Pod by name
-kubectl delete pods -l app=api-server    # Delete all Pods matching a label selector
-kubectl delete namespace staging         # Delete an entire namespace and everything in it
-```
+![05-kubernetes diagram 6](assets/05-kubernetes-6.svg)
 
 ### Inspecting Resources
 
-```bash
-# ── Get (list resources) ─────────────────────────────────────────
-kubectl get pods                         # List Pods in the default namespace
-kubectl get pods -n kube-system          # List Pods in a specific namespace
-kubectl get pods -A                      # List Pods across ALL namespaces
-kubectl get pods -o wide                 # Extended output: node name, IP address
-kubectl get pods -o yaml                 # Full YAML output (useful for debugging)
-kubectl get pods -l app=api-server       # Filter by label selector
-kubectl get pods --field-selector=status.phase=Running  # Filter by field
-kubectl get all                          # List common resources (pods, services, deployments, etc.)
-kubectl get events --sort-by=.metadata.creationTimestamp  # Recent cluster events, sorted by time
-
-# ── Describe (detailed info) ─────────────────────────────────────
-kubectl describe pod api-server-7d4f8b6c9f-abc12   # Detailed Pod info: events, conditions, volumes
-kubectl describe node minikube                      # Node capacity, allocatable, conditions, Pods
-kubectl describe deployment api-server              # Deployment strategy, replicas, events
-kubectl describe service api-service                # Endpoints, selector, ports
-
-# ── Resource usage ────────────────────────────────────────────────
-kubectl top pods                         # CPU and memory usage per Pod
-kubectl top pods --sort-by=memory        # Sort Pods by memory consumption
-kubectl top pods -l app=api-server       # Resource usage for specific Pods
-```
+![05-kubernetes diagram 7](assets/05-kubernetes-7.svg)
 
 ### Logs and Debugging
 
-```bash
-# ── Logs ──────────────────────────────────────────────────────────
-kubectl logs api-server-7d4f8b6c9f-abc12            # Print logs from a Pod
-kubectl logs api-server-7d4f8b6c9f-abc12 -c api     # Logs from a specific container in a multi-container Pod
-kubectl logs api-server-7d4f8b6c9f-abc12 --tail=100  # Last 100 lines only
-kubectl logs api-server-7d4f8b6c9f-abc12 -f          # Stream logs in real-time (like tail -f)
-kubectl logs -l app=api-server --all-containers       # Logs from ALL Pods matching a label
-kubectl logs api-server-7d4f8b6c9f-abc12 --previous   # Logs from the previous (crashed) container instance
-
-# ── Exec (run commands inside a container) ────────────────────────
-kubectl exec -it api-server-7d4f8b6c9f-abc12 -- /bin/sh   # Open a shell inside the container
-kubectl exec api-server-7d4f8b6c9f-abc12 -- env            # Print environment variables
-kubectl exec api-server-7d4f8b6c9f-abc12 -- cat /etc/resolv.conf  # Check DNS configuration
-
-# ── Port forwarding ───────────────────────────────────────────────
-kubectl port-forward pod/api-server-7d4f8b6c9f-abc12 8080:8080  # Forward local 8080 to Pod 8080
-kubectl port-forward svc/api-service 8080:80                     # Forward local 8080 to Service port 80
-# Now visit http://localhost:8080 in your browser
-
-# ── Debug (ephemeral debug containers, K8s 1.25+) ────────────────
-kubectl debug -it api-server-7d4f8b6c9f-abc12 --image=busybox --target=api
-# Attaches a busybox container to the running Pod for debugging
-```
+![05-kubernetes diagram 8](assets/05-kubernetes-8.svg)
 
 ### Scaling and Rollouts
 
-```bash
-# ── Manual scaling ────────────────────────────────────────────────
-kubectl scale deployment api-server --replicas=5     # Scale to 5 replicas
-kubectl scale deployment api-server --replicas=1     # Scale down to 1 replica
-
-# ── Rollout management ───────────────────────────────────────────
-kubectl rollout status deployment/api-server         # Watch the rollout progress in real-time
-kubectl rollout history deployment/api-server        # List all rollout revisions
-kubectl rollout undo deployment/api-server           # Roll back to the previous revision
-kubectl rollout undo deployment/api-server --to-revision=3  # Roll back to a specific revision
-kubectl rollout restart deployment/api-server        # Restart all Pods (triggers a new rollout)
-kubectl rollout pause deployment/api-server          # Pause a rollout (for canary-style manual gating)
-kubectl rollout resume deployment/api-server         # Resume a paused rollout
-```
+![05-kubernetes diagram 9](assets/05-kubernetes-9.svg)
 
 ### Troubleshooting Workflow
 
@@ -1025,41 +845,7 @@ environment. Helm solves this with:
 
 ### Essential Helm Commands
 
-```bash
-# ── Repository management ─────────────────────────────────────────
-helm repo add bitnami https://charts.bitnami.com/bitnami  # Add the Bitnami chart repository
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx  # Add nginx ingress charts
-helm repo update                        # Fetch latest chart versions from all repos
-helm repo list                          # List configured repositories
-helm search repo nginx                  # Search for charts matching "nginx"
-
-# ── Installing charts ─────────────────────────────────────────────
-helm install my-nginx ingress-nginx/ingress-nginx \  # Install chart as release "my-nginx"
-  --namespace ingress \                 # Install into a specific namespace
-  --create-namespace \                  # Create the namespace if it does not exist
-  --version 4.10.0                      # Pin to a specific chart version
-
-helm install my-redis bitnami/redis \   # Install Redis from Bitnami
-  --set auth.password=mypassword \      # Override a single value
-  --set replica.replicaCount=3          # Set replica count
-
-# ── Managing releases ─────────────────────────────────────────────
-helm list -A                            # List all releases across all namespaces
-helm status my-nginx -n ingress         # Check the status of a specific release
-helm history my-nginx -n ingress        # Show revision history for a release
-
-# ── Upgrading ─────────────────────────────────────────────────────
-helm upgrade my-nginx ingress-nginx/ingress-nginx \
-  --namespace ingress \
-  --version 4.11.0 \                   # Upgrade to a new chart version
-  --reuse-values                        # Keep existing custom values
-
-# ── Rolling back ──────────────────────────────────────────────────
-helm rollback my-nginx 1 -n ingress     # Roll back to revision 1
-
-# ── Uninstalling ──────────────────────────────────────────────────
-helm uninstall my-nginx -n ingress      # Remove the release and all its resources
-```
+![05-kubernetes diagram 10](assets/05-kubernetes-10.svg)
 
 ### Creating Your Own Helm Chart
 
@@ -1070,23 +856,7 @@ helm create my-app                      # Creates a directory structure:
 
 The generated structure:
 
-```
-my-app/
-├── Chart.yaml              # Chart metadata (name, version, description)
-├── values.yaml             # Default configuration values
-├── charts/                 # Dependencies (sub-charts)
-├── templates/              # Kubernetes manifest templates
-│   ├── deployment.yaml     # Deployment template
-│   ├── service.yaml        # Service template
-│   ├── ingress.yaml        # Ingress template
-│   ├── hpa.yaml            # HorizontalPodAutoscaler template
-│   ├── serviceaccount.yaml # ServiceAccount template
-│   ├── _helpers.tpl        # Template helper functions
-│   ├── NOTES.txt           # Post-install usage notes
-│   └── tests/
-│       └── test-connection.yaml  # Helm test
-└── .helmignore             # Files to exclude from packaging
-```
+![05-kubernetes diagram 11](assets/05-kubernetes-11.svg)
 
 ### Chart.yaml
 
@@ -1192,30 +962,7 @@ spec:
 
 ### Deploying with Overrides
 
-```bash
-# ── Dry run (see rendered manifests without deploying) ────────────
-helm template my-release ./my-app \
-  -f values-production.yaml             # Render templates locally and print to stdout
-
-# ── Install with custom values file ──────────────────────────────
-helm install my-release ./my-app \
-  --namespace production \
-  --create-namespace \
-  -f values-production.yaml             # Override defaults with production values
-
-# ── Upgrade with inline overrides ─────────────────────────────────
-helm upgrade my-release ./my-app \
-  --namespace production \
-  --set image.tag="2.2.0" \             # Override just the image tag
-  --set replicaCount=5                  # And the replica count
-
-# ── Rollback to a previous release ───────────────────────────────
-helm rollback my-release 2 \            # Roll back to revision 2
-  --namespace production
-
-# ── Uninstall ─────────────────────────────────────────────────────
-helm uninstall my-release -n production  # Remove all resources for this release
-```
+![05-kubernetes diagram 12](assets/05-kubernetes-12.svg)
 
 ---
 
@@ -1226,135 +973,22 @@ boundaries, managed services, autoscaling, and multi-tenancy.
 
 ### Production Cloud Layout
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      Cloud Provider (AWS / GCP / Azure)                 │
-│                                                                        │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                     VPC / Virtual Network                        │  │
-│  │                                                                  │  │
-│  │  ┌──────────────────────┐   ┌─────────────────────────────────┐ │  │
-│  │  │   Public Subnets     │   │      Private Subnets            │ │  │
-│  │  │                      │   │                                 │ │  │
-│  │  │  ┌────────────────┐  │   │  ┌───────────────────────────┐  │ │  │
-│  │  │  │ Load Balancer  │──│──▶│  │  EKS / GKE / AKS Cluster │  │ │  │
-│  │  │  │ (ALB / NLB)    │  │   │  │                           │  │ │  │
-│  │  │  └────────────────┘  │   │  │  Control Plane (managed)  │  │ │  │
-│  │  │                      │   │  │  ┌─────────────────────┐  │  │ │  │
-│  │  │  ┌────────────────┐  │   │  │  │ Node Group (AZ-1)   │  │  │ │  │
-│  │  │  │ NAT Gateway    │  │   │  │  │ m5.xlarge x 3       │  │  │ │  │
-│  │  │  │ (outbound from │◀─│───│  │  └─────────────────────┘  │  │ │  │
-│  │  │  │  private subs) │  │   │  │  ┌─────────────────────┐  │  │ │  │
-│  │  │  └────────────────┘  │   │  │  │ Node Group (AZ-2)   │  │  │ │  │
-│  │  │                      │   │  │  │ m5.xlarge x 3       │  │  │ │  │
-│  │  └──────────────────────┘   │  │  └─────────────────────┘  │  │ │  │
-│  │                             │  └───────────────────────────┘  │ │  │
-│  │                             │                                 │ │  │
-│  │                             │  ┌───────────────────────────┐  │ │  │
-│  │                             │  │ Managed Data Stores       │  │ │  │
-│  │                             │  │ RDS (Postgres/MySQL)      │  │ │  │
-│  │                             │  │ ElastiCache (Redis)       │  │ │  │
-│  │                             │  │ S3 / GCS / Blob Storage   │  │ │  │
-│  │                             │  └───────────────────────────┘  │ │  │
-│  │                             └─────────────────────────────────┘ │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-│                                                                        │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │  Supporting Services                                             │  │
-│  │  ECR / GAR / ACR (Container Registry)                            │  │
-│  │  Route 53 / Cloud DNS (DNS)                                      │  │
-│  │  ACM / Cloud Armor / WAF (TLS + Security)                        │  │
-│  │  CloudWatch / Cloud Monitoring (Observability)                   │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+![05-kubernetes diagram 13](assets/05-kubernetes-13.svg)
 
 ### Creating a Production Cluster on AWS (EKS)
 
-```bash
-# ── Prerequisites ─────────────────────────────────────────────────
-# Install eksctl (the official CLI for EKS cluster management)
-curl --silent --location "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" \
-  | tar xz -C /tmp && sudo mv /tmp/eksctl /usr/local/bin
-
-# Install AWS CLI v2 and configure credentials
-aws configure                            # Set up access key, secret, region
-
-# ── Create the EKS cluster ───────────────────────────────────────
-eksctl create cluster \
-  --name production \                    # Cluster name
-  --region us-east-1 \                   # AWS region
-  --version 1.30 \                       # Kubernetes version
-  --nodegroup-name workers \             # Name for the managed node group
-  --node-type m5.xlarge \                # Instance type (4 vCPU, 16 GB RAM)
-  --nodes 3 \                            # Desired number of nodes
-  --nodes-min 2 \                        # Minimum nodes (for Cluster Autoscaler)
-  --nodes-max 10 \                       # Maximum nodes (for Cluster Autoscaler)
-  --managed \                            # Use EKS-managed node groups (recommended)
-  --with-oidc \                          # Enable OIDC for IAM Roles for Service Accounts (IRSA)
-  --ssh-access \                         # Enable SSH access to nodes (for debugging)
-  --ssh-public-key my-key-pair \         # EC2 key pair name
-  --vpc-nat-mode HighlyAvailable \       # NAT Gateway in each AZ (production-grade)
-  --asg-access \                         # Allow Cluster Autoscaler to manage ASGs
-  --full-ecr-access                      # Grant nodes access to ECR (container registry)
-
-# This command takes 15-20 minutes. It creates:
-# - A VPC with public and private subnets across 3 AZs
-# - The EKS control plane (managed by AWS)
-# - A managed node group with 3 m5.xlarge instances
-# - IAM roles, security groups, and OIDC provider
-
-# ── Verify ────────────────────────────────────────────────────────
-kubectl get nodes -o wide                # All nodes should be Ready
-aws eks describe-cluster --name production --query 'cluster.status'
-# Output: "ACTIVE"
-```
+![05-kubernetes diagram 14](assets/05-kubernetes-14.svg)
 
 ### Creating a Production Cluster on GCP (GKE)
 
-```bash
-# ── Prerequisites ─────────────────────────────────────────────────
-# Install gcloud CLI and authenticate
-gcloud auth login
-gcloud config set project my-project-id
-gcloud config set compute/zone us-central1-a
-
-# ── Create the GKE cluster ───────────────────────────────────────
-gcloud container clusters create production \
-  --region us-central1 \                 # Regional cluster (control plane in 3 zones)
-  --num-nodes 3 \                        # Nodes per zone (9 total for 3 zones)
-  --machine-type e2-standard-4 \         # 4 vCPU, 16 GB RAM
-  --disk-size 100 \                      # 100 GB boot disk per node
-  --disk-type pd-ssd \                   # SSD persistent disk for better I/O
-  --enable-autoscaling \                 # Enable node autoscaling
-  --min-nodes 1 \                        # Min nodes per zone
-  --max-nodes 10 \                       # Max nodes per zone
-  --enable-autorepair \                  # Auto-repair unhealthy nodes
-  --enable-autoupgrade \                 # Auto-upgrade to new K8s patch versions
-  --enable-ip-alias \                    # VPC-native cluster (required for most features)
-  --enable-network-policy \              # Enable Calico NetworkPolicy enforcement
-  --enable-vertical-pod-autoscaling \    # VPA: auto-adjusts resource requests
-  --workload-pool=my-project-id.svc.id.goog \  # Workload Identity (GCP's IRSA equivalent)
-  --release-channel regular             # Follow the "regular" release channel
-
-# ── Get credentials ───────────────────────────────────────────────
-gcloud container clusters get-credentials production --region us-central1
-kubectl get nodes                        # Verify nodes are Ready
-```
+![05-kubernetes diagram 15](assets/05-kubernetes-15.svg)
 
 ### Namespace Strategy
 
 Namespaces provide logical isolation within a cluster. A production cluster should
 have a deliberate namespace strategy.
 
-```bash
-# ── Create namespaces ─────────────────────────────────────────────
-kubectl create namespace production      # Production workloads
-kubectl create namespace staging         # Staging / pre-production
-kubectl create namespace monitoring      # Prometheus, Grafana, Loki
-kubectl create namespace ingress         # Ingress controllers
-kubectl create namespace argocd          # GitOps controller
-```
+![05-kubernetes diagram 16](assets/05-kubernetes-16.svg)
 
 ```yaml
 # file: namespace-with-labels.yaml
@@ -1607,33 +1241,7 @@ The key benefits:
 **ArgoCD** is the most popular GitOps tool for Kubernetes. It provides a web UI, CLI,
 and API for managing application deployments declaratively.
 
-```bash
-# ── Install ArgoCD ────────────────────────────────────────────────
-kubectl create namespace argocd
-kubectl apply -n argocd \
-  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
-# Wait for ArgoCD to be ready
-kubectl wait --for=condition=available deployment/argocd-server \
-  -n argocd --timeout=300s
-
-# ── Access the ArgoCD UI ─────────────────────────────────────────
-# Get the initial admin password
-kubectl -n argocd get secret argocd-initial-admin-secret \
-  -o jsonpath='{.data.password}' | base64 -d
-# Output: (a random password like "abc123XYZ")
-
-# Port-forward to access the UI
-kubectl port-forward svc/argocd-server -n argocd 8443:443
-# Visit https://localhost:8443, login: admin / <password from above>
-
-# ── Install the ArgoCD CLI ───────────────────────────────────────
-brew install argocd                      # macOS
-# OR download from https://github.com/argoproj/argo-cd/releases
-
-# Login via CLI
-argocd login localhost:8443 --insecure   # --insecure for self-signed cert
-```
+![05-kubernetes diagram 17](assets/05-kubernetes-17.svg)
 
 #### Defining an ArgoCD Application
 
@@ -1696,79 +1304,13 @@ argocd app history api-server
 approach. Instead of a centralized UI, Flux uses a set of controllers (source,
 kustomize, helm, notification) that each handle one responsibility.
 
-```bash
-# ── Install Flux CLI ──────────────────────────────────────────────
-brew install fluxcd/tap/flux             # macOS
-# OR: curl -s https://fluxcd.io/install.sh | sudo bash
-
-# ── Bootstrap Flux into your cluster ─────────────────────────────
-# This installs Flux controllers and commits their manifests to your Git repo
-flux bootstrap github \
-  --owner=myorg \                        # GitHub organization or user
-  --repository=fleet-infra \             # Repo where Flux stores its own config
-  --branch=main \
-  --path=clusters/production \           # Path within the repo for this cluster
-  --personal                             # Use a personal access token (vs. deploy key)
-
-# ── Define a GitRepository source ─────────────────────────────────
-flux create source git api-server \
-  --url=https://github.com/myorg/k8s-manifests \
-  --branch=main \
-  --interval=1m                          # Poll Git every 1 minute for changes
-
-# ── Define a Kustomization (what to deploy from that source) ──────
-flux create kustomization api-server \
-  --source=api-server \                  # Reference the GitRepository created above
-  --path="./apps/api-server/production" \  # Path within the repo
-  --prune=true \                         # Remove resources deleted from Git
-  --interval=5m                          # Reconcile every 5 minutes
-
-# ── Check status ──────────────────────────────────────────────────
-flux get kustomizations                  # List all Kustomizations and their sync status
-flux get sources git                     # List all Git sources and last fetch time
-flux logs                                # View Flux controller logs
-```
+![05-kubernetes diagram 18](assets/05-kubernetes-18.svg)
 
 ### The Complete CI/CD + GitOps Pipeline
 
 Here is how the pieces fit together in a production workflow:
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                        CI/CD + GitOps Pipeline                       │
-│                                                                      │
-│  1. Developer pushes code to app repo                                │
-│     github.com/myorg/api-server (branch: main)                       │
-│              │                                                       │
-│              ▼                                                       │
-│  2. CI Pipeline (GitHub Actions / GitLab CI) triggers                │
-│     ┌─────────────────────────────────────────────┐                  │
-│     │  a. Run tests                               │                  │
-│     │  b. Build Docker image                      │                  │
-│     │  c. Push image to registry (tag: v2.2.0)    │                  │
-│     │  d. Update image tag in k8s-manifests repo  │                  │
-│     └─────────────────────────────────────────────┘                  │
-│              │                                                       │
-│              ▼                                                       │
-│  3. k8s-manifests repo now has updated image tag                     │
-│     github.com/myorg/k8s-manifests (commit: "bump api to v2.2.0")   │
-│              │                                                       │
-│              ▼                                                       │
-│  4. ArgoCD / Flux detects the new commit                             │
-│     ┌─────────────────────────────────────────────┐                  │
-│     │  a. Pulls latest manifests from Git         │                  │
-│     │  b. Compares desired state vs. live state   │                  │
-│     │  c. Applies diff to the cluster             │                  │
-│     │  d. Monitors rollout health                 │                  │
-│     └─────────────────────────────────────────────┘                  │
-│              │                                                       │
-│              ▼                                                       │
-│  5. Kubernetes performs rolling update                                │
-│     New Pods (v2.2.0) pass health checks → Old Pods (v2.1.0) drain  │
-│                                                                      │
-│  Rollback? → git revert the commit → ArgoCD syncs old manifests     │
-└──────────────────────────────────────────────────────────────────────┘
-```
+![05-kubernetes diagram 19](assets/05-kubernetes-19.svg)
 
 #### Example CI Step: Updating Manifests
 
@@ -1960,18 +1502,7 @@ running databases in Kubernetes unless you have specific operational expertise.
 
 ### Object Hierarchy
 
-```
-Deployment
-  └── manages → ReplicaSet
-                  └── manages → Pod(s)
-                                  └── contains → Container(s)
-Service ──selects──▶ Pod(s) by label
-Ingress ──routes──▶ Service(s) by host/path
-ConfigMap / Secret ──injected into──▶ Pod(s) as env vars or files
-PVC ──bound to──▶ PV ──mounted in──▶ Pod(s) as volumes
-HPA ──scales──▶ Deployment (adjusts replica count)
-NetworkPolicy ──restricts traffic to/from──▶ Pod(s)
-```
+![05-kubernetes diagram 20](assets/05-kubernetes-20.svg)
 
 ### kubectl Quick Reference
 

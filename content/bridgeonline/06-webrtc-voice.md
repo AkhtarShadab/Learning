@@ -28,21 +28,7 @@ Before two browsers can connect, they need to exchange:
 
 Neither browser knows the other's IP address before this exchange. The Socket.io server is used as a relay to pass these messages.
 
-```
-Alice's browser                Server              Bob's browser
-      │                          │                       │
-      │──── voice:offer ─────────▶                       │
-      │     { to: bob, sdp: "..." }──── voice:offer ────▶│
-      │                          │     { from: alice }   │
-      │◀──────────────────────── voice:answer ───────────│
-      │     { from: bob, sdp: "..." }                    │
-      │──── voice:ice ───────────▶──── voice:ice ───────▶│
-      │ (multiple ice candidates │  (multiple ice        │
-      │  sent asynchronously)    │   candidates)         │
-      │                          │                       │
-      │◀═══════════════ DIRECT WebRTC connection ════════│
-      │            (no server involvement from here)      │
-```
+![06-webrtc-voice diagram 1](assets/06-webrtc-voice-1.svg)
 
 ### Phase 2 — ICE Negotiation (direct)
 

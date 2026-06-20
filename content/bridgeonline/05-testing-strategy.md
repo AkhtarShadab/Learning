@@ -23,21 +23,7 @@ The solution: test every case, exhaustively, before deploying. The 5-layer test 
 
 Before describing each layer, understand the shape of the test suite:
 
-```
-          ▲
-         /|\
-        / | \         Layer 4+5 — E2E, Browser
-       /  |  \        20 tests, ~60 seconds, needs browser + server + DB
-      /   |   \
-     /─────────\      Layer 3 — Socket.io Integration
-    /    │      \     20 tests, ~2 seconds, in-process server
-   /─────│───────\
-  /      │        \   Layer 2 — DB Integration
- /       │         \  35 tests, ~8 seconds, needs Docker DB
-/────────│──────────\
-/        │           \ Layer 1 — Unit Tests (the bulk)
-/────────│────────────\ 123 tests, ~1 second, zero dependencies
-```
+![05-testing-strategy diagram 1](assets/05-testing-strategy-1.svg)
 
 The pyramid principle:
 - **Wide base**: many fast tests that cover pure logic. Run these constantly — on every save if using watch mode.

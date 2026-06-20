@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="544" height="128" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="544" height="128"></rect>
+    <text x="18" y="12" >m</text>
+    <text x="42" y="12" >5</text>
+    <text x="66" y="12" >a</text>
+    <text x="90" y="12" >d</text>
+    <text x="138" y="12" >2xlarge</text>
+    <text x="114" y="12" >.</text>
+    <text x="170" y="44" >Size</text>
+    <path d="M 216,32 A 16,16 0,0,0 216,48" class="nofill"></path>
+    <text x="218" y="44" >vCPUs,</text>
+    <text x="274" y="44" >memory</text>
+    <path d="M 320,32 A 16,16 0,0,1 320,48" class="nofill"></path>
+    <text x="170" y="60" >Additional</text>
+    <text x="258" y="60" >capability:</text>
+    <text x="354" y="60" >d</text>
+    <line x1="368" y1="54" x2="376" y2="54" class="solid"></line>
+    <line x1="368" y1="58" x2="376" y2="58" class="solid"></line>
+    <text x="386" y="60" >NVMe</text>
+    <text x="426" y="60" >instance</text>
+    <text x="498" y="60" >store</text>
+    <text x="170" y="76" >Processor:</text>
+    <text x="258" y="76" >a</text>
+    <line x1="272" y1="70" x2="280" y2="70" class="solid"></line>
+    <line x1="272" y1="74" x2="280" y2="74" class="solid"></line>
+    <text x="290" y="76" >AMD,</text>
+    <text x="330" y="76" >g</text>
+    <line x1="344" y1="70" x2="352" y2="70" class="solid"></line>
+    <line x1="344" y1="74" x2="352" y2="74" class="solid"></line>
+    <text x="362" y="76" >Graviton,</text>
+    <text x="442" y="76" >i</text>
+    <line x1="456" y1="70" x2="464" y2="70" class="solid"></line>
+    <line x1="456" y1="74" x2="464" y2="74" class="solid"></line>
+    <text x="474" y="76" >Intel</text>
+    <text x="170" y="92" >Generation</text>
+    <text x="258" y="92" >number</text>
+    <text x="170" y="108" >Family</text>
+    <path d="M 232,96 A 16,16 0,0,0 232,112" class="nofill"></path>
+    <text x="234" y="108" >purpose</text>
+    <path d="M 288,96 A 16,16 0,0,1 288,112" class="nofill"></path>
+    <g>
+        <line x1="20" y1="16" x2="20" y2="104" class="solid"></line>
+        <line x1="20" y1="104" x2="160" y2="104" class="solid"></line>
+    </g>
+    <g>
+        <line x1="44" y1="16" x2="44" y2="88" class="solid"></line>
+        <line x1="44" y1="88" x2="160" y2="88" class="solid"></line>
+    </g>
+    <g>
+        <line x1="68" y1="16" x2="68" y2="72" class="solid"></line>
+        <line x1="68" y1="72" x2="160" y2="72" class="solid"></line>
+    </g>
+    <g>
+        <line x1="92" y1="16" x2="92" y2="56" class="solid"></line>
+        <line x1="92" y1="56" x2="160" y2="56" class="solid"></line>
+    </g>
+    <g>
+        <line x1="140" y1="16" x2="140" y2="40" class="solid"></line>
+        <line x1="140" y1="40" x2="160" y2="40" class="solid"></line>
+    </g>
+</svg>

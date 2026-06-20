@@ -22,30 +22,7 @@ and the zero-trust principles that tie them together.
 
 ## The Shared Responsibility Model
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                    YOUR RESPONSIBILITY                       │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │  Customer Data                                         │  │
-│  ├────────────────────────────────────────────────────────┤  │
-│  │  Platform, Applications, IAM                           │  │
-│  ├────────────────────────────────────────────────────────┤  │
-│  │  Operating System, Network, Firewall Configuration     │  │
-│  ├────────────────────────────────────────────────────────┤  │
-│  │  Client-Side Encryption    Server-Side Encryption      │  │
-│  │  Network Traffic Protection  Data Integrity Auth       │  │
-│  └────────────────────────────────────────────────────────┘  │
-├──────────────────────────────────────────────────────────────┤
-│                    AWS RESPONSIBILITY                        │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │  Compute    Storage    Database    Networking           │  │
-│  ├────────────────────────────────────────────────────────┤  │
-│  │  Hardware / AWS Global Infrastructure                  │  │
-│  ├────────────────────────────────────────────────────────┤  │
-│  │  Regions    Availability Zones    Edge Locations        │  │
-│  └────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────┘
-```
+![09_security_architecture diagram 1](assets/09_security_architecture-1.svg)
 
 How responsibility shifts by service type:
 
@@ -66,14 +43,7 @@ How responsibility shifts by service type:
 
 IAM has four types of principals (entities that can make requests):
 
-```
-┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────┐
-│   User   │  │  Group   │  │   Role   │  │ Federated    │
-│          │  │          │  │          │  │ Identity     │
-│ (human   │  │(collection│ │(assumable│  │(external IdP:│
-│  or svc) │  │ of users) │ │ identity)│  │ SAML, OIDC)  │
-└──────────┘  └──────────┘  └──────────┘  └──────────────┘
-```
+![09_security_architecture diagram 2](assets/09_security_architecture-2.svg)
 
 **Best practice**: Do not create IAM users for human access. Use IAM Identity Center
 (SSO) with federation to your corporate identity provider. IAM users should only
@@ -115,71 +85,11 @@ structure:
 
 ### Policy Types (in evaluation order)
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  1. SERVICE CONTROL POLICIES (SCPs)                     │
-│     Organization-level guardrails                       │
-│     "No one in this account can delete CloudTrail logs" │
-├─────────────────────────────────────────────────────────┤
-│  2. RESOURCE-BASED POLICIES                             │
-│     Attached to resources (S3 bucket, SQS queue, etc.)  │
-│     "This bucket allows access from account 987654"     │
-├─────────────────────────────────────────────────────────┤
-│  3. PERMISSION BOUNDARIES                               │
-│     Maximum permissions an IAM entity can have          │
-│     "This role can never exceed S3 + DynamoDB access"   │
-├─────────────────────────────────────────────────────────┤
-│  4. IDENTITY-BASED POLICIES                             │
-│     Attached to users, groups, or roles                 │
-│     "This role can read from S3 bucket X"               │
-├─────────────────────────────────────────────────────────┤
-│  5. SESSION POLICIES                                    │
-│     Passed during AssumeRole or federation              │
-│     Further limits permissions for this session         │
-└─────────────────────────────────────────────────────────┘
-```
+![09_security_architecture diagram 3](assets/09_security_architecture-3.svg)
 
 ### IAM Policy Evaluation Flowchart
 
-```
-                    Request arrives
-                         │
-                         ▼
-                  ┌──────────────┐
-             ┌────│ Explicit DENY│────┐
-             │YES │ in any policy│    │NO
-             │    └──────────────┘    │
-             ▼                        ▼
-        ┌─────────┐           ┌──────────────┐
-        │ DENIED  │      ┌────│     SCP      │────┐
-        └─────────┘      │YES │ allows it?   │    │NO
-                         │    └──────────────┘    │
-                         ▼                        ▼
-                  ┌──────────────┐          ┌─────────┐
-             ┌────│ Resource-    │────┐     │ DENIED  │
-             │YES │ based policy │    │NO   └─────────┘
-             │    │ allows it?   │    │
-             │    └──────────────┘    │
-             ▼                        ▼
-        (If same account:       ┌──────────────┐
-         may be allowed)   ┌────│ Permission   │────┐
-                           │YES │ boundary     │    │NO
-                           │    │ allows it?   │    │
-                           │    └──────────────┘    │
-                           ▼                        ▼
-                    ┌──────────────┐          ┌─────────┐
-               ┌────│ Identity-   │────┐     │ DENIED  │
-               │YES │ based policy│    │NO   └─────────┘
-               │    │ allows it?  │    │
-               │    └──────────────┘    │
-               ▼                        ▼
-          ┌─────────┐            ┌─────────┐
-          │ ALLOWED │            │ DENIED  │
-          └─────────┘            └─────────┘
-
-Key rule: Default DENY. Explicit DENY always wins.
-         An Allow is only effective if no Deny overrides it.
-```
+![09_security_architecture diagram 4](assets/09_security_architecture-4.svg)
 
 ### Permission Boundaries
 
@@ -212,19 +122,7 @@ ensuring those roles never exceed a predefined set of permissions.
 
 ### Organization Structure
 
-```
-Root (Management Account)
-├── OU: Production
-│   ├── Account: prod-us (123456789012)
-│   └── Account: prod-eu (234567890123)
-├── OU: Development
-│   ├── Account: dev (345678901234)
-│   └── Account: staging (456789012345)
-├── OU: Security
-│   └── Account: security-tooling (567890123456)
-└── OU: Sandbox
-    └── Account: experiments (678901234567)
-```
+![09_security_architecture diagram 5](assets/09_security_architecture-5.svg)
 
 ### SCP Examples
 
@@ -272,33 +170,7 @@ Root (Management Account)
 
 **AWS KMS (Key Management Service)** is the centralized key management system.
 
-```
-Envelope Encryption:
-┌────────────────────────────────────────────┐
-│ KMS                                        │
-│ ┌──────────────┐                           │
-│ │ Customer     │──► Encrypts Data Key      │
-│ │ Master Key   │    (never leaves KMS)     │
-│ │ (CMK)        │                           │
-│ └──────────────┘                           │
-└────────────────────┬───────────────────────┘
-                     │
-                     ▼
-           ┌──────────────────┐
-           │ Encrypted Data   │
-           │ Key (stored with │
-           │ the data)        │
-           └────────┬─────────┘
-                    │ Data Key (plaintext)
-                    │ used to encrypt data,
-                    │ then discarded from
-                    │ memory
-                    ▼
-           ┌──────────────────┐
-           │ Encrypted Data   │
-           │ (S3, EBS, RDS)   │
-           └──────────────────┘
-```
+![09_security_architecture diagram 6](assets/09_security_architecture-6.svg)
 
 **Why envelope encryption?** KMS has a 4 KB limit on direct encryption. For larger
 data, KMS generates a data key, you use the data key to encrypt locally, then store
@@ -376,20 +248,7 @@ aws secretsmanager rotate-secret \
 
 ### Security Groups vs NACLs
 
-```
-                    Security Groups              NACLs
-                    ─────────────────           ──────────────────
-Level:              Instance/ENI level           Subnet level
-Stateful:           YES (return traffic          NO (must explicitly
-                    auto-allowed)                allow return traffic)
-Rules:              Allow only                   Allow AND Deny
-Evaluation:         All rules evaluated          Rules evaluated in
-                    together                     number order (first match)
-Default:            Deny all inbound,            Allow all inbound and
-                    Allow all outbound           outbound
-Best for:           Primary firewall             Broad deny rules
-                                                 (block IP ranges)
-```
+![09_security_architecture diagram 7](assets/09_security_architecture-7.svg)
 
 ### Security Group Best Practices
 
@@ -510,26 +369,7 @@ WAF operates at Layer 7 (HTTP) and provides:
 Traditional security trusts everything inside the network perimeter. Zero trust
 trusts nothing and verifies everything:
 
-```
-Zero Trust Principles in AWS:
-═══════════════════════════════════════════════════════
-
-1. VERIFY EXPLICITLY
-   - Use IAM roles, not long-lived credentials
-   - MFA for all human access
-   - Validate JWTs at every API boundary
-
-2. LEAST PRIVILEGE ACCESS
-   - Scope IAM policies to specific resources
-   - Use permission boundaries
-   - Review and remove unused permissions (IAM Access Analyzer)
-
-3. ASSUME BREACH
-   - Encrypt everything at rest and in transit
-   - Enable CloudTrail, GuardDuty, VPC Flow Logs
-   - Segment networks (private subnets, security groups)
-   - Use VPC endpoints to avoid internet exposure
-```
+![09_security_architecture diagram 8](assets/09_security_architecture-8.svg)
 
 ---
 

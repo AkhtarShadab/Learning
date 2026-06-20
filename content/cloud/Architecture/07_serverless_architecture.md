@@ -36,19 +36,7 @@ Serverless has three defining characteristics:
 
 Not all serverless services are equal in how fully they embody these principles:
 
-```
-Fully Serverless                              Serverless-ish
-(no servers, pay-per-use, scale to zero)      (managed, but some config)
-│                                              │
-├── Lambda                                     ├── Aurora Serverless v2
-├── API Gateway                                ├── ECS Fargate
-├── DynamoDB (on-demand)                       ├── OpenSearch Serverless
-├── S3                                         ├── MSK Serverless
-├── SQS / SNS                                 ├── ElastiCache Serverless
-├── EventBridge                                │
-├── Step Functions                             │
-└── AppSync                                    │
-```
+![07_serverless_architecture diagram 1](assets/07_serverless_architecture-1.svg)
 
 ---
 
@@ -59,34 +47,7 @@ Fully Serverless                              Serverless-ish
 When Lambda receives an invocation, it creates (or reuses) an execution
 environment -- a lightweight, isolated container that runs your function code.
 
-```
-Invocation Request
-        │
-        ▼
-┌──────────────────────────────────────────────┐
-│            Lambda Service                     │
-│                                              │
-│   Is there a warm execution environment?     │
-│   ├── YES → Route request to warm env (FAST) │
-│   └── NO  → Create new environment (COLD)    │
-│                                              │
-│   ┌────────────────────────────────────────┐  │
-│   │        Execution Environment           │  │
-│   │  ┌──────────────────────────────────┐  │  │
-│   │  │  Runtime (Python, Node, Java...) │  │  │
-│   │  │  ┌────────────────────────────┐  │  │  │
-│   │  │  │    Your Function Code      │  │  │  │
-│   │  │  │    + Dependencies          │  │  │  │
-│   │  │  └────────────────────────────┘  │  │  │
-│   │  └──────────────────────────────────┘  │  │
-│   │  ┌────────┐ ┌──────┐ ┌────────────┐   │  │
-│   │  │ /tmp   │ │ RAM  │ │ CPU alloc. │   │  │
-│   │  │ 10 GB  │ │      │ │ (prop. to  │   │  │
-│   │  │ ephm.  │ │      │ │  memory)   │   │  │
-│   │  └────────┘ └──────┘ └────────────┘   │  │
-│   └────────────────────────────────────────┘  │
-└──────────────────────────────────────────────┘
-```
+![07_serverless_architecture diagram 2](assets/07_serverless_architecture-2.svg)
 
 ### The Cold Start Problem
 
@@ -97,20 +58,7 @@ A cold start occurs when Lambda creates a new execution environment. This involv
 3. **Running your initialization code** (outside the handler: imports, DB connections)
 4. **Executing the handler** (your actual function logic)
 
-```
-Cold Start Timeline:
-├── Download code ──────── ~50-200ms (zip) / ~500ms+ (container)
-├── Init runtime ─────── ~10-100ms
-├── Init code (imports) ── ~100-2000ms (depends on your code)
-├── Handler execution ──── your code
-│
-│   Total cold start: ~200ms (Python, small) to ~5-10s (Java, large)
-
-Warm Start Timeline:
-├── Handler execution ──── your code only
-│
-│   No init overhead: ~1-2ms added latency
-```
+![07_serverless_architecture diagram 3](assets/07_serverless_architecture-3.svg)
 
 ### Strategies to Minimize Cold Starts
 
@@ -160,20 +108,7 @@ Layers let you package shared code and dependencies separately from your functio
 code. A function can use up to 5 layers. The total unzipped size (function +
 layers) must be under 250 MB.
 
-```
-Function Code (small, changes often)
-├── handler.py
-│
-Layer 1: Common utilities (changes rarely)
-├── utils/
-│   ├── auth.py
-│   └── validators.py
-│
-Layer 2: Heavy dependencies (changes rarely)
-├── numpy/
-├── pandas/
-└── scipy/
-```
+![07_serverless_architecture diagram 4](assets/07_serverless_architecture-4.svg)
 
 ### Lambda Container Image Support
 
@@ -202,56 +137,24 @@ Lambda is event-driven. It responds to events from dozens of AWS services:
 
 The caller waits for Lambda to complete and return a response.
 
-```
-API Gateway ──► Lambda ──► Response (to client)
-ALB ──────────► Lambda ──► Response (to client)
-```
+![07_serverless_architecture diagram 5](assets/07_serverless_architecture-5.svg)
 
 ### Asynchronous Invocation
 
 The event is queued. Lambda processes it and retries on failure (up to 2 retries).
 You can configure a dead-letter queue (SQS/SNS) for failed events.
 
-```
-S3 Event ──────► Lambda Event Queue ──► Lambda
-SNS ──────────► Lambda Event Queue ──► Lambda
-EventBridge ──► Lambda Event Queue ──► Lambda
-```
+![07_serverless_architecture diagram 6](assets/07_serverless_architecture-6.svg)
 
 ### Poll-Based (Stream/Queue)
 
 Lambda polls the source for new records, processes them in batches.
 
-```
-SQS Queue ◄──── Lambda (polls every ~1s)
-DynamoDB Stream ◄──── Lambda (polls for new records)
-Kinesis Stream ◄──── Lambda (polls shards)
-```
+![07_serverless_architecture diagram 7](assets/07_serverless_architecture-7.svg)
 
 ### Event Source Architecture
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                    EVENT SOURCES                             │
-│                                                              │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐             │
-│  │ API Gateway│  │    S3      │  │  DynamoDB   │             │
-│  │ (sync)     │  │ (async)    │  │  Streams    │             │
-│  └─────┬──────┘  └─────┬──────┘  └──────┬──────┘            │
-│        │               │               │                    │
-│  ┌─────┴──────┐  ┌─────┴──────┐  ┌──────┴──────┐            │
-│  │  SQS       │  │EventBridge │  │  Kinesis    │            │
-│  │ (poll)     │  │ (async)    │  │  (poll)     │            │
-│  └─────┬──────┘  └─────┬──────┘  └──────┬──────┘            │
-│        │               │               │                    │
-│        └───────────┬────┴───────────────┘                    │
-│                    ▼                                         │
-│              ┌───────────┐                                   │
-│              │  Lambda   │                                   │
-│              │ Function  │                                   │
-│              └───────────┘                                   │
-└──────────────────────────────────────────────────────────────┘
-```
+![07_serverless_architecture diagram 8](assets/07_serverless_architecture-8.svg)
 
 ---
 
@@ -287,34 +190,7 @@ you define it declaratively.
 
 ### Workflow Example: Order Processing
 
-```
-┌─────────┐    ┌──────────┐    ┌──────────┐
-│ Validate│───►│ Check    │───►│ Process  │
-│ Order   │    │ Inventory│    │ Payment  │
-└─────────┘    └────┬─────┘    └────┬─────┘
-                    │               │
-              ┌─────┴──────┐   ┌────┴─────┐
-              │ Out of     │   │ Payment  │
-              │ Stock?     │   │ Failed?  │
-              └─────┬──────┘   └────┬─────┘
-                    │YES            │YES
-                    ▼               ▼
-              ┌──────────┐   ┌──────────┐
-              │ Notify   │   │ Retry    │
-              │ Customer │   │ (3x)    │
-              │ (email)  │   │ then     │
-              └──────────┘   │ Cancel   │
-                             └──────────┘
-
-                    │NO
-                    ▼
-              ┌──────────────────┐
-              │  Parallel:       │
-              │  ├── Ship Order  │
-              │  ├── Send Email  │
-              │  └── Update DB   │
-              └──────────────────┘
-```
+![07_serverless_architecture diagram 9](assets/07_serverless_architecture-9.svg)
 
 ```json
 {
@@ -377,59 +253,26 @@ you define it declaratively.
 
 ### Pattern 1: API Backend
 
-```
-Client ──► API Gateway ──► Lambda ──► DynamoDB
-                │
-                └──► Lambda Authorizer (JWT validation)
-```
+![07_serverless_architecture diagram 10](assets/07_serverless_architecture-10.svg)
 
 ### Pattern 2: Event Processing Pipeline
 
-```
-S3 Upload ──► Lambda ──► Process ──► DynamoDB
-    │                                    │
-    │                              EventBridge ──► Lambda ──► SNS
-    │                                                        (notify)
-    └──► SQS (DLQ for failures)
-```
+![07_serverless_architecture diagram 11](assets/07_serverless_architecture-11.svg)
 
 ### Pattern 3: Scheduled Jobs
 
-```
-EventBridge Rule ──► Lambda (every 5 min)
-(cron: 0/5 * * * *)    │
-                        ├── Check for stale records
-                        ├── Generate reports
-                        └── Sync external API
-```
+![07_serverless_architecture diagram 12](assets/07_serverless_architecture-12.svg)
 
 ### Pattern 4: Fan-Out / Fan-In
 
-```
-Input ──► Lambda ──► SNS Topic ──► SQS Queue 1 ──► Lambda (process A)
-                              ──► SQS Queue 2 ──► Lambda (process B)
-                              ──► SQS Queue 3 ──► Lambda (process C)
-                                                        │
-                                                        ▼
-                                                   DynamoDB (aggregate)
-```
+![07_serverless_architecture diagram 13](assets/07_serverless_architecture-13.svg)
 
 ### Pattern 5: Saga Pattern for Distributed Transactions
 
 When a workflow spans multiple services and any step can fail, the saga pattern
 provides compensating transactions:
 
-```
-Step Functions Saga:
-1. Reserve Inventory  ──► Success
-2. Process Payment    ──► Success
-3. Book Shipping      ──► FAILURE
-   │
-   ▼ Compensate:
-3c. Cancel Shipping   ──► (no-op, booking failed)
-2c. Refund Payment    ──► Success
-1c. Release Inventory ──► Success
-```
+![07_serverless_architecture diagram 14](assets/07_serverless_architecture-14.svg)
 
 ---
 
@@ -439,20 +282,7 @@ Step Functions Saga:
 
 Run Lambda functions at CloudFront edge locations. Four trigger points:
 
-```
-Client ──► CloudFront ──────────────────────────────► Origin
-           │                                    │
-      ┌────┴────┐                          ┌────┴────┐
-      │ Viewer  │                          │ Origin  │
-      │ Request │                          │ Request │
-      └─────────┘                          └─────────┘
-      ┌─────────┐                          ┌─────────┐
-      │ Viewer  │                          │ Origin  │
-      │ Response│                          │ Response│
-      └────┬────┘                          └────┬────┘
-           │                                    │
-Client ◄───┘                               Origin
-```
+![07_serverless_architecture diagram 15](assets/07_serverless_architecture-15.svg)
 
 Use cases:
 - URL rewriting (A/B testing, feature flags)
@@ -502,15 +332,7 @@ If B is slow, A times out. Use SQS/SNS/Step Functions for decoupling.
 a new database connection. At 1,000 concurrent invocations, you have 1,000 database
 connections. Use RDS Proxy to pool connections.
 
-```
-Without RDS Proxy:                    With RDS Proxy:
-1000 Lambda instances                 1000 Lambda instances
-     │                                     │
-     ├── 1000 DB connections               ├── 1000 connections to Proxy
-     │   (database overwhelmed)            │   (Proxy pools ~50 to DB)
-     ▼                                     ▼
-   RDS (max_connections exceeded)        RDS Proxy ──► RDS (healthy)
-```
+![07_serverless_architecture diagram 16](assets/07_serverless_architecture-16.svg)
 
 ---
 
@@ -540,16 +362,7 @@ The same workload on a t3.micro EC2 instance (always-on): ~$7.60/month.
 
 ### Cost Comparison Table
 
-```
-Requests/month    Lambda (256MB, 200ms)    t3.medium (always-on)
-───────────────   ─────────────────────    ─────────────────────
-100K              $0.11                    $30.37
-1M                $1.05                    $30.37
-10M               $10.50                   $30.37
-50M               $52.50                   $30.37    ← breakeven zone
-100M              $105.00                  $30.37
-500M              $525.00                  $30.37
-```
+![07_serverless_architecture diagram 17](assets/07_serverless_architecture-17.svg)
 
 At ~30-50 million requests per month with steady traffic, EC2 becomes cheaper.
 But this ignores operational cost: patching, monitoring, scaling, availability
@@ -560,39 +373,7 @@ higher compute cost.
 
 ## Serverless Web Application Architecture
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                    SERVERLESS WEB APP                        │
-│                                                              │
-│  ┌─────────┐     ┌───────────┐     ┌──────────┐             │
-│  │CloudFron│────►│ S3 Bucket │     │ Cognito  │             │
-│  │  (CDN)  │     │ (static   │     │ (auth)   │             │
-│  │         │     │  assets)  │     │          │             │
-│  └────┬────┘     └───────────┘     └────┬─────┘             │
-│       │                                 │                    │
-│       │          ┌───────────┐          │                    │
-│       └─────────►│ API GW    │◄─────────┘ (JWT validation)  │
-│                  │ (HTTP API)│                                │
-│                  └─────┬─────┘                               │
-│            ┌───────────┼───────────┐                         │
-│            ▼           ▼           ▼                         │
-│       ┌────────┐  ┌────────┐  ┌────────┐                    │
-│       │Lambda  │  │Lambda  │  │Lambda  │                    │
-│       │GET /   │  │POST /  │  │PUT /   │                    │
-│       │users   │  │orders  │  │orders  │                    │
-│       └───┬────┘  └───┬────┘  └───┬────┘                    │
-│           │           │           │                          │
-│           ▼           ▼           ▼                          │
-│       ┌──────────────────────────────┐                       │
-│       │         DynamoDB             │                       │
-│       │    (users, orders tables)    │                       │
-│       └──────────────────────────────┘                       │
-│                                                              │
-│  Async Processing:                                           │
-│  DynamoDB Stream ──► Lambda ──► SES (email)                  │
-│                            ──► SQS ──► Lambda (analytics)    │
-└──────────────────────────────────────────────────────────────┘
-```
+![07_serverless_architecture diagram 18](assets/07_serverless_architecture-18.svg)
 
 ---
 

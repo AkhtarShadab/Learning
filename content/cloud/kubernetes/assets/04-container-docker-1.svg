@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="528" height="208" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="528" height="208"></rect>
+    <text x="162" y="12" >HIGH</text>
+    <line x1="192" y1="8" x2="200" y2="8" class="solid"></line>
+    <text x="202" y="12" >LEVEL</text>
+    <text x="250" y="12" >RUNTIME</text>
+    <line x1="156" y1="32" x2="156" y2="48" class="solid"></line>
+    <text x="194" y="44" >containerd</text>
+    <path d="M 192,48 A 16,16 0,0,0 192,64" class="nofill"></path>
+    <text x="194" y="60" >or</text>
+    <text x="218" y="60" >CRI</text>
+    <line x1="240" y1="56" x2="248" y2="56" class="solid"></line>
+    <circle cx="252" cy="56" r="4" class="nofill"></circle>
+    <path d="M 256,48 A 16,16 0,0,1 256,64" class="nofill"></path>
+    <text x="162" y="108" >LOW</text>
+    <line x1="184" y1="104" x2="192" y2="104" class="solid"></line>
+    <text x="194" y="108" >LEVEL</text>
+    <text x="242" y="108" >RUNTIME</text>
+    <text x="194" y="140" >runc</text>
+    <path d="M 240,128 A 16,16 0,0,0 240,144" class="nofill"></path>
+    <text x="242" y="140" >or</text>
+    <text x="266" y="140" >crun</text>
+    <path d="M 296,128 A 16,16 0,0,1 296,144" class="nofill"></path>
+    <line x1="332" y1="128" x2="332" y2="176" class="solid"></line>
+    <text x="194" y="172" >clone</text>
+    <text x="258" y="172" >+</text>
+    <text x="274" y="172" >exec</text>
+    <text x="10" y="44" >Docker</text>
+    <text x="66" y="44" >CLI</text>
+    <text x="354" y="44" >Manages</text>
+    <text x="418" y="44" >lifecycle:</text>
+    <text x="354" y="60" >pull,</text>
+    <text x="402" y="60" >create,</text>
+    <text x="466" y="60" >start,</text>
+    <text x="354" y="76" >stop,</text>
+    <text x="402" y="76" >delete</text>
+    <text x="362" y="140" >Actually</text>
+    <text x="434" y="140" >creates</text>
+    <text x="362" y="156" >the</text>
+    <text x="394" y="156" >container:</text>
+    <text x="362" y="172" >namespaces,</text>
+    <text x="458" y="172" >cgroups,</text>
+    <text x="354" y="188" >pivot</text>
+    <line x1="392" y1="192" x2="400" y2="192" class="solid"></line>
+    <text x="402" y="188" >root</text>
+    <g>
+        <line x1="164" y1="24" x2="324" y2="24" class="solid"></line>
+        <line x1="164" y1="24" x2="164" y2="32" class="solid"></line>
+        <line x1="324" y1="24" x2="324" y2="72" class="solid"></line>
+        <line x1="164" y1="48" x2="164" y2="72" class="solid"></line>
+        <line x1="164" y1="72" x2="324" y2="72" class="solid"></line>
+        <line x1="236" y1="72" x2="236" y2="96" class="solid"></line>
+    </g>
+    <g>
+        <line x1="164" y1="120" x2="232" y2="120" class="solid"></line>
+        <line x1="164" y1="120" x2="164" y2="184" class="solid"></line>
+        <line x1="164" y1="184" x2="324" y2="184" class="solid"></line>
+        <line x1="324" y1="176" x2="324" y2="184" class="solid"></line>
+    </g>
+    <g>
+        <line x1="236" y1="112" x2="236" y2="116" class="solid"></line>
+        <polygon points="232,116 240,116 236,128" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="240" y1="120" x2="324" y2="120" class="solid"></line>
+        <line x1="324" y1="120" x2="324" y2="128" class="solid"></line>
+    </g>
+    <g>
+        <path d="M 240,160 A 16,16 0,0,0 240,176" class="nofill"></path>
+        <path d="M 240,160 A 16,16 0,0,1 240,176" class="nofill"></path>
+    </g>
+    <g>
+        <line x1="96" y1="40" x2="120" y2="40" class="solid"></line>
+        <polygon points="120,36 128,40 120,44" class="filled"></polygon>
+    </g>
+</svg>

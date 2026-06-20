@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="544" height="256" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="544" height="256"></rect>
+    <rect x="4" y="72" width="56" height="112" class="solid nofill" rx="0"></rect>
+    <text x="18" y="92" >RDS</text>
+    <text x="10" y="124" >MySQL</text>
+    <text x="10" y="140" >Postg.</text>
+    <text x="10" y="156" >Oracle</text>
+    <text x="10" y="172" >MSSQL</text>
+    <rect x="84" y="72" width="56" height="112" class="solid nofill" rx="0"></rect>
+    <text x="90" y="92" >Aurora</text>
+    <text x="90" y="124" >MySQL</text>
+    <text x="90" y="140" >Postg.</text>
+    <rect x="420" y="72" width="88" height="112" class="solid nofill" rx="0"></rect>
+    <text x="426" y="92" >Timestream</text>
+    <text x="426" y="124" >Time</text>
+    <text x="426" y="140" >Series</text>
+    <rect x="164" y="72" width="72" height="112" class="solid nofill" rx="0"></rect>
+    <text x="170" y="92" >DynamoDB</text>
+    <text x="170" y="124" >Key</text>
+    <line x1="192" y1="120" x2="200" y2="120" class="solid"></line>
+    <text x="202" y="124" >Val</text>
+    <text x="170" y="140" >Documen</text>
+    <rect x="260" y="72" width="56" height="112" class="solid nofill" rx="0"></rect>
+    <text x="266" y="92" >Elast.</text>
+    <text x="266" y="108" >Cache</text>
+    <text x="266" y="124" >Redis</text>
+    <text x="266" y="140" >Memca.</text>
+    <rect x="340" y="72" width="56" height="112" class="solid nofill" rx="0"></rect>
+    <text x="346" y="92" >Neptun</text>
+    <text x="362" y="108" >e</text>
+    <text x="346" y="124" >Graph</text>
+    <text x="10" y="12" >Strict</text>
+    <text x="10" y="28" >Schema</text>
+    <line x1="28" y1="192" x2="28" y2="208" class="solid"></line>
+    <line x1="108" y1="192" x2="108" y2="208" class="solid"></line>
+    <text x="26" y="220" >Relational</text>
+    <text x="474" y="12" >Flexible</text>
+    <text x="474" y="28" >Schema</text>
+    <line x1="460" y1="192" x2="460" y2="208" class="solid"></line>
+    <text x="426" y="220" >Time</text>
+    <line x1="456" y1="216" x2="464" y2="216" class="solid"></line>
+    <text x="466" y="220" >Series</text>
+    <line x1="196" y1="192" x2="196" y2="208" class="solid"></line>
+    <text x="154" y="220" >Key</text>
+    <line x1="176" y1="216" x2="184" y2="216" class="solid"></line>
+    <text x="186" y="220" >Value</text>
+    <text x="154" y="236" >Column</text>
+    <line x1="284" y1="192" x2="284" y2="208" class="solid"></line>
+    <text x="258" y="220" >In</text>
+    <line x1="272" y1="216" x2="280" y2="216" class="solid"></line>
+    <text x="282" y="220" >Memory</text>
+    <text x="242" y="236" >Cache</text>
+    <line x1="372" y1="192" x2="372" y2="208" class="solid"></line>
+    <text x="362" y="220" >Graph</text>
+    <text x="114" y="236" >Wide</text>
+    <g>
+        <line x1="28" y1="32" x2="28" y2="52" class="solid"></line>
+        <polygon points="24,52 32,52 28,64" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="492" y1="32" x2="492" y2="52" class="solid"></line>
+        <polygon points="488,52 496,52 492,64" class="filled"></polygon>
+    </g>
+</svg>

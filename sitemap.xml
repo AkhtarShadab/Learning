@@ -1,132 +1,132 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url>
     <loc>https://study.tpresearcher.online/bridgeonline/00-project-overview</loc>
-    <lastmod>2026-06-20T02:46:36.371Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.522Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/01-architecture-and-design</loc>
-    <lastmod>2026-06-20T02:46:36.374Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.526Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/02-game-logic-pure-functions</loc>
-    <lastmod>2026-06-20T02:46:36.373Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.523Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/03-database-prisma</loc>
-    <lastmod>2026-06-20T02:46:36.403Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.586Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/04-realtime-socketio</loc>
-    <lastmod>2026-06-20T02:46:36.381Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.534Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/05-testing-strategy</loc>
-    <lastmod>2026-06-20T02:46:36.394Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.555Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/06-webrtc-voice</loc>
-    <lastmod>2026-06-20T02:46:36.393Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.552Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/07-scalability</loc>
-    <lastmod>2026-06-20T02:46:36.399Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.581Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/08-typescript-nextjs-patterns</loc>
-    <lastmod>2026-06-20T02:46:36.397Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.556Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/09-game-state-bugs-and-defensive-coding</loc>
-    <lastmod>2026-06-20T02:46:36.390Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.547Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/10-e2e-playwright-nodejs24</loc>
-    <lastmod>2026-06-20T02:46:36.378Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.529Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/11-full-game-simulation-and-play-route-bugs</loc>
-    <lastmod>2026-06-20T02:46:36.380Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.531Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/12-turn-order-fix-and-passed-out-ui</loc>
-    <lastmod>2026-06-20T02:46:36.387Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.543Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/DOUBTS</loc>
-    <lastmod>2026-06-20T02:46:36.388Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.544Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/README</loc>
-    <lastmod>2026-06-20T02:46:36.391Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.549Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/TESTING_GUIDE</loc>
-    <lastmod>2026-06-20T02:46:36.401Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.583Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/sessions/006-passed-out-board-fix-and-testing</loc>
-    <lastmod>2026-06-20T02:46:36.385Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.540Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/bridgeonline/testing-guide</loc>
-    <lastmod>2026-06-20T02:46:36.376Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.527Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/01_global_infrastructure</loc>
-    <lastmod>2026-06-20T02:46:36.349Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.497Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/02_compute_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.351Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.500Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/03_storage_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.354Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.503Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/04_networking_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.358Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.509Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/05_load_balancing_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.352Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.502Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/06_database_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.355Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.505Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/07_serverless_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.362Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.514Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/08_container_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.360Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.511Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/09_security_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.345Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.493Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/10_observability_architecture</loc>
-    <lastmod>2026-06-20T02:46:36.357Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.507Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/Architecture/DOUBTS</loc>
-    <lastmod>2026-06-20T02:46:36.346Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.495Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/MentalModels/01_utility_model</loc>
-    <lastmod>2026-06-20T02:46:36.322Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.079Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/MentalModels/02_statistical_multiplexing</loc>
-    <lastmod>2026-06-20T02:46:36.324Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.082Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/MentalModels/03_virtualization_abstraction</loc>
-    <lastmod>2026-06-20T02:46:36.319Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.074Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/MentalModels/04_fault_tolerance</loc>
-    <lastmod>2026-06-20T02:46:36.321Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.077Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/MentalModels/05_networking_mental_model</loc>
-    <lastmod>2026-06-20T02:46:36.325Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.084Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/MentalModels/06_elasticity_scaling</loc>
-    <lastmod>2026-06-20T02:46:36.327Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.086Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/MentalModels/07_cost_mental_model</loc>
-    <lastmod>2026-06-20T02:46:36.330Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.091Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/MentalModels/DOUBTS</loc>
-    <lastmod>2026-06-20T02:46:36.328Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.089Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/basic_learning</loc>
-    <lastmod>2026-06-20T02:46:36.364Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.516Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/kubernetes/01-kernel</loc>
-    <lastmod>2026-06-20T02:46:36.334Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.251Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/kubernetes/02-os</loc>
-    <lastmod>2026-06-20T02:46:36.336Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.254Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/kubernetes/03-vm</loc>
-    <lastmod>2026-06-20T02:46:36.338Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.257Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/kubernetes/04-container-docker</loc>
-    <lastmod>2026-06-20T02:46:36.341Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.261Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/cloud/kubernetes/05-kubernetes</loc>
-    <lastmod>2026-06-20T02:46:36.340Z</lastmod>
+    <lastmod>2026-06-20T04:35:36.260Z</lastmod>
   </url><url>
     <loc>https://study.tpresearcher.online/</loc>
     <lastmod>2023-08-23T19:09:04.000Z</lastmod>

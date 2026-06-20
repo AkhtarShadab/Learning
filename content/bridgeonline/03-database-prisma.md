@@ -397,17 +397,7 @@ export async function cleanDatabase() {
 
 This deletion order mirrors the FK dependency tree:
 
-```
-users
-├── game_rooms (creator_id → users.id)
-│   ├── game_players (game_room_id → game_rooms.id)
-│   │   └── (game_id → games.id)
-│   └── games (game_room_id → game_rooms.id)
-│       ├── game_moves (game_id → games.id)
-│       └── game_results (game_id → games.id)
-├── friendships (requester_id, addressee_id → users.id)
-└── room_invitations (room_id → game_rooms.id)
-```
+![03-database-prisma diagram 1](assets/03-database-prisma-1.svg)
 
 You can only delete a node after all nodes that point to it are deleted. You must delete leaf nodes before internal nodes before the root — which is exactly the **post-order traversal** of a tree.
 

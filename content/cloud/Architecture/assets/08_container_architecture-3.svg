@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="392" height="240" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="392" height="240"></rect>
+    <rect x="4" y="8" width="112" height="48" class="solid nofill" rx="0"></rect>
+    <text x="26" y="28" >Docker</text>
+    <text x="82" y="28" >CLI</text>
+    <path d="M 32,32 A 16,16 0,0,0 32,48" class="nofill"></path>
+    <text x="34" y="44" >client</text>
+    <path d="M 80,32 A 16,16 0,0,1 80,48" class="nofill"></path>
+    <text x="210" y="28" >Docker</text>
+    <text x="266" y="28" >Daemon</text>
+    <line x1="380" y1="16" x2="380" y2="208" class="solid"></line>
+    <path d="M 216,32 A 16,16 0,0,0 216,48" class="nofill"></path>
+    <text x="218" y="44" >dockerd</text>
+    <path d="M 272,32 A 16,16 0,0,1 272,48" class="nofill"></path>
+    <text x="226" y="92" >containerd</text>
+    <path d="M 216,96 A 16,16 0,0,0 216,112" class="nofill"></path>
+    <text x="218" y="108" >container</text>
+    <text x="298" y="108" >mgmt</text>
+    <path d="M 328,96 A 16,16 0,0,1 328,112" class="nofill"></path>
+    <text x="242" y="172" >runc</text>
+    <path d="M 216,176 A 16,16 0,0,0 216,192" class="nofill"></path>
+    <text x="218" y="188" >OCI</text>
+    <text x="250" y="188" >runtime</text>
+    <path d="M 304,176 A 16,16 0,0,1 304,192" class="nofill"></path>
+    <g>
+        <line x1="164" y1="8" x2="372" y2="8" class="solid"></line>
+        <line x1="164" y1="8" x2="164" y2="216" class="solid"></line>
+        <line x1="372" y1="8" x2="372" y2="16" class="solid"></line>
+        <line x1="164" y1="216" x2="372" y2="216" class="solid"></line>
+        <line x1="372" y1="208" x2="372" y2="216" class="solid"></line>
+    </g>
+    <g>
+        <line x1="120" y1="24" x2="152" y2="24" class="solid"></line>
+        <polygon points="152,20 160,24 152,28" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="188" y1="72" x2="356" y2="72" class="solid"></line>
+        <line x1="188" y1="72" x2="188" y2="120" class="solid"></line>
+        <line x1="356" y1="72" x2="356" y2="120" class="solid"></line>
+        <line x1="188" y1="120" x2="356" y2="120" class="solid"></line>
+        <line x1="260" y1="120" x2="260" y2="152" class="solid"></line>
+        <line x1="188" y1="152" x2="356" y2="152" class="solid"></line>
+        <line x1="188" y1="152" x2="188" y2="200" class="solid"></line>
+        <line x1="356" y1="152" x2="356" y2="200" class="solid"></line>
+        <line x1="188" y1="200" x2="356" y2="200" class="solid"></line>
+    </g>
+</svg>

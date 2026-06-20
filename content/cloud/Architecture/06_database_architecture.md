@@ -18,23 +18,7 @@ architectures that make them work.
 
 ## The Database Spectrum
 
-```
- Strict                                                    Flexible
- Schema                                                    Schema
-   │                                                         │
-   ▼                                                         ▼
-┌──────┐  ┌──────┐  ┌────────┐  ┌──────┐  ┌──────┐  ┌──────────┐
-│ RDS  │  │Aurora│  │DynamoDB│  │Elast.│  │Neptun│  │Timestream│
-│      │  │      │  │        │  │Cache │  │  e   │  │          │
-│MySQL │  │MySQL │  │Key-Val │  │Redis │  │Graph │  │Time      │
-│Postg.│  │Postg.│  │Documen │  │Memca.│  │      │  │Series    │
-│Oracle│  │      │  │        │  │      │  │      │  │          │
-│MSSQL │  │      │  │        │  │      │  │      │  │          │
-└──────┘  └──────┘  └────────┘  └──────┘  └──────┘  └──────────┘
-   │         │          │          │          │          │
-   Relational      Key-Value    In-Memory    Graph   Time-Series
-              Wide Column     Cache
-```
+![06_database_architecture diagram 1](assets/06_database_architecture-1.svg)
 
 ---
 
@@ -51,25 +35,7 @@ In practice, network partitions always happen in distributed systems, so the rea
 choice is between **CP** (consistent but may reject requests during partitions) and
 **AP** (available but may return stale data during partitions).
 
-```
-                    C (Consistency)
-                   ╱╲
-                  ╱  ╲
-                 ╱    ╲
-        CP ────╱──────╲──── CA
-        (RDS) ╱ Not    ╲  (single node
-              ╱possible ╲  only; no
-             ╱ in dist.  ╲  partition
-            ╱  systems    ╲  tolerance)
-           ╱              ╲
-          ╱────────────────╲
-         P                  A
-   (Partition         (Availability)
-    Tolerance)
-              AP
-        (DynamoDB,
-         Cassandra)
-```
+![06_database_architecture diagram 2](assets/06_database_architecture-2.svg)
 
 AWS services and their CAP positioning:
 - **RDS Multi-AZ**: CP (synchronous replication, strongly consistent)
@@ -91,44 +57,11 @@ the infrastructure.
 
 ### Single-AZ Architecture
 
-```
-┌─────────────────────┐
-│  AZ-a               │
-│  ┌────────────────┐  │
-│  │  EC2 (hidden)  │  │
-│  │  ┌──────────┐  │  │
-│  │  │  DB      │  │  │
-│  │  │  Engine  │  │  │
-│  │  └──────────┘  │  │
-│  │  ┌──────────┐  │  │
-│  │  │  EBS     │  │  │
-│  │  │  Volume  │  │  │
-│  │  └──────────┘  │  │
-│  └────────────────┘  │
-│                      │
-│  Automated backups   │
-│  ──► S3 (snapshots)  │
-└──────────────────────┘
-```
+![06_database_architecture diagram 3](assets/06_database_architecture-3.svg)
 
 ### Multi-AZ Architecture (High Availability)
 
-```
-┌─────────────────────┐        ┌─────────────────────┐
-│  AZ-a               │        │  AZ-b               │
-│  ┌────────────────┐  │        │  ┌────────────────┐  │
-│  │  PRIMARY       │  │ sync   │  │  STANDBY       │  │
-│  │  (read/write)  │──┼───────►│  │  (no traffic)  │  │
-│  │                │  │ repl.  │  │                │  │
-│  │  ┌──────────┐  │  │        │  │  ┌──────────┐  │  │
-│  │  │  EBS     │  │  │        │  │  │  EBS     │  │  │
-│  │  └──────────┘  │  │        │  │  └──────────┘  │  │
-│  └────────────────┘  │        │  └────────────────┘  │
-└──────────────────────┘        └──────────────────────┘
-
-Failover: DNS endpoint (CNAME) swings to standby in 60-120 seconds.
-Standby does NOT serve read traffic (it is a hot standby for failover only).
-```
+![06_database_architecture diagram 4](assets/06_database_architecture-4.svg)
 
 ### RDS Multi-AZ with Two Readable Standbys
 
@@ -142,23 +75,7 @@ standby instances using a write-ahead log (WAL) based replication. This provides
 
 Read replicas use asynchronous replication to offload read traffic from the primary:
 
-```
-                    ┌──────────────┐
-                    │   PRIMARY    │
-        ┌───────────│ (read/write) │───────────┐
-        │ async     └──────────────┘   async   │
-        │ repl.            │           repl.   │
-        ▼                  │                   ▼
-┌──────────────┐           │          ┌──────────────┐
-│ READ REPLICA │           │          │ READ REPLICA │
-│  (read only) │     async │ repl.    │  (read only) │
-│  Same Region │           │          │  Diff Region │
-└──────────────┘           ▼          └──────────────┘
-                   ┌──────────────┐
-                   │ READ REPLICA │   (Cross-region for
-                   │  (read only) │    DR and latency)
-                   └──────────────┘
-```
+![06_database_architecture diagram 5](assets/06_database_architecture-5.svg)
 
 Key characteristics:
 - Up to 15 read replicas for Aurora, 5 for RDS MySQL/PostgreSQL
@@ -202,26 +119,7 @@ engines on EC2/EBS, Aurora redesigns the storage layer for the cloud.
 
 ### Shared Storage Volume
 
-```
-                 ┌────────────────────┐
-                 │   Aurora Primary    │
-                 │   (compute only)   │
-                 └────────┬───────────┘
-                          │
-              ┌───────────┼───────────┐
-              │           │           │
-              ▼           ▼           ▼
-         ┌─────────┐ ┌─────────┐ ┌─────────┐
-         │ Storage │ │ Storage │ │ Storage │
-         │ Node    │ │ Node    │ │ Node    │
-    AZ-a │ (2 copies)│ (2 copies)│ (2 copies)│ AZ-c
-         └─────────┘ └─────────┘ └─────────┘
-              AZ-a       AZ-b       AZ-c
-
-    6 copies of data across 3 AZs
-    Writes: Quorum of 4/6 (survives losing an entire AZ)
-    Reads:  Quorum of 3/6 (fast, can tolerate failures)
-```
+![06_database_architecture diagram 6](assets/06_database_architecture-6.svg)
 
 **Key innovations:**
 1. **Log-structured storage**: Only redo log records are sent to storage nodes, not
@@ -286,28 +184,7 @@ DynamoDB stores data in partitions. The partition key determines which partition
 stores an item (via consistent hashing). The optional sort key enables range queries
 within a partition.
 
-```
-Table: Orders
-Partition Key: customer_id
-Sort Key: order_date
-
-Partition 1 (hash range A-M):
-┌────────────────┬──────────────┬─────────┬──────────┐
-│ customer_id(PK)│ order_date(SK)│ total   │ status   │
-├────────────────┼──────────────┼─────────┼──────────┤
-│ alice          │ 2024-01-15   │ 150.00  │ shipped  │
-│ alice          │ 2024-02-20   │ 75.50   │ delivered│
-│ bob            │ 2024-01-10   │ 200.00  │ delivered│
-└────────────────┴──────────────┴─────────┴──────────┘
-
-Partition 2 (hash range N-Z):
-┌────────────────┬──────────────┬─────────┬──────────┐
-│ customer_id(PK)│ order_date(SK)│ total   │ status   │
-├────────────────┼──────────────┼─────────┼──────────┤
-│ nadia          │ 2024-03-01   │ 50.00   │ pending  │
-│ zach           │ 2024-01-05   │ 300.00  │ shipped  │
-└────────────────┴──────────────┴─────────┴──────────┘
-```
+![06_database_architecture diagram 7](assets/06_database_architecture-7.svg)
 
 ### Global Secondary Indexes (GSI) and Local Secondary Indexes (LSI)
 
@@ -348,13 +225,7 @@ Cheaper than on-demand for predictable workloads. Supports auto-scaling.
 DAX is an in-memory cache that sits in front of DynamoDB, providing microsecond
 response times for read-heavy workloads.
 
-```
-Application ──► DAX Cluster ──► DynamoDB
-                  │
-           Cache HIT: ~200μs
-           Cache MISS: DAX reads from DynamoDB,
-                       caches result, returns
-```
+![06_database_architecture diagram 8](assets/06_database_architecture-8.svg)
 
 DAX is API-compatible with DynamoDB -- change the endpoint, and your application
 uses the cache automatically without code changes.
@@ -365,34 +236,14 @@ Streams capture a time-ordered sequence of item-level changes in a table. Each
 stream record contains the item's key attributes and the before/after images
 of modified attributes.
 
-```
-DynamoDB Table ──► Stream ──► Lambda (process changes)
-                         ──► Kinesis Data Streams
-                         ──► EventBridge Pipes
-
-Use cases:
-- Materialized views (replicate to another table/service)
-- Real-time aggregations
-- Cross-region replication (Global Tables use this internally)
-- Event-driven architectures
-```
+![06_database_architecture diagram 9](assets/06_database_architecture-9.svg)
 
 ### Single-Table Design
 
 In DynamoDB, the best practice is often to store multiple entity types in a single
 table using carefully designed partition keys and sort keys:
 
-```
-Table: MyApp
-PK              SK                  Attributes
-─────────────   ──────────────────  ──────────────────
-USER#alice      PROFILE             {name, email, ...}
-USER#alice      ORDER#2024-01-15    {total, status}
-USER#alice      ORDER#2024-02-20    {total, status}
-PRODUCT#p123    METADATA            {name, price, ...}
-PRODUCT#p123    REVIEW#alice        {rating, text}
-ORDER#ord-456   STATUS              {status, ship_date}
-```
+![06_database_architecture diagram 10](assets/06_database_architecture-10.svg)
 
 This enables efficient access patterns:
 - Get user profile: `PK=USER#alice, SK=PROFILE`
@@ -425,33 +276,7 @@ for simple key-value caching and don't need any of Redis's advanced features.
 
 ### Caching Strategies
 
-```
-CACHE-ASIDE (Lazy Loading):
-1. App checks cache
-2. Cache miss → read from DB
-3. Write result to cache
-4. Return to caller
-
-     App ──1──► Cache (miss)
-      │                │
-      ├──2──► DB       │
-      │       │        │
-      ◄───────┘        │
-      │                │
-      ├──3──► Cache ───┘ (store)
-      │
-      ◄── 4. Return
-
-WRITE-THROUGH:
-1. App writes to cache AND DB simultaneously
-2. Cache is always current
-3. Reads always hit cache
-
-WRITE-BEHIND:
-1. App writes to cache only
-2. Cache async writes to DB (batched)
-3. Risk: data loss if cache crashes before flush
-```
+![06_database_architecture diagram 11](assets/06_database_architecture-11.svg)
 
 ---
 
@@ -480,64 +305,17 @@ tracking, regulatory audit trails.
 
 ### The 6 R's Applied to Databases
 
-```
-Strategy           Description                     Example
-─────────────────  ─────────────────────────────── ────────────────────────
-Rehost (Lift)      Move to RDS same engine         Oracle on-prem → RDS Oracle
-Replatform         Move to managed, same paradigm  MySQL on-prem → Aurora MySQL
-Refactor           Change engine entirely           Oracle → Aurora PostgreSQL
-                                                   SQL Server → DynamoDB
-Repurchase         Move to SaaS                    Self-hosted CRM → Salesforce
-Retire             Decommission                    Unused databases
-Retain             Keep on-premises                Mainframe DB (for now)
-```
+![06_database_architecture diagram 12](assets/06_database_architecture-12.svg)
 
 ### AWS Database Migration Service (DMS)
 
-```
-Source DB ──► DMS Replication Instance ──► Target DB
-  (on-prem      (runs in your VPC,         (RDS, Aurora,
-   or cloud)     performs ETL if needed)     DynamoDB, S3)
-
-Migration phases:
-1. Full load: Initial bulk data copy
-2. Change Data Capture (CDC): Ongoing replication of changes
-3. Cutover: Switch application to target when caught up
-```
+![06_database_architecture diagram 13](assets/06_database_architecture-13.svg)
 
 ---
 
 ## Database Decision Flowchart
 
-```
-START: What are your data access patterns?
-│
-├── Structured data with complex joins and transactions?
-│   ├── Need cloud-native performance? ──► Aurora
-│   ├── Need Oracle/SQL Server compatibility? ──► RDS
-│   └── Need auto-scaling compute? ──► Aurora Serverless v2
-│
-├── Key-value lookups with massive scale?
-│   ├── Need single-digit ms latency? ──► DynamoDB
-│   ├── Need microsecond latency? ──► DynamoDB + DAX
-│   └── Need flexible queries? ──► Consider Aurora instead
-│
-├── Caching layer for reads?
-│   ├── Need data structures (sorted sets, lists)? ──► ElastiCache Redis
-│   └── Simple key-value cache? ──► ElastiCache Redis (or Memcached)
-│
-├── Highly connected data (relationships)?
-│   └── Neptune (graph database)
-│
-├── Time-series data (metrics, IoT)?
-│   └── Timestream
-│
-├── Immutable audit log?
-│   └── QLDB
-│
-└── Document storage with search?
-    └── OpenSearch (Elasticsearch managed)
-```
+![06_database_architecture diagram 14](assets/06_database_architecture-14.svg)
 
 ---
 

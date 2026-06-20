@@ -418,55 +418,11 @@ collector per node). Applications send to `localhost:4317`.
 
 ### Primary Pipeline (AWS-Native)
 
-```
-                        OBSERVABILITY PIPELINE (AWS-NATIVE)
-
-  ┌──────────┐    ┌──────────────┐    ┌──────────────────────────────┐
-  │ App /    │    │ ADOT         │    │       BACKENDS               │
-  │ Service  │    │ Collector    │    │                              │
-  │          ├───>│ (sidecar /   ├───>│  CloudWatch Metrics          │
-  │ ECS/EKS/ │    │  DaemonSet)  │    │    ├── Dashboards            │
-  │ Lambda/  │    │              │    │    ├── Alarms ──> SNS         │
-  │ EC2      │    │ Receives:    │    │    │    ├── PagerDuty         │
-  │          │    │  OTLP gRPC   │    │    │    └── Slack             │
-  │ Emits:   │    │  OTLP HTTP   │    │    └── Anomaly Detection     │
-  │  traces  │    │  Prometheus  │    │                              │
-  │  metrics │    │              │    │  CloudWatch Logs              │
-  │  logs    │    │ Exports to:  │    │    ├── Logs Insights          │
-  └──────────┘    │  CW/X-Ray    │    │    ├── Metric Filters         │
-                  └──────────────┘    │    └── Sub. Filters > S3      │
-                                      │                              │
-  ┌──────────────┐                    │  X-Ray Traces                │
-  │ CW Synthetics│──metrics──>        │    ├── Service Map            │
-  │ (canaries)   │                    │    └── Trace Analytics        │
-  └──────────────┘                    └──────────────────────────────┘
-  ┌──────────────┐                    ┌──────────────────────────────┐
-  │ CW RUM       │──> Real user       │ EventBridge                  │
-  │ (browser)    │    perf data       │  > Step Functions (remediate)│
-  └──────────────┘                    │  > Lambda (custom action)    │
-                                      │  > SNS (notify)             │
-                                      └──────────────────────────────┘
-```
+![10_observability_architecture diagram 1](assets/10_observability_architecture-1.svg)
 
 ### Alternative Pipeline (Prometheus + Grafana)
 
-```
-                   OBSERVABILITY PIPELINE (PROMETHEUS / GRAFANA)
-
-  ┌──────────┐    ┌───────────────┐    ┌───────────────────────────┐
-  │ App      │    │ Amazon Managed│    │ Amazon Managed Grafana    │
-  │ /metrics ├───>│ Prometheus    ├───>│  ├── Dashboards           │
-  │ endpoint │    │ (AMP)         │    │  │    (SLO, capacity)     │
-  └──────────┘    └───────────────┘    │  ├── Alerting > PagerDuty │
-  ┌──────────┐    ┌───────────────┐    │  │                        │
-  │ ADOT     ├───>│ OpenSearch    ├───>│  Data Sources:            │
-  │ (logs)   │    │ Service       │    │  ├── AMP (metrics/PromQL) │
-  └──────────┘    └───────────────┘    │  ├── OpenSearch (logs)    │
-  ┌──────────┐    ┌───────────────┐    │  ├── X-Ray (traces)       │
-  │ ADOT     ├───>│ X-Ray         ├───>│  └── CloudWatch (infra)   │
-  │ (traces) │    │               │    └───────────────────────────┘
-  └──────────┘    └───────────────┘
-```
+![10_observability_architecture diagram 2](assets/10_observability_architecture-2.svg)
 
 ### Choosing Between Pipelines
 

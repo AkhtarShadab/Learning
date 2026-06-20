@@ -51,36 +51,7 @@ Before we dive into specifics, let us establish four mental models that will ser
 
 ### Mental Model 1: The Kernel as Resource Manager and Gatekeeper
 
-```
- ┌──────────────────────────────────────────────────────┐
- │                    USER SPACE                         │
- │  ┌──────────┐  ┌──────────┐  ┌──────────┐           │
- │  │  nginx   │  │  python  │  │   bash   │  ...      │
- │  └────┬─────┘  └────┬─────┘  └────┬─────┘           │
- │       │              │              │                 │
- │       ▼              ▼              ▼                 │
- │  ═══════════ SYSTEM CALL INTERFACE ════════════════   │
- │                                                       │
- │  ┌─────────────────────────────────────────────────┐  │
- │  │               KERNEL SPACE                      │  │
- │  │  ┌──────────┐ ┌────────┐ ┌────────┐ ┌───────┐  │  │
- │  │  │ Process  │ │ Memory │ │  File  │ │  Net  │  │  │
- │  │  │ Sched.   │ │ Mgmt   │ │ System │ │ Stack │  │  │
- │  │  └──────────┘ └────────┘ └────────┘ └───────┘  │  │
- │  │  ┌──────────┐ ┌────────┐ ┌────────────────────┐│  │
- │  │  │ Device   │ │Security│ │  IPC (pipes,       ││  │
- │  │  │ Drivers  │ │ Module │ │  shared mem, etc.) ││  │
- │  │  └──────────┘ └────────┘ └────────────────────┘│  │
- │  └─────────────────────────────────────────────────┘  │
- │                        │                              │
- │                        ▼                              │
- │              ┌───────────────────┐                    │
- │              │     HARDWARE      │                    │
- │              │  CPU, RAM, Disk,  │                    │
- │              │  NIC, GPU, ...    │                    │
- │              └───────────────────┘                    │
- └──────────────────────────────────────────────────────┘
-```
+![01-kernel diagram 1](assets/01-kernel-1.svg)
 
 Think of the kernel as the **building superintendent** of a large apartment complex. Tenants (user-space processes) cannot directly touch the plumbing (hardware). They must submit requests to the superintendent (system calls), who decides whether to grant them and then does the actual work. The superintendent manages who lives where (process scheduling), how much water each tenant can use (cgroups), which floors they can access (namespaces), and what tools they are allowed to bring in (capabilities and seccomp).
 
@@ -151,38 +122,7 @@ The CPU hardware enforces a privilege boundary called **protection rings**. On x
 - **Ring 0 (kernel space):** Full access to all CPU instructions, all memory, all hardware. The kernel runs here.
 - **Ring 3 (user space):** Restricted. Cannot execute privileged instructions (e.g., writing to I/O ports), cannot access kernel memory. All applications run here.
 
-```
- ┌─────────────────────────────────────────────┐
- │              Ring 3 (User Space)             │
- │                                              │
- │    Application calls write(fd, buf, len)     │
- │                     │                        │
- │                     ▼                        │
- │    C library (glibc) prepares registers:     │
- │      RAX = 1 (write syscall number)          │
- │      RDI = fd, RSI = buf, RDX = len          │
- │                     │                        │
- │                     ▼                        │
- │            SYSCALL instruction                │
- │ ═══════════════════════════════════════════  │
- │              Ring 0 (Kernel Space)           │
- │                     │                        │
- │                     ▼                        │
- │     Kernel syscall handler (entry_64.S)      │
- │            dispatches to sys_write()         │
- │                     │                        │
- │                     ▼                        │
- │     VFS layer → filesystem driver → disk     │
- │                     │                        │
- │                     ▼                        │
- │           Return value placed in RAX         │
- │ ═══════════════════════════════════════════  │
- │              Ring 3 (User Space)             │
- │                     │                        │
- │                     ▼                        │
- │     Application receives return code         │
- └─────────────────────────────────────────────┘
-```
+![01-kernel diagram 2](assets/01-kernel-2.svg)
 
 A **system call (syscall)** is the mechanism for crossing this boundary. When a user-space process needs to do anything involving hardware — read a file, allocate memory, send a network packet, create a new process — it must ask the kernel via a syscall. The x86-64 `syscall` instruction triggers a hardware-level transition from ring 3 to ring 0, saving the user-space context and jumping to the kernel's syscall handler.
 
@@ -218,46 +158,7 @@ Output (strace -c):
 
 Understanding the boot process helps you debug nodes that fail to start and explains where `systemd`, which manages container runtimes, fits in.
 
-```
- Power On
-    │
-    ▼
- ┌──────────┐
- │  BIOS /  │  Hardware initialization, POST
- │   UEFI   │  Finds bootloader on disk
- └────┬─────┘
-      │
-      ▼
- ┌──────────┐
- │   GRUB   │  Reads grub.cfg, loads kernel image (vmlinuz)
- │ Bootloader│  and initial RAM disk (initrd/initramfs)
- └────┬─────┘
-      │
-      ▼
- ┌──────────┐
- │  Kernel   │  Decompresses itself into memory
- │  (early)  │  Initializes CPU, memory, interrupts
- │           │  Mounts initramfs as temporary root (/)
- └────┬─────┘
-      │
-      ▼
- ┌──────────┐
- │  initrd / │  Contains essential drivers (disk, filesystem)
- │ initramfs │  Finds and mounts the real root filesystem
- └────┬─────┘
-      │
-      ▼
- ┌──────────┐
- │  Kernel   │  pivot_root to real root filesystem
- │  (late)   │  Starts /sbin/init (PID 1)
- └────┬─────┘
-      │
-      ▼
- ┌──────────┐
- │ systemd   │  PID 1 — the "mother of all processes"
- │ (init)    │  Starts services: containerd, kubelet, etc.
- └──────────┘
-```
+![01-kernel diagram 3](assets/01-kernel-3.svg)
 
 The **initrd (initial RAM disk)** or **initramfs (initial RAM filesystem)** is a small, temporary root filesystem loaded into memory alongside the kernel. It contains just enough drivers and tools to find and mount the real root filesystem. This solves a chicken-and-egg problem: the kernel needs a filesystem driver to read the disk, but the driver might be on the disk.
 
@@ -295,27 +196,7 @@ Linux provides seven namespace types:
 
 When Docker or containerd creates a container, they call `clone()` (or `unshare()`) with a combination of these flags. The child process wakes up in a world where it is PID 1, has its own network stack, its own filesystem mounts, its own hostname — but it is still sharing the host kernel.
 
-```
- HOST KERNEL (single instance, shared by all containers)
- ┌─────────────────────────────────────────────────────────────┐
- │                                                             │
- │  ┌─── PID NS 1 ──┐    ┌─── PID NS 2 ──┐                   │
- │  │  PID 1: nginx  │    │  PID 1: python │                   │
- │  │  PID 2: worker │    │  PID 2: gunicorn│                  │
- │  └────────────────┘    └────────────────┘                   │
- │         │                      │                            │
- │  ┌─── NET NS 1 ──┐    ┌─── NET NS 2 ──┐                   │
- │  │ eth0: 10.0.1.5│    │ eth0: 10.0.1.6│                    │
- │  │ lo: 127.0.0.1 │    │ lo: 127.0.0.1 │                    │
- │  └────────────────┘    └────────────────┘                   │
- │         │                      │                            │
- │  ┌─── MNT NS 1 ──┐    ┌─── MNT NS 2 ──┐                   │
- │  │ /: overlay     │    │ /: overlay     │                   │
- │  │ /etc: custom   │    │ /app: custom   │                   │
- │  └────────────────┘    └────────────────┘                   │
- │                                                             │
- └─────────────────────────────────────────────────────────────┘
-```
+![01-kernel diagram 4](assets/01-kernel-4.svg)
 
 ```bash
 # List all namespaces on the system
@@ -374,25 +255,7 @@ There are two versions:
 
 **cgroups v2** is the modern standard and what Kubernetes uses on recent distributions. It provides a single, unified hierarchy instead of the confusing multiple-hierarchy model of v1.
 
-```
- cgroups v2 hierarchy (single unified tree)
- ┌──────────────────────────────────────────────┐
- │  / (root cgroup)                             │
- │  ├── system.slice/                           │
- │  │   ├── containerd.service/                 │
- │  │   ├── kubelet.service/                    │
- │  │   └── sshd.service/                       │
- │  ├── user.slice/                             │
- │  │   └── user-1000.slice/                    │
- │  └── kubepods.slice/                         │
- │      ├── kubepods-burstable.slice/           │
- │      │   └── kubepods-burstable-pod<uid>.slice│
- │      │       ├── <container-id-1>/           │
- │      │       └── <container-id-2>/           │
- │      └── kubepods-besteffort.slice/          │
- │          └── ...                             │
- └──────────────────────────────────────────────┘
-```
+![01-kernel diagram 5](assets/01-kernel-5.svg)
 
 The key controllers (resource limiters) are:
 
@@ -579,41 +442,7 @@ A custom seccomp profile is a JSON file listing allowed syscalls:
 
 **eBPF (extended Berkeley Packet Filter)** is a technology that allows you to run sandboxed programs inside the Linux kernel without changing kernel source code or loading kernel modules. Think of it as a safe, restricted scripting language for the kernel. An eBPF program attaches to a **hook point** (a syscall entry, a network packet arrival, a function call inside the kernel) and runs a small, verified program each time that hook fires.
 
-```
- ┌─────────────────────────────────────────────────────┐
- │  User Space                                         │
- │  ┌──────────┐                                       │
- │  │  Cilium   │  Compiles eBPF programs, loads them  │
- │  │  Agent    │  into kernel via bpf() syscall       │
- │  └────┬─────┘                                       │
- │       │                                             │
- │  ═════▼═══════ bpf() system call ═══════════════    │
- │                                                     │
- │  ┌──────────────────────────────────────────────┐   │
- │  │  Kernel                                      │   │
- │  │                                              │   │
- │  │  ┌───────────┐    ┌─────────────────────┐    │   │
- │  │  │  Verifier  │──▶│  JIT Compiler       │    │   │
- │  │  │  (safety   │    │  (compiles eBPF     │    │   │
- │  │  │   checks)  │    │   to native code)   │    │   │
- │  │  └───────────┘    └──────────┬──────────┘    │   │
- │  │                              │               │   │
- │  │    Attached to hook points:  │               │   │
- │  │    ┌─────────┐  ┌─────────┐ │ ┌──────────┐  │   │
- │  │    │  XDP    │  │ tc      │ │ │ kprobe/  │  │   │
- │  │    │(packet  │  │(traffic │ │ │ tracepoint│  │   │
- │  │    │ arrive) │  │ control)│ │ │ (func    │  │   │
- │  │    └─────────┘  └─────────┘ │ │  entry)  │  │   │
- │  │                             │ └──────────┘  │   │
- │  │    ┌──────────────────────┐ │               │   │
- │  │    │  BPF Maps (shared    │◀┘               │   │
- │  │    │  data structures:    │                  │   │
- │  │    │  hash maps, arrays,  │                  │   │
- │  │    │  ring buffers)       │                  │   │
- │  │    └──────────────────────┘                  │   │
- │  └──────────────────────────────────────────────┘   │
- └─────────────────────────────────────────────────────┘
-```
+![01-kernel diagram 6](assets/01-kernel-6.svg)
 
 eBPF is transformative for cloud engineers because of the tools built on it:
 
@@ -723,30 +552,7 @@ Kubernetes networking is built entirely on kernel networking primitives. Underst
 
 A **veth pair** is a pair of virtual network interfaces connected like a pipe — anything sent into one end comes out the other. Containers use veth pairs to connect their network namespace to the host network namespace.
 
-```
- ┌─── Container Net NS ───┐         ┌─── Host Net NS ───────────────┐
- │                         │         │                               │
- │  ┌─────────┐            │         │            ┌────────────┐     │
- │  │  eth0   │◄═══════════╪═════════╪═══════════►│  vethXXXX  │     │
- │  │10.0.1.5 │  veth pair │         │            └─────┬──────┘     │
- │  └─────────┘            │         │                  │            │
- │                         │         │            ┌─────▼──────┐     │
- └─────────────────────────┘         │            │   cbr0     │     │
-                                     │            │  (bridge)  │     │
- ┌─── Container Net NS ───┐         │            │  10.0.1.1  │     │
- │                         │         │            └─────┬──────┘     │
- │  ┌─────────┐            │         │                  │            │
- │  │  eth0   │◄═══════════╪═════════╪══════════►┌─────▼──────┐     │
- │  │10.0.1.6 │  veth pair │         │           │  vethYYYY  │     │
- │  └─────────┘            │         │           └────────────┘     │
- │                         │         │                  │            │
- └─────────────────────────┘         │            ┌─────▼──────┐     │
-                                     │            │  eth0      │     │
-                                     │            │ (host NIC) │     │
-                                     │            │ 192.168.1.10│    │
-                                     │            └────────────┘     │
-                                     └───────────────────────────────┘
-```
+![01-kernel diagram 7](assets/01-kernel-7.svg)
 
 #### Linux Bridge
 
@@ -756,28 +562,7 @@ A **bridge** (e.g., `cbr0` or `docker0`) operates like a virtual network switch 
 
 **Netfilter** is the kernel's packet filtering framework. **iptables** is the user-space tool that configures netfilter rules. In Kubernetes, kube-proxy uses iptables (or IPVS) to implement Service load balancing — when a packet destined for a ClusterIP arrives, an iptables DNAT rule rewrites the destination to a pod IP.
 
-```
- Packet flow through netfilter hooks:
- 
- ┌─────────┐    ┌──────────────┐    ┌──────────┐    ┌──────────────┐    ┌─────────┐
- │ Incoming│    │  PREROUTING  │    │ Routing   │    │   FORWARD    │    │POSTROUTING│
- │ Packet  │───▶│  (DNAT, raw, │───▶│ Decision  │───▶│  (filter)    │───▶│  (SNAT,  │───▶ Out
- │         │    │   mangle)    │    │           │    │              │    │  masq)   │
- └─────────┘    └──────────────┘    └─────┬─────┘    └──────────────┘    └─────────┘
-                                          │
-                                    (if local)
-                                          │
-                                    ┌─────▼─────┐    ┌──────────────┐
-                                    │   INPUT    │    │  Local       │
-                                    │  (filter)  │───▶│  Process     │
-                                    └────────────┘    └──────┬───────┘
-                                                             │
-                                                       ┌─────▼─────┐
-                                                       │  OUTPUT    │
-                                                       │  (filter,  │───▶ POSTROUTING ───▶ Out
-                                                       │   DNAT)    │
-                                                       └───────────┘
-```
+![01-kernel diagram 8](assets/01-kernel-8.svg)
 
 #### IP Routing
 
@@ -1095,19 +880,7 @@ This is the most dangerous misconception. Containers are **not** VMs. A VM has i
 
 This is technically true but misleadingly simple. CPU limits in Kubernetes use CFS bandwidth control, which works on a **period** basis (default 100ms). If your limit is 500m (half a core), you get 50ms of CPU per 100ms period. If your application does a burst of CPU work for 50ms, it is fine. But if a single request needs 60ms of CPU, it will be **throttled** for 40ms until the next period. This introduces **latency spikes** even when the node has idle CPUs.
 
-```
- Time ──────────────────────────────────────────────────▶
- 
- Period 1 (0-100ms)          Period 2 (100-200ms)
- ┌──────────┬────────────┐  ┌──────────┬────────────┐
- │ APP RUNS │ THROTTLED  │  │ APP RUNS │ THROTTLED  │
- │  50ms    │   50ms     │  │  50ms    │   50ms     │
- └──────────┴────────────┘  └──────────┴────────────┘
- 
- The app needs 60ms but only gets 50ms per period.
- The remaining 10ms is served in period 2 after a 50ms wait.
- Result: a request that should take 60ms takes 110ms.
-```
+![01-kernel diagram 9](assets/01-kernel-9.svg)
 
 Many organizations (including Google) set CPU **requests** but not CPU **limits**, relying on the scheduler for fair sharing rather than hard throttling.
 
@@ -1339,20 +1112,7 @@ cat /proc/slabinfo | grep inode          # inode slab allocations
 
 Virtual-to-physical address translation uses a **multi-level page table**, which is structurally a **trie** (prefix tree). On x86-64, there are 4 or 5 levels (PGD → P4D → PUD → PMD → PTE), each level indexing a portion of the virtual address bits.
 
-```
- Virtual Address (48 bits used on x86-64):
- ┌──────┬──────┬──────┬──────┬──────┬──────────────┐
- │ PGD  │ P4D  │ PUD  │ PMD  │ PTE  │   Offset     │
- │(9 bit│(9 bit│(9 bit│(9 bit│(9 bit│  (12 bits)   │
- │index)│index)│index)│index)│index)│              │
- └──┬───┴──┬───┴──┬───┴──┬───┴──┬───┴──────────────┘
-    │      │      │      │      │
-    ▼      ▼      ▼      ▼      ▼
-   PGD    P4D    PUD    PMD    PTE → Physical Page Frame
-  Table → Table → Table → Table → Table
-  (512    (512    (512    (512    (512
-  entries) entries) entries) entries) entries)
-```
+![01-kernel diagram 10](assets/01-kernel-10.svg)
 
 Each level of the page table uses 9 bits of the virtual address as an index into a 512-entry table. This is a radix-256 trie (well, radix-512 at each level). The kernel also uses a data structure literally called `struct radix_tree` (now `struct xarray`) for page cache lookups, mapping file offsets to pages — another trie.
 

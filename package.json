@@ -21,7 +21,8 @@
     "serve": "npx quartz build --serve",
     "build": "npx quartz build",
     "publish-site": "node scripts/publish.mjs",
-    "deploy": "node scripts/publish.mjs --push"
+    "deploy": "node scripts/publish.mjs --push",
+    "diagrams": "node --experimental-wasm-modules scripts/convert-diagrams.mjs content"
   },
   "engines": {
     "npm": ">=10.9.2",
@@ -113,6 +114,7 @@
     "esbuild": "^0.25.9",
     "prettier": "^3.6.2",
     "tsx": "^4.20.5",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "svgbob-wasm": "^1.0.0"
   }
 }

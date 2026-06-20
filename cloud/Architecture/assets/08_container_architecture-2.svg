@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="272" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="520" height="272"></rect>
+    <text x="2" y="12" >Container</text>
+    <text x="82" y="12" >Filesystem</text>
+    <path d="M 176,0 A 16,16 0,0,0 176,16" class="nofill"></path>
+    <text x="178" y="12" >overlay2</text>
+    <path d="M 240,0 A 16,16 0,0,1 240,16" class="nofill"></path>
+    <text x="250" y="12" >:</text>
+    <text x="26" y="60" >Read</text>
+    <line x1="56" y1="56" x2="64" y2="56" class="solid"></line>
+    <text x="66" y="60" >Write</text>
+    <text x="114" y="60" >Layer</text>
+    <text x="26" y="92" >Layer</text>
+    <text x="74" y="92" >3:</text>
+    <text x="98" y="92" >app</text>
+    <text x="130" y="92" >code</text>
+    <text x="26" y="124" >Layer</text>
+    <text x="74" y="124" >2:</text>
+    <text x="98" y="124" >deps</text>
+    <text x="26" y="156" >Layer</text>
+    <text x="74" y="156" >1:</text>
+    <text x="98" y="156" >python</text>
+    <text x="26" y="188" >Layer</text>
+    <text x="74" y="188" >0:</text>
+    <text x="98" y="188" >base</text>
+    <text x="138" y="188" >OS</text>
+    <text x="194" y="60" >←</text>
+    <text x="210" y="60" >Container</text>
+    <text x="290" y="60" >changes</text>
+    <path d="M 360,48 A 16,16 0,0,0 360,64" class="nofill"></path>
+    <text x="362" y="60" >ephemeral</text>
+    <path d="M 432,48 A 16,16 0,0,1 432,64" class="nofill"></path>
+    <text x="194" y="92" >←</text>
+    <text x="210" y="92" >COPY</text>
+    <text x="250" y="92" >.</text>
+    <line x1="272" y1="80" x2="264" y2="96" class="solid"></line>
+    <text x="274" y="92" >app</text>
+    <text x="194" y="124" >←</text>
+    <text x="210" y="124" >RUN</text>
+    <text x="242" y="124" >pip</text>
+    <text x="274" y="124" >install</text>
+    <text x="194" y="156" >←</text>
+    <text x="210" y="156" >FROM</text>
+    <text x="250" y="156" >python:3.12</text>
+    <line x1="336" y1="152" x2="344" y2="152" class="solid"></line>
+    <text x="346" y="156" >slim</text>
+    <text x="194" y="188" >←</text>
+    <text x="210" y="188" >Debian</text>
+    <text x="266" y="188" >slim</text>
+    <text x="2" y="236" >All</text>
+    <text x="34" y="236" >containers</text>
+    <text x="122" y="236" >from</text>
+    <text x="162" y="236" >the</text>
+    <text x="194" y="236" >same</text>
+    <text x="2" y="252" >Only</text>
+    <text x="42" y="252" >the</text>
+    <text x="74" y="252" >R</text>
+    <line x1="88" y1="240" x2="80" y2="256" class="solid"></line>
+    <text x="90" y="252" >W</text>
+    <text x="106" y="252" >layer</text>
+    <text x="154" y="252" >is</text>
+    <text x="178" y="252" >unique</text>
+    <text x="234" y="236" >image</text>
+    <text x="282" y="236" >share</text>
+    <text x="330" y="236" >layers</text>
+    <text x="234" y="252" >per</text>
+    <text x="266" y="252" >container.</text>
+    <text x="386" y="236" >0</text>
+    <line x1="392" y1="232" x2="400" y2="232" class="solid"></line>
+    <text x="402" y="236" >3</text>
+    <path d="M 424,224 A 16,16 0,0,0 424,240" class="nofill"></path>
+    <text x="426" y="236" >read</text>
+    <line x1="456" y1="232" x2="464" y2="232" class="solid"></line>
+    <circle cx="468" cy="232" r="3" class="nofill"></circle>
+    <text x="474" y="236" >nly</text>
+    <path d="M 496,224 A 16,16 0,0,1 496,240" class="nofill"></path>
+    <text x="506" y="236" >.</text>
+    <g>
+        <line x1="4" y1="40" x2="172" y2="40" class="solid"></line>
+        <line x1="4" y1="40" x2="4" y2="200" class="solid"></line>
+        <line x1="172" y1="40" x2="172" y2="200" class="solid"></line>
+        <line x1="4" y1="72" x2="172" y2="72" class="solid"></line>
+        <line x1="4" y1="104" x2="172" y2="104" class="solid"></line>
+        <line x1="4" y1="136" x2="172" y2="136" class="solid"></line>
+        <line x1="4" y1="168" x2="172" y2="168" class="solid"></line>
+        <line x1="4" y1="200" x2="172" y2="200" class="solid"></line>
+    </g>
+</svg>

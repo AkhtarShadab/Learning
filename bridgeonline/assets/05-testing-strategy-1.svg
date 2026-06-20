@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="584" height="224" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="584" height="224"></rect>
+    <line x1="76" y1="96" x2="76" y2="208" class="solid"></line>
+    <line x1="8" y1="176" x2="0" y2="192" class="solid"></line>
+    <text x="186" y="188" >Layer</text>
+    <text x="234" y="188" >1</text>
+    <line x1="248" y1="184" x2="256" y2="184" class="solid"></line>
+    <text x="266" y="188" >Unit</text>
+    <text x="194" y="204" >123</text>
+    <text x="226" y="204" >tests,</text>
+    <line x1="280" y1="200" x2="288" y2="200" class="broken"></line>
+    <text x="290" y="204" >1</text>
+    <text x="178" y="44" >Layer</text>
+    <text x="226" y="44" >4+5</text>
+    <text x="178" y="60" >20</text>
+    <text x="202" y="60" >tests,</text>
+    <line x1="256" y1="40" x2="264" y2="40" class="solid"></line>
+    <text x="274" y="44" >E2E,</text>
+    <text x="314" y="44" >Browser</text>
+    <line x1="256" y1="56" x2="264" y2="56" class="broken"></line>
+    <text x="266" y="60" >60</text>
+    <text x="290" y="60" >seconds,</text>
+    <text x="362" y="60" >needs</text>
+    <text x="410" y="60" >browser</text>
+    <text x="474" y="60" >+</text>
+    <text x="490" y="60" >server</text>
+    <text x="546" y="60" >+</text>
+    <text x="562" y="60" >DB</text>
+    <text x="178" y="92" >Layer</text>
+    <text x="226" y="92" >3</text>
+    <line x1="240" y1="88" x2="248" y2="88" class="solid"></line>
+    <text x="178" y="108" >20</text>
+    <text x="202" y="108" >tests,</text>
+    <text x="258" y="92" >Socket.io</text>
+    <text x="338" y="92" >Integration</text>
+    <line x1="256" y1="104" x2="264" y2="104" class="broken"></line>
+    <text x="266" y="108" >2</text>
+    <text x="282" y="108" >seconds,</text>
+    <text x="354" y="108" >in</text>
+    <line x1="368" y1="104" x2="376" y2="104" class="solid"></line>
+    <text x="378" y="108" >process</text>
+    <text x="442" y="108" >server</text>
+    <text x="178" y="140" >Layer</text>
+    <text x="226" y="140" >2</text>
+    <line x1="240" y1="136" x2="248" y2="136" class="solid"></line>
+    <text x="178" y="156" >35</text>
+    <text x="202" y="156" >tests,</text>
+    <text x="258" y="140" >DB</text>
+    <line x1="256" y1="152" x2="264" y2="152" class="broken"></line>
+    <text x="266" y="156" >8</text>
+    <text x="282" y="140" >Integration</text>
+    <text x="282" y="156" >seconds,</text>
+    <text x="354" y="156" >needs</text>
+    <text x="402" y="156" >Docker</text>
+    <text x="458" y="156" >DB</text>
+    <text x="306" y="188" >Tests</text>
+    <path d="M 360,176 A 16,16 0,0,0 360,192" class="nofill"></path>
+    <text x="362" y="188" >the</text>
+    <text x="394" y="188" >bulk</text>
+    <path d="M 424,176 A 16,16 0,0,1 424,192" class="nofill"></path>
+    <text x="306" y="204" >second,</text>
+    <text x="370" y="204" >zero</text>
+    <text x="410" y="204" >dependencies</text>
+    <g>
+        <polygon points="80,12 84,0 88,12" class="filled"></polygon>
+        <line x1="84" y1="12" x2="84" y2="80" class="solid"></line>
+    </g>
+    <g>
+        <line x1="80" y1="16" x2="16" y2="144" class="solid"></line>
+        <line x1="28" y1="120" x2="72" y2="120" class="solid"></line>
+        <line x1="16" y1="144" x2="0" y2="176" class="solid"></line>
+        <line x1="4" y1="168" x2="72" y2="168" class="solid"></line>
+        <line x1="88" y1="16" x2="152" y2="144" class="solid"></line>
+        <line x1="44" y1="88" x2="124" y2="88" class="solid"></line>
+        <line x1="80" y1="120" x2="140" y2="120" class="solid"></line>
+        <line x1="152" y1="144" x2="184" y2="208" class="solid"></line>
+        <line x1="80" y1="168" x2="164" y2="168" class="solid"></line>
+        <line x1="80" y1="200" x2="180" y2="200" class="solid"></line>
+    </g>
+    <g>
+        <line x1="8" y1="192" x2="0" y2="208" class="solid"></line>
+        <line x1="4" y1="200" x2="72" y2="200" class="solid"></line>
+    </g>
+</svg>

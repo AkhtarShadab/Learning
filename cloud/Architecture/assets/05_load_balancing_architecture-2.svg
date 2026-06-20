@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="496" height="320" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="496" height="320"></rect>
+    <text x="2" y="12" >Decision:</text>
+    <text x="82" y="12" >L4</text>
+    <text x="106" y="12" >or</text>
+    <text x="130" y="12" >L7?</text>
+    <text x="34" y="44" >Need</text>
+    <text x="74" y="44" >to</text>
+    <text x="66" y="60" >YES</text>
+    <text x="98" y="44" >route</text>
+    <text x="146" y="44" >by</text>
+    <text x="170" y="44" >URL</text>
+    <text x="130" y="60" >L7</text>
+    <path d="M 160,48 A 16,16 0,0,0 160,64" class="nofill"></path>
+    <text x="162" y="60" >ALB</text>
+    <path d="M 184,48 A 16,16 0,0,1 184,64" class="nofill"></path>
+    <text x="202" y="44" >path,</text>
+    <text x="250" y="44" >host</text>
+    <text x="290" y="44" >header,</text>
+    <text x="354" y="44" >or</text>
+    <text x="378" y="44" >HTTP</text>
+    <text x="418" y="44" >method?</text>
+    <text x="34" y="92" >Non</text>
+    <line x1="56" y1="88" x2="64" y2="88" class="solid"></line>
+    <text x="66" y="92" >HTTP</text>
+    <text x="106" y="92" >protocol</text>
+    <text x="186" y="92" >MQTT,</text>
+    <text x="66" y="108" >YES</text>
+    <text x="130" y="108" >L4</text>
+    <path d="M 160,96 A 16,16 0,0,0 160,112" class="nofill"></path>
+    <text x="162" y="108" >NLB</text>
+    <text x="234" y="92" >gRPC</text>
+    <text x="274" y="92" >raw,</text>
+    <text x="314" y="92" >custom</text>
+    <text x="370" y="92" >TCP,</text>
+    <text x="410" y="92" >gaming</text>
+    <path d="M 456,80 A 16,16 0,0,1 456,96" class="nofill"></path>
+    <text x="466" y="92" >?</text>
+    <text x="34" y="140" >Need</text>
+    <text x="74" y="140" >ultra</text>
+    <line x1="112" y1="136" x2="120" y2="136" class="solid"></line>
+    <text x="122" y="140" >low</text>
+    <text x="66" y="156" >YES</text>
+    <text x="130" y="156" >L4</text>
+    <text x="154" y="140" >latency</text>
+    <path d="M 160,144 A 16,16 0,0,0 160,160" class="nofill"></path>
+    <text x="162" y="156" >NLB</text>
+    <path d="M 184,144 A 16,16 0,0,1 184,160" class="nofill"></path>
+    <path d="M 224,128 A 16,16 0,0,0 224,144" class="nofill"></path>
+    <text x="226" y="140" >&lt;</text>
+    <text x="242" y="140" >100</text>
+    <text x="274" y="140" >microseconds</text>
+    <text x="378" y="140" >added</text>
+    <path d="M 416,128 A 16,16 0,0,1 416,144" class="nofill"></path>
+    <text x="426" y="140" >?</text>
+    <text x="34" y="188" >Need</text>
+    <text x="74" y="188" >static</text>
+    <line x1="128" y1="176" x2="120" y2="192" class="solid"></line>
+    <text x="130" y="188" >Elastic</text>
+    <text x="194" y="188" >IP</text>
+    <text x="66" y="204" >YES</text>
+    <text x="130" y="204" >L4</text>
+    <path d="M 160,192 A 16,16 0,0,0 160,208" class="nofill"></path>
+    <text x="162" y="204" >NLB</text>
+    <path d="M 184,192 A 16,16 0,0,1 184,208" class="nofill"></path>
+    <line x1="200" y1="200" x2="208" y2="200" class="solid"></line>
+    <text x="218" y="188" >for</text>
+    <text x="218" y="204" >ALB</text>
+    <text x="250" y="188" >the</text>
+    <text x="282" y="188" >load</text>
+    <text x="250" y="204" >uses</text>
+    <text x="290" y="204" >DNS</text>
+    <text x="322" y="188" >balancer?</text>
+    <text x="322" y="204" >names,</text>
+    <text x="378" y="204" >not</text>
+    <text x="410" y="204" >static</text>
+    <text x="466" y="204" >IPs</text>
+    <text x="34" y="236" >Need</text>
+    <text x="74" y="236" >millions</text>
+    <text x="146" y="236" >of</text>
+    <text x="170" y="236" >requests</text>
+    <text x="242" y="236" >per</text>
+    <text x="66" y="252" >YES</text>
+    <text x="130" y="252" >L4</text>
+    <path d="M 160,240 A 16,16 0,0,0 160,256" class="nofill"></path>
+    <text x="162" y="252" >NLB</text>
+    <path d="M 184,240 A 16,16 0,0,1 184,256" class="nofill"></path>
+    <line x1="200" y1="248" x2="208" y2="248" class="solid"></line>
+    <text x="218" y="252" >scales</text>
+    <text x="274" y="236" >second?</text>
+    <text x="274" y="252" >to</text>
+    <text x="298" y="252" >millions</text>
+    <text x="370" y="252" >RPS</text>
+    <text x="402" y="252" >instantly</text>
+    <text x="34" y="284" >Standard</text>
+    <text x="106" y="284" >web</text>
+    <text x="66" y="300" >L7</text>
+    <path d="M 96,288 A 16,16 0,0,0 96,304" class="nofill"></path>
+    <text x="98" y="300" >ALB</text>
+    <path d="M 120,288 A 16,16 0,0,1 120,304" class="nofill"></path>
+    <text x="138" y="284" >application</text>
+    <text x="234" y="284" >with</text>
+    <text x="274" y="284" >HTTP</text>
+    <line x1="312" y1="272" x2="304" y2="288" class="solid"></line>
+    <text x="314" y="284" >HTTPS?</text>
+    <line x1="136" y1="296" x2="144" y2="296" class="solid"></line>
+    <text x="154" y="300" >most</text>
+    <text x="194" y="300" >common</text>
+    <text x="250" y="300" >choice</text>
+    <g>
+        <line x1="4" y1="16" x2="4" y2="280" class="solid"></line>
+        <line x1="4" y1="40" x2="24" y2="40" class="solid"></line>
+        <line x1="4" y1="88" x2="24" y2="88" class="solid"></line>
+        <line x1="4" y1="136" x2="24" y2="136" class="solid"></line>
+        <line x1="4" y1="184" x2="24" y2="184" class="solid"></line>
+        <line x1="4" y1="232" x2="24" y2="232" class="solid"></line>
+        <line x1="4" y1="280" x2="24" y2="280" class="solid"></line>
+    </g>
+    <g>
+        <line x1="36" y1="48" x2="36" y2="56" class="solid"></line>
+        <line x1="36" y1="56" x2="56" y2="56" class="solid"></line>
+    </g>
+    <g>
+        <line x1="96" y1="56" x2="112" y2="56" class="solid"></line>
+        <polygon points="112,52 120,56 112,60" class="filled"></polygon>
+    </g>
+    <g>
+        <path d="M 184,80 A 16,16 0,0,0 184,96" class="nofill"></path>
+        <path d="M 184,96 A 16,16 0,0,1 184,112" class="nofill"></path>
+    </g>
+    <g>
+        <line x1="36" y1="96" x2="36" y2="104" class="solid"></line>
+        <line x1="36" y1="104" x2="56" y2="104" class="solid"></line>
+    </g>
+    <g>
+        <line x1="96" y1="104" x2="112" y2="104" class="solid"></line>
+        <polygon points="112,100 120,104 112,108" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="36" y1="144" x2="36" y2="152" class="solid"></line>
+        <line x1="36" y1="152" x2="56" y2="152" class="solid"></line>
+    </g>
+    <g>
+        <line x1="96" y1="152" x2="112" y2="152" class="solid"></line>
+        <polygon points="112,148 120,152 112,156" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="36" y1="192" x2="36" y2="200" class="solid"></line>
+        <line x1="36" y1="200" x2="56" y2="200" class="solid"></line>
+    </g>
+    <g>
+        <line x1="96" y1="200" x2="112" y2="200" class="solid"></line>
+        <polygon points="112,196 120,200 112,204" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="36" y1="240" x2="36" y2="248" class="solid"></line>
+        <line x1="36" y1="248" x2="56" y2="248" class="solid"></line>
+    </g>
+    <g>
+        <line x1="96" y1="248" x2="112" y2="248" class="solid"></line>
+        <polygon points="112,244 120,248 112,252" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="36" y1="288" x2="36" y2="296" class="solid"></line>
+        <line x1="36" y1="296" x2="56" y2="296" class="solid"></line>
+    </g>
+</svg>

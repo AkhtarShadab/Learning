@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="576" height="128" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="576" height="128"></rect>
+    <text x="18" y="12" >Traditional</text>
+    <text x="114" y="12" >polling</text>
+    <path d="M 184,0 A 16,16 0,0,0 184,16" class="nofill"></path>
+    <text x="186" y="12" >select</text>
+    <path d="M 232,0 A 16,16 0,0,1 232,16" class="nofill"></path>
+    <text x="242" y="12" >:</text>
+    <text x="322" y="12" >epoll</text>
+    <path d="M 376,0 A 16,16 0,0,0 376,16" class="nofill"></path>
+    <text x="378" y="12" >event</text>
+    <line x1="416" y1="8" x2="424" y2="8" class="solid"></line>
+    <text x="426" y="12" >driven</text>
+    <path d="M 472,0 A 16,16 0,0,1 472,16" class="nofill"></path>
+    <text x="482" y="12" >:</text>
+    <text x="18" y="44" >for</text>
+    <text x="50" y="44" >each</text>
+    <text x="90" y="44" >of</text>
+    <text x="114" y="44" >10,000</text>
+    <text x="170" y="44" >FDs:</text>
+    <line x1="176" y1="56" x2="200" y2="56" class="solid"></line>
+    <text x="322" y="44" >Register</text>
+    <text x="394" y="44" >10,000</text>
+    <text x="450" y="44" >FDs</text>
+    <text x="482" y="44" >once</text>
+    <text x="322" y="60" >Kernel</text>
+    <text x="378" y="60" >maintains</text>
+    <text x="458" y="60" >ready</text>
+    <text x="506" y="60" >list</text>
+    <text x="330" y="76" >epoll</text>
+    <line x1="368" y1="80" x2="376" y2="80" class="solid"></line>
+    <text x="378" y="76" >wait</text>
+    <text x="434" y="76" >returns</text>
+    <text x="498" y="76" >ONLY</text>
+    <text x="346" y="92" >the</text>
+    <text x="378" y="92" >FDs</text>
+    <text x="410" y="92" >that</text>
+    <text x="450" y="92" >are</text>
+    <text x="482" y="92" >ready</text>
+    <line x1="328" y1="104" x2="352" y2="104" class="solid"></line>
+    <text x="362" y="108" >O</text>
+    <path d="M 376,96 A 16,16 0,0,0 376,112" class="nofill"></path>
+    <text x="378" y="108" >ready</text>
+    <text x="426" y="108" >FDs</text>
+    <path d="M 448,96 A 16,16 0,0,1 448,112" class="nofill"></path>
+    <text x="458" y="108" >,</text>
+    <text x="474" y="108" >not</text>
+    <text x="506" y="108" >O</text>
+    <path d="M 520,96 A 16,16 0,0,0 520,112" class="nofill"></path>
+    <text x="522" y="108" >total</text>
+    <path d="M 560,96 A 16,16 0,0,1 560,112" class="nofill"></path>
+    <text x="210" y="60" >O</text>
+    <path d="M 224,48 A 16,16 0,0,0 224,64" class="nofill"></path>
+    <text x="226" y="60" >n</text>
+    <path d="M 232,48 A 16,16 0,0,1 232,64" class="nofill"></path>
+    <text x="34" y="108" >...</text>
+    <text x="34" y="60" >anything ready?</text>
+    <text x="34" y="76" >anything ready?</text>
+    <text x="34" y="92" >anything ready?</text>
+    <g>
+        <path d="M 416,64 A 16,16 0,0,0 416,80" class="nofill"></path>
+        <path d="M 416,64 A 16,16 0,0,1 416,80" class="nofill"></path>
+    </g>
+</svg>

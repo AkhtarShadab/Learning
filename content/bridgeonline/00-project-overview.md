@@ -57,52 +57,7 @@ If the declaring partnership takes at least as many tricks as they bid, they sco
 
 ## The Complete Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  BROWSER (Player's Machine)                                                 │
-│                                                                             │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │  Next.js React App                                                    │  │
-│  │  - Pages: Login, Register, Dashboard, Room Lobby, Game Table         │  │
-│  │  - Zustand state (local UI state)                                     │  │
-│  │  - Socket.io client (persistent WebSocket connection)                │  │
-│  │  - WebRTC connections (direct to other browsers, for voice)          │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────┬───────────────────────────────────────┘
-                                      │
-              ┌───────────────────────┼───────────────────────┐
-              │ HTTP (API requests)   │ WebSocket (game events)│ WebRTC (voice, direct)
-              ▼                       ▼                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  SERVER (Hostinger VPS / Vercel)                                            │
-│                                                                             │
-│  ┌──────────────────────┐   ┌──────────────────────────────────────────┐   │
-│  │  Next.js App Server  │   │  Socket.io Server                        │   │
-│  │  - Auth (NextAuth)   │   │  - Room management (join, seat, ready)   │   │
-│  │  - API routes        │   │  - Game events (bid, play card)          │   │
-│  │  - Page rendering    │   │  - Voice signaling relay (offer/answer)  │   │
-│  └──────────┬───────────┘   └─────────────────┬────────────────────────┘   │
-│             │                                  │                            │
-│             └───────────┬────────────────────┘                             │
-│                         │                                                   │
-│                         ▼                                                   │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  lib/game/  — Pure game logic (no I/O)                              │   │
-│  │    deck.ts · bidding.ts · playing.ts · scoring.ts · gameEngine.ts  │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-└──────────────┬──────────────────────────┬──────────────────────────────────┘
-               │                          │
-               ▼                          ▼
-┌──────────────────────┐    ┌──────────────────────────┐
-│  PostgreSQL          │    │  Redis                   │
-│  (permanent storage) │    │  (fast in-memory cache)  │
-│  - Users             │    │  - Session tokens        │
-│  - Game rooms        │    │  - Live game state       │
-│  - Players, moves    │    │  - Reconnect tokens      │
-│  - Game results      │    │  - Socket.io pub/sub     │
-└──────────────────────┘    └──────────────────────────┘
-```
+![00-project-overview diagram 1](assets/00-project-overview-1.svg)
 
 Every part of this diagram corresponds to a module in this learning series.
 
@@ -112,30 +67,7 @@ Every part of this diagram corresponds to a module in this learning series.
 
 Tracing a single action through the entire system is the clearest way to understand how everything connects.
 
-```
-1. Player clicks "Play Card" (Ace of Spades) in the browser
-   └─▶ React onClick handler fires
-       └─▶ Socket.io client emits: game:play_card { gameId, card: "AS", playerId }
-
-2. Socket.io server receives the event
-   └─▶ Handler calls: validatePlay(card, playerHand, currentTrick, trumpSuit)
-       ├─▶ [invalid] → socket.emit('error', { message: "Must follow suit" })
-       └─▶ [valid] →
-           ├─▶ Write card to Redis: HSET game:{gameId}:state currentTrick [...]
-           ├─▶ Write move to PostgreSQL: INSERT INTO game_moves (game_id, card, seq)
-           └─▶ Broadcast to all 4 players: io.to(gameId).emit('game:card_played', {
-                   card: "AS", playerId, seat: "NORTH"
-               })
-
-3. All four browsers receive game:card_played
-   └─▶ React state updates (via Zustand or useState)
-       └─▶ Component re-renders — the card appears on the table for all players
-
-4. Server checks: was that the 4th card in this trick?
-   └─▶ [yes] → call determineTrickWinner(trick, trumpSuit)
-       └─▶ Broadcast: game:trick_completed { winner: "NORTH", tricks: { NS: 5, EW: 3 } }
-           └─▶ All browsers update the score display
-```
+![00-project-overview diagram 2](assets/00-project-overview-2.svg)
 
 This whole round-trip — click to all-four-screens-updated — happens in under 100ms on a good connection.
 
@@ -143,56 +75,7 @@ This whole round-trip — click to all-four-screens-updated — happens in under
 
 ## Directory Structure Explained
 
-```
-BridgeOnline/
-│
-├── app/                    ← Next.js pages (URL routes)
-│   ├── page.tsx            ← Homepage (/)
-│   ├── login/              ← Login page (/login)
-│   ├── register/           ← Registration (/register)
-│   ├── dashboard/          ← User dashboard (/dashboard)
-│   ├── room/[roomId]/      ← Lobby for a game room (/room/abc123)
-│   ├── game/[gameId]/      ← Live game table (/game/xyz789)
-│   └── api/                ← HTTP API endpoints
-│       ├── auth/           ← NextAuth authentication
-│       ├── rooms/          ← Create room, join room
-│       └── games/          ← Game state, bids, card plays
-│
-├── lib/                    ← Shared business logic
-│   ├── game/               ← Pure game logic (NO side effects)
-│   │   ├── deck.ts         ← Card generation, shuffle, deal
-│   │   ├── bidding.ts      ← Bid validation, auction end detection
-│   │   ├── playing.ts      ← Card play rules, trick winner
-│   │   ├── scoring.ts      ← ACBL scoring formula
-│   │   ├── cardUtils.ts    ← Card string/object conversion
-│   │   └── gameEngine.ts   ← Vulnerability, dealer rotation
-│   ├── voice/              ← WebRTC connection management
-│   ├── hooks/              ← React hooks (useVoiceChat, etc.)
-│   └── constants/          ← Card ranks, suits, suit order
-│
-├── server/                 ← Socket.io server
-│   └── index.js            ← WebSocket server entrypoint
-│
-├── components/             ← React UI components
-│   ├── voice/              ← Voice chat UI (mute button, indicators)
-│   └── ...
-│
-├── prisma/                 ← Database schema and client
-│   └── schema.prisma       ← Single source of truth for all DB models
-│
-├── __tests__/              ← All tests (5 layers)
-│   ├── unit/               ← Pure function tests (no I/O)
-│   ├── db/                 ← Database integration tests
-│   ├── socket/             ← Socket.io integration tests
-│   ├── e2e/                ← Playwright browser tests
-│   └── helpers/            ← Shared test utilities
-│
-├── docs/                   ← Technical documentation
-│   ├── design-document.md  ← Architecture decisions
-│   └── testing-guide.md    ← How to run each test layer
-│
-└── learning/               ← This folder — developer learning guide
-```
+![00-project-overview diagram 3](assets/00-project-overview-3.svg)
 
 ---
 

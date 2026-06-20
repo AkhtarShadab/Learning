@@ -1,0 +1,273 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="808" height="352" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="808" height="352"></rect>
+    <text x="2" y="12" >#</text>
+    <line x1="16" y1="8" x2="32" y2="8" class="solid"></line>
+    <text x="42" y="12" >Get</text>
+    <path d="M 80,0 A 16,16 0,0,0 80,16" class="nofill"></path>
+    <text x="82" y="12" >list</text>
+    <text x="122" y="12" >resources</text>
+    <path d="M 192,0 A 16,16 0,0,1 192,16" class="nofill"></path>
+    <text x="2" y="28" >kubectl</text>
+    <text x="66" y="28" >get</text>
+    <text x="98" y="28" >pods</text>
+    <text x="2" y="44" >kubectl</text>
+    <text x="66" y="44" >get</text>
+    <text x="98" y="44" >pods</text>
+    <text x="2" y="60" >kubectl</text>
+    <text x="66" y="60" >get</text>
+    <text x="98" y="60" >pods</text>
+    <text x="2" y="76" >kubectl</text>
+    <text x="66" y="76" >get</text>
+    <text x="98" y="76" >pods</text>
+    <text x="2" y="92" >kubectl</text>
+    <text x="66" y="92" >get</text>
+    <text x="98" y="92" >pods</text>
+    <text x="2" y="108" >kubectl</text>
+    <text x="66" y="108" >get</text>
+    <text x="98" y="108" >pods</text>
+    <text x="2" y="124" >kubectl</text>
+    <text x="66" y="124" >get</text>
+    <text x="98" y="124" >pods</text>
+    <text x="2" y="140" >kubectl</text>
+    <text x="66" y="140" >get</text>
+    <text x="98" y="140" >all</text>
+    <text x="2" y="156" >kubectl</text>
+    <text x="66" y="156" >get</text>
+    <text x="98" y="156" >events</text>
+    <line x1="208" y1="8" x2="536" y2="8" class="solid"></line>
+    <rect x="328" y="20" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="332" y1="28" x2="332" y2="36" class="solid"></line>
+    <text x="346" y="28" >List</text>
+    <text x="386" y="28" >Pods</text>
+    <text x="426" y="28" >in</text>
+    <text x="450" y="28" >the</text>
+    <text x="482" y="28" >default</text>
+    <text x="546" y="28" >namespace</text>
+    <line x1="136" y1="40" x2="144" y2="40" class="solid"></line>
+    <text x="146" y="44" >n</text>
+    <rect x="328" y="36" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="332" y1="44" x2="332" y2="52" class="solid"></line>
+    <text x="346" y="44" >List</text>
+    <text x="386" y="44" >Pods</text>
+    <text x="426" y="44" >in</text>
+    <text x="450" y="44" >a</text>
+    <text x="466" y="44" >specific</text>
+    <text x="538" y="44" >namespace</text>
+    <line x1="136" y1="56" x2="144" y2="56" class="solid"></line>
+    <text x="146" y="60" >A</text>
+    <rect x="328" y="52" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="332" y1="60" x2="332" y2="68" class="solid"></line>
+    <text x="346" y="60" >List</text>
+    <text x="386" y="60" >Pods</text>
+    <text x="426" y="60" >across</text>
+    <text x="482" y="60" >ALL</text>
+    <text x="514" y="60" >namespaces</text>
+    <line x1="136" y1="72" x2="144" y2="72" class="solid"></line>
+    <circle cx="148" cy="72" r="3" class="nofill"></circle>
+    <text x="162" y="76" >wide</text>
+    <rect x="328" y="68" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="332" y1="76" x2="332" y2="84" class="solid"></line>
+    <text x="346" y="76" >Extended</text>
+    <text x="418" y="76" >output:</text>
+    <text x="482" y="76" >node</text>
+    <text x="522" y="76" >name,</text>
+    <text x="570" y="76" >IP</text>
+    <text x="594" y="76" >address</text>
+    <line x1="136" y1="88" x2="144" y2="88" class="solid"></line>
+    <circle cx="148" cy="88" r="3" class="nofill"></circle>
+    <text x="162" y="92" >yaml</text>
+    <rect x="328" y="84" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="332" y1="92" x2="332" y2="100" class="solid"></line>
+    <text x="346" y="92" >Full</text>
+    <text x="386" y="92" >YAML</text>
+    <text x="426" y="92" >output</text>
+    <path d="M 488,80 A 16,16 0,0,0 488,96" class="nofill"></path>
+    <text x="490" y="92" >useful</text>
+    <text x="546" y="92" >for</text>
+    <text x="578" y="92" >debugging</text>
+    <path d="M 648,80 A 16,16 0,0,1 648,96" class="nofill"></path>
+    <line x1="136" y1="104" x2="144" y2="104" class="solid"></line>
+    <text x="146" y="108" >l</text>
+    <text x="162" y="108" >app</text>
+    <line x1="184" y1="102" x2="192" y2="102" class="solid"></line>
+    <line x1="184" y1="106" x2="192" y2="106" class="solid"></line>
+    <text x="194" y="108" >api</text>
+    <line x1="216" y1="104" x2="224" y2="104" class="solid"></line>
+    <text x="226" y="108" >server</text>
+    <rect x="328" y="100" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="346" y="108" >Filter</text>
+    <text x="402" y="108" >by</text>
+    <text x="426" y="108" >label</text>
+    <text x="474" y="108" >selector</text>
+    <line x1="136" y1="120" x2="152" y2="120" class="solid"></line>
+    <text x="154" y="124" >field</text>
+    <line x1="192" y1="120" x2="200" y2="120" class="solid"></line>
+    <text x="202" y="124" >selector</text>
+    <line x1="264" y1="118" x2="272" y2="118" class="solid"></line>
+    <line x1="264" y1="122" x2="272" y2="122" class="solid"></line>
+    <text x="274" y="124" >status.phase</text>
+    <line x1="368" y1="118" x2="376" y2="118" class="solid"></line>
+    <line x1="368" y1="122" x2="376" y2="122" class="solid"></line>
+    <text x="378" y="124" >Running</text>
+    <text x="450" y="124" >#</text>
+    <text x="466" y="124" >Filter</text>
+    <text x="522" y="124" >by</text>
+    <text x="546" y="124" >field</text>
+    <text x="330" y="140" >#</text>
+    <text x="346" y="140" >List</text>
+    <text x="386" y="140" >common</text>
+    <text x="442" y="140" >resources</text>
+    <path d="M 528,128 A 16,16 0,0,0 528,144" class="nofill"></path>
+    <text x="530" y="140" >pods,</text>
+    <text x="578" y="140" >services,</text>
+    <text x="658" y="140" >deployments,</text>
+    <text x="762" y="140" >etc.</text>
+    <path d="M 792,128 A 16,16 0,0,1 792,144" class="nofill"></path>
+    <line x1="152" y1="152" x2="168" y2="152" class="solid"></line>
+    <text x="170" y="156" >sort</text>
+    <line x1="200" y1="152" x2="208" y2="152" class="solid"></line>
+    <text x="210" y="156" >by</text>
+    <line x1="224" y1="150" x2="232" y2="150" class="solid"></line>
+    <line x1="224" y1="154" x2="232" y2="154" class="solid"></line>
+    <text x="234" y="156" >.metadata.creationTimestamp</text>
+    <text x="466" y="156" >#</text>
+    <text x="482" y="156" >Recent</text>
+    <text x="538" y="156" >cluster</text>
+    <text x="602" y="156" >events,</text>
+    <text x="666" y="156" >sorted</text>
+    <text x="722" y="156" >by</text>
+    <text x="746" y="156" >time</text>
+    <text x="162" y="44" >kube</text>
+    <line x1="192" y1="40" x2="200" y2="40" class="solid"></line>
+    <text x="202" y="44" >system</text>
+    <text x="2" y="188" >#</text>
+    <line x1="16" y1="184" x2="32" y2="184" class="solid"></line>
+    <text x="42" y="188" >Describe</text>
+    <path d="M 120,176 A 16,16 0,0,0 120,192" class="nofill"></path>
+    <text x="122" y="188" >detailed</text>
+    <text x="194" y="188" >info</text>
+    <path d="M 224,176 A 16,16 0,0,1 224,192" class="nofill"></path>
+    <line x1="240" y1="184" x2="536" y2="184" class="solid"></line>
+    <text x="2" y="204" >kubectl</text>
+    <text x="66" y="204" >describe</text>
+    <text x="138" y="204" >pod</text>
+    <text x="170" y="204" >api</text>
+    <line x1="192" y1="200" x2="200" y2="200" class="solid"></line>
+    <text x="202" y="204" >server</text>
+    <line x1="248" y1="200" x2="256" y2="200" class="solid"></line>
+    <text x="258" y="204" >7d4f8b6c9f</text>
+    <line x1="336" y1="200" x2="344" y2="200" class="solid"></line>
+    <text x="346" y="204" >abc12</text>
+    <text x="410" y="204" >#</text>
+    <text x="426" y="204" >Detailed</text>
+    <text x="498" y="204" >Pod</text>
+    <text x="530" y="204" >info:</text>
+    <text x="578" y="204" >events,</text>
+    <text x="642" y="204" >conditions,</text>
+    <text x="738" y="204" >volumes</text>
+    <text x="2" y="220" >kubectl</text>
+    <text x="66" y="220" >describe</text>
+    <text x="138" y="220" >node</text>
+    <text x="178" y="220" >minikube</text>
+    <rect x="416" y="212" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="420" y1="220" x2="420" y2="228" class="solid"></line>
+    <text x="434" y="220" >Node</text>
+    <text x="474" y="220" >capacity,</text>
+    <text x="554" y="220" >allocatable,</text>
+    <text x="658" y="220" >conditions,</text>
+    <text x="754" y="220" >Pods</text>
+    <text x="2" y="236" >kubectl</text>
+    <text x="66" y="236" >describe</text>
+    <text x="138" y="236" >deployment</text>
+    <text x="226" y="236" >api</text>
+    <line x1="248" y1="232" x2="256" y2="232" class="solid"></line>
+    <text x="258" y="236" >server</text>
+    <rect x="416" y="228" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="420" y1="236" x2="420" y2="244" class="solid"></line>
+    <text x="434" y="236" >Deployment</text>
+    <text x="522" y="236" >strategy,</text>
+    <text x="602" y="236" >replicas,</text>
+    <text x="682" y="236" >events</text>
+    <text x="2" y="252" >kubectl</text>
+    <text x="66" y="252" >describe</text>
+    <text x="138" y="252" >service</text>
+    <text x="202" y="252" >api</text>
+    <line x1="224" y1="248" x2="232" y2="248" class="solid"></line>
+    <text x="234" y="252" >service</text>
+    <rect x="416" y="244" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="434" y="252" >Endpoints,</text>
+    <text x="522" y="252" >selector,</text>
+    <text x="602" y="252" >ports</text>
+    <text x="2" y="284" >#</text>
+    <line x1="16" y1="280" x2="32" y2="280" class="solid"></line>
+    <text x="42" y="284" >Resource</text>
+    <text x="114" y="284" >usage</text>
+    <text x="2" y="300" >kubectl</text>
+    <text x="66" y="300" >top</text>
+    <text x="98" y="300" >pods</text>
+    <text x="2" y="316" >kubectl</text>
+    <text x="66" y="316" >top</text>
+    <text x="98" y="316" >pods</text>
+    <text x="2" y="332" >kubectl</text>
+    <text x="66" y="332" >top</text>
+    <text x="98" y="332" >pods</text>
+    <line x1="160" y1="280" x2="544" y2="280" class="solid"></line>
+    <rect x="328" y="292" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="332" y1="300" x2="332" y2="308" class="solid"></line>
+    <text x="346" y="300" >CPU</text>
+    <text x="378" y="300" >and</text>
+    <text x="410" y="300" >memory</text>
+    <text x="466" y="300" >usage</text>
+    <text x="514" y="300" >per</text>
+    <text x="546" y="300" >Pod</text>
+    <rect x="328" y="308" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="332" y1="316" x2="332" y2="324" class="solid"></line>
+    <text x="346" y="316" >Sort</text>
+    <text x="386" y="316" >Pods</text>
+    <text x="426" y="316" >by</text>
+    <text x="450" y="316" >memory</text>
+    <text x="506" y="316" >consumption</text>
+    <rect x="328" y="324" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="346" y="332" >Resource</text>
+    <text x="418" y="332" >usage</text>
+    <text x="466" y="332" >for</text>
+    <text x="498" y="332" >specific</text>
+    <text x="570" y="332" >Pods</text>
+    <line x1="136" y1="312" x2="152" y2="312" class="solid"></line>
+    <text x="154" y="316" >sort</text>
+    <line x1="184" y1="312" x2="192" y2="312" class="solid"></line>
+    <text x="194" y="316" >by</text>
+    <line x1="208" y1="310" x2="216" y2="310" class="solid"></line>
+    <line x1="208" y1="314" x2="216" y2="314" class="solid"></line>
+    <text x="218" y="316" >memory</text>
+    <line x1="136" y1="328" x2="144" y2="328" class="solid"></line>
+    <text x="146" y="332" >l</text>
+    <text x="162" y="332" >app</text>
+    <line x1="184" y1="326" x2="192" y2="326" class="solid"></line>
+    <line x1="184" y1="330" x2="192" y2="330" class="solid"></line>
+    <text x="194" y="332" >api</text>
+    <line x1="216" y1="328" x2="224" y2="328" class="solid"></line>
+    <text x="226" y="332" >server</text>
+</svg>

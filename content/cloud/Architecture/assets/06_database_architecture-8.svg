@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="96" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="384" height="96"></rect>
+    <text x="2" y="12" >Application</text>
+    <text x="130" y="12" >DA</text>
+    <line x1="148" y1="8" x2="148" y2="32" class="solid"></line>
+    <text x="138" y="44" >HIT:</text>
+    <line x1="176" y1="40" x2="184" y2="40" class="broken"></line>
+    <text x="138" y="60" >MISS:</text>
+    <text x="186" y="60" >DAX</text>
+    <text x="218" y="60" >reads</text>
+    <text x="266" y="60" >from</text>
+    <text x="186" y="76" >caches</text>
+    <text x="242" y="76" >result,</text>
+    <text x="162" y="12" >Cluster</text>
+    <text x="258" y="12" >DynamoDB</text>
+    <text x="90" y="44" >Cache</text>
+    <text x="90" y="60" >Cache</text>
+    <text x="306" y="60" >DynamoDB,</text>
+    <text x="306" y="76" >returns</text>
+    <g>
+        <line x1="96" y1="8" x2="112" y2="8" class="solid"></line>
+        <polygon points="112,4 120,8 112,12" class="filled"></polygon>
+    </g>
+    <g>
+        <text x="186" y="44">200μ</text>
+        <text x="218" y="44">s</text>
+    </g>
+    <g>
+        <line x1="224" y1="8" x2="240" y2="8" class="solid"></line>
+        <polygon points="240,4 248,8 240,12" class="filled"></polygon>
+    </g>
+</svg>

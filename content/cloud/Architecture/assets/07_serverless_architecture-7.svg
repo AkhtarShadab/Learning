@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="424" height="64" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="424" height="64"></rect>
+    <text x="2" y="12" >SQS</text>
+    <text x="34" y="12" >Queue</text>
+    <text x="130" y="12" >Lambda</text>
+    <path d="M 192,0 A 16,16 0,0,0 192,16" class="nofill"></path>
+    <text x="194" y="12" >polls</text>
+    <text x="242" y="12" >every</text>
+    <line x1="288" y1="8" x2="296" y2="8" class="broken"></line>
+    <text x="298" y="12" >1s</text>
+    <path d="M 312,0 A 16,16 0,0,1 312,16" class="nofill"></path>
+    <text x="2" y="28" >DynamoDB</text>
+    <text x="74" y="28" >Stream</text>
+    <text x="178" y="28" >Lambda</text>
+    <path d="M 240,16 A 16,16 0,0,0 240,32" class="nofill"></path>
+    <text x="242" y="28" >polls</text>
+    <text x="290" y="28" >for</text>
+    <text x="322" y="28" >new</text>
+    <text x="2" y="44" >Kinesis</text>
+    <text x="66" y="44" >Stream</text>
+    <text x="170" y="44" >Lambda</text>
+    <path d="M 232,32 A 16,16 0,0,0 232,48" class="nofill"></path>
+    <text x="234" y="44" >polls</text>
+    <text x="282" y="44" >shards</text>
+    <path d="M 328,32 A 16,16 0,0,1 328,48" class="nofill"></path>
+    <text x="354" y="28" >records</text>
+    <path d="M 408,16 A 16,16 0,0,1 408,32" class="nofill"></path>
+    <g>
+        <polygon points="88,4 80,8 88,12" class="filled"></polygon>
+        <line x1="88" y1="8" x2="120" y2="8" class="solid"></line>
+    </g>
+    <g>
+        <polygon points="136,20 128,24 136,28" class="filled"></polygon>
+        <line x1="136" y1="24" x2="168" y2="24" class="solid"></line>
+    </g>
+    <g>
+        <polygon points="128,36 120,40 128,44" class="filled"></polygon>
+        <line x1="128" y1="40" x2="160" y2="40" class="solid"></line>
+    </g>
+</svg>

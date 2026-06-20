@@ -1,0 +1,308 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="696" height="800" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="696" height="800"></rect>
+    <rect x="0" y="4" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="12" x2="4" y2="20" class="solid"></line>
+    <line x1="16" y1="8" x2="32" y2="8" class="solid"></line>
+    <text x="42" y="12" >START</text>
+    <line x1="88" y1="8" x2="480" y2="8" class="solid"></line>
+    <rect x="0" y="20" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="28" x2="4" y2="36" class="solid"></line>
+    <text x="18" y="28" >Build</text>
+    <text x="66" y="28" >images</text>
+    <path d="M 128,16 A 16,16 0,0,0 128,32" class="nofill"></path>
+    <text x="130" y="28" >if</text>
+    <text x="154" y="28" >needed</text>
+    <path d="M 200,16 A 16,16 0,0,1 200,32" class="nofill"></path>
+    <text x="218" y="28" >and</text>
+    <text x="250" y="28" >start</text>
+    <text x="298" y="28" >all</text>
+    <text x="330" y="28" >services</text>
+    <text x="402" y="28" >in</text>
+    <text x="426" y="28" >detached</text>
+    <text x="498" y="28" >mode.</text>
+    <rect x="0" y="36" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="44" >Docker</text>
+    <text x="74" y="44" >Compose</text>
+    <text x="138" y="44" >reads</text>
+    <text x="186" y="44" >docker</text>
+    <line x1="232" y1="40" x2="240" y2="40" class="solid"></line>
+    <text x="242" y="44" >compose.yml</text>
+    <path d="M 344,32 A 16,16 0,0,0 344,48" class="nofill"></path>
+    <text x="346" y="44" >or</text>
+    <text x="370" y="44" >compose.yml</text>
+    <path d="M 456,32 A 16,16 0,0,1 456,48" class="nofill"></path>
+    <text x="474" y="44" >from</text>
+    <text x="514" y="44" >the</text>
+    <text x="2" y="60" >docker</text>
+    <text x="58" y="60" >compose</text>
+    <text x="122" y="60" >up</text>
+    <line x1="144" y1="56" x2="152" y2="56" class="solid"></line>
+    <text x="154" y="60" >d</text>
+    <text x="546" y="44" >current</text>
+    <text x="610" y="44" >directory.</text>
+    <text x="2" y="92" >#</text>
+    <text x="18" y="92" >Build</text>
+    <text x="66" y="92" >images</text>
+    <text x="2" y="108" >docker</text>
+    <text x="58" y="108" >compose</text>
+    <text x="122" y="92" >without</text>
+    <text x="186" y="92" >using</text>
+    <text x="234" y="92" >cache</text>
+    <text x="122" y="108" >build</text>
+    <line x1="168" y1="104" x2="184" y2="104" class="solid"></line>
+    <text x="186" y="108" >n</text>
+    <circle cx="196" cy="104" r="3" class="nofill"></circle>
+    <line x1="200" y1="104" x2="208" y2="104" class="solid"></line>
+    <text x="210" y="108" >cache</text>
+    <path d="M 288,80 A 16,16 0,0,0 288,96" class="nofill"></path>
+    <text x="290" y="92" >force</text>
+    <text x="338" y="92" >a</text>
+    <text x="354" y="92" >fresh</text>
+    <text x="402" y="92" >build</text>
+    <path d="M 440,80 A 16,16 0,0,1 440,96" class="nofill"></path>
+    <text x="450" y="92" >:</text>
+    <text x="2" y="140" >#</text>
+    <text x="18" y="140" >Start</text>
+    <text x="66" y="140" >only</text>
+    <text x="106" y="140" >specific</text>
+    <text x="178" y="140" >services:</text>
+    <text x="2" y="156" >docker</text>
+    <text x="58" y="156" >compose</text>
+    <text x="122" y="156" >up</text>
+    <line x1="144" y1="152" x2="152" y2="152" class="solid"></line>
+    <text x="154" y="156" >d</text>
+    <text x="170" y="156" >api</text>
+    <text x="202" y="156" >db</text>
+    <rect x="0" y="180" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="188" x2="4" y2="196" class="solid"></line>
+    <line x1="16" y1="184" x2="32" y2="184" class="solid"></line>
+    <text x="42" y="188" >LOGS</text>
+    <line x1="80" y1="184" x2="480" y2="184" class="solid"></line>
+    <rect x="0" y="196" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="204" >Follow</text>
+    <text x="74" y="204" >logs</text>
+    <text x="114" y="204" >from</text>
+    <text x="154" y="204" >a</text>
+    <text x="170" y="204" >specific</text>
+    <text x="242" y="204" >service:</text>
+    <text x="2" y="220" >docker</text>
+    <text x="58" y="220" >compose</text>
+    <text x="122" y="220" >logs</text>
+    <line x1="160" y1="216" x2="168" y2="216" class="solid"></line>
+    <text x="170" y="220" >f</text>
+    <text x="186" y="220" >api</text>
+    <text x="2" y="252" >#</text>
+    <text x="18" y="252" >Follow</text>
+    <text x="74" y="252" >logs</text>
+    <text x="114" y="252" >from</text>
+    <text x="154" y="252" >all</text>
+    <text x="2" y="268" >docker</text>
+    <text x="58" y="268" >compose</text>
+    <text x="122" y="268" >logs</text>
+    <line x1="160" y1="264" x2="168" y2="264" class="solid"></line>
+    <text x="170" y="268" >f</text>
+    <text x="186" y="252" >services,</text>
+    <text x="266" y="252" >with</text>
+    <line x1="184" y1="264" x2="200" y2="264" class="solid"></line>
+    <text x="202" y="268" >timestamps</text>
+    <text x="306" y="252" >timestamps:</text>
+    <rect x="0" y="292" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="300" x2="4" y2="308" class="solid"></line>
+    <line x1="16" y1="296" x2="32" y2="296" class="solid"></line>
+    <text x="42" y="300" >STATUS</text>
+    <line x1="96" y1="296" x2="480" y2="296" class="solid"></line>
+    <rect x="0" y="308" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="316" >List</text>
+    <text x="58" y="316" >running</text>
+    <text x="122" y="316" >services</text>
+    <text x="194" y="316" >and</text>
+    <text x="226" y="316" >their</text>
+    <text x="274" y="316" >status:</text>
+    <text x="2" y="332" >docker</text>
+    <text x="58" y="332" >compose</text>
+    <text x="122" y="332" >ps</text>
+    <rect x="0" y="356" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="364" x2="4" y2="372" class="solid"></line>
+    <line x1="16" y1="360" x2="32" y2="360" class="solid"></line>
+    <text x="42" y="364" >EXEC</text>
+    <line x1="80" y1="360" x2="480" y2="360" class="solid"></line>
+    <rect x="0" y="372" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="380" >Open</text>
+    <text x="58" y="380" >a</text>
+    <text x="74" y="380" >shell</text>
+    <text x="122" y="380" >in</text>
+    <text x="146" y="380" >the</text>
+    <text x="178" y="380" >running</text>
+    <text x="242" y="380" >API</text>
+    <text x="274" y="380" >container:</text>
+    <text x="2" y="396" >docker</text>
+    <text x="58" y="396" >compose</text>
+    <text x="122" y="396" >exec</text>
+    <text x="162" y="396" >api</text>
+    <text x="194" y="396" >sh</text>
+    <text x="2" y="428" >#</text>
+    <text x="18" y="428" >Run</text>
+    <text x="50" y="428" >a</text>
+    <text x="66" y="428" >one</text>
+    <line x1="88" y1="424" x2="96" y2="424" class="solid"></line>
+    <circle cx="100" cy="424" r="3" class="nofill"></circle>
+    <text x="106" y="428" >ff</text>
+    <text x="130" y="428" >command</text>
+    <text x="2" y="444" >docker</text>
+    <text x="58" y="444" >compose</text>
+    <text x="122" y="444" >exec</text>
+    <text x="162" y="444" >api</text>
+    <path d="M 200,416 A 16,16 0,0,0 200,432" class="nofill"></path>
+    <text x="202" y="428" >e.g.,</text>
+    <text x="250" y="428" >database</text>
+    <text x="194" y="444" >npm</text>
+    <text x="226" y="444" >run</text>
+    <text x="258" y="444" >migrate</text>
+    <text x="322" y="428" >migration</text>
+    <path d="M 392,416 A 16,16 0,0,1 392,432" class="nofill"></path>
+    <text x="402" y="428" >:</text>
+    <text x="2" y="476" >#</text>
+    <text x="18" y="476" >Run</text>
+    <text x="50" y="476" >a</text>
+    <text x="66" y="476" >one</text>
+    <line x1="88" y1="472" x2="96" y2="472" class="solid"></line>
+    <circle cx="100" cy="472" r="3" class="nofill"></circle>
+    <text x="106" y="476" >ff</text>
+    <text x="130" y="476" >container</text>
+    <text x="210" y="476" >that</text>
+    <text x="250" y="476" >exits</text>
+    <text x="2" y="492" >docker</text>
+    <text x="58" y="492" >compose</text>
+    <text x="122" y="492" >run</text>
+    <line x1="152" y1="488" x2="168" y2="488" class="solid"></line>
+    <text x="170" y="492" >rm</text>
+    <text x="194" y="492" >api</text>
+    <text x="226" y="492" >npm</text>
+    <text x="258" y="492" >test</text>
+    <text x="298" y="476" >after</text>
+    <text x="346" y="476" >the</text>
+    <text x="378" y="476" >command:</text>
+    <rect x="0" y="516" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="524" x2="4" y2="532" class="solid"></line>
+    <line x1="16" y1="520" x2="32" y2="520" class="solid"></line>
+    <text x="42" y="524" >SCALE</text>
+    <line x1="88" y1="520" x2="480" y2="520" class="solid"></line>
+    <rect x="0" y="532" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="540" >Run</text>
+    <text x="50" y="540" >3</text>
+    <text x="66" y="540" >instances</text>
+    <text x="146" y="540" >of</text>
+    <text x="170" y="540" >the</text>
+    <text x="202" y="540" >API</text>
+    <text x="234" y="540" >service</text>
+    <path d="M 304,528 A 16,16 0,0,0 304,544" class="nofill"></path>
+    <text x="306" y="540" >requires</text>
+    <text x="378" y="540" >removing</text>
+    <text x="450" y="540" >&#39;container</text>
+    <line x1="528" y1="544" x2="536" y2="544" class="solid"></line>
+    <text x="538" y="540" >name&#39;</text>
+    <path d="M 576,528 A 16,16 0,0,1 576,544" class="nofill"></path>
+    <text x="586" y="540" >:</text>
+    <text x="2" y="556" >docker</text>
+    <text x="58" y="556" >compose</text>
+    <text x="122" y="556" >up</text>
+    <line x1="144" y1="552" x2="152" y2="552" class="solid"></line>
+    <text x="154" y="556" >d</text>
+    <line x1="168" y1="552" x2="184" y2="552" class="solid"></line>
+    <text x="186" y="556" >scale</text>
+    <text x="234" y="556" >api</text>
+    <line x1="256" y1="550" x2="264" y2="550" class="solid"></line>
+    <line x1="256" y1="554" x2="264" y2="554" class="solid"></line>
+    <text x="266" y="556" >3</text>
+    <rect x="0" y="580" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="588" x2="4" y2="596" class="solid"></line>
+    <line x1="16" y1="584" x2="32" y2="584" class="solid"></line>
+    <text x="42" y="588" >STOP</text>
+    <text x="82" y="588" >&amp;</text>
+    <text x="98" y="588" >CLEANUP</text>
+    <line x1="160" y1="584" x2="472" y2="584" class="solid"></line>
+    <rect x="0" y="596" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="604" x2="4" y2="612" class="solid"></line>
+    <text x="18" y="604" >Stop</text>
+    <text x="58" y="604" >and</text>
+    <text x="90" y="604" >remove</text>
+    <text x="146" y="604" >all</text>
+    <text x="178" y="604" >containers,</text>
+    <text x="274" y="604" >networks</text>
+    <text x="346" y="604" >created</text>
+    <text x="410" y="604" >by</text>
+    <text x="434" y="604" >Compose.</text>
+    <rect x="0" y="612" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="16" y1="616" x2="24" y2="616" class="solid"></line>
+    <text x="26" y="620" >v</text>
+    <text x="42" y="620" >flag</text>
+    <text x="82" y="620" >also</text>
+    <text x="122" y="620" >removes</text>
+    <text x="186" y="620" >named</text>
+    <text x="234" y="620" >volumes</text>
+    <path d="M 304,608 A 16,16 0,0,0 304,624" class="nofill"></path>
+    <text x="306" y="620" >WARNING:</text>
+    <text x="378" y="620" >deletes</text>
+    <text x="442" y="620" >data</text>
+    <path d="M 472,608 A 16,16 0,0,1 472,624" class="nofill"></path>
+    <text x="482" y="620" >.</text>
+    <text x="2" y="636" >docker</text>
+    <text x="58" y="636" >compose</text>
+    <text x="122" y="636" >down</text>
+    <text x="2" y="668" >#</text>
+    <text x="18" y="668" >Stop</text>
+    <text x="2" y="684" >docker</text>
+    <text x="58" y="668" >and</text>
+    <text x="90" y="668" >remove</text>
+    <text x="146" y="668" >everything</text>
+    <text x="58" y="684" >compose</text>
+    <text x="122" y="684" >down</text>
+    <line x1="160" y1="680" x2="168" y2="680" class="solid"></line>
+    <text x="170" y="684" >v</text>
+    <text x="234" y="668" >including</text>
+    <text x="314" y="668" >volumes:</text>
+    <text x="2" y="716" >#</text>
+    <text x="18" y="716" >Stop</text>
+    <text x="2" y="732" >docker</text>
+    <text x="58" y="716" >without</text>
+    <text x="58" y="732" >compose</text>
+    <text x="122" y="716" >removing</text>
+    <text x="122" y="732" >stop</text>
+    <path d="M 200,704 A 16,16 0,0,0 200,720" class="nofill"></path>
+    <text x="202" y="716" >containers</text>
+    <text x="290" y="716" >can</text>
+    <text x="322" y="716" >be</text>
+    <text x="346" y="716" >restarted</text>
+    <text x="426" y="716" >later</text>
+    <path d="M 464,704 A 16,16 0,0,1 464,720" class="nofill"></path>
+    <text x="474" y="716" >:</text>
+    <text x="2" y="764" >#</text>
+    <text x="18" y="764" >Restart</text>
+    <text x="82" y="764" >all</text>
+    <text x="114" y="764" >services:</text>
+    <text x="2" y="780" >docker</text>
+    <text x="58" y="780" >compose</text>
+    <text x="122" y="780" >restart</text>
+</svg>

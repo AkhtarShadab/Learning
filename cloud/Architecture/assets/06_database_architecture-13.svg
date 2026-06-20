@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="488" height="144" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="488" height="144"></rect>
+    <text x="2" y="12" >Source</text>
+    <text x="58" y="12" >DB</text>
+    <path d="M 24,16 A 16,16 0,0,0 24,32" class="nofill"></path>
+    <text x="26" y="28" >on</text>
+    <line x1="40" y1="24" x2="48" y2="24" class="solid"></line>
+    <text x="50" y="28" >prem</text>
+    <text x="26" y="44" >or</text>
+    <text x="50" y="44" >cloud</text>
+    <path d="M 88,32 A 16,16 0,0,1 88,48" class="nofill"></path>
+    <text x="114" y="12" >DMS</text>
+    <text x="146" y="12" >Replication</text>
+    <path d="M 136,16 A 16,16 0,0,0 136,32" class="nofill"></path>
+    <text x="138" y="28" >runs</text>
+    <text x="178" y="28" >in</text>
+    <text x="202" y="28" >your</text>
+    <text x="138" y="44" >performs</text>
+    <text x="210" y="44" >ETL</text>
+    <text x="242" y="12" >Instance</text>
+    <text x="242" y="28" >VPC,</text>
+    <text x="242" y="44" >if</text>
+    <text x="266" y="44" >needed</text>
+    <path d="M 312,32 A 16,16 0,0,1 312,48" class="nofill"></path>
+    <text x="346" y="12" >Target</text>
+    <text x="402" y="12" >DB</text>
+    <path d="M 352,16 A 16,16 0,0,0 352,32" class="nofill"></path>
+    <text x="354" y="28" >RDS,</text>
+    <text x="394" y="28" >Aurora,</text>
+    <text x="362" y="44" >DynamoDB,</text>
+    <text x="442" y="44" >S3</text>
+    <path d="M 456,32 A 16,16 0,0,1 456,48" class="nofill"></path>
+    <text x="2" y="76" >Migration</text>
+    <text x="82" y="76" >phases:</text>
+    <text x="2" y="92" >1.</text>
+    <text x="26" y="92" >Full</text>
+    <text x="66" y="92" >load:</text>
+    <text x="114" y="92" >Initial</text>
+    <text x="178" y="92" >bulk</text>
+    <text x="218" y="92" >data</text>
+    <text x="258" y="92" >copy</text>
+    <text x="2" y="108" >2.</text>
+    <text x="26" y="108" >Change</text>
+    <text x="82" y="108" >Data</text>
+    <text x="122" y="108" >Capture</text>
+    <path d="M 192,96 A 16,16 0,0,0 192,112" class="nofill"></path>
+    <text x="194" y="108" >CDC</text>
+    <path d="M 216,96 A 16,16 0,0,1 216,112" class="nofill"></path>
+    <text x="226" y="108" >:</text>
+    <text x="242" y="108" >Ongoing</text>
+    <text x="306" y="108" >replication</text>
+    <text x="402" y="108" >of</text>
+    <text x="2" y="124" >3.</text>
+    <text x="26" y="124" >Cutover:</text>
+    <text x="98" y="124" >Switch</text>
+    <text x="154" y="124" >applicati</text>
+    <line x1="228" y1="112" x2="228" y2="116" class="solid"></line>
+    <circle cx="228" cy="120" r="3" class="nofill"></circle>
+    <text x="234" y="124" >n</text>
+    <text x="250" y="124" >to</text>
+    <text x="274" y="124" >target</text>
+    <text x="330" y="124" >when</text>
+    <text x="370" y="124" >caught</text>
+    <text x="426" y="108" >changes</text>
+    <text x="426" y="124" >up</text>
+    <g>
+        <line x1="80" y1="8" x2="96" y2="8" class="solid"></line>
+        <polygon points="96,4 104,8 96,12" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="312" y1="8" x2="328" y2="8" class="solid"></line>
+        <polygon points="328,4 336,8 328,12" class="filled"></polygon>
+    </g>
+</svg>

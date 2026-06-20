@@ -19,27 +19,7 @@ strategies, and decision frameworks.
 
 ## Storage Type Overview
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                   CLOUD STORAGE TYPES                    │
-├──────────────┬──────────────────┬─────────────────────── ┤
-│  BLOCK       │  FILE            │  OBJECT                │
-│  (EBS)       │  (EFS, FSx)      │  (S3)                  │
-│              │                  │                        │
-│  ┌────────┐  │  ┌────────────┐  │  ┌────────────┐        │
-│  │ Volume │  │  │ Shared FS  │  │  │  Bucket    │        │
-│  │ ┌────┐ │  │  │ ┌────┐    │  │  │ ┌────────┐ │        │
-│  │ │Blk │ │  │  │ │File│    │  │  │ │ Object │ │        │
-│  │ │Blk │ │  │  │ │File│    │  │  │ │ Object │ │        │
-│  │ │Blk │ │  │  │ │Dir/│    │  │  │ │ Object │ │        │
-│  │ └────┘ │  │  │ └────┘    │  │  │ └────────┘ │        │
-│  └────────┘  │  └────────────┘  │  └────────────┘        │
-│              │                  │                        │
-│  Attached to │  Mounted by many │  Accessed via HTTP     │
-│  one instance│  instances       │  API (PUT/GET/DELETE)  │
-│  (like a HD) │  (like NFS)      │  (like a key-value)    │
-└──────────────┴──────────────────┴────────────────────────┘
-```
+![03_storage_architecture diagram 1](assets/03_storage_architecture-1.svg)
 
 ---
 
@@ -96,17 +76,7 @@ for clustered databases).
 Snapshots are incremental backups stored in S3 (managed by AWS, not visible in your
 S3 buckets). Only changed blocks since the last snapshot are stored.
 
-```
-Time 0: Full snapshot         Time 1: Incremental        Time 2: Incremental
-┌──────────────┐              ┌──────────────┐           ┌──────────────┐
-│ Block A ─────│──────────►   │ (unchanged)  │           │ Block A' ────│──►
-│ Block B ─────│──────────►   │ Block B' ────│──────►    │ (unchanged)  │
-│ Block C ─────│──────────►   │ (unchanged)  │           │ (unchanged)  │
-│ Block D ─────│──────────►   │ Block D' ────│──────►    │ (unchanged)  │
-└──────────────┘              └──────────────┘           └──────────────┘
-
-Each snapshot is independently restorable (AWS manages block references)
-```
+![03_storage_architecture diagram 2](assets/03_storage_architecture-2.svg)
 
 ```bash
 # Create a snapshot
@@ -153,16 +123,7 @@ aws ec2 modify-ebs-default-kms-key-id \
 S3 is not a file system. It is a flat key-value object store. The "folders" you see
 in the console are a UI convention based on the `/` delimiter in keys.
 
-```
-Bucket: my-application-data
-│
-├── Key: images/profile/user123.jpg     →  Object (binary + metadata)
-├── Key: images/profile/user456.jpg     →  Object
-├── Key: logs/2024/01/15/access.log.gz  →  Object
-└── Key: config/app.json                →  Object
-
-There is no "images" directory. The prefix "images/" is just part of the key string.
-```
+![03_storage_architecture diagram 3](assets/03_storage_architecture-3.svg)
 
 Internally, S3 stores each object across a minimum of three Availability Zones within
 a region. The data is written synchronously to all AZs before S3 returns a success
@@ -204,12 +165,7 @@ Automate object transitions between storage classes based on age:
 }
 ```
 
-```
-Day 0        Day 30           Day 90              Day 365         Day 2555
-  │            │                │                   │                │
-  ▼            ▼                ▼                   ▼                ▼
-Standard ──► Standard-IA ──► Glacier Instant ──► Deep Archive ──► DELETE
-```
+![03_storage_architecture diagram 4](assets/03_storage_architecture-4.svg)
 
 ### S3 Versioning
 
@@ -286,12 +242,7 @@ from browsers (presigned POST), sharing temporary links to objects.
 
 S3 can trigger actions when objects are created, deleted, or restored:
 
-```
-S3 Bucket ──► Event ──► Lambda Function
-                   ──► SQS Queue
-                   ──► SNS Topic
-                   ──► EventBridge
-```
+![03_storage_architecture diagram 5](assets/03_storage_architecture-5.svg)
 
 ```bash
 # Configure event notification to trigger Lambda on object creation
@@ -338,30 +289,7 @@ as you add and remove files -- no provisioning required.
 
 ### EFS Architecture
 
-```
-                    Region: us-east-1
-┌────────────────────────────────────────────────┐
-│                                                │
-│   AZ-a                AZ-b                     │
-│   ┌────────────┐      ┌────────────┐           │
-│   │ Mount      │      │ Mount      │           │
-│   │ Target     │      │ Target     │           │
-│   │ (ENI)      │      │ (ENI)      │           │
-│   └─────┬──────┘      └─────┬──────┘           │
-│         │                   │                  │
-│         │   ┌───────────────┤                  │
-│         │   │   EFS File System                │
-│         │   │   (distributed storage           │
-│         │   │    across all AZs)               │
-│         │   └───────────────┤                  │
-│         │                   │                  │
-│   ┌─────┴──────┐      ┌────┴───────┐          │
-│   │ EC2 inst.  │      │ EC2 inst.  │          │
-│   │ (mount via │      │ (mount via │          │
-│   │  NFS 4.1)  │      │  NFS 4.1)  │          │
-│   └────────────┘      └────────────┘          │
-└────────────────────────────────────────────────┘
-```
+![03_storage_architecture diagram 6](assets/03_storage_architecture-6.svg)
 
 ### EFS Performance Modes
 
@@ -412,17 +340,7 @@ data lives cheaply in S3, and Lustre provides fast parallel access during traini
 
 Storage Gateway bridges on-premises storage and AWS cloud storage:
 
-```
-On-Premises                              AWS Cloud
-┌──────────────────┐                ┌──────────────────┐
-│  Applications    │                │                  │
-│       │          │                │  S3 / S3 Glacier │
-│       ▼          │                │  EBS Snapshots   │
-│  Storage Gateway │◄──────────────►│  FSx             │
-│  (VM or HW)      │   Encrypted   │                  │
-│                  │   over SSL    │                  │
-└──────────────────┘                └──────────────────┘
-```
+![03_storage_architecture diagram 7](assets/03_storage_architecture-7.svg)
 
 Three modes:
 - **S3 File Gateway**: NFS/SMB interface backed by S3
@@ -433,28 +351,7 @@ Three modes:
 
 ## Storage Decision Matrix
 
-```
-What kind of data?
-│
-├── Structured, needs POSIX filesystem semantics
-│   ├── Single instance attachment ──► EBS (gp3 or io2)
-│   ├── Shared across Linux instances ──► EFS
-│   ├── Shared across Windows instances ──► FSx for Windows
-│   └── High-performance parallel I/O ──► FSx for Lustre
-│
-├── Unstructured (images, videos, logs, backups, data lake)
-│   └── S3 (choose storage class based on access pattern)
-│
-├── Database storage
-│   ├── Boot volume / single-instance DB ──► EBS (gp3)
-│   ├── High-IOPS DB (Oracle, SQL Server) ──► EBS (io2 Block Express)
-│   └── Managed DB ──► Let RDS/Aurora manage storage for you
-│
-└── Archive / compliance retention
-    ├── Access within milliseconds ──► S3 Glacier Instant Retrieval
-    ├── Access within minutes/hours ──► S3 Glacier Flexible
-    └── Access rarely (compliance) ──► S3 Glacier Deep Archive
-```
+![03_storage_architecture diagram 8](assets/03_storage_architecture-8.svg)
 
 ---
 

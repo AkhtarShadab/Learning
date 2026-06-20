@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="392" height="128" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="392" height="128"></rect>
+    <text x="2" y="12" >Node</text>
+    <path d="M 48,0 A 16,16 0,0,0 48,16" class="nofill"></path>
+    <text x="50" y="12" >EC2</text>
+    <text x="82" y="12" >instance</text>
+    <path d="M 144,0 A 16,16 0,0,1 144,16" class="nofill"></path>
+    <text x="154" y="12" >:</text>
+    <text x="34" y="28" >Pod</text>
+    <text x="66" y="28" >A</text>
+    <line x1="76" y1="16" x2="76" y2="64" class="broken"></line>
+    <text x="90" y="28" >10.0.1.11</text>
+    <text x="34" y="44" >Pod</text>
+    <text x="66" y="44" >B</text>
+    <text x="90" y="44" >10.0.1.12</text>
+    <text x="34" y="60" >Pod</text>
+    <text x="66" y="60" >C</text>
+    <text x="90" y="60" >10.0.1.13</text>
+    <text x="170" y="12" >10.0.1.10</text>
+    <text x="178" y="28" >secondary</text>
+    <text x="178" y="44" >secondary</text>
+    <text x="178" y="60" >secondary</text>
+    <text x="258" y="28" >IP</text>
+    <text x="258" y="44" >IP</text>
+    <text x="258" y="60" >IP</text>
+    <text x="282" y="28" >on</text>
+    <text x="282" y="44" >on</text>
+    <text x="282" y="60" >on</text>
+    <text x="306" y="28" >ENI</text>
+    <text x="306" y="44" >ENI</text>
+    <text x="306" y="60" >ENI</text>
+    <text x="2" y="92" >Pods</text>
+    <text x="42" y="92" >communicate</text>
+    <text x="138" y="92" >directly</text>
+    <text x="210" y="92" >using</text>
+    <text x="258" y="92" >VPC</text>
+    <text x="290" y="92" >networking.</text>
+    <text x="2" y="108" >Security</text>
+    <text x="74" y="108" >groups</text>
+    <text x="130" y="108" >can</text>
+    <text x="162" y="108" >be</text>
+    <text x="186" y="108" >applied</text>
+    <text x="250" y="108" >at</text>
+    <text x="274" y="108" >the</text>
+    <text x="306" y="108" >pod</text>
+    <text x="338" y="108" >level.</text>
+    <g>
+        <line x1="4" y1="16" x2="4" y2="56" class="solid"></line>
+        <line x1="4" y1="24" x2="24" y2="24" class="solid"></line>
+        <line x1="4" y1="40" x2="24" y2="40" class="solid"></line>
+        <line x1="4" y1="56" x2="24" y2="56" class="solid"></line>
+    </g>
+    <g>
+        <path d="M 176,16 A 16,16 0,0,0 176,32" class="nofill"></path>
+        <path d="M 176,32 A 16,16 0,0,0 176,48" class="nofill"></path>
+        <path d="M 176,48 A 16,16 0,0,0 176,64" class="nofill"></path>
+    </g>
+    <g>
+        <path d="M 328,16 A 16,16 0,0,1 328,32" class="nofill"></path>
+        <path d="M 328,32 A 16,16 0,0,1 328,48" class="nofill"></path>
+        <path d="M 328,48 A 16,16 0,0,1 328,64" class="nofill"></path>
+    </g>
+</svg>

@@ -1,0 +1,419 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="728" height="1008" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="728" height="1008"></rect>
+    <rect x="0" y="4" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="12" x2="4" y2="20" class="solid"></line>
+    <line x1="16" y1="8" x2="32" y2="8" class="solid"></line>
+    <text x="42" y="12" >CREATE</text>
+    <line x1="96" y1="8" x2="480" y2="8" class="solid"></line>
+    <rect x="0" y="20" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="28" x2="4" y2="36" class="solid"></line>
+    <text x="18" y="28" >Create</text>
+    <text x="74" y="28" >a</text>
+    <text x="90" y="28" >named</text>
+    <text x="138" y="28" >volume.</text>
+    <text x="202" y="28" >Docker</text>
+    <text x="258" y="28" >stores</text>
+    <text x="314" y="28" >it</text>
+    <text x="338" y="28" >at</text>
+    <line x1="368" y1="16" x2="360" y2="32" class="solid"></line>
+    <text x="370" y="28" >var</text>
+    <line x1="400" y1="16" x2="392" y2="32" class="solid"></line>
+    <text x="402" y="28" >lib</text>
+    <line x1="432" y1="16" x2="424" y2="32" class="solid"></line>
+    <text x="434" y="28" >docker</text>
+    <line x1="488" y1="16" x2="480" y2="32" class="solid"></line>
+    <text x="490" y="28" >volumes</text>
+    <line x1="552" y1="16" x2="544" y2="32" class="solid"></line>
+    <text x="554" y="28" >pgdata</text>
+    <text x="618" y="28" >data.</text>
+    <rect x="0" y="36" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="44" >Named</text>
+    <text x="66" y="44" >volumes</text>
+    <text x="130" y="44" >are</text>
+    <text x="162" y="44" >managed</text>
+    <text x="226" y="44" >by</text>
+    <text x="250" y="44" >Docker</text>
+    <text x="306" y="44" >and</text>
+    <text x="338" y="44" >persist</text>
+    <text x="402" y="44" >across</text>
+    <text x="458" y="44" >container</text>
+    <text x="538" y="44" >restarts</text>
+    <text x="610" y="44" >and</text>
+    <text x="642" y="44" >removals.</text>
+    <text x="2" y="60" >docker</text>
+    <text x="58" y="60" >volume</text>
+    <text x="114" y="60" >create</text>
+    <text x="170" y="60" >pgdata</text>
+    <rect x="0" y="84" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="92" x2="4" y2="100" class="solid"></line>
+    <line x1="16" y1="88" x2="32" y2="88" class="solid"></line>
+    <text x="42" y="92" >USE</text>
+    <line x1="72" y1="88" x2="480" y2="88" class="solid"></line>
+    <rect x="0" y="100" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="108" x2="4" y2="116" class="solid"></line>
+    <text x="18" y="108" >Run</text>
+    <text x="50" y="108" >a</text>
+    <text x="66" y="108" >PostgreSQL</text>
+    <text x="154" y="108" >container</text>
+    <text x="234" y="108" >with</text>
+    <text x="274" y="108" >the</text>
+    <text x="306" y="108" >named</text>
+    <text x="354" y="108" >volume</text>
+    <text x="410" y="108" >mounted</text>
+    <text x="474" y="108" >at</text>
+    <text x="498" y="108" >the</text>
+    <text x="530" y="108" >database</text>
+    <text x="602" y="108" >data</text>
+    <rect x="0" y="116" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="124" >When</text>
+    <text x="58" y="124" >the</text>
+    <text x="90" y="124" >container</text>
+    <text x="170" y="124" >is</text>
+    <text x="194" y="124" >removed</text>
+    <text x="258" y="124" >and</text>
+    <text x="290" y="124" >recreated,</text>
+    <text x="378" y="124" >the</text>
+    <text x="410" y="124" >data</text>
+    <text x="450" y="124" >persists</text>
+    <text x="522" y="124" >in</text>
+    <text x="546" y="124" >the</text>
+    <text x="578" y="124" >volume.</text>
+    <text x="2" y="140" >docker</text>
+    <text x="58" y="140" >run</text>
+    <line x1="88" y1="136" x2="96" y2="136" class="solid"></line>
+    <text x="98" y="140" >d</text>
+    <line x1="112" y1="128" x2="120" y2="144" class="solid"></line>
+    <line x1="16" y1="152" x2="32" y2="152" class="solid"></line>
+    <text x="34" y="156" >name</text>
+    <text x="74" y="156" >pg</text>
+    <line x1="96" y1="144" x2="104" y2="160" class="solid"></line>
+    <line x1="16" y1="168" x2="24" y2="168" class="solid"></line>
+    <text x="26" y="172" >e</text>
+    <text x="42" y="172" >POSTGRES</text>
+    <text x="114" y="172" >PASSWORD</text>
+    <line x1="176" y1="166" x2="184" y2="166" class="solid"></line>
+    <line x1="176" y1="170" x2="184" y2="170" class="solid"></line>
+    <text x="186" y="172" >secret</text>
+    <line x1="240" y1="160" x2="248" y2="176" class="solid"></line>
+    <line x1="16" y1="184" x2="24" y2="184" class="solid"></line>
+    <text x="26" y="188" >v</text>
+    <text x="42" y="188" >pgdata:</text>
+    <text x="106" y="188" >var</text>
+    <line x1="136" y1="176" x2="128" y2="192" class="solid"></line>
+    <text x="138" y="188" >lib</text>
+    <line x1="168" y1="176" x2="160" y2="192" class="solid"></line>
+    <text x="170" y="188" >postgresql</text>
+    <line x1="256" y1="176" x2="248" y2="192" class="solid"></line>
+    <text x="258" y="188" >data</text>
+    <text x="18" y="204" >postgres:16</text>
+    <text x="642" y="108" >directory.</text>
+    <line x1="296" y1="176" x2="304" y2="192" class="solid"></line>
+    <rect x="0" y="228" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="236" x2="4" y2="244" class="solid"></line>
+    <line x1="16" y1="232" x2="32" y2="232" class="solid"></line>
+    <text x="42" y="236" >LIST</text>
+    <line x1="80" y1="232" x2="480" y2="232" class="solid"></line>
+    <rect x="0" y="244" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="252" >List</text>
+    <text x="58" y="252" >all</text>
+    <text x="90" y="252" >volumes</text>
+    <text x="154" y="252" >on</text>
+    <text x="178" y="252" >the</text>
+    <text x="210" y="252" >system.</text>
+    <text x="2" y="268" >docker</text>
+    <text x="58" y="268" >v</text>
+    <circle cx="68" cy="264" r="3" class="nofill"></circle>
+    <line x1="68" y1="268" x2="68" y2="272" class="solid"></line>
+    <text x="74" y="268" >lume</text>
+    <text x="114" y="268" >ls</text>
+    <rect x="0" y="276" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="284" x2="4" y2="292" class="solid"></line>
+    <text x="18" y="284" >Output:</text>
+    <rect x="0" y="292" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="300" x2="4" y2="308" class="solid"></line>
+    <text x="18" y="300" >DRIVER</text>
+    <rect x="0" y="308" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="316" >local</text>
+    <text x="98" y="300" >VOLUME</text>
+    <text x="98" y="316" >pgdata</text>
+    <text x="154" y="300" >NAME</text>
+    <rect x="0" y="340" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="348" x2="4" y2="356" class="solid"></line>
+    <line x1="16" y1="344" x2="32" y2="344" class="solid"></line>
+    <text x="42" y="348" >INSPECT</text>
+    <line x1="104" y1="344" x2="480" y2="344" class="solid"></line>
+    <rect x="0" y="356" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="364" >Show</text>
+    <text x="58" y="364" >metadata</text>
+    <text x="130" y="364" >about</text>
+    <text x="178" y="364" >a</text>
+    <text x="194" y="364" >volume:</text>
+    <text x="258" y="364" >where</text>
+    <text x="306" y="364" >it</text>
+    <text x="330" y="364" >lives</text>
+    <text x="378" y="364" >on</text>
+    <text x="402" y="364" >disk,</text>
+    <text x="450" y="364" >when</text>
+    <text x="2" y="380" >docker</text>
+    <text x="58" y="380" >v</text>
+    <circle cx="68" cy="376" r="3" class="nofill"></circle>
+    <line x1="68" y1="380" x2="68" y2="384" class="solid"></line>
+    <text x="74" y="380" >lume</text>
+    <text x="114" y="380" >inspect</text>
+    <text x="178" y="380" >pgdata</text>
+    <rect x="0" y="388" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="396" x2="4" y2="404" class="solid"></line>
+    <text x="18" y="396" >Output:</text>
+    <rect x="0" y="404" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="412" x2="4" y2="420" class="solid"></line>
+    <text x="18" y="412" >[</text>
+    <rect x="0" y="420" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="428" x2="4" y2="436" class="solid"></line>
+    <rect x="0" y="436" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="444" x2="4" y2="452" class="solid"></line>
+    <rect x="0" y="452" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="460" x2="4" y2="468" class="solid"></line>
+    <rect x="0" y="468" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="476" x2="4" y2="484" class="solid"></line>
+    <rect x="0" y="484" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="492" x2="4" y2="500" class="solid"></line>
+    <rect x="0" y="500" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="508" x2="4" y2="516" class="solid"></line>
+    <rect x="0" y="516" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="524" x2="4" y2="532" class="solid"></line>
+    <rect x="0" y="532" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="540" x2="4" y2="548" class="solid"></line>
+    <rect x="0" y="548" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="556" x2="4" y2="564" class="solid"></line>
+    <rect x="0" y="564" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="490" y="364" >it</text>
+    <text x="514" y="364" >was</text>
+    <text x="546" y="364" >created.</text>
+    <text x="50" y="428" >{</text>
+    <text x="170" y="444" >:</text>
+    <text x="362" y="444" >,</text>
+    <line x1="148" y1="448" x2="148" y2="480" class="broken"></line>
+    <text x="218" y="460" >,</text>
+    <text x="162" y="476" >{},</text>
+    <text x="178" y="492" >:</text>
+    <text x="498" y="492" >,</text>
+    <text x="130" y="508" >:</text>
+    <text x="210" y="508" >,</text>
+    <text x="154" y="524" >:</text>
+    <text x="170" y="524" >{},</text>
+    <text x="138" y="540" >:</text>
+    <text x="50" y="556" >}</text>
+    <text x="18" y="572" >]</text>
+    <rect x="0" y="596" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="604" x2="4" y2="612" class="solid"></line>
+    <line x1="16" y1="600" x2="32" y2="600" class="solid"></line>
+    <text x="42" y="604" >BIND</text>
+    <text x="82" y="604" >MOUNT</text>
+    <line x1="128" y1="600" x2="480" y2="600" class="solid"></line>
+    <rect x="0" y="612" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="620" x2="4" y2="628" class="solid"></line>
+    <text x="18" y="620" >Mount</text>
+    <text x="66" y="620" >the</text>
+    <text x="98" y="620" >current</text>
+    <text x="162" y="620" >directory</text>
+    <text x="242" y="620" >into</text>
+    <text x="282" y="620" >the</text>
+    <text x="314" y="620" >container</text>
+    <path d="M 400,608 A 16,16 0,0,0 400,624" class="nofill"></path>
+    <text x="402" y="620" >for</text>
+    <text x="434" y="620" >local</text>
+    <text x="482" y="620" >development</text>
+    <path d="M 568,608 A 16,16 0,0,1 568,624" class="nofill"></path>
+    <text x="578" y="620" >.</text>
+    <rect x="0" y="628" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="636" >Changes</text>
+    <text x="82" y="636" >on</text>
+    <text x="106" y="636" >the</text>
+    <text x="138" y="636" >host</text>
+    <text x="178" y="636" >are</text>
+    <text x="210" y="636" >immediately</text>
+    <text x="306" y="636" >visible</text>
+    <text x="370" y="636" >inside</text>
+    <text x="426" y="636" >the</text>
+    <text x="458" y="636" >container</text>
+    <text x="538" y="636" >and</text>
+    <polygon points="576,628 568,632 572,624" class="filled"></polygon>
+    <text x="578" y="636" >ice</text>
+    <text x="2" y="652" >docker</text>
+    <text x="58" y="652" >run</text>
+    <line x1="88" y1="648" x2="96" y2="648" class="solid"></line>
+    <text x="98" y="652" >d</text>
+    <line x1="112" y1="640" x2="120" y2="656" class="solid"></line>
+    <line x1="16" y1="664" x2="32" y2="664" class="solid"></line>
+    <text x="34" y="668" >name</text>
+    <text x="74" y="668" >dev</text>
+    <line x1="16" y1="680" x2="24" y2="680" class="solid"></line>
+    <text x="26" y="684" >v</text>
+    <text x="106" y="684" >:</text>
+    <line x1="120" y1="672" x2="112" y2="688" class="solid"></line>
+    <text x="122" y="684" >app</text>
+    <line x1="16" y1="696" x2="24" y2="696" class="solid"></line>
+    <text x="26" y="700" >w</text>
+    <line x1="48" y1="688" x2="40" y2="704" class="solid"></line>
+    <text x="50" y="700" >app</text>
+    <line x1="80" y1="688" x2="88" y2="704" class="solid"></line>
+    <text x="18" y="716" >node:20</text>
+    <line x1="72" y1="712" x2="80" y2="712" class="solid"></line>
+    <text x="82" y="716" >alpine</text>
+    <text x="18" y="732" >npm</text>
+    <text x="50" y="732" >run</text>
+    <text x="82" y="732" >dev</text>
+    <text x="610" y="636" >versa.</text>
+    <line x1="152" y1="672" x2="160" y2="688" class="solid"></line>
+    <line x1="136" y1="704" x2="144" y2="720" class="solid"></line>
+    <rect x="0" y="756" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="764" x2="4" y2="772" class="solid"></line>
+    <line x1="16" y1="760" x2="32" y2="760" class="solid"></line>
+    <text x="42" y="764" >TMPFS</text>
+    <text x="90" y="764" >MOUNT</text>
+    <line x1="136" y1="760" x2="480" y2="760" class="solid"></line>
+    <rect x="0" y="772" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="780" x2="4" y2="788" class="solid"></line>
+    <text x="18" y="780" >Mount</text>
+    <text x="66" y="780" >a</text>
+    <text x="82" y="780" >tmpfs</text>
+    <path d="M 136,768 A 16,16 0,0,0 136,784" class="nofill"></path>
+    <text x="138" y="780" >RAM</text>
+    <line x1="160" y1="776" x2="168" y2="776" class="solid"></line>
+    <text x="170" y="780" >backed</text>
+    <path d="M 216,768 A 16,16 0,0,1 216,784" class="nofill"></path>
+    <text x="234" y="780" >filesystem.</text>
+    <text x="330" y="780" >Data</text>
+    <text x="370" y="780" >is</text>
+    <text x="394" y="780" >never</text>
+    <text x="442" y="780" >written</text>
+    <rect x="0" y="788" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="796" >Useful</text>
+    <text x="74" y="796" >for</text>
+    <text x="106" y="796" >secrets</text>
+    <text x="170" y="796" >or</text>
+    <text x="194" y="796" >temporary</text>
+    <text x="274" y="796" >scratch</text>
+    <text x="338" y="796" >space.</text>
+    <text x="2" y="812" >docker</text>
+    <text x="58" y="812" >run</text>
+    <line x1="88" y1="808" x2="96" y2="808" class="solid"></line>
+    <text x="98" y="812" >d</text>
+    <line x1="112" y1="800" x2="120" y2="816" class="solid"></line>
+    <line x1="16" y1="824" x2="32" y2="824" class="solid"></line>
+    <text x="34" y="828" >name</text>
+    <text x="74" y="828" >secure</text>
+    <line x1="128" y1="816" x2="136" y2="832" class="solid"></line>
+    <line x1="16" y1="840" x2="32" y2="840" class="solid"></line>
+    <text x="34" y="844" >tmpfs</text>
+    <line x1="88" y1="832" x2="80" y2="848" class="solid"></line>
+    <text x="90" y="844" >run</text>
+    <line x1="120" y1="832" x2="112" y2="848" class="solid"></line>
+    <text x="122" y="844" >secrets:rw,noexec,nosuid,size</text>
+    <line x1="352" y1="838" x2="360" y2="838" class="solid"></line>
+    <line x1="352" y1="842" x2="360" y2="842" class="solid"></line>
+    <text x="362" y="844" >64m</text>
+    <text x="18" y="860" >myapp:1.0</text>
+    <text x="506" y="780" >to</text>
+    <text x="530" y="780" >disk.</text>
+    <line x1="392" y1="832" x2="400" y2="848" class="solid"></line>
+    <rect x="0" y="884" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="892" x2="4" y2="900" class="solid"></line>
+    <line x1="16" y1="888" x2="32" y2="888" class="solid"></line>
+    <text x="42" y="892" >CLEANUP</text>
+    <line x1="104" y1="888" x2="480" y2="888" class="solid"></line>
+    <rect x="0" y="900" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="908" x2="4" y2="916" class="solid"></line>
+    <text x="18" y="908" >Remove</text>
+    <text x="74" y="908" >all</text>
+    <text x="106" y="908" >unused</text>
+    <text x="162" y="908" >volumes</text>
+    <path d="M 232,896 A 16,16 0,0,0 232,912" class="nofill"></path>
+    <text x="234" y="908" >volumes</text>
+    <text x="298" y="908" >not</text>
+    <text x="330" y="908" >mounted</text>
+    <text x="394" y="908" >by</text>
+    <text x="418" y="908" >any</text>
+    <text x="450" y="908" >container</text>
+    <path d="M 520,896 A 16,16 0,0,1 520,912" class="nofill"></path>
+    <text x="530" y="908" >.</text>
+    <rect x="0" y="916" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="924" >WARNING:</text>
+    <text x="90" y="924" >This</text>
+    <text x="130" y="924" >permanently</text>
+    <text x="226" y="924" >deletes</text>
+    <text x="290" y="924" >data.</text>
+    <text x="338" y="924" >Use</text>
+    <text x="370" y="924" >with</text>
+    <text x="410" y="924" >caution.</text>
+    <text x="2" y="940" >docker</text>
+    <text x="58" y="940" >volume</text>
+    <text x="114" y="940" >prune</text>
+    <text x="2" y="972" >#</text>
+    <text x="18" y="972" >Remove</text>
+    <text x="74" y="972" >a</text>
+    <text x="90" y="972" >specific</text>
+    <text x="162" y="972" >volume</text>
+    <text x="2" y="988" >docker</text>
+    <text x="58" y="988" >volume</text>
+    <text x="114" y="988" >rm</text>
+    <text x="138" y="988" >pgdata</text>
+    <path d="M 224,960 A 16,16 0,0,0 224,976" class="nofill"></path>
+    <text x="226" y="972" >must</text>
+    <text x="266" y="972" >not</text>
+    <text x="298" y="972" >be</text>
+    <text x="322" y="972" >in</text>
+    <text x="346" y="972" >use</text>
+    <text x="378" y="972" >by</text>
+    <text x="402" y="972" >any</text>
+    <text x="434" y="972" >container</text>
+    <path d="M 504,960 A 16,16 0,0,1 504,976" class="nofill"></path>
+    <text x="514" y="972" >:</text>
+    <text x="82" y="444" >CreatedAt</text>
+    <text x="186" y="444" >2025-01-15T10:30:00Z</text>
+    <text x="82" y="460" >Driver</text>
+    <text x="162" y="460" >local</text>
+    <text x="82" y="476" >Labels</text>
+    <text x="82" y="492" >Mountpoint</text>
+    <text x="194" y="492" >/var/lib/docker/volumes/pgdata/_data</text>
+    <text x="82" y="508" >Name</text>
+    <text x="146" y="508" >pgdata</text>
+    <text x="82" y="524" >Options</text>
+    <text x="82" y="540" >Scope</text>
+    <text x="154" y="540" >local</text>
+    <text x="42" y="684" >$(pwd)</text>
+    <g>
+        <line x1="608" y1="16" x2="600" y2="32" class="solid"></line>
+        <line x1="600" y1="32" x2="616" y2="32" class="solid"></line>
+    </g>
+    <g>
+        <line x1="104" y1="176" x2="112" y2="176" class="solid"></line>
+        <line x1="104" y1="176" x2="96" y2="192" class="solid"></line>
+    </g>
+    <g>
+        <line x1="104" y1="656" x2="112" y2="672" class="solid"></line>
+        <line x1="108" y1="664" x2="108" y2="672" class="solid"></line>
+    </g>
+</svg>

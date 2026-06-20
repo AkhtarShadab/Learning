@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="368" height="272" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="368" height="272"></rect>
+    <text x="2" y="12" >Corporate</text>
+    <text x="82" y="12" >CIDR</text>
+    <text x="122" y="12" >Allocation</text>
+    <text x="210" y="12" >Plan</text>
+    <line x1="0" y1="24" x2="344" y2="24" class="solid"></line>
+    <line x1="0" y1="28" x2="344" y2="28" class="solid"></line>
+    <text x="2" y="44" >10.0.0.0</text>
+    <line x1="72" y1="32" x2="64" y2="48" class="solid"></line>
+    <text x="74" y="44" >8</text>
+    <line x1="136" y1="40" x2="160" y2="40" class="solid"></line>
+    <text x="170" y="44" >Reserved</text>
+    <text x="242" y="44" >for</text>
+    <text x="274" y="44" >cloud</text>
+    <text x="322" y="44" >VPCs</text>
+    <text x="18" y="60" >10.0.0.0</text>
+    <line x1="88" y1="48" x2="80" y2="64" class="solid"></line>
+    <text x="90" y="60" >12</text>
+    <line x1="136" y1="56" x2="160" y2="56" class="solid"></line>
+    <text x="170" y="60" >AWS</text>
+    <text x="202" y="60" >accounts</text>
+    <text x="34" y="76" >10.0.0.0</text>
+    <line x1="104" y1="64" x2="96" y2="80" class="solid"></line>
+    <text x="106" y="76" >16</text>
+    <line x1="136" y1="72" x2="160" y2="72" class="solid"></line>
+    <text x="170" y="76" >Production</text>
+    <text x="266" y="76" >us</text>
+    <line x1="280" y1="72" x2="288" y2="72" class="solid"></line>
+    <text x="290" y="76" >east</text>
+    <line x1="320" y1="72" x2="328" y2="72" class="solid"></line>
+    <text x="330" y="76" >1</text>
+    <text x="34" y="92" >10.1.0.0</text>
+    <line x1="104" y1="80" x2="96" y2="96" class="solid"></line>
+    <text x="106" y="92" >16</text>
+    <line x1="136" y1="88" x2="160" y2="88" class="solid"></line>
+    <text x="170" y="92" >Production</text>
+    <text x="266" y="92" >eu</text>
+    <line x1="280" y1="88" x2="288" y2="88" class="solid"></line>
+    <text x="290" y="92" >west</text>
+    <line x1="320" y1="88" x2="328" y2="88" class="solid"></line>
+    <text x="330" y="92" >1</text>
+    <text x="34" y="108" >10.2.0.0</text>
+    <line x1="104" y1="96" x2="96" y2="112" class="solid"></line>
+    <text x="106" y="108" >16</text>
+    <line x1="136" y1="104" x2="160" y2="104" class="solid"></line>
+    <text x="170" y="108" >Staging</text>
+    <text x="34" y="124" >10.3.0.0</text>
+    <line x1="104" y1="112" x2="88" y2="144" class="solid"></line>
+    <text x="98" y="140" >12</text>
+    <text x="106" y="124" >16</text>
+    <line x1="136" y1="120" x2="160" y2="120" class="solid"></line>
+    <text x="170" y="124" >Development</text>
+    <text x="18" y="140" >10.16.0.0</text>
+    <line x1="136" y1="136" x2="160" y2="136" class="solid"></line>
+    <text x="170" y="140" >Azure</text>
+    <text x="218" y="140" >subscriptions</text>
+    <text x="18" y="156" >10.32.0.0</text>
+    <line x1="96" y1="144" x2="88" y2="160" class="solid"></line>
+    <text x="98" y="156" >12</text>
+    <line x1="136" y1="152" x2="160" y2="152" class="solid"></line>
+    <text x="170" y="156" >GCP</text>
+    <text x="202" y="156" >projects</text>
+    <text x="2" y="188" >172.16.0.0</text>
+    <line x1="88" y1="176" x2="80" y2="192" class="solid"></line>
+    <text x="90" y="188" >12</text>
+    <text x="18" y="204" >172.16.0.0</text>
+    <line x1="104" y1="192" x2="96" y2="208" class="solid"></line>
+    <text x="106" y="204" >16</text>
+    <text x="18" y="220" >172.17.0.0</text>
+    <line x1="104" y1="208" x2="96" y2="224" class="solid"></line>
+    <text x="106" y="220" >16</text>
+    <line x1="136" y1="184" x2="160" y2="184" class="solid"></line>
+    <line x1="136" y1="200" x2="160" y2="200" class="solid"></line>
+    <line x1="136" y1="216" x2="160" y2="216" class="solid"></line>
+    <text x="170" y="188" >On</text>
+    <line x1="184" y1="184" x2="192" y2="184" class="solid"></line>
+    <text x="194" y="188" >premises</text>
+    <text x="266" y="188" >data</text>
+    <text x="170" y="204" >DC</text>
+    <line x1="184" y1="200" x2="192" y2="200" class="solid"></line>
+    <text x="194" y="204" >1</text>
+    <text x="218" y="204" >New</text>
+    <text x="250" y="204" >York</text>
+    <path d="M 280,192 A 16,16 0,0,1 280,208" class="nofill"></path>
+    <text x="170" y="220" >DC</text>
+    <line x1="184" y1="216" x2="192" y2="216" class="solid"></line>
+    <text x="194" y="220" >2</text>
+    <text x="218" y="220" >London</text>
+    <path d="M 264,208 A 16,16 0,0,1 264,224" class="nofill"></path>
+    <text x="306" y="188" >centers</text>
+    <text x="2" y="252" >192.168.0.0</text>
+    <line x1="96" y1="240" x2="88" y2="256" class="solid"></line>
+    <text x="98" y="252" >16</text>
+    <line x1="136" y1="248" x2="160" y2="248" class="solid"></line>
+    <text x="170" y="252" >Office</text>
+    <line x1="224" y1="240" x2="216" y2="256" class="solid"></line>
+    <text x="226" y="252" >branch</text>
+    <text x="282" y="252" >networks</text>
+    <g>
+        <path d="M 264,64 A 16,16 0,0,0 264,80" class="nofill"></path>
+        <path d="M 264,80 A 16,16 0,0,0 264,96" class="nofill"></path>
+    </g>
+    <g>
+        <path d="M 336,64 A 16,16 0,0,1 336,80" class="nofill"></path>
+        <path d="M 336,80 A 16,16 0,0,1 336,96" class="nofill"></path>
+    </g>
+    <g>
+        <path d="M 216,192 A 16,16 0,0,0 216,208" class="nofill"></path>
+        <path d="M 216,208 A 16,16 0,0,0 216,224" class="nofill"></path>
+    </g>
+</svg>

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="288" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="320" height="288"></rect>
+    <text x="162" y="12" >C</text>
+    <text x="66" y="76" >CP</text>
+    <line x1="88" y1="72" x2="120" y2="72" class="solid"></line>
+    <line x1="128" y1="64" x2="112" y2="96" class="solid"></line>
+    <line x1="128" y1="72" x2="176" y2="72" class="solid"></line>
+    <line x1="176" y1="64" x2="216" y2="144" class="solid"></line>
+    <line x1="184" y1="72" x2="216" y2="72" class="solid"></line>
+    <path d="M 216,80 A 16,16 0,0,0 216,96" class="nofill"></path>
+    <text x="226" y="76" >CA</text>
+    <path d="M 72,80 A 16,16 0,0,0 72,96" class="nofill"></path>
+    <text x="74" y="92" >RDS</text>
+    <path d="M 96,80 A 16,16 0,0,1 96,96" class="nofill"></path>
+    <text x="130" y="92" >Not</text>
+    <text x="218" y="92" >single</text>
+    <text x="274" y="92" >node</text>
+    <line x1="120" y1="96" x2="80" y2="176" class="solid"></line>
+    <text x="122" y="108" >possible</text>
+    <text x="218" y="108" >only;</text>
+    <text x="266" y="108" >no</text>
+    <text x="122" y="124" >in</text>
+    <text x="146" y="124" >dist.</text>
+    <text x="226" y="124" >partition</text>
+    <text x="122" y="140" >systems</text>
+    <text x="234" y="140" >tolerance</text>
+    <path d="M 304,128 A 16,16 0,0,1 304,144" class="nofill"></path>
+    <line x1="208" y1="144" x2="224" y2="176" class="solid"></line>
+    <line x1="88" y1="168" x2="216" y2="168" class="solid"></line>
+    <text x="74" y="188" >P</text>
+    <text x="226" y="188" >A</text>
+    <path d="M 32,192 A 16,16 0,0,0 32,208" class="nofill"></path>
+    <text x="34" y="204" >Partition</text>
+    <path d="M 184,192 A 16,16 0,0,0 184,208" class="nofill"></path>
+    <text x="186" y="204" >Availability</text>
+    <path d="M 280,192 A 16,16 0,0,1 280,208" class="nofill"></path>
+    <text x="34" y="220" >Tolerance</text>
+    <path d="M 104,208 A 16,16 0,0,1 104,224" class="nofill"></path>
+    <text x="114" y="236" >AP</text>
+    <path d="M 72,240 A 16,16 0,0,0 72,256" class="nofill"></path>
+    <text x="74" y="252" >DynamoDB,</text>
+    <text x="74" y="268" >Cassandra</text>
+    <path d="M 144,256 A 16,16 0,0,1 144,272" class="nofill"></path>
+    <path d="M 184,0 A 16,16 0,0,0 184,16" class="nofill"></path>
+    <text x="186" y="12" >Consistency</text>
+    <path d="M 272,0 A 16,16 0,0,1 272,16" class="nofill"></path>
+    <g>
+        <line x1="160" y1="16" x2="136" y2="64" class="solid"></line>
+        <line x1="160" y1="16" x2="184" y2="64" class="solid"></line>
+    </g>
+</svg>

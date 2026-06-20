@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="496" height="624" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="496" height="624"></rect>
+    <text x="10" y="12" >Power</text>
+    <text x="34" y="76" >BIOS</text>
+    <line x1="80" y1="64" x2="72" y2="80" class="solid"></line>
+    <text x="42" y="92" >UEFI</text>
+    <text x="42" y="172" >GRUB</text>
+    <text x="26" y="188" >Bootloader</text>
+    <line x1="108" y1="176" x2="108" y2="192" class="solid"></line>
+    <text x="34" y="268" >Kernel</text>
+    <line x1="108" y1="256" x2="108" y2="304" class="solid"></line>
+    <path d="M 40,272 A 16,16 0,0,0 40,288" class="nofill"></path>
+    <text x="42" y="284" >early</text>
+    <path d="M 80,272 A 16,16 0,0,1 80,288" class="nofill"></path>
+    <text x="34" y="380" >initrd</text>
+    <line x1="96" y1="368" x2="88" y2="384" class="solid"></line>
+    <line x1="108" y1="368" x2="108" y2="400" class="solid"></line>
+    <text x="26" y="396" >initramfs</text>
+    <text x="34" y="476" >Kernel</text>
+    <line x1="108" y1="464" x2="108" y2="496" class="solid"></line>
+    <path d="M 40,480 A 16,16 0,0,0 40,496" class="nofill"></path>
+    <text x="42" y="492" >late</text>
+    <path d="M 72,480 A 16,16 0,0,1 72,496" class="nofill"></path>
+    <text x="26" y="572" >systemd</text>
+    <line x1="108" y1="560" x2="108" y2="592" class="solid"></line>
+    <path d="M 32,576 A 16,16 0,0,0 32,592" class="nofill"></path>
+    <text x="34" y="588" >init</text>
+    <path d="M 64,576 A 16,16 0,0,1 64,592" class="nofill"></path>
+    <text x="58" y="12" >On</text>
+    <text x="122" y="76" >Hardware</text>
+    <text x="194" y="76" >initialization,</text>
+    <text x="122" y="92" >Finds</text>
+    <text x="170" y="92" >bootloader</text>
+    <text x="258" y="92" >on</text>
+    <text x="282" y="92" >disk</text>
+    <text x="322" y="76" >POST</text>
+    <text x="122" y="172" >Reads</text>
+    <text x="170" y="172" >grub.cfg,</text>
+    <text x="250" y="172" >loads</text>
+    <text x="130" y="188" >and</text>
+    <text x="162" y="188" >initial</text>
+    <text x="226" y="188" >RAM</text>
+    <text x="258" y="188" >disk</text>
+    <text x="298" y="172" >kernel</text>
+    <text x="354" y="172" >image</text>
+    <path d="M 408,160 A 16,16 0,0,0 408,176" class="nofill"></path>
+    <text x="410" y="172" >vmlinuz</text>
+    <path d="M 464,160 A 16,16 0,0,1 464,176" class="nofill"></path>
+    <path d="M 304,176 A 16,16 0,0,0 304,192" class="nofill"></path>
+    <text x="306" y="188" >initrd</text>
+    <line x1="360" y1="176" x2="352" y2="192" class="solid"></line>
+    <text x="362" y="188" >initramfs</text>
+    <path d="M 432,176 A 16,16 0,0,1 432,192" class="nofill"></path>
+    <text x="130" y="268" >Decompresses</text>
+    <text x="234" y="268" >itself</text>
+    <text x="290" y="268" >into</text>
+    <text x="330" y="268" >memory</text>
+    <text x="130" y="284" >Initializes</text>
+    <text x="226" y="284" >CPU,</text>
+    <text x="266" y="284" >memory,</text>
+    <text x="330" y="284" >interrupts</text>
+    <text x="130" y="300" >Mounts</text>
+    <text x="186" y="300" >initramfs</text>
+    <text x="266" y="300" >as</text>
+    <text x="290" y="300" >temporary</text>
+    <text x="370" y="300" >root</text>
+    <text x="130" y="380" >Contains</text>
+    <text x="202" y="380" >essential</text>
+    <text x="282" y="380" >drivers</text>
+    <path d="M 352,368 A 16,16 0,0,0 352,384" class="nofill"></path>
+    <text x="354" y="380" >disk,</text>
+    <text x="402" y="380" >filesystem</text>
+    <path d="M 480,368 A 16,16 0,0,1 480,384" class="nofill"></path>
+    <text x="130" y="396" >Finds</text>
+    <text x="178" y="396" >and</text>
+    <text x="210" y="396" >mounts</text>
+    <text x="266" y="396" >the</text>
+    <text x="298" y="396" >real</text>
+    <text x="338" y="396" >root</text>
+    <text x="378" y="396" >filesystem</text>
+    <text x="130" y="476" >pivot</text>
+    <line x1="168" y1="480" x2="176" y2="480" class="solid"></line>
+    <text x="178" y="476" >ro</text>
+    <circle cx="196" cy="472" r="3" class="nofill"></circle>
+    <line x1="194" y1="476" x2="184" y2="496" class="solid"></line>
+    <text x="202" y="476" >t</text>
+    <text x="218" y="476" >to</text>
+    <text x="242" y="476" >real</text>
+    <text x="282" y="476" >root</text>
+    <text x="322" y="476" >filesystem</text>
+    <text x="130" y="492" >Starts</text>
+    <text x="194" y="492" >sbin</text>
+    <line x1="232" y1="480" x2="224" y2="496" class="solid"></line>
+    <text x="234" y="492" >init</text>
+    <path d="M 280,480 A 16,16 0,0,0 280,496" class="nofill"></path>
+    <text x="282" y="492" >PID</text>
+    <text x="314" y="492" >1</text>
+    <path d="M 320,480 A 16,16 0,0,1 320,496" class="nofill"></path>
+    <text x="130" y="572" >PID</text>
+    <text x="162" y="572" >1</text>
+    <line x1="176" y1="568" x2="184" y2="568" class="solid"></line>
+    <text x="194" y="572" >the</text>
+    <text x="130" y="588" >Starts</text>
+    <text x="186" y="588" >services:</text>
+    <text x="266" y="588" >containerd,</text>
+    <text x="362" y="588" >kubelet,</text>
+    <text x="434" y="588" >etc.</text>
+    <text x="226" y="572" >mother of all processes</text>
+    <g>
+        <line x1="36" y1="16" x2="36" y2="36" class="solid"></line>
+        <polygon points="32,36 40,36 36,48" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="12" y1="56" x2="100" y2="56" class="solid"></line>
+        <line x1="12" y1="56" x2="12" y2="104" class="solid"></line>
+        <line x1="100" y1="56" x2="100" y2="104" class="solid"></line>
+        <line x1="12" y1="104" x2="100" y2="104" class="solid"></line>
+        <line x1="52" y1="104" x2="52" y2="132" class="solid"></line>
+        <polygon points="48,132 56,132 52,144" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="12" y1="152" x2="100" y2="152" class="solid"></line>
+        <line x1="12" y1="152" x2="12" y2="200" class="solid"></line>
+        <line x1="100" y1="152" x2="100" y2="176" class="solid"></line>
+        <line x1="12" y1="200" x2="100" y2="200" class="solid"></line>
+        <line x1="52" y1="200" x2="52" y2="228" class="solid"></line>
+        <line x1="100" y1="192" x2="100" y2="200" class="solid"></line>
+        <polygon points="48,228 56,228 52,240" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="12" y1="248" x2="100" y2="248" class="solid"></line>
+        <line x1="12" y1="248" x2="12" y2="312" class="solid"></line>
+        <line x1="100" y1="248" x2="100" y2="256" class="solid"></line>
+        <line x1="12" y1="312" x2="100" y2="312" class="solid"></line>
+        <line x1="52" y1="312" x2="52" y2="340" class="solid"></line>
+        <line x1="100" y1="304" x2="100" y2="312" class="solid"></line>
+        <polygon points="48,340 56,340 52,352" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="12" y1="360" x2="100" y2="360" class="solid"></line>
+        <line x1="12" y1="360" x2="12" y2="408" class="solid"></line>
+        <line x1="100" y1="360" x2="100" y2="368" class="solid"></line>
+        <line x1="12" y1="408" x2="100" y2="408" class="solid"></line>
+        <line x1="52" y1="408" x2="52" y2="436" class="solid"></line>
+        <line x1="100" y1="400" x2="100" y2="408" class="solid"></line>
+        <polygon points="48,436 56,436 52,448" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="12" y1="456" x2="100" y2="456" class="solid"></line>
+        <line x1="12" y1="456" x2="12" y2="504" class="solid"></line>
+        <line x1="100" y1="456" x2="100" y2="464" class="solid"></line>
+        <line x1="12" y1="504" x2="100" y2="504" class="solid"></line>
+        <line x1="52" y1="504" x2="52" y2="532" class="solid"></line>
+        <line x1="100" y1="496" x2="100" y2="504" class="solid"></line>
+        <polygon points="48,532 56,532 52,544" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="12" y1="552" x2="100" y2="552" class="solid"></line>
+        <line x1="12" y1="552" x2="12" y2="600" class="solid"></line>
+        <line x1="100" y1="552" x2="100" y2="560" class="solid"></line>
+        <line x1="12" y1="600" x2="100" y2="600" class="solid"></line>
+        <line x1="100" y1="592" x2="100" y2="600" class="solid"></line>
+    </g>
+    <g>
+        <path d="M 416,288 A 16,16 0,0,0 416,304" class="nofill"></path>
+        <line x1="424" y1="288" x2="416" y2="304" class="solid"></line>
+        <path d="M 424,288 A 16,16 0,0,1 424,304" class="nofill"></path>
+    </g>
+</svg>

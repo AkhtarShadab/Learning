@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="552" height="208" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="552" height="208"></rect>
+    <text x="2" y="12" >Cold</text>
+    <text x="42" y="12" >Start</text>
+    <text x="90" y="12" >Timeline:</text>
+    <text x="34" y="28" >Download</text>
+    <text x="106" y="28" >code</text>
+    <line x1="144" y1="24" x2="208" y2="24" class="solid"></line>
+    <line x1="216" y1="24" x2="224" y2="24" class="broken"></line>
+    <text x="226" y="28" >50</text>
+    <line x1="240" y1="24" x2="248" y2="24" class="solid"></line>
+    <text x="250" y="28" >200ms</text>
+    <text x="34" y="44" >Init</text>
+    <text x="74" y="44" >runtime</text>
+    <line x1="136" y1="40" x2="192" y2="40" class="solid"></line>
+    <line x1="200" y1="40" x2="208" y2="40" class="broken"></line>
+    <text x="210" y="44" >10</text>
+    <line x1="224" y1="40" x2="232" y2="40" class="solid"></line>
+    <text x="234" y="44" >100ms</text>
+    <text x="34" y="60" >Init</text>
+    <text x="74" y="60" >code</text>
+    <path d="M 120,48 A 16,16 0,0,0 120,64" class="nofill"></path>
+    <text x="122" y="60" >imports</text>
+    <path d="M 176,48 A 16,16 0,0,1 176,64" class="nofill"></path>
+    <line x1="192" y1="56" x2="208" y2="56" class="solid"></line>
+    <line x1="216" y1="56" x2="224" y2="56" class="broken"></line>
+    <text x="226" y="60" >100</text>
+    <line x1="248" y1="56" x2="256" y2="56" class="solid"></line>
+    <text x="258" y="60" >2000ms</text>
+    <text x="34" y="76" >Handler</text>
+    <text x="98" y="76" >execution</text>
+    <line x1="176" y1="72" x2="208" y2="72" class="solid"></line>
+    <text x="218" y="76" >your</text>
+    <text x="258" y="76" >code</text>
+    <path d="M 304,16 A 16,16 0,0,0 304,32" class="nofill"></path>
+    <text x="306" y="28" >zip</text>
+    <path d="M 328,16 A 16,16 0,0,1 328,32" class="nofill"></path>
+    <line x1="352" y1="16" x2="344" y2="32" class="solid"></line>
+    <line x1="360" y1="24" x2="368" y2="24" class="broken"></line>
+    <text x="370" y="28" >500ms+</text>
+    <path d="M 432,16 A 16,16 0,0,0 432,32" class="nofill"></path>
+    <text x="434" y="28" >container</text>
+    <path d="M 504,16 A 16,16 0,0,1 504,32" class="nofill"></path>
+    <path d="M 320,48 A 16,16 0,0,0 320,64" class="nofill"></path>
+    <text x="322" y="60" >depends</text>
+    <text x="386" y="60" >on</text>
+    <text x="410" y="60" >your</text>
+    <text x="450" y="60" >code</text>
+    <path d="M 480,48 A 16,16 0,0,1 480,64" class="nofill"></path>
+    <text x="34" y="108" >Total</text>
+    <text x="82" y="108" >cold</text>
+    <text x="122" y="108" >start:</text>
+    <line x1="176" y1="104" x2="184" y2="104" class="broken"></line>
+    <text x="186" y="108" >200ms</text>
+    <path d="M 240,96 A 16,16 0,0,0 240,112" class="nofill"></path>
+    <text x="242" y="108" >Python,</text>
+    <text x="306" y="108" >small</text>
+    <path d="M 344,96 A 16,16 0,0,1 344,112" class="nofill"></path>
+    <text x="362" y="108" >to</text>
+    <line x1="384" y1="104" x2="392" y2="104" class="broken"></line>
+    <text x="394" y="108" >5</text>
+    <line x1="400" y1="104" x2="408" y2="104" class="solid"></line>
+    <text x="410" y="108" >10s</text>
+    <path d="M 448,96 A 16,16 0,0,0 448,112" class="nofill"></path>
+    <text x="450" y="108" >Java,</text>
+    <text x="498" y="108" >large</text>
+    <path d="M 536,96 A 16,16 0,0,1 536,112" class="nofill"></path>
+    <text x="2" y="140" >Warm</text>
+    <text x="42" y="140" >Start</text>
+    <text x="90" y="140" >Timeline:</text>
+    <text x="34" y="156" >Handler</text>
+    <text x="98" y="156" >executi</text>
+    <line x1="156" y1="144" x2="156" y2="148" class="solid"></line>
+    <circle cx="156" cy="152" r="3" class="nofill"></circle>
+    <text x="162" y="156" >n</text>
+    <line x1="176" y1="152" x2="208" y2="152" class="solid"></line>
+    <text x="218" y="156" >your</text>
+    <text x="258" y="156" >code</text>
+    <text x="298" y="156" >only</text>
+    <text x="34" y="188" >No</text>
+    <text x="58" y="188" >init</text>
+    <text x="98" y="188" >overhead:</text>
+    <line x1="176" y1="184" x2="184" y2="184" class="broken"></line>
+    <text x="186" y="188" >1</text>
+    <line x1="192" y1="184" x2="200" y2="184" class="solid"></line>
+    <text x="202" y="188" >2ms</text>
+    <text x="234" y="188" >added</text>
+    <text x="282" y="188" >latency</text>
+    <g>
+        <line x1="4" y1="16" x2="4" y2="112" class="solid"></line>
+        <line x1="4" y1="24" x2="24" y2="24" class="solid"></line>
+        <line x1="4" y1="40" x2="24" y2="40" class="solid"></line>
+        <line x1="4" y1="56" x2="24" y2="56" class="solid"></line>
+        <line x1="4" y1="72" x2="24" y2="72" class="solid"></line>
+    </g>
+    <g>
+        <line x1="4" y1="144" x2="4" y2="192" class="solid"></line>
+        <line x1="4" y1="152" x2="24" y2="152" class="solid"></line>
+    </g>
+</svg>

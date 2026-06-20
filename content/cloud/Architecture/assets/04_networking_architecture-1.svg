@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="424" height="256" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="424" height="256"></rect>
+    <rect x="36" y="104" width="88" height="64" class="solid nofill" rx="0"></rect>
+    <text x="50" y="124" >Subnet</text>
+    <text x="50" y="140" >10.0.1.0</text>
+    <line x1="56" y1="144" x2="48" y2="160" class="solid"></line>
+    <text x="58" y="156" >24</text>
+    <rect x="196" y="104" width="88" height="64" class="solid nofill" rx="0"></rect>
+    <text x="210" y="124" >Subnet</text>
+    <text x="210" y="140" >10.0.2.0</text>
+    <line x1="216" y1="144" x2="208" y2="160" class="solid"></line>
+    <text x="218" y="156" >24</text>
+    <rect x="340" y="104" width="48" height="64" class="solid nofill" rx="0"></rect>
+    <text x="354" y="124" >...</text>
+    <text x="2" y="12" >Region:</text>
+    <text x="66" y="12" >us</text>
+    <line x1="80" y1="8" x2="88" y2="8" class="solid"></line>
+    <text x="90" y="12" >east</text>
+    <line x1="120" y1="8" x2="128" y2="8" class="solid"></line>
+    <text x="130" y="12" >1</text>
+    <text x="154" y="44" >VPC:</text>
+    <text x="194" y="44" >10.0.0.0</text>
+    <line x1="264" y1="32" x2="256" y2="48" class="solid"></line>
+    <text x="266" y="44" >16</text>
+    <path d="M 160,48 A 16,16 0,0,0 160,64" class="nofill"></path>
+    <text x="162" y="60" >65,536</text>
+    <text x="218" y="60" >addresses</text>
+    <path d="M 288,48 A 16,16 0,0,1 288,64" class="nofill"></path>
+    <line x1="404" y1="96" x2="404" y2="176" class="solid"></line>
+    <text x="34" y="204" >Route</text>
+    <text x="82" y="204" >Tables</text>
+    <text x="162" y="204" >Security</text>
+    <text x="314" y="204" >NACLs</text>
+    <text x="34" y="220" >Internet</text>
+    <text x="106" y="220" >GW</text>
+    <text x="162" y="220" >NAT</text>
+    <text x="194" y="220" >GW</text>
+    <text x="306" y="220" >VPC</text>
+    <text x="338" y="220" >Endpts</text>
+    <text x="34" y="92" >AZ</text>
+    <line x1="48" y1="88" x2="56" y2="88" class="solid"></line>
+    <text x="58" y="92" >a</text>
+    <text x="202" y="92" >AZ</text>
+    <line x1="216" y1="88" x2="224" y2="88" class="solid"></line>
+    <text x="226" y="92" >b</text>
+    <text x="346" y="92" >AZ</text>
+    <line x1="360" y1="88" x2="368" y2="88" class="solid"></line>
+    <text x="370" y="92" >c</text>
+    <text x="234" y="204" >Groups</text>
+    <g>
+        <line x1="4" y1="24" x2="412" y2="24" class="solid"></line>
+        <line x1="4" y1="24" x2="4" y2="232" class="solid"></line>
+        <line x1="412" y1="24" x2="412" y2="96" class="solid"></line>
+        <line x1="412" y1="176" x2="412" y2="232" class="solid"></line>
+        <line x1="4" y1="232" x2="412" y2="232" class="solid"></line>
+    </g>
+</svg>

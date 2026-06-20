@@ -24,35 +24,7 @@ orchestration with ECS and EKS.
 A container is a process (or group of processes) running on a host OS with three
 forms of isolation:
 
-```
-┌──────────────────────────────────────────────┐
-│                 HOST OS (Linux)               │
-│                                              │
-│  ┌─────────────────┐  ┌─────────────────┐    │
-│  │  Container A     │  │  Container B     │   │
-│  │  ┌────────────┐  │  │  ┌────────────┐  │   │
-│  │  │ App Process│  │  │  │ App Process│  │   │
-│  │  └────────────┘  │  │  └────────────┘  │   │
-│  │                  │  │                  │   │
-│  │  Namespace:      │  │  Namespace:      │   │
-│  │  - Own PID tree  │  │  - Own PID tree  │   │
-│  │  - Own network   │  │  - Own network   │   │
-│  │  - Own mounts    │  │  - Own mounts    │   │
-│  │                  │  │                  │   │
-│  │  Cgroup:         │  │  Cgroup:         │   │
-│  │  - 512MB RAM max │  │  - 1GB RAM max   │   │
-│  │  - 0.5 CPU       │  │  - 1.0 CPU       │   │
-│  │                  │  │                  │   │
-│  │  Filesystem:     │  │  Filesystem:     │   │
-│  │  - Union FS      │  │  - Union FS      │   │
-│  │  (overlay2)      │  │  (overlay2)      │   │
-│  └─────────────────┘  └─────────────────┘    │
-│                                              │
-│  ┌────────────────────────────────────────┐   │
-│  │           Shared Linux Kernel          │   │
-│  └────────────────────────────────────────┘   │
-└──────────────────────────────────────────────┘
-```
+![08_container_architecture diagram 1](assets/08_container_architecture-1.svg)
 
 ### Linux Namespaces
 
@@ -86,24 +58,7 @@ Container images are composed of layers. Each layer is read-only. When a contain
 runs, a thin read-write layer is added on top. Changes (file edits, new files) are
 written to this top layer, leaving the image layers untouched.
 
-```
-Container Filesystem (overlay2):
-
-┌────────────────────┐
-│  Read-Write Layer  │  ← Container changes (ephemeral)
-├────────────────────┤
-│  Layer 3: app code │  ← COPY . /app
-├────────────────────┤
-│  Layer 2: deps     │  ← RUN pip install
-├────────────────────┤
-│  Layer 1: python   │  ← FROM python:3.12-slim
-├────────────────────┤
-│  Layer 0: base OS  │  ← Debian slim
-└────────────────────┘
-
-All containers from the same image share layers 0-3 (read-only).
-Only the R/W layer is unique per container.
-```
+![08_container_architecture diagram 2](assets/08_container_architecture-2.svg)
 
 ---
 
@@ -111,22 +66,7 @@ Only the R/W layer is unique per container.
 
 ### Components
 
-```
-┌─────────────┐     ┌─────────────────────────┐
-│  Docker CLI │────►│     Docker Daemon        │
-│  (client)   │     │     (dockerd)            │
-└─────────────┘     │                          │
-                    │  ┌────────────────────┐  │
-                    │  │    containerd      │  │
-                    │  │  (container mgmt)  │  │
-                    │  └────────┬───────────┘  │
-                    │           │              │
-                    │  ┌────────┴───────────┐  │
-                    │  │      runc          │  │
-                    │  │  (OCI runtime)     │  │
-                    │  └────────────────────┘  │
-                    └─────────────────────────┘
-```
+![08_container_architecture diagram 3](assets/08_container_architecture-3.svg)
 
 - **Docker CLI**: User-facing commands (`docker build`, `docker run`)
 - **Docker Daemon (dockerd)**: Background service that manages images, containers,
@@ -220,31 +160,7 @@ aws ecr put-lifecycle-policy \
 
 ### Core Concepts
 
-```
-┌──────────────────────────────────────────────────────┐
-│                   ECS CLUSTER                        │
-│                                                      │
-│  ┌─────────────────────────────────────────────┐     │
-│  │              SERVICE                         │    │
-│  │  (maintains desired count of tasks)          │    │
-│  │                                              │    │
-│  │  ┌───────────────┐  ┌───────────────┐        │    │
-│  │  │    TASK        │  │    TASK        │       │    │
-│  │  │  ┌──────────┐  │  │  ┌──────────┐  │      │    │
-│  │  │  │Container │  │  │  │Container │  │      │    │
-│  │  │  │ (app)    │  │  │  │ (app)    │  │      │    │
-│  │  │  └──────────┘  │  │  └──────────┘  │      │    │
-│  │  │  ┌──────────┐  │  │  ┌──────────┐  │      │    │
-│  │  │  │Container │  │  │  │Container │  │      │    │
-│  │  │  │ (sidecar)│  │  │  │ (sidecar)│  │      │    │
-│  │  │  └──────────┘  │  │  └──────────┘  │      │    │
-│  │  └───────────────┘  └───────────────┘        │    │
-│  └─────────────────────────────────────────────┘     │
-│                                                      │
-│  Task Definition: Blueprint for a task               │
-│  (image, CPU, memory, ports, env vars, IAM role)     │
-└──────────────────────────────────────────────────────┘
-```
+![08_container_architecture diagram 4](assets/08_container_architecture-4.svg)
 
 **Cluster**: Logical grouping of tasks and services.
 **Task Definition**: A blueprint (like a docker-compose file) specifying containers,
@@ -255,22 +171,7 @@ load balancer integration.
 
 ### ECS on Fargate vs EC2
 
-```
-ECS on Fargate:                      ECS on EC2:
-┌────────────────────┐               ┌────────────────────┐
-│  Task              │               │  EC2 Instance      │
-│  ┌──────────────┐  │               │  ┌──────────────┐  │
-│  │  Container   │  │               │  │  ECS Agent   │  │
-│  └──────────────┘  │               │  ├──────────────┤  │
-│                    │               │  │  Task 1      │  │
-│  AWS manages the   │               │  │  Task 2      │  │
-│  underlying host   │               │  │  Task 3      │  │
-│                    │               │  └──────────────┘  │
-│  No EC2 to manage  │               │                    │
-│  Pay per task      │               │  You manage EC2s   │
-│  resources         │               │  Pay per instance  │
-└────────────────────┘               └────────────────────┘
-```
+![08_container_architecture diagram 5](assets/08_container_architecture-5.svg)
 
 | Aspect             | Fargate                     | EC2                          |
 |--------------------|-----------------------------|------------------------------|
@@ -341,38 +242,7 @@ worker nodes (or use Fargate for serverless pods).
 
 ### Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    EKS CLUSTER                          │
-│                                                         │
-│  ┌─────────────────────────────────┐  (AWS-managed)     │
-│  │        CONTROL PLANE            │                    │
-│  │  ┌────────┐ ┌────────┐         │                    │
-│  │  │API     │ │  etcd  │         │                    │
-│  │  │Server  │ │(state) │         │                    │
-│  │  └────────┘ └────────┘         │                    │
-│  │  ┌────────────┐ ┌───────────┐  │                    │
-│  │  │Controller  │ │Scheduler  │  │                    │
-│  │  │Manager     │ │           │  │                    │
-│  │  └────────────┘ └───────────┘  │                    │
-│  └────────────────┬────────────────┘                    │
-│                   │                                     │
-│  ┌────────────────┼────────────────┐  (you manage)      │
-│  │        DATA PLANE               │                    │
-│  │                                 │                    │
-│  │  ┌──────────┐  ┌──────────┐     │                    │
-│  │  │  Node    │  │  Node    │     │                    │
-│  │  │(EC2/Farg)│  │(EC2/Farg)│     │                    │
-│  │  │ ┌──────┐ │  │ ┌──────┐ │    │                    │
-│  │  │ │ Pod  │ │  │ │ Pod  │ │    │                    │
-│  │  │ │┌────┐│ │  │ │┌────┐│ │    │                    │
-│  │  │ ││cntr││ │  │ ││cntr││ │    │                    │
-│  │  │ │└────┘│ │  │ │└────┘│ │    │                    │
-│  │  │ └──────┘ │  │ └──────┘ │    │                    │
-│  │  └──────────┘  └──────────┘    │                    │
-│  └─────────────────────────────────┘                    │
-└─────────────────────────────────────────────────────────┘
-```
+![08_container_architecture diagram 6](assets/08_container_architecture-6.svg)
 
 ### Kubernetes Core Concepts
 
@@ -492,33 +362,14 @@ Each task gets its own Elastic Network Interface (ENI) with a private IP in your
 VPC subnet. This is the only networking mode supported on Fargate and the
 recommended mode for EC2 launch type.
 
-```
-VPC Subnet: 10.0.1.0/24
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│ Task A       │  │ Task B       │  │ Task C       │
-│ IP: 10.0.1.5 │  │ IP: 10.0.1.6 │  │ IP: 10.0.1.7 │
-│ ENI: eni-aaa │  │ ENI: eni-bbb │  │ ENI: eni-ccc │
-│              │  │              │  │              │
-│ SG: sg-app   │  │ SG: sg-app   │  │ SG: sg-app   │
-└──────────────┘  └──────────────┘  └──────────────┘
-
-Each task has its own security group, like an EC2 instance.
-```
+![08_container_architecture diagram 7](assets/08_container_architecture-7.svg)
 
 ### Kubernetes Pod Networking (Amazon VPC CNI)
 
 The Amazon VPC CNI plugin assigns VPC IP addresses directly to pods. Each pod gets
 a real VPC IP, enabling direct communication with other VPC resources without NAT.
 
-```
-Node (EC2 instance): 10.0.1.10
-├── Pod A: 10.0.1.11 (secondary IP on ENI)
-├── Pod B: 10.0.1.12 (secondary IP on ENI)
-└── Pod C: 10.0.1.13 (secondary IP on ENI)
-
-Pods communicate directly using VPC networking.
-Security groups can be applied at the pod level.
-```
+![08_container_architecture diagram 8](assets/08_container_architecture-8.svg)
 
 ---
 
@@ -530,20 +381,7 @@ A service mesh manages service-to-service communication in a microservices
 architecture. It handles traffic management, security (mTLS), and observability
 transparently via sidecar proxies.
 
-```
-Without Service Mesh:            With Service Mesh:
-┌────────┐    ┌────────┐        ┌────────┐    ┌────────┐
-│Service │───►│Service │        │Service │    │Service │
-│   A    │    │   B    │        │   A    │    │   B    │
-│        │    │        │        │┌──────┐│    │┌──────┐│
-└────────┘    └────────┘        ││Proxy ││───►││Proxy ││
-                                │└──────┘│    │└──────┘│
-App handles: retries,           └────────┘    └────────┘
-timeouts, auth, metrics
-                                Proxy handles: retries,
-                                timeouts, mTLS, metrics,
-                                traffic splitting
-```
+![08_container_architecture diagram 9](assets/08_container_architecture-9.svg)
 
 AWS App Mesh and Istio are the primary service mesh options on EKS.
 

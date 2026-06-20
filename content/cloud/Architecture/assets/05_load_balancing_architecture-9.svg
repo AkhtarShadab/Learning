@@ -1,0 +1,202 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="464" height="464" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="464" height="464"></rect>
+    <text x="2" y="12" >1.</text>
+    <text x="26" y="12" >Client</text>
+    <text x="82" y="12" >resolves</text>
+    <text x="58" y="28" >DNS</text>
+    <text x="90" y="28" >returns</text>
+    <text x="154" y="12" >ALB</text>
+    <text x="154" y="28" >ALB</text>
+    <text x="186" y="12" >DNS</text>
+    <text x="218" y="12" >name</text>
+    <text x="186" y="28" >IP</text>
+    <text x="210" y="28" >addresses</text>
+    <path d="M 296,16 A 16,16 0,0,0 296,32" class="nofill"></path>
+    <text x="298" y="28" >multiple</text>
+    <text x="370" y="28" >for</text>
+    <text x="402" y="28" >HA</text>
+    <path d="M 416,16 A 16,16 0,0,1 416,32" class="nofill"></path>
+    <text x="2" y="60" >2.</text>
+    <text x="26" y="60" >Client</text>
+    <text x="82" y="60" >sends</text>
+    <text x="130" y="60" >HTTPS</text>
+    <text x="58" y="76" >TCP</text>
+    <text x="90" y="76" >connection</text>
+    <text x="178" y="60" >request</text>
+    <text x="242" y="60" >to</text>
+    <text x="266" y="60" >ALB</text>
+    <text x="298" y="60" >IP</text>
+    <text x="178" y="76" >established</text>
+    <text x="274" y="76" >with</text>
+    <text x="314" y="76" >ALB</text>
+    <text x="2" y="108" >3.</text>
+    <text x="26" y="108" >ALB</text>
+    <text x="58" y="108" >terminates</text>
+    <text x="146" y="108" >TLS</text>
+    <text x="58" y="124" >Decrypts</text>
+    <text x="130" y="124" >using</text>
+    <text x="178" y="124" >certificate</text>
+    <text x="274" y="124" >from</text>
+    <text x="314" y="124" >ACM</text>
+    <text x="2" y="156" >4.</text>
+    <text x="26" y="156" >ALB</text>
+    <text x="58" y="156" >evaluates</text>
+    <text x="138" y="156" >listener</text>
+    <text x="58" y="172" >Matches</text>
+    <text x="122" y="172" >path</text>
+    <text x="210" y="156" >rules</text>
+    <path d="M 264,144 A 16,16 0,0,0 264,160" class="nofill"></path>
+    <text x="266" y="156" >priority</text>
+    <text x="338" y="156" >order</text>
+    <path d="M 376,144 A 16,16 0,0,1 376,160" class="nofill"></path>
+    <text x="338" y="172" >target</text>
+    <text x="394" y="172" >group</text>
+    <text x="2" y="204" >5.</text>
+    <text x="26" y="204" >ALB</text>
+    <text x="58" y="204" >selects</text>
+    <text x="122" y="204" >target</text>
+    <text x="178" y="204" >from</text>
+    <text x="218" y="204" >target</text>
+    <text x="274" y="204" >group</text>
+    <text x="58" y="220" >Algorithm:</text>
+    <text x="146" y="220" >least</text>
+    <text x="194" y="220" >outstanding</text>
+    <text x="290" y="220" >requests</text>
+    <text x="58" y="236" >Target:</text>
+    <text x="122" y="236" >10.0.11.47:8080</text>
+    <path d="M 256,224 A 16,16 0,0,0 256,240" class="nofill"></path>
+    <text x="258" y="236" >healthy,</text>
+    <text x="330" y="236" >2</text>
+    <text x="346" y="236" >in</text>
+    <line x1="360" y1="232" x2="368" y2="232" class="solid"></line>
+    <text x="370" y="236" >flight</text>
+    <path d="M 416,224 A 16,16 0,0,1 416,240" class="nofill"></path>
+    <text x="2" y="268" >6.</text>
+    <text x="26" y="268" >ALB</text>
+    <text x="58" y="268" >sends</text>
+    <text x="106" y="268" >HTTP</text>
+    <text x="146" y="268" >request</text>
+    <text x="210" y="268" >to</text>
+    <text x="58" y="284" >Adds</text>
+    <line x1="100" y1="280" x2="112" y2="280" class="solid"></line>
+    <text x="114" y="284" >Forwarded</text>
+    <line x1="184" y1="280" x2="192" y2="280" class="solid"></line>
+    <text x="194" y="284" >For,</text>
+    <text x="234" y="268" >target</text>
+    <line x1="236" y1="280" x2="248" y2="280" class="solid"></line>
+    <text x="250" y="284" >Forwarded</text>
+    <line x1="320" y1="280" x2="328" y2="280" class="solid"></line>
+    <text x="330" y="284" >Proto</text>
+    <text x="378" y="284" >headers</text>
+    <text x="2" y="316" >7.</text>
+    <text x="26" y="316" >Target</text>
+    <text x="82" y="316" >processes</text>
+    <text x="162" y="316" >request,</text>
+    <text x="58" y="332" >HTTP</text>
+    <text x="98" y="332" >200,</text>
+    <text x="138" y="332" >body:</text>
+    <text x="186" y="332" >{</text>
+    <text x="234" y="316" >returns</text>
+    <text x="298" y="316" >response</text>
+    <text x="242" y="332" >:</text>
+    <text x="258" y="332" >{...}}</text>
+    <text x="2" y="364" >8.</text>
+    <text x="26" y="364" >ALB</text>
+    <text x="58" y="364" >forwards</text>
+    <text x="130" y="364" >response</text>
+    <text x="202" y="364" >to</text>
+    <text x="226" y="364" >client</text>
+    <text x="58" y="380" >Re</text>
+    <line x1="72" y1="376" x2="80" y2="376" class="solid"></line>
+    <text x="82" y="380" >encrypts</text>
+    <text x="154" y="380" >for</text>
+    <text x="186" y="380" >HTTPS</text>
+    <text x="2" y="412" >9.</text>
+    <text x="26" y="412" >ALB</text>
+    <text x="58" y="412" >logs</text>
+    <text x="98" y="412" >the</text>
+    <text x="130" y="412" >request</text>
+    <text x="58" y="428" >Access</text>
+    <text x="114" y="428" >log</text>
+    <text x="146" y="428" >to</text>
+    <text x="170" y="428" >S3:</text>
+    <text x="202" y="428" >timestamp,</text>
+    <text x="290" y="428" >client</text>
+    <text x="346" y="428" >IP,</text>
+    <text x="58" y="444" >response</text>
+    <text x="130" y="444" >code,</text>
+    <text x="178" y="444" >processing</text>
+    <text x="266" y="444" >time,</text>
+    <text x="314" y="444" >request</text>
+    <text x="378" y="428" >target</text>
+    <text x="378" y="444" >URL</text>
+    <text x="434" y="428" >IP,</text>
+    <text x="162" y="172" >/api/v2/users</text>
+    <text x="194" y="332" >user</text>
+    <g>
+        <line x1="28" y1="16" x2="28" y2="24" class="solid"></line>
+        <line x1="28" y1="24" x2="48" y2="24" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="64" x2="28" y2="72" class="solid"></line>
+        <line x1="28" y1="72" x2="48" y2="72" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="112" x2="28" y2="120" class="solid"></line>
+        <line x1="28" y1="120" x2="48" y2="120" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="160" x2="28" y2="168" class="solid"></line>
+        <line x1="28" y1="168" x2="48" y2="168" class="solid"></line>
+    </g>
+    <g>
+        <text x="290" y="172">→</text>
+        <text x="306" y="172">API</text>
+    </g>
+    <g>
+        <line x1="28" y1="208" x2="28" y2="216" class="solid"></line>
+        <line x1="28" y1="216" x2="48" y2="216" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="224" x2="28" y2="232" class="solid"></line>
+        <line x1="28" y1="232" x2="48" y2="232" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="272" x2="28" y2="280" class="solid"></line>
+        <line x1="28" y1="280" x2="48" y2="280" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="320" x2="28" y2="328" class="solid"></line>
+        <line x1="28" y1="328" x2="48" y2="328" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="368" x2="28" y2="376" class="solid"></line>
+        <line x1="28" y1="376" x2="48" y2="376" class="solid"></line>
+    </g>
+    <g>
+        <line x1="28" y1="416" x2="28" y2="424" class="solid"></line>
+        <line x1="28" y1="424" x2="48" y2="424" class="solid"></line>
+    </g>
+</svg>

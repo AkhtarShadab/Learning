@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="336" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="560" height="336"></rect>
+    <text x="2" y="12" >Type</text>
+    <text x="42" y="12" >1</text>
+    <path d="M 64,0 A 16,16 0,0,0 64,16" class="nofill"></path>
+    <path d="M 192,0 A 16,16 0,0,1 192,16" class="nofill"></path>
+    <text x="202" y="12" >:</text>
+    <text x="314" y="12" >Type</text>
+    <text x="354" y="12" >2</text>
+    <path d="M 376,0 A 16,16 0,0,0 376,16" class="nofill"></path>
+    <path d="M 536,0 A 16,16 0,0,1 536,16" class="nofill"></path>
+    <text x="546" y="12" >:</text>
+    <text x="26" y="60" >VM</text>
+    <text x="50" y="60" >1</text>
+    <text x="106" y="60" >VM</text>
+    <text x="130" y="60" >2</text>
+    <text x="186" y="60" >VM</text>
+    <text x="210" y="60" >3</text>
+    <text x="58" y="124" >Type</text>
+    <text x="98" y="124" >1</text>
+    <text x="114" y="124" >Hypervisor</text>
+    <path d="M 40,128 A 16,16 0,0,0 40,144" class="nofill"></path>
+    <text x="42" y="140" >bare</text>
+    <text x="82" y="140" >metal</text>
+    <line x1="128" y1="136" x2="136" y2="136" class="solid"></line>
+    <text x="146" y="140" >no</text>
+    <text x="170" y="140" >host</text>
+    <text x="210" y="140" >OS</text>
+    <path d="M 224,128 A 16,16 0,0,1 224,144" class="nofill"></path>
+    <text x="58" y="204" >Physical</text>
+    <text x="130" y="204" >Hardware</text>
+    <line x1="244" y1="192" x2="244" y2="208" class="solid"></line>
+    <text x="330" y="60" >VM</text>
+    <text x="354" y="60" >1</text>
+    <text x="410" y="60" >VM</text>
+    <text x="434" y="60" >2</text>
+    <line x1="348" y1="80" x2="348" y2="96" class="solid"></line>
+    <line x1="428" y1="80" x2="428" y2="96" class="solid"></line>
+    <text x="346" y="124" >Type</text>
+    <text x="386" y="124" >2</text>
+    <text x="402" y="124" >Hypervisor</text>
+    <line x1="500" y1="112" x2="500" y2="144" class="solid"></line>
+    <path d="M 352,128 A 16,16 0,0,0 352,144" class="nofill"></path>
+    <text x="354" y="140" >runs</text>
+    <text x="394" y="140" >as</text>
+    <text x="418" y="140" >an</text>
+    <text x="442" y="140" >app</text>
+    <path d="M 464,128 A 16,16 0,0,1 464,144" class="nofill"></path>
+    <line x1="332" y1="192" x2="332" y2="208" class="solid"></line>
+    <text x="378" y="204" >Host</text>
+    <circle cx="420" cy="200" r="4" class="nofill"></circle>
+    <line x1="418" y1="204" x2="408" y2="224" class="solid"></line>
+    <text x="426" y="204" >S</text>
+    <line x1="508" y1="192" x2="508" y2="208" class="solid"></line>
+    <path d="M 352,208 A 16,16 0,0,0 352,224" class="nofill"></path>
+    <text x="354" y="220" >Windows</text>
+    <text x="418" y="220" >macOS</text>
+    <line x1="500" y1="208" x2="500" y2="240" class="solid"></line>
+    <text x="354" y="236" >Linux</text>
+    <text x="402" y="236" >desktop</text>
+    <text x="346" y="300" >Physical</text>
+    <text x="418" y="300" >Hardware</text>
+    <line x1="508" y1="288" x2="508" y2="304" class="solid"></line>
+    <text x="66" y="12" >The Foundation</text>
+    <text x="378" y="12" >Room Within a Room</text>
+    <g>
+        <line x1="12" y1="40" x2="68" y2="40" class="solid"></line>
+        <line x1="12" y1="40" x2="12" y2="72" class="solid"></line>
+        <line x1="68" y1="40" x2="68" y2="72" class="solid"></line>
+        <line x1="12" y1="72" x2="68" y2="72" class="solid"></line>
+        <line x1="36" y1="72" x2="36" y2="104" class="solid"></line>
+        <line x1="172" y1="40" x2="228" y2="40" class="solid"></line>
+        <line x1="172" y1="40" x2="172" y2="72" class="solid"></line>
+        <line x1="228" y1="40" x2="228" y2="72" class="solid"></line>
+        <line x1="172" y1="72" x2="228" y2="72" class="solid"></line>
+        <line x1="196" y1="72" x2="196" y2="104" class="solid"></line>
+        <line x1="12" y1="104" x2="228" y2="104" class="solid"></line>
+        <line x1="12" y1="104" x2="12" y2="152" class="solid"></line>
+        <line x1="228" y1="104" x2="228" y2="112" class="solid"></line>
+        <line x1="236" y1="112" x2="236" y2="152" class="solid"></line>
+        <line x1="12" y1="152" x2="236" y2="152" class="solid"></line>
+        <line x1="108" y1="152" x2="108" y2="184" class="solid"></line>
+        <line x1="12" y1="184" x2="236" y2="184" class="solid"></line>
+        <line x1="12" y1="184" x2="12" y2="216" class="solid"></line>
+        <line x1="236" y1="184" x2="236" y2="192" class="solid"></line>
+        <line x1="12" y1="216" x2="236" y2="216" class="solid"></line>
+        <line x1="236" y1="208" x2="236" y2="216" class="solid"></line>
+        <line x1="92" y1="40" x2="148" y2="40" class="solid"></line>
+        <line x1="92" y1="40" x2="92" y2="72" class="solid"></line>
+        <line x1="148" y1="40" x2="148" y2="72" class="solid"></line>
+        <line x1="92" y1="72" x2="148" y2="72" class="solid"></line>
+        <line x1="116" y1="72" x2="116" y2="104" class="solid"></line>
+    </g>
+    <g>
+        <line x1="316" y1="40" x2="372" y2="40" class="solid"></line>
+        <line x1="316" y1="40" x2="316" y2="72" class="solid"></line>
+        <line x1="372" y1="40" x2="372" y2="72" class="solid"></line>
+        <line x1="316" y1="72" x2="372" y2="72" class="solid"></line>
+        <line x1="340" y1="72" x2="340" y2="80" class="solid"></line>
+    </g>
+    <g>
+        <line x1="396" y1="40" x2="452" y2="40" class="solid"></line>
+        <line x1="396" y1="40" x2="396" y2="72" class="solid"></line>
+        <line x1="452" y1="40" x2="452" y2="72" class="solid"></line>
+        <line x1="396" y1="72" x2="452" y2="72" class="solid"></line>
+        <line x1="420" y1="72" x2="420" y2="80" class="solid"></line>
+    </g>
+    <g>
+        <line x1="316" y1="104" x2="484" y2="104" class="solid"></line>
+        <line x1="316" y1="104" x2="316" y2="112" class="solid"></line>
+        <line x1="340" y1="96" x2="340" y2="104" class="solid"></line>
+        <line x1="420" y1="96" x2="420" y2="104" class="solid"></line>
+        <line x1="484" y1="104" x2="484" y2="112" class="solid"></line>
+    </g>
+    <g>
+        <line x1="324" y1="112" x2="324" y2="152" class="solid"></line>
+        <line x1="324" y1="152" x2="492" y2="152" class="solid"></line>
+        <line x1="404" y1="152" x2="404" y2="184" class="solid"></line>
+        <line x1="492" y1="144" x2="492" y2="152" class="solid"></line>
+        <line x1="324" y1="184" x2="492" y2="184" class="solid"></line>
+        <line x1="324" y1="184" x2="324" y2="192" class="solid"></line>
+        <line x1="492" y1="184" x2="492" y2="192" class="solid"></line>
+    </g>
+    <g>
+        <line x1="324" y1="208" x2="324" y2="248" class="solid"></line>
+        <line x1="324" y1="248" x2="492" y2="248" class="solid"></line>
+        <line x1="404" y1="248" x2="404" y2="280" class="solid"></line>
+        <line x1="492" y1="240" x2="492" y2="248" class="solid"></line>
+        <line x1="324" y1="280" x2="492" y2="280" class="solid"></line>
+        <line x1="324" y1="280" x2="324" y2="312" class="solid"></line>
+        <line x1="492" y1="280" x2="492" y2="288" class="solid"></line>
+        <line x1="324" y1="312" x2="500" y2="312" class="solid"></line>
+        <line x1="500" y1="304" x2="500" y2="312" class="solid"></line>
+    </g>
+    <g>
+        <line x1="464" y1="208" x2="456" y2="224" class="solid"></line>
+        <path d="M 456,224 A 16,16 0,0,1 456,240" class="nofill"></path>
+    </g>
+</svg>

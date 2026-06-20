@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="584" height="448" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="584" height="448"></rect>
+    <text x="2" y="12" >START:</text>
+    <text x="58" y="12" >What</text>
+    <text x="98" y="12" >are</text>
+    <text x="130" y="12" >your</text>
+    <text x="170" y="12" >data</text>
+    <text x="210" y="12" >access</text>
+    <text x="266" y="12" >patterns?</text>
+    <text x="34" y="44" >Structured</text>
+    <text x="122" y="44" >data</text>
+    <text x="162" y="44" >with</text>
+    <text x="202" y="44" >complex</text>
+    <text x="266" y="44" >joins</text>
+    <text x="314" y="44" >and</text>
+    <text x="346" y="44" >transactions?</text>
+    <text x="66" y="60" >Need</text>
+    <text x="106" y="60" >cloud</text>
+    <line x1="144" y1="56" x2="152" y2="56" class="solid"></line>
+    <text x="154" y="60" >native</text>
+    <text x="210" y="60" >performance?</text>
+    <text x="346" y="60" >Aurora</text>
+    <text x="66" y="76" >Need</text>
+    <text x="106" y="76" >Oracle</text>
+    <line x1="160" y1="64" x2="152" y2="80" class="solid"></line>
+    <text x="162" y="76" >SQL</text>
+    <text x="194" y="76" >Server</text>
+    <text x="250" y="76" >compatibility?</text>
+    <text x="402" y="76" >RDS</text>
+    <text x="66" y="92" >Need</text>
+    <text x="106" y="92" >aut</text>
+    <circle cx="132" cy="88" r="3" class="nofill"></circle>
+    <line x1="136" y1="88" x2="144" y2="88" class="solid"></line>
+    <text x="146" y="92" >scaling</text>
+    <text x="210" y="92" >compute?</text>
+    <text x="314" y="92" >Aurora</text>
+    <text x="370" y="92" >Serverless</text>
+    <text x="458" y="92" >v2</text>
+    <text x="34" y="124" >Key</text>
+    <line x1="56" y1="120" x2="64" y2="120" class="solid"></line>
+    <text x="66" y="124" >value</text>
+    <text x="114" y="124" >lookups</text>
+    <text x="178" y="124" >with</text>
+    <text x="218" y="124" >massive</text>
+    <text x="282" y="124" >scale?</text>
+    <text x="66" y="140" >Need</text>
+    <text x="106" y="140" >single</text>
+    <line x1="152" y1="136" x2="160" y2="136" class="solid"></line>
+    <text x="162" y="140" >digit</text>
+    <text x="210" y="140" >ms</text>
+    <text x="234" y="140" >latency?</text>
+    <text x="338" y="140" >DynamoDB</text>
+    <text x="66" y="156" >Need</text>
+    <text x="106" y="156" >microsecond</text>
+    <text x="202" y="156" >latency?</text>
+    <text x="306" y="156" >DynamoDB</text>
+    <text x="378" y="156" >+</text>
+    <text x="394" y="156" >DAX</text>
+    <text x="66" y="172" >Need</text>
+    <text x="106" y="172" >flexible</text>
+    <text x="178" y="172" >queries?</text>
+    <text x="282" y="172" >Consider</text>
+    <text x="354" y="172" >Aurora</text>
+    <text x="410" y="172" >instead</text>
+    <text x="34" y="204" >Caching</text>
+    <text x="98" y="204" >layer</text>
+    <text x="146" y="204" >for</text>
+    <text x="178" y="204" >reads?</text>
+    <text x="66" y="220" >Need</text>
+    <text x="106" y="220" >data</text>
+    <text x="146" y="220" >structures</text>
+    <path d="M 240,208 A 16,16 0,0,0 240,224" class="nofill"></path>
+    <text x="242" y="220" >sorted</text>
+    <text x="298" y="220" >sets,</text>
+    <text x="346" y="220" >lists</text>
+    <path d="M 384,208 A 16,16 0,0,1 384,224" class="nofill"></path>
+    <text x="394" y="220" >?</text>
+    <text x="442" y="220" >ElastiCache</text>
+    <text x="538" y="220" >Redis</text>
+    <text x="66" y="236" >Simple</text>
+    <text x="122" y="236" >key</text>
+    <line x1="144" y1="232" x2="152" y2="232" class="solid"></line>
+    <text x="154" y="236" >value</text>
+    <text x="202" y="236" >cache?</text>
+    <text x="290" y="236" >ElastiCache</text>
+    <text x="386" y="236" >Redis</text>
+    <path d="M 440,224 A 16,16 0,0,0 440,240" class="nofill"></path>
+    <text x="442" y="236" >or</text>
+    <text x="466" y="236" >Memcached</text>
+    <path d="M 536,224 A 16,16 0,0,1 536,240" class="nofill"></path>
+    <text x="34" y="268" >Highly</text>
+    <text x="90" y="268" >connected</text>
+    <text x="170" y="268" >data</text>
+    <path d="M 216,256 A 16,16 0,0,0 216,272" class="nofill"></path>
+    <text x="218" y="268" >relationships</text>
+    <path d="M 320,256 A 16,16 0,0,1 320,272" class="nofill"></path>
+    <text x="330" y="268" >?</text>
+    <text x="66" y="284" >Neptune</text>
+    <path d="M 136,272 A 16,16 0,0,0 136,288" class="nofill"></path>
+    <text x="138" y="284" >graph</text>
+    <text x="186" y="284" >database</text>
+    <path d="M 248,272 A 16,16 0,0,1 248,288" class="nofill"></path>
+    <text x="34" y="316" >Time</text>
+    <line x1="64" y1="312" x2="72" y2="312" class="solid"></line>
+    <text x="74" y="316" >series</text>
+    <text x="130" y="316" >data</text>
+    <text x="66" y="332" >Timestream</text>
+    <path d="M 176,304 A 16,16 0,0,0 176,320" class="nofill"></path>
+    <text x="178" y="316" >metrics,</text>
+    <text x="250" y="316" >IoT</text>
+    <path d="M 272,304 A 16,16 0,0,1 272,320" class="nofill"></path>
+    <text x="282" y="316" >?</text>
+    <text x="34" y="364" >Immutable</text>
+    <text x="66" y="380" >QLDB</text>
+    <text x="114" y="364" >audit</text>
+    <text x="162" y="364" >log?</text>
+    <text x="34" y="412" >Document</text>
+    <text x="106" y="412" >storage</text>
+    <text x="170" y="412" >with</text>
+    <text x="210" y="412" >search?</text>
+    <text x="66" y="428" >OpenSearch</text>
+    <path d="M 160,416 A 16,16 0,0,0 160,432" class="nofill"></path>
+    <text x="162" y="428" >Elasticsearch</text>
+    <text x="274" y="428" >managed</text>
+    <path d="M 328,416 A 16,16 0,0,1 328,432" class="nofill"></path>
+    <g>
+        <line x1="4" y1="16" x2="4" y2="408" class="solid"></line>
+        <line x1="4" y1="40" x2="24" y2="40" class="solid"></line>
+        <line x1="4" y1="120" x2="24" y2="120" class="solid"></line>
+        <line x1="4" y1="200" x2="24" y2="200" class="solid"></line>
+        <line x1="4" y1="264" x2="24" y2="264" class="solid"></line>
+        <line x1="4" y1="312" x2="24" y2="312" class="solid"></line>
+        <line x1="4" y1="360" x2="24" y2="360" class="solid"></line>
+        <line x1="4" y1="408" x2="24" y2="408" class="solid"></line>
+    </g>
+    <g>
+        <line x1="36" y1="48" x2="36" y2="88" class="solid"></line>
+        <line x1="36" y1="56" x2="56" y2="56" class="solid"></line>
+        <line x1="36" y1="72" x2="56" y2="72" class="solid"></line>
+        <line x1="36" y1="88" x2="56" y2="88" class="solid"></line>
+    </g>
+    <g>
+        <line x1="312" y1="56" x2="328" y2="56" class="solid"></line>
+        <polygon points="328,52 336,56 328,60" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="368" y1="72" x2="384" y2="72" class="solid"></line>
+        <polygon points="384,68 392,72 384,76" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="280" y1="88" x2="296" y2="88" class="solid"></line>
+        <polygon points="296,84 304,88 296,92" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="36" y1="128" x2="36" y2="168" class="solid"></line>
+        <line x1="36" y1="136" x2="56" y2="136" class="solid"></line>
+        <line x1="36" y1="152" x2="56" y2="152" class="solid"></line>
+        <line x1="36" y1="168" x2="56" y2="168" class="solid"></line>
+    </g>
+    <g>
+        <line x1="304" y1="136" x2="320" y2="136" class="solid"></line>
+        <polygon points="320,132 328,136 320,140" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="272" y1="152" x2="288" y2="152" class="solid"></line>
+        <polygon points="288,148 296,152 288,156" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="248" y1="168" x2="264" y2="168" class="solid"></line>
+        <polygon points="264,164 272,168 264,172" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="36" y1="208" x2="36" y2="232" class="solid"></line>
+        <line x1="36" y1="216" x2="56" y2="216" class="solid"></line>
+        <line x1="36" y1="232" x2="56" y2="232" class="solid"></line>
+    </g>
+    <g>
+        <line x1="408" y1="216" x2="424" y2="216" class="solid"></line>
+        <polygon points="424,212 432,216 424,220" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="256" y1="232" x2="272" y2="232" class="solid"></line>
+        <polygon points="272,228 280,232 272,236" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="36" y1="272" x2="36" y2="280" class="solid"></line>
+        <line x1="36" y1="280" x2="56" y2="280" class="solid"></line>
+    </g>
+    <g>
+        <line x1="36" y1="320" x2="36" y2="328" class="solid"></line>
+        <line x1="36" y1="328" x2="56" y2="328" class="solid"></line>
+    </g>
+    <g>
+        <line x1="36" y1="368" x2="36" y2="376" class="solid"></line>
+        <line x1="36" y1="376" x2="56" y2="376" class="solid"></line>
+    </g>
+    <g>
+        <line x1="36" y1="416" x2="36" y2="424" class="solid"></line>
+        <line x1="36" y1="424" x2="56" y2="424" class="solid"></line>
+    </g>
+</svg>

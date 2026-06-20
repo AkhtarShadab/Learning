@@ -1,0 +1,14 @@
+# Quartz on Hostinger (Apache/LiteSpeed) — resolve extensionless clean URLs to .html
+DirectoryIndex index.html
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # If "/path" isn't a real dir and "/path.html" exists, serve the .html file
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}\.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
+</IfModule>
+
+ErrorDocument 404 /404.html

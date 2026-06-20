@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="584" height="288" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="584" height="288"></rect>
+    <text x="2" y="12" >Circular</text>
+    <text x="74" y="12" >Buffer</text>
+    <path d="M 136,0 A 16,16 0,0,0 136,16" class="nofill"></path>
+    <text x="138" y="12" >virtio</text>
+    <text x="194" y="12" >vring</text>
+    <path d="M 232,0 A 16,16 0,0,1 232,16" class="nofill"></path>
+    <text x="242" y="12" >:</text>
+    <text x="18" y="44" >Available</text>
+    <text x="98" y="44" >Ring</text>
+    <path d="M 144,32 A 16,16 0,0,0 144,48" class="nofill"></path>
+    <text x="146" y="44" >guest</text>
+    <path d="M 240,32 A 16,16 0,0,1 240,48" class="nofill"></path>
+    <text x="250" y="44" >:</text>
+    <text x="34" y="76" >3</text>
+    <text x="66" y="76" >7</text>
+    <text x="98" y="76" >1</text>
+    <text x="130" y="76" >5</text>
+    <text x="34" y="108" >↑</text>
+    <text x="194" y="108" >↑</text>
+    <text x="34" y="124" >host</text>
+    <text x="74" y="124" >reads</text>
+    <text x="122" y="124" >here</text>
+    <text x="194" y="124" >guest</text>
+    <text x="242" y="124" >writes</text>
+    <text x="298" y="124" >here</text>
+    <path d="M 40,128 A 16,16 0,0,0 40,144" class="nofill"></path>
+    <text x="42" y="140" >consumer</text>
+    <text x="114" y="140" >index</text>
+    <path d="M 152,128 A 16,16 0,0,1 152,144" class="nofill"></path>
+    <path d="M 200,128 A 16,16 0,0,0 200,144" class="nofill"></path>
+    <text x="202" y="140" >producer</text>
+    <text x="274" y="140" >index</text>
+    <path d="M 312,128 A 16,16 0,0,1 312,144" class="nofill"></path>
+    <text x="298" y="76" >←</text>
+    <text x="314" y="76" >guest</text>
+    <text x="362" y="76" >writes</text>
+    <text x="418" y="76" >descriptor</text>
+    <text x="506" y="76" >indices</text>
+    <text x="18" y="172" >Used</text>
+    <text x="58" y="172" >Ring</text>
+    <path d="M 104,160 A 16,16 0,0,0 104,176" class="nofill"></path>
+    <text x="106" y="172" >host</text>
+    <path d="M 200,160 A 16,16 0,0,1 200,176" class="nofill"></path>
+    <text x="210" y="172" >:</text>
+    <text x="34" y="204" >3</text>
+    <text x="66" y="204" >7</text>
+    <text x="34" y="236" >↑</text>
+    <text x="98" y="236" >↑</text>
+    <text x="34" y="252" >guest</text>
+    <text x="98" y="252" >host</text>
+    <text x="34" y="268" >reads</text>
+    <text x="298" y="204" >←</text>
+    <text x="314" y="204" >host</text>
+    <text x="354" y="204" >writes</text>
+    <text x="410" y="204" >completed</text>
+    <text x="490" y="204" >descriptors</text>
+    <text x="138" y="252" >writes</text>
+    <text x="194" y="252" >here</text>
+    <g>
+        <text x="194" y="44">→</text>
+        <text x="210" y="44">host</text>
+    </g>
+    <g>
+        <line x1="20" y1="56" x2="276" y2="56" class="solid"></line>
+        <line x1="20" y1="56" x2="20" y2="88" class="solid"></line>
+        <line x1="52" y1="56" x2="52" y2="88" class="solid"></line>
+        <line x1="84" y1="56" x2="84" y2="88" class="solid"></line>
+        <line x1="116" y1="56" x2="116" y2="88" class="solid"></line>
+        <line x1="148" y1="56" x2="148" y2="88" class="solid"></line>
+        <line x1="180" y1="56" x2="180" y2="88" class="solid"></line>
+        <line x1="212" y1="56" x2="212" y2="88" class="solid"></line>
+        <line x1="244" y1="56" x2="244" y2="88" class="solid"></line>
+        <line x1="276" y1="56" x2="276" y2="88" class="solid"></line>
+        <line x1="20" y1="88" x2="276" y2="88" class="solid"></line>
+    </g>
+    <g>
+        <text x="146" y="172">→</text>
+        <text x="162" y="172">guest</text>
+    </g>
+    <g>
+        <line x1="20" y1="184" x2="276" y2="184" class="solid"></line>
+        <line x1="20" y1="184" x2="20" y2="216" class="solid"></line>
+        <line x1="52" y1="184" x2="52" y2="216" class="solid"></line>
+        <line x1="84" y1="184" x2="84" y2="216" class="solid"></line>
+        <line x1="116" y1="184" x2="116" y2="216" class="solid"></line>
+        <line x1="148" y1="184" x2="148" y2="216" class="solid"></line>
+        <line x1="180" y1="184" x2="180" y2="216" class="solid"></line>
+        <line x1="212" y1="184" x2="212" y2="216" class="solid"></line>
+        <line x1="244" y1="184" x2="244" y2="216" class="solid"></line>
+        <line x1="276" y1="184" x2="276" y2="216" class="solid"></line>
+        <line x1="20" y1="216" x2="276" y2="216" class="solid"></line>
+    </g>
+</svg>

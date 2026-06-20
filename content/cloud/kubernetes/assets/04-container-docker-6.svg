@@ -1,0 +1,602 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="816" height="1216" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="816" height="1216"></rect>
+    <rect x="0" y="4" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="12" x2="4" y2="20" class="solid"></line>
+    <line x1="16" y1="8" x2="32" y2="8" class="solid"></line>
+    <text x="42" y="12" >RUN</text>
+    <path d="M 80,0 A 16,16 0,0,0 80,16" class="nofill"></path>
+    <text x="82" y="12" >DETACHED</text>
+    <path d="M 144,0 A 16,16 0,0,1 144,16" class="nofill"></path>
+    <line x1="160" y1="8" x2="480" y2="8" class="solid"></line>
+    <rect x="0" y="20" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="28" x2="4" y2="36" class="solid"></line>
+    <text x="18" y="28" >Start</text>
+    <text x="66" y="28" >an</text>
+    <text x="90" y="28" >nginx</text>
+    <text x="138" y="28" >container</text>
+    <text x="218" y="28" >in</text>
+    <text x="242" y="28" >the</text>
+    <text x="274" y="28" >background</text>
+    <path d="M 368,16 A 16,16 0,0,0 368,32" class="nofill"></path>
+    <line x1="368" y1="24" x2="376" y2="24" class="solid"></line>
+    <text x="378" y="28" >d</text>
+    <line x1="392" y1="22" x2="400" y2="22" class="solid"></line>
+    <line x1="392" y1="26" x2="400" y2="26" class="solid"></line>
+    <text x="410" y="28" >detached</text>
+    <text x="482" y="28" >mode</text>
+    <path d="M 512,16 A 16,16 0,0,1 512,32" class="nofill"></path>
+    <text x="522" y="28" >.</text>
+    <rect x="0" y="36" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="44" x2="4" y2="52" class="solid"></line>
+    <line x1="16" y1="40" x2="32" y2="40" class="solid"></line>
+    <text x="34" y="44" >name</text>
+    <text x="74" y="44" >web</text>
+    <line x1="100" y1="32" x2="100" y2="64" class="broken"></line>
+    <text x="114" y="44" >give</text>
+    <text x="154" y="44" >it</text>
+    <text x="178" y="44" >a</text>
+    <text x="194" y="44" >human</text>
+    <line x1="232" y1="40" x2="240" y2="40" class="solid"></line>
+    <text x="242" y="44" >readable</text>
+    <text x="314" y="44" >name</text>
+    <text x="354" y="44" >instead</text>
+    <text x="418" y="44" >of</text>
+    <text x="442" y="44" >a</text>
+    <text x="458" y="44" >random</text>
+    <text x="514" y="44" >one.</text>
+    <rect x="0" y="52" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="60" x2="4" y2="68" class="solid"></line>
+    <line x1="16" y1="56" x2="24" y2="56" class="solid"></line>
+    <text x="26" y="60" >p</text>
+    <text x="42" y="60" >8080:80</text>
+    <text x="114" y="60" >map</text>
+    <text x="146" y="60" >host</text>
+    <text x="186" y="60" >port</text>
+    <text x="226" y="60" >8080</text>
+    <text x="266" y="60" >to</text>
+    <text x="290" y="60" >container</text>
+    <text x="370" y="60" >port</text>
+    <text x="410" y="60" >80.</text>
+    <rect x="0" y="68" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="76" >nginx:alpine:</text>
+    <text x="130" y="76" >the</text>
+    <text x="162" y="76" >image</text>
+    <text x="210" y="76" >to</text>
+    <text x="234" y="76" >use</text>
+    <line x1="260" y1="76" x2="260" y2="80" class="solid"></line>
+    <text x="2" y="92" >docker</text>
+    <text x="58" y="92" >run</text>
+    <line x1="88" y1="88" x2="96" y2="88" class="solid"></line>
+    <text x="98" y="92" >d</text>
+    <line x1="112" y1="88" x2="128" y2="88" class="solid"></line>
+    <text x="130" y="92" >name</text>
+    <text x="170" y="92" >web</text>
+    <line x1="200" y1="88" x2="208" y2="88" class="solid"></line>
+    <text x="210" y="92" >p</text>
+    <text x="226" y="92" >8080:80</text>
+    <text x="290" y="92" >nginx:alpine</text>
+    <rect x="0" y="116" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="124" x2="4" y2="132" class="solid"></line>
+    <line x1="16" y1="120" x2="32" y2="120" class="solid"></line>
+    <text x="42" y="124" >RUN</text>
+    <path d="M 80,112 A 16,16 0,0,0 80,128" class="nofill"></path>
+    <text x="82" y="124" >INTERACTIVE</text>
+    <path d="M 168,112 A 16,16 0,0,1 168,128" class="nofill"></path>
+    <line x1="184" y1="120" x2="472" y2="120" class="solid"></line>
+    <rect x="0" y="132" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="140" x2="4" y2="148" class="solid"></line>
+    <text x="18" y="140" >Start</text>
+    <text x="66" y="140" >an</text>
+    <text x="90" y="140" >Ubuntu</text>
+    <text x="146" y="140" >container</text>
+    <text x="226" y="140" >and</text>
+    <text x="258" y="140" >drop</text>
+    <text x="298" y="140" >into</text>
+    <text x="338" y="140" >a</text>
+    <text x="354" y="140" >bash</text>
+    <text x="394" y="140" >shell.</text>
+    <rect x="0" y="148" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="156" x2="4" y2="164" class="solid"></line>
+    <line x1="16" y1="152" x2="24" y2="152" class="solid"></line>
+    <text x="26" y="156" >i</text>
+    <line x1="36" y1="144" x2="36" y2="176" class="broken"></line>
+    <text x="50" y="156" >keep</text>
+    <text x="90" y="156" >STDIN</text>
+    <text x="138" y="156" >open</text>
+    <path d="M 184,144 A 16,16 0,0,0 184,160" class="nofill"></path>
+    <text x="186" y="156" >interactive</text>
+    <path d="M 272,144 A 16,16 0,0,1 272,160" class="nofill"></path>
+    <text x="282" y="156" >.</text>
+    <rect x="0" y="164" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="172" x2="4" y2="180" class="solid"></line>
+    <line x1="16" y1="168" x2="24" y2="168" class="solid"></line>
+    <text x="26" y="172" >t</text>
+    <text x="50" y="172" >allocate</text>
+    <text x="122" y="172" >a</text>
+    <text x="138" y="172" >pseud</text>
+    <circle cx="180" cy="168" r="3" class="nofill"></circle>
+    <line x1="184" y1="168" x2="192" y2="168" class="solid"></line>
+    <text x="194" y="172" >TTY</text>
+    <path d="M 232,160 A 16,16 0,0,0 232,176" class="nofill"></path>
+    <text x="234" y="172" >terminal</text>
+    <path d="M 296,160 A 16,16 0,0,1 296,176" class="nofill"></path>
+    <text x="306" y="172" >.</text>
+    <rect x="0" y="180" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="188" >The</text>
+    <text x="50" y="188" >container</text>
+    <text x="130" y="188" >exits</text>
+    <text x="178" y="188" >when</text>
+    <text x="218" y="188" >the</text>
+    <text x="250" y="188" >bash</text>
+    <text x="290" y="188" >shell</text>
+    <text x="2" y="204" >docker</text>
+    <text x="58" y="204" >run</text>
+    <line x1="88" y1="200" x2="96" y2="200" class="solid"></line>
+    <text x="98" y="204" >it</text>
+    <text x="122" y="204" >ubuntu:22.04</text>
+    <text x="226" y="204" >bash</text>
+    <text x="338" y="188" >exits.</text>
+    <rect x="0" y="228" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="236" x2="4" y2="244" class="solid"></line>
+    <line x1="16" y1="232" x2="32" y2="232" class="solid"></line>
+    <text x="42" y="236" >LIST</text>
+    <text x="82" y="236" >CONTAINERS</text>
+    <line x1="168" y1="232" x2="472" y2="232" class="solid"></line>
+    <rect x="0" y="244" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="252" x2="4" y2="260" class="solid"></line>
+    <text x="18" y="252" >List</text>
+    <text x="58" y="252" >all</text>
+    <text x="90" y="252" >containers,</text>
+    <text x="186" y="252" >including</text>
+    <text x="266" y="252" >stopped</text>
+    <text x="330" y="252" >ones</text>
+    <path d="M 376,240 A 16,16 0,0,0 376,256" class="nofill"></path>
+    <line x1="376" y1="248" x2="384" y2="248" class="solid"></line>
+    <text x="386" y="252" >a</text>
+    <line x1="400" y1="246" x2="408" y2="246" class="solid"></line>
+    <line x1="400" y1="250" x2="408" y2="250" class="solid"></line>
+    <text x="418" y="252" >all</text>
+    <path d="M 440,240 A 16,16 0,0,1 440,256" class="nofill"></path>
+    <text x="450" y="252" >.</text>
+    <rect x="0" y="260" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="268" >Without</text>
+    <line x1="80" y1="264" x2="88" y2="264" class="solid"></line>
+    <text x="90" y="268" >a,</text>
+    <text x="114" y="268" >only</text>
+    <text x="154" y="268" >running</text>
+    <text x="218" y="268" >containers</text>
+    <text x="306" y="268" >are</text>
+    <text x="338" y="268" >shown.</text>
+    <text x="2" y="284" >docker</text>
+    <text x="58" y="284" >ps</text>
+    <line x1="80" y1="280" x2="88" y2="280" class="solid"></line>
+    <text x="90" y="284" >a</text>
+    <rect x="0" y="292" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="300" x2="4" y2="308" class="solid"></line>
+    <text x="18" y="300" >Output:</text>
+    <rect x="0" y="308" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="316" x2="4" y2="324" class="solid"></line>
+    <text x="18" y="316" >CONTAINER</text>
+    <text x="98" y="316" >ID</text>
+    <rect x="0" y="324" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="332" >3f7a2b1c9d8e</text>
+    <text x="138" y="316" >IMAGE</text>
+    <text x="138" y="332" >nginx:alpine</text>
+    <text x="258" y="316" >COMMAND</text>
+    <text x="458" y="316" >STATUS</text>
+    <text x="458" y="332" >Up</text>
+    <text x="482" y="332" >5</text>
+    <text x="498" y="332" >minutes</text>
+    <text x="586" y="316" >PORTS</text>
+    <text x="586" y="332" >0.0.0.0:8080</text>
+    <text x="698" y="332" >80</text>
+    <line x1="720" y1="320" x2="712" y2="336" class="solid"></line>
+    <text x="722" y="332" >tcp</text>
+    <text x="770" y="316" >NAMES</text>
+    <text x="770" y="332" >web</text>
+    <rect x="0" y="356" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="364" x2="4" y2="372" class="solid"></line>
+    <line x1="16" y1="360" x2="32" y2="360" class="solid"></line>
+    <text x="42" y="364" >LOGS</text>
+    <line x1="80" y1="360" x2="480" y2="360" class="solid"></line>
+    <rect x="0" y="372" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="380" x2="4" y2="388" class="solid"></line>
+    <text x="18" y="380" >View</text>
+    <text x="58" y="380" >container</text>
+    <text x="138" y="380" >logs</text>
+    <path d="M 184,368 A 16,16 0,0,0 184,384" class="nofill"></path>
+    <text x="186" y="380" >stdout</text>
+    <text x="242" y="380" >+</text>
+    <text x="258" y="380" >stderr</text>
+    <path d="M 304,368 A 16,16 0,0,1 304,384" class="nofill"></path>
+    <text x="314" y="380" >.</text>
+    <rect x="0" y="388" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="396" x2="4" y2="404" class="solid"></line>
+    <line x1="16" y1="392" x2="24" y2="392" class="solid"></line>
+    <text x="26" y="396" >f:</text>
+    <text x="50" y="396" >follow</text>
+    <text x="106" y="396" >the</text>
+    <text x="138" y="396" >log</text>
+    <text x="170" y="396" >stream</text>
+    <text x="226" y="396" >in</text>
+    <text x="250" y="396" >real</text>
+    <line x1="280" y1="392" x2="288" y2="392" class="solid"></line>
+    <text x="290" y="396" >time</text>
+    <path d="M 336,384 A 16,16 0,0,0 336,400" class="nofill"></path>
+    <text x="338" y="396" >like</text>
+    <text x="378" y="396" >&#39;tail</text>
+    <line x1="424" y1="392" x2="432" y2="392" class="solid"></line>
+    <text x="434" y="396" >f&#39;</text>
+    <path d="M 448,384 A 16,16 0,0,1 448,400" class="nofill"></path>
+    <text x="458" y="396" >.</text>
+    <rect x="0" y="404" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="412" x2="4" y2="420" class="solid"></line>
+    <line x1="16" y1="408" x2="32" y2="408" class="solid"></line>
+    <text x="34" y="412" >tail</text>
+    <text x="74" y="412" >100</text>
+    <line x1="100" y1="400" x2="100" y2="432" class="broken"></line>
+    <text x="114" y="412" >show</text>
+    <text x="154" y="412" >only</text>
+    <text x="194" y="412" >the</text>
+    <text x="226" y="412" >last</text>
+    <text x="266" y="412" >100</text>
+    <text x="298" y="412" >lines</text>
+    <path d="M 352,400 A 16,16 0,0,0 352,416" class="nofill"></path>
+    <text x="354" y="412" >useful</text>
+    <text x="410" y="412" >for</text>
+    <text x="442" y="412" >large</text>
+    <rect x="0" y="420" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="16" y1="424" x2="32" y2="424" class="solid"></line>
+    <text x="34" y="428" >since</text>
+    <text x="82" y="428" >5m</text>
+    <text x="114" y="428" >show</text>
+    <text x="154" y="428" >logs</text>
+    <text x="194" y="428" >from</text>
+    <text x="234" y="428" >the</text>
+    <text x="266" y="428" >last</text>
+    <text x="306" y="428" >5</text>
+    <text x="322" y="428" >minutes.</text>
+    <text x="2" y="444" >docker</text>
+    <text x="58" y="444" >logs</text>
+    <text x="98" y="444" >web</text>
+    <line x1="128" y1="440" x2="136" y2="440" class="solid"></line>
+    <text x="138" y="444" >f</text>
+    <text x="2" y="460" >docker</text>
+    <text x="58" y="460" >logs</text>
+    <text x="98" y="460" >web</text>
+    <line x1="128" y1="456" x2="144" y2="456" class="solid"></line>
+    <text x="146" y="460" >tail</text>
+    <text x="490" y="412" >logs</text>
+    <path d="M 520,400 A 16,16 0,0,1 520,416" class="nofill"></path>
+    <text x="530" y="412" >.</text>
+    <text x="186" y="460" >100</text>
+    <line x1="216" y1="456" x2="232" y2="456" class="solid"></line>
+    <text x="234" y="460" >since</text>
+    <text x="282" y="460" >5m</text>
+    <rect x="0" y="484" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="492" x2="4" y2="500" class="solid"></line>
+    <line x1="16" y1="488" x2="32" y2="488" class="solid"></line>
+    <text x="42" y="492" >EXEC</text>
+    <line x1="80" y1="488" x2="480" y2="488" class="solid"></line>
+    <rect x="0" y="500" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="508" x2="4" y2="516" class="solid"></line>
+    <text x="18" y="508" >Run</text>
+    <text x="50" y="508" >a</text>
+    <text x="66" y="508" >command</text>
+    <text x="130" y="508" >inside</text>
+    <text x="186" y="508" >a</text>
+    <text x="202" y="508" >running</text>
+    <text x="266" y="508" >container.</text>
+    <rect x="0" y="516" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="524" x2="4" y2="532" class="solid"></line>
+    <line x1="16" y1="520" x2="24" y2="520" class="solid"></line>
+    <text x="26" y="524" >it:</text>
+    <text x="58" y="524" >interactive</text>
+    <text x="154" y="524" >+</text>
+    <text x="170" y="524" >TTY</text>
+    <path d="M 208,512 A 16,16 0,0,0 208,528" class="nofill"></path>
+    <text x="210" y="524" >for</text>
+    <text x="242" y="524" >shell</text>
+    <text x="290" y="524" >sessions</text>
+    <path d="M 352,512 A 16,16 0,0,1 352,528" class="nofill"></path>
+    <text x="362" y="524" >.</text>
+    <rect x="0" y="532" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="540" >Useful</text>
+    <text x="74" y="540" >for</text>
+    <text x="106" y="540" >debugging:</text>
+    <text x="194" y="540" >inspect</text>
+    <text x="258" y="540" >files,</text>
+    <text x="314" y="540" >check</text>
+    <text x="362" y="540" >processes,</text>
+    <text x="2" y="556" >docker</text>
+    <text x="58" y="556" >exec</text>
+    <line x1="96" y1="552" x2="104" y2="552" class="solid"></line>
+    <text x="106" y="556" >it</text>
+    <text x="130" y="556" >web</text>
+    <text x="162" y="556" >sh</text>
+    <rect x="0" y="564" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="572" x2="4" y2="580" class="solid"></line>
+    <text x="18" y="572" >Inside</text>
+    <text x="74" y="572" >the</text>
+    <text x="106" y="572" >container,</text>
+    <rect x="0" y="580" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="588" x2="4" y2="596" class="solid"></line>
+    <text x="34" y="588" >ls</text>
+    <line x1="64" y1="576" x2="56" y2="592" class="solid"></line>
+    <text x="66" y="588" >etc</text>
+    <line x1="96" y1="576" x2="88" y2="592" class="solid"></line>
+    <text x="98" y="588" >nginx</text>
+    <line x1="144" y1="576" x2="136" y2="592" class="solid"></line>
+    <rect x="0" y="596" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="604" x2="4" y2="612" class="solid"></line>
+    <text x="34" y="604" >cat</text>
+    <line x1="72" y1="592" x2="64" y2="608" class="solid"></line>
+    <text x="74" y="604" >etc</text>
+    <line x1="104" y1="592" x2="94" y2="612" class="solid"></line>
+    <text x="106" y="604" >nginx</text>
+    <text x="154" y="604" >nginx.conf</text>
+    <rect x="0" y="612" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="34" y="620" >wget</text>
+    <line x1="72" y1="616" x2="80" y2="616" class="solid"></line>
+    <text x="82" y="620" >q</text>
+    <circle cx="92" cy="616" r="4" class="nofill"></circle>
+    <line x1="96" y1="616" x2="104" y2="616" class="solid"></line>
+    <text x="114" y="620" >http:</text>
+    <line x1="160" y1="608" x2="152" y2="624" class="solid"></line>
+    <line x1="168" y1="608" x2="160" y2="624" class="solid"></line>
+    <text x="170" y="620" >localhost:80</text>
+    <text x="450" y="540" >test</text>
+    <text x="490" y="540" >connectivity.</text>
+    <text x="194" y="572" >you</text>
+    <text x="226" y="572" >can</text>
+    <text x="258" y="572" >run:</text>
+    <text x="2" y="652" >#</text>
+    <text x="18" y="652" >Run</text>
+    <text x="50" y="652" >a</text>
+    <text x="66" y="652" >one</text>
+    <line x1="88" y1="648" x2="96" y2="648" class="solid"></line>
+    <circle cx="100" cy="648" r="3" class="nofill"></circle>
+    <text x="106" y="652" >ff</text>
+    <text x="2" y="668" >docker</text>
+    <text x="58" y="668" >exec</text>
+    <text x="98" y="668" >web</text>
+    <text x="130" y="652" >command</text>
+    <text x="194" y="652" >without</text>
+    <text x="258" y="652" >entering</text>
+    <text x="330" y="652" >the</text>
+    <text x="130" y="668" >cat</text>
+    <line x1="168" y1="656" x2="160" y2="672" class="solid"></line>
+    <text x="170" y="668" >etc</text>
+    <line x1="200" y1="656" x2="192" y2="672" class="solid"></line>
+    <text x="202" y="668" >nginx</text>
+    <line x1="248" y1="656" x2="240" y2="672" class="solid"></line>
+    <text x="250" y="668" >nginx.conf</text>
+    <text x="362" y="652" >shell:</text>
+    <rect x="0" y="692" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="700" x2="4" y2="708" class="solid"></line>
+    <line x1="16" y1="696" x2="32" y2="696" class="solid"></line>
+    <text x="42" y="700" >STATS</text>
+    <line x1="88" y1="696" x2="480" y2="696" class="solid"></line>
+    <rect x="0" y="708" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="716" x2="4" y2="724" class="solid"></line>
+    <text x="18" y="716" >Show</text>
+    <text x="58" y="716" >live</text>
+    <text x="98" y="716" >resource</text>
+    <text x="170" y="716" >usage</text>
+    <text x="218" y="716" >for</text>
+    <text x="250" y="716" >all</text>
+    <text x="282" y="716" >running</text>
+    <text x="346" y="716" >containers.</text>
+    <rect x="0" y="724" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="732" >Displays</text>
+    <text x="90" y="732" >CPU</text>
+    <text x="122" y="732" >%,</text>
+    <text x="146" y="732" >memory</text>
+    <text x="202" y="732" >usage</text>
+    <line x1="248" y1="720" x2="240" y2="736" class="solid"></line>
+    <text x="250" y="732" >limit,</text>
+    <text x="306" y="732" >network</text>
+    <text x="370" y="732" >I</text>
+    <line x1="384" y1="720" x2="376" y2="736" class="solid"></line>
+    <text x="386" y="732" >O,</text>
+    <text x="410" y="732" >and</text>
+    <text x="2" y="748" >docker</text>
+    <text x="58" y="748" >stats</text>
+    <rect x="0" y="756" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="764" x2="4" y2="772" class="solid"></line>
+    <text x="18" y="764" >Output:</text>
+    <rect x="0" y="772" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="780" x2="4" y2="788" class="solid"></line>
+    <text x="18" y="780" >CONTAINER</text>
+    <text x="98" y="780" >ID</text>
+    <rect x="0" y="788" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="796" >3f7a2b1c9d8e</text>
+    <text x="442" y="732" >block</text>
+    <text x="490" y="732" >I</text>
+    <line x1="504" y1="720" x2="496" y2="736" class="solid"></line>
+    <text x="506" y="732" >O.</text>
+    <text x="138" y="780" >NAME</text>
+    <text x="138" y="796" >web</text>
+    <text x="194" y="780" >CPU</text>
+    <text x="226" y="780" >%</text>
+    <text x="194" y="796" >0.00%</text>
+    <text x="258" y="780" >MEM</text>
+    <text x="290" y="780" >USAGE</text>
+    <line x1="344" y1="768" x2="328" y2="800" class="solid"></line>
+    <text x="354" y="780" >LIMIT</text>
+    <text x="258" y="796" >3.891MiB</text>
+    <text x="346" y="796" >15.58GiB</text>
+    <text x="434" y="780" >MEM</text>
+    <text x="466" y="780" >%</text>
+    <text x="434" y="796" >0.02%</text>
+    <text x="498" y="780" >NET</text>
+    <text x="530" y="780" >I</text>
+    <line x1="544" y1="768" x2="536" y2="784" class="solid"></line>
+    <text x="546" y="780" >O</text>
+    <text x="498" y="796" >1.09kB</text>
+    <line x1="560" y1="784" x2="552" y2="800" class="solid"></line>
+    <text x="634" y="780" >BLOCK</text>
+    <text x="682" y="780" >I</text>
+    <line x1="696" y1="768" x2="688" y2="784" class="solid"></line>
+    <text x="698" y="780" >O</text>
+    <text x="634" y="796" >0B</text>
+    <line x1="664" y1="784" x2="656" y2="800" class="solid"></line>
+    <text x="674" y="796" >0B</text>
+    <text x="570" y="796" >0B</text>
+    <rect x="0" y="820" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="828" x2="4" y2="836" class="solid"></line>
+    <line x1="16" y1="824" x2="32" y2="824" class="solid"></line>
+    <text x="42" y="828" >INSPECT</text>
+    <line x1="104" y1="824" x2="480" y2="824" class="solid"></line>
+    <rect x="0" y="836" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="844" x2="4" y2="852" class="solid"></line>
+    <text x="18" y="844" >Show</text>
+    <text x="58" y="844" >full</text>
+    <text x="98" y="844" >JSON</text>
+    <text x="138" y="844" >configuration</text>
+    <text x="250" y="844" >of</text>
+    <text x="274" y="844" >a</text>
+    <text x="290" y="844" >running</text>
+    <text x="354" y="844" >container.</text>
+    <rect x="0" y="852" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="860" >Includes:</text>
+    <text x="98" y="860" >network</text>
+    <text x="162" y="860" >settings,</text>
+    <text x="242" y="860" >mounts,</text>
+    <text x="306" y="860" >environment</text>
+    <text x="402" y="860" >variables,</text>
+    <text x="2" y="876" >docker</text>
+    <text x="58" y="876" >inspect</text>
+    <text x="122" y="876" >web</text>
+    <text x="490" y="860" >health</text>
+    <text x="546" y="860" >status,</text>
+    <text x="610" y="860" >cgroup</text>
+    <text x="666" y="860" >config.</text>
+    <text x="2" y="908" >#</text>
+    <text x="18" y="908" >Extract</text>
+    <text x="82" y="908" >specific</text>
+    <text x="154" y="908" >fields</text>
+    <text x="210" y="908" >using</text>
+    <text x="258" y="908" >Go</text>
+    <text x="282" y="908" >template</text>
+    <text x="354" y="908" >syntax:</text>
+    <text x="2" y="924" >docker</text>
+    <text x="58" y="924" >inspect</text>
+    <text x="122" y="924" >web</text>
+    <line x1="152" y1="920" x2="168" y2="920" class="solid"></line>
+    <text x="170" y="924" >format</text>
+    <text x="226" y="924" >&#39;{{.NetworkSettings.IPAddress}}&#39;</text>
+    <text x="2" y="940" >#</text>
+    <text x="18" y="940" >Output:</text>
+    <text x="82" y="940" >172.17.0.2</text>
+    <rect x="0" y="964" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="4" y1="972" x2="4" y2="980" class="solid"></line>
+    <line x1="16" y1="968" x2="32" y2="968" class="solid"></line>
+    <text x="42" y="972" >STOP</text>
+    <text x="82" y="972" >&amp;</text>
+    <text x="98" y="972" >REMOVE</text>
+    <line x1="152" y1="968" x2="472" y2="968" class="solid"></line>
+    <rect x="0" y="980" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="18" y="988" >Stop</text>
+    <text x="58" y="988" >a</text>
+    <text x="74" y="988" >running</text>
+    <text x="138" y="988" >container</text>
+    <path d="M 224,976 A 16,16 0,0,0 224,992" class="nofill"></path>
+    <text x="226" y="988" >sends</text>
+    <text x="274" y="988" >SIGTERM,</text>
+    <text x="346" y="988" >waits</text>
+    <text x="394" y="988" >10s,</text>
+    <text x="434" y="988" >then</text>
+    <text x="474" y="988" >SIGKILL</text>
+    <path d="M 528,976 A 16,16 0,0,1 528,992" class="nofill"></path>
+    <text x="538" y="988" >.</text>
+    <text x="2" y="1004" >docker</text>
+    <text x="58" y="1004" >stop</text>
+    <text x="98" y="1004" >web</text>
+    <text x="2" y="1036" >#</text>
+    <text x="18" y="1036" >Remove</text>
+    <text x="74" y="1036" >a</text>
+    <text x="90" y="1036" >stopped</text>
+    <text x="2" y="1052" >docker</text>
+    <text x="58" y="1052" >rm</text>
+    <text x="82" y="1052" >web</text>
+    <text x="154" y="1036" >container.</text>
+    <text x="242" y="1036" >This</text>
+    <text x="282" y="1036" >deletes</text>
+    <text x="346" y="1036" >the</text>
+    <text x="378" y="1036" >writable</text>
+    <text x="450" y="1036" >layer.</text>
+    <text x="2" y="1084" >#</text>
+    <text x="18" y="1084" >Shorthand:</text>
+    <text x="106" y="1084" >stop</text>
+    <text x="146" y="1084" >and</text>
+    <text x="178" y="1084" >remove</text>
+    <text x="2" y="1100" >docker</text>
+    <text x="58" y="1100" >stop</text>
+    <text x="98" y="1100" >web</text>
+    <text x="130" y="1100" >&amp;&amp;</text>
+    <text x="154" y="1100" >docker</text>
+    <text x="210" y="1100" >rm</text>
+    <text x="234" y="1084" >in</text>
+    <text x="258" y="1084" >one</text>
+    <text x="234" y="1100" >web</text>
+    <text x="290" y="1084" >command</text>
+    <text x="354" y="1084" >chain.</text>
+    <text x="2" y="1132" >#</text>
+    <text x="18" y="1132" >Force</text>
+    <line x1="56" y1="1128" x2="64" y2="1128" class="solid"></line>
+    <text x="66" y="1132" >remove</text>
+    <text x="122" y="1132" >a</text>
+    <text x="2" y="1148" >docker</text>
+    <text x="58" y="1148" >rm</text>
+    <line x1="80" y1="1144" x2="88" y2="1144" class="solid"></line>
+    <text x="90" y="1148" >f</text>
+    <text x="106" y="1148" >web</text>
+    <text x="138" y="1132" >running</text>
+    <text x="202" y="1132" >container</text>
+    <path d="M 288,1120 A 16,16 0,0,0 288,1136" class="nofill"></path>
+    <text x="290" y="1132" >sends</text>
+    <text x="338" y="1132" >SIGKILL</text>
+    <text x="402" y="1132" >immediately</text>
+    <path d="M 488,1120 A 16,16 0,0,1 488,1136" class="nofill"></path>
+    <text x="498" y="1132" >:</text>
+    <text x="2" y="1180" >#</text>
+    <text x="18" y="1180" >Remove</text>
+    <text x="74" y="1180" >all</text>
+    <text x="106" y="1180" >stopped</text>
+    <text x="170" y="1180" >containers:</text>
+    <text x="2" y="1196" >docker</text>
+    <text x="58" y="1196" >container</text>
+    <text x="138" y="1196" >prune</text>
+    <text x="258" y="332" >/docker-entrypoint.…</text>
+    <g>
+        <line x1="680" y1="328" x2="688" y2="328" class="solid"></line>
+        <polygon points="688,324 696,328 688,332" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="152" y1="592" x2="148" y2="600" class="solid"></line>
+        <line x1="148" y1="600" x2="148" y2="608" class="solid"></line>
+    </g>
+</svg>

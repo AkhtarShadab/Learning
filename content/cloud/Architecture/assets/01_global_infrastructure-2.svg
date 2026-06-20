@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="432" height="208" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="432" height="208"></rect>
+    <text x="2" y="12" >User</text>
+    <text x="42" y="12" >in</text>
+    <text x="18" y="76" >Edge</text>
+    <text x="66" y="12" >Tokyo</text>
+    <text x="274" y="12" >Origin</text>
+    <text x="330" y="12" >in</text>
+    <text x="194" y="156" >Fetch</text>
+    <text x="242" y="156" >from</text>
+    <text x="194" y="172" >origin,</text>
+    <text x="258" y="172" >cache</text>
+    <text x="194" y="188" >locally,</text>
+    <text x="266" y="188" >return</text>
+    <text x="354" y="12" >us</text>
+    <line x1="368" y1="8" x2="376" y2="8" class="solid"></line>
+    <text x="378" y="12" >east</text>
+    <line x1="408" y1="8" x2="416" y2="8" class="solid"></line>
+    <text x="418" y="12" >1</text>
+    <text x="66" y="44" >1.</text>
+    <text x="90" y="44" >GET</text>
+    <line x1="128" y1="32" x2="120" y2="48" class="solid"></line>
+    <text x="130" y="44" >image.jpg</text>
+    <text x="58" y="76" >Location</text>
+    <path d="M 136,64 A 16,16 0,0,0 136,80" class="nofill"></path>
+    <text x="138" y="76" >Tokyo</text>
+    <path d="M 176,64 A 16,16 0,0,1 176,80" class="nofill"></path>
+    <text x="66" y="108" >Cache</text>
+    <text x="114" y="108" >HIT?</text>
+    <text x="186" y="108" >Return</text>
+    <text x="242" y="108" >cached</text>
+    <text x="186" y="124" >content</text>
+    <path d="M 256,112 A 16,16 0,0,0 256,128" class="nofill"></path>
+    <text x="258" y="124" >&lt;</text>
+    <text x="274" y="124" >5ms</text>
+    <path d="M 296,112 A 16,16 0,0,1 296,128" class="nofill"></path>
+    <text x="66" y="156" >Cache</text>
+    <text x="114" y="156" >MISS?</text>
+    <g>
+        <line x1="44" y1="16" x2="44" y2="52" class="solid"></line>
+        <polygon points="40,52 48,52 44,64" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="44" y1="80" x2="44" y2="152" class="solid"></line>
+        <line x1="44" y1="104" x2="56" y2="104" class="solid"></line>
+        <line x1="44" y1="152" x2="56" y2="152" class="solid"></line>
+    </g>
+    <g>
+        <line x1="340" y1="16" x2="340" y2="152" class="solid"></line>
+        <line x1="280" y1="152" x2="340" y2="152" class="solid"></line>
+    </g>
+    <g>
+        <line x1="152" y1="104" x2="168" y2="104" class="solid"></line>
+        <polygon points="168,100 176,104 168,108" class="filled"></polygon>
+    </g>
+    <g>
+        <line x1="160" y1="152" x2="176" y2="152" class="solid"></line>
+        <polygon points="176,148 184,152 176,156" class="filled"></polygon>
+    </g>
+</svg>

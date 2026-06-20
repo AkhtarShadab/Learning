@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="696" height="368" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="696" height="368"></rect>
+    <text x="2" y="12" >#</text>
+    <line x1="16" y1="8" x2="32" y2="8" class="solid"></line>
+    <text x="2" y="28" >helm</text>
+    <line x1="16" y1="40" x2="24" y2="40" class="solid"></line>
+    <text x="26" y="44" >f</text>
+    <text x="42" y="12" >Dry</text>
+    <text x="74" y="12" >run</text>
+    <path d="M 112,0 A 16,16 0,0,0 112,16" class="nofill"></path>
+    <text x="114" y="12" >see</text>
+    <text x="146" y="12" >rendered</text>
+    <text x="218" y="12" >manifests</text>
+    <text x="42" y="28" >template</text>
+    <text x="114" y="28" >my</text>
+    <line x1="128" y1="24" x2="136" y2="24" class="solid"></line>
+    <text x="138" y="28" >release</text>
+    <text x="202" y="28" >.</text>
+    <line x1="216" y1="16" x2="208" y2="32" class="solid"></line>
+    <text x="218" y="28" >my</text>
+    <line x1="232" y1="24" x2="240" y2="24" class="solid"></line>
+    <text x="242" y="28" >app</text>
+    <line x1="272" y1="16" x2="280" y2="32" class="solid"></line>
+    <text x="42" y="44" >values</text>
+    <line x1="88" y1="40" x2="96" y2="40" class="solid"></line>
+    <text x="98" y="44" >production.yaml</text>
+    <text x="298" y="12" >without</text>
+    <text x="362" y="12" >deploying</text>
+    <path d="M 432,0 A 16,16 0,0,1 432,16" class="nofill"></path>
+    <line x1="448" y1="8" x2="544" y2="8" class="solid"></line>
+    <text x="322" y="44" >#</text>
+    <text x="338" y="44" >Render</text>
+    <text x="394" y="44" >templates</text>
+    <text x="474" y="44" >locally</text>
+    <text x="538" y="44" >and</text>
+    <text x="570" y="44" >print</text>
+    <text x="618" y="44" >to</text>
+    <text x="642" y="44" >stdout</text>
+    <text x="2" y="76" >#</text>
+    <line x1="16" y1="72" x2="32" y2="72" class="solid"></line>
+    <text x="42" y="76" >Install</text>
+    <text x="106" y="76" >with</text>
+    <text x="146" y="76" >custom</text>
+    <text x="202" y="76" >values</text>
+    <text x="258" y="76" >file</text>
+    <text x="2" y="92" >helm</text>
+    <text x="42" y="92" >install</text>
+    <text x="106" y="92" >my</text>
+    <line x1="120" y1="88" x2="128" y2="88" class="solid"></line>
+    <text x="130" y="92" >release</text>
+    <text x="194" y="92" >.</text>
+    <text x="210" y="92" >my</text>
+    <line x1="224" y1="88" x2="232" y2="88" class="solid"></line>
+    <text x="234" y="92" >app</text>
+    <line x1="264" y1="80" x2="272" y2="96" class="solid"></line>
+    <line x1="16" y1="104" x2="32" y2="104" class="solid"></line>
+    <text x="34" y="108" >namespace</text>
+    <text x="114" y="108" >production</text>
+    <line x1="16" y1="120" x2="32" y2="120" class="solid"></line>
+    <text x="34" y="124" >create</text>
+    <line x1="80" y1="120" x2="88" y2="120" class="solid"></line>
+    <text x="90" y="124" >namespace</text>
+    <line x1="168" y1="112" x2="176" y2="128" class="solid"></line>
+    <line x1="16" y1="136" x2="24" y2="136" class="solid"></line>
+    <text x="26" y="140" >f</text>
+    <text x="42" y="140" >values</text>
+    <line x1="88" y1="136" x2="96" y2="136" class="solid"></line>
+    <text x="98" y="140" >production.yaml</text>
+    <line x1="296" y1="72" x2="536" y2="72" class="solid"></line>
+    <text x="322" y="140" >#</text>
+    <text x="338" y="140" >Override</text>
+    <text x="410" y="140" >defaults</text>
+    <text x="482" y="140" >with</text>
+    <text x="522" y="140" >production</text>
+    <text x="610" y="140" >values</text>
+    <text x="2" y="172" >#</text>
+    <line x1="16" y1="168" x2="32" y2="168" class="solid"></line>
+    <text x="42" y="172" >Upgrade</text>
+    <text x="106" y="172" >with</text>
+    <text x="146" y="172" >inline</text>
+    <text x="202" y="172" >overrides</text>
+    <text x="2" y="188" >helm</text>
+    <text x="42" y="188" >upgrade</text>
+    <text x="106" y="188" >my</text>
+    <line x1="120" y1="184" x2="128" y2="184" class="solid"></line>
+    <text x="130" y="188" >release</text>
+    <text x="194" y="188" >.</text>
+    <text x="210" y="188" >my</text>
+    <line x1="224" y1="184" x2="232" y2="184" class="solid"></line>
+    <text x="234" y="188" >app</text>
+    <line x1="264" y1="176" x2="272" y2="192" class="solid"></line>
+    <line x1="16" y1="200" x2="32" y2="200" class="solid"></line>
+    <text x="34" y="204" >namespace</text>
+    <text x="114" y="204" >production</text>
+    <line x1="16" y1="216" x2="32" y2="216" class="solid"></line>
+    <text x="34" y="220" >set</text>
+    <text x="66" y="220" >image.tag</text>
+    <line x1="136" y1="214" x2="144" y2="214" class="solid"></line>
+    <line x1="136" y1="218" x2="144" y2="218" class="solid"></line>
+    <line x1="16" y1="232" x2="32" y2="232" class="solid"></line>
+    <text x="34" y="236" >set</text>
+    <text x="66" y="236" >replicaCount</text>
+    <line x1="160" y1="230" x2="168" y2="230" class="solid"></line>
+    <line x1="160" y1="234" x2="168" y2="234" class="solid"></line>
+    <text x="170" y="236" >5</text>
+    <line x1="280" y1="168" x2="544" y2="168" class="solid"></line>
+    <rect x="320" y="212" width="8" height="8" class="solid filled" rx="0"></rect>
+    <line x1="324" y1="220" x2="324" y2="228" class="solid"></line>
+    <rect x="320" y="228" width="8" height="8" class="solid filled" rx="0"></rect>
+    <text x="338" y="220" >Override</text>
+    <text x="410" y="220" >just</text>
+    <text x="450" y="220" >the</text>
+    <text x="482" y="220" >image</text>
+    <text x="338" y="236" >And</text>
+    <text x="370" y="236" >the</text>
+    <text x="402" y="236" >replica</text>
+    <text x="466" y="236" >count</text>
+    <text x="530" y="220" >tag</text>
+    <text x="2" y="268" >#</text>
+    <line x1="16" y1="264" x2="32" y2="264" class="solid"></line>
+    <text x="42" y="268" >Rollback</text>
+    <text x="2" y="284" >helm</text>
+    <text x="42" y="284" >rollback</text>
+    <line x1="16" y1="296" x2="32" y2="296" class="solid"></line>
+    <text x="34" y="300" >namespace</text>
+    <text x="114" y="268" >to</text>
+    <text x="138" y="268" >a</text>
+    <text x="154" y="268" >previous</text>
+    <text x="226" y="268" >release</text>
+    <text x="114" y="284" >my</text>
+    <line x1="128" y1="280" x2="136" y2="280" class="solid"></line>
+    <text x="138" y="284" >release</text>
+    <text x="202" y="284" >2</text>
+    <line x1="216" y1="272" x2="224" y2="288" class="solid"></line>
+    <text x="114" y="300" >production</text>
+    <line x1="288" y1="264" x2="536" y2="264" class="solid"></line>
+    <text x="322" y="284" >#</text>
+    <text x="338" y="284" >Roll</text>
+    <text x="378" y="284" >back</text>
+    <text x="418" y="284" >to</text>
+    <text x="442" y="284" >revision</text>
+    <text x="514" y="284" >2</text>
+    <text x="2" y="332" >#</text>
+    <line x1="16" y1="328" x2="32" y2="328" class="solid"></line>
+    <text x="2" y="348" >helm</text>
+    <text x="42" y="332" >Uninstall</text>
+    <text x="42" y="348" >uninstall</text>
+    <line x1="120" y1="328" x2="544" y2="328" class="solid"></line>
+    <text x="122" y="348" >my</text>
+    <line x1="136" y1="344" x2="144" y2="344" class="solid"></line>
+    <text x="146" y="348" >release</text>
+    <line x1="208" y1="344" x2="216" y2="344" class="solid"></line>
+    <text x="218" y="348" >n</text>
+    <text x="234" y="348" >production</text>
+    <text x="330" y="348" >#</text>
+    <text x="346" y="348" >Remove</text>
+    <text x="402" y="348" >all</text>
+    <text x="434" y="348" >resources</text>
+    <text x="514" y="348" >for</text>
+    <text x="546" y="348" >this</text>
+    <text x="586" y="348" >release</text>
+    <text x="146" y="220" >2.2.0</text>
+    <g>
+        <line x1="208" y1="80" x2="200" y2="96" class="solid"></line>
+        <line x1="200" y1="96" x2="208" y2="112" class="solid"></line>
+    </g>
+    <g>
+        <line x1="208" y1="176" x2="200" y2="192" class="solid"></line>
+        <line x1="200" y1="192" x2="216" y2="224" class="solid"></line>
+    </g>
+</svg>

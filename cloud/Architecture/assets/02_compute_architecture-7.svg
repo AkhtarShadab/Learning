@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="504" height="128" style="background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;max-width:100%;height:auto"><rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+    <style>
+        line, path, circle, rect, polygon{stroke:black;stroke-width:2;stroke-opacity:1;fill-opacity:1;stroke-linecap:round;stroke-linejoin:miter;}text{font-family:Iosevka Fixed, monospace;font-size:14px;}rect.backdrop{stroke:none;fill:transparent;}.broken{stroke-dasharray:8;}.filled{fill:black;}.bg_filled{fill:transparent;}.nofill{fill:transparent;}.end_marked_arrow{marker-end:url(#arrow);}.start_marked_arrow{marker-start:url(#arrow);}.end_marked_diamond{marker-end:url(#diamond);}.start_marked_diamond{marker-start:url(#diamond);}.end_marked_circle{marker-end:url(#circle);}.start_marked_circle{marker-start:url(#circle);}.end_marked_open_circle{marker-end:url(#open_circle);}.start_marked_open_circle{marker-start:url(#open_circle);}.end_marked_big_open_circle{marker-end:url(#big_open_circle);}.start_marked_big_open_circle{marker-start:url(#big_open_circle);}
+        <!--separator-->
+        
+    </style>
+    <defs>
+        <marker id="arrow" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,0 0,4 4,2 0,0"></polygon>
+        </marker>
+        <marker id="diamond" viewBox="-2 -2 8 8" refX="4" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,2 2,0 4,2 2,4 0,2"></polygon>
+        </marker>
+        <marker id="circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="filled"></circle>
+        </marker>
+        <marker id="open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="2" class="bg_filled"></circle>
+        </marker>
+        <marker id="big_open_circle" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <circle cx="4" cy="4" r="3" class="bg_filled"></circle>
+        </marker>
+    </defs>
+    <rect class="backdrop" x="0" y="0" width="504" height="128"></rect>
+    <rect x="20" y="24" width="56" height="32" class="solid nofill" rx="0"></rect>
+    <text x="34" y="44" >i</text>
+    <line x1="40" y1="40" x2="48" y2="40" class="solid"></line>
+    <text x="50" y="44" >aa</text>
+    <rect x="116" y="24" width="56" height="32" class="solid nofill" rx="0"></rect>
+    <text x="130" y="44" >i</text>
+    <line x1="136" y1="40" x2="144" y2="40" class="solid"></line>
+    <text x="146" y="44" >bb</text>
+    <rect x="220" y="24" width="56" height="32" class="solid nofill" rx="0"></rect>
+    <text x="234" y="44" >i</text>
+    <line x1="240" y1="40" x2="248" y2="40" class="solid"></line>
+    <text x="250" y="44" >cc</text>
+    <rect x="324" y="24" width="56" height="32" class="solid nofill" rx="0"></rect>
+    <text x="338" y="44" >i</text>
+    <line x1="344" y1="40" x2="352" y2="40" class="solid"></line>
+    <text x="354" y="44" >dd</text>
+    <text x="18" y="12" >Rack</text>
+    <text x="58" y="12" >1</text>
+    <text x="130" y="12" >Rack</text>
+    <text x="170" y="12" >2</text>
+    <text x="242" y="12" >Rack</text>
+    <text x="282" y="12" >3</text>
+    <text x="354" y="12" >Rack</text>
+    <text x="394" y="12" >4</text>
+    <text x="18" y="92" >Use:</text>
+    <text x="58" y="92" >Critical</text>
+    <text x="130" y="92" >instances</text>
+    <path d="M 216,80 A 16,16 0,0,0 216,96" class="nofill"></path>
+    <text x="218" y="92" >primary</text>
+    <text x="18" y="108" >Limit:</text>
+    <text x="74" y="108" >7</text>
+    <text x="90" y="108" >instances</text>
+    <text x="170" y="108" >per</text>
+    <text x="202" y="108" >AZ</text>
+    <text x="282" y="92" >DB</text>
+    <text x="306" y="92" >nodes,</text>
+    <text x="362" y="92" >ZooKeeper</text>
+    <text x="442" y="92" >quorum</text>
+    <path d="M 488,80 A 16,16 0,0,1 488,96" class="nofill"></path>
+</svg>
